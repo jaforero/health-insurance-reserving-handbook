@@ -1,922 +1,448 @@
 ---
-title: "Machine Learning for Loss Reserving"
-part: "Parte V · Machine Learning"
-chapter: 18
-language: "es"
+title: "Machine Learning para reservas actuariales"
+description: "Marco práctico para diseñar, validar, explicar y gobernar modelos de aprendizaje automático aplicados a reservas de seguros de salud."
 status: "draft"
+version: "0.1.10"
+chapter: "18"
+part: "part-05-machine-learning"
+language: "es"
 last_updated: "2026-07-14"
 ---
 
-18-machine-learning-for-loss-reserving.md
----
-title: Machine Learning for Loss Reserving
-subtitle: Modern Predictive Modeling for Health Insurance Reserving
-author: Health Insurance Reserving Handbook
-version: 1.0
-chapter: 18
-status: Draft
-last_updated: 2026-07-13
----
+# Machine Learning para reservas actuariales
 
-# Machine Learning for Loss Reserving
+El aprendizaje automático, o *machine learning* (ML), amplía las herramientas de reserving cuando existen datos granulares, relaciones no lineales y suficiente historia para validar el desempeño fuera de muestra. Su valor no consiste en sustituir el juicio actuarial, sino en estimar componentes de la obligación futura con información que un triángulo agregado no conserva.
 
-> *"Traditional actuarial models explain reserve development. Machine Learning learns complex patterns directly from data."*
+Un modelo predictivo puede ser técnicamente preciso y aun así resultar inadecuado para una reserva oficial. Debe respetar la fecha de corte, evitar fuga de información, producir resultados reconciliables y demostrar estabilidad frente a cambios operativos, contractuales y regulatorios.
 
----
+## Objetivos de aprendizaje
 
-## Learning Objectives
+Al finalizar este capítulo, el lector podrá:
 
-After completing this chapter, the reader should be able to:
+- distinguir predicción, inferencia y estimación actuarial;
+- formular objetivos de ML compatibles con una fecha de valoración;
+- construir variables sin utilizar información futura;
+- seleccionar familias de modelos y funciones de pérdida;
+- diseñar validación temporal y backtesting;
+- evaluar precisión individual, suficiencia agregada y estabilidad;
+- incorporar explicabilidad e incertidumbre;
+- integrar modelos de ML con benchmarks actuariales y controles de producción.
 
-- Understand Machine Learning in reserving.
-- Distinguish predictive modeling from statistical inference.
-- Select appropriate ML algorithms.
-- Build production-grade reserving models.
-- Evaluate model performance.
-- Prevent overfitting.
-- Apply Explainable AI (XAI).
-- Implement governance consistent with actuarial standards.
+## 1. Papel de ML en reserving
 
----
+Los métodos tradicionales resumen el desarrollo histórico en factores, curvas o parámetros. ML permite usar simultáneamente variables como:
 
-## Table of Contents
+- edad de desarrollo;
+- monto pagado e incurrido a la fecha;
+- diagnóstico, procedimiento y tipo de servicio;
+- prestador, red y modalidad contractual;
+- características del afiliado y exposición;
+- estado de auditoría, glosa o devolución;
+- periodo calendario, inflación médica y estacionalidad.
 
-1. Introduction
-2. Why Machine Learning?
-3. Statistical Learning Theory
-4. Supervised Learning
-5. Data Engineering
-6. Feature Engineering
-7. Model Selection
-8. Training Pipeline
-9. Evaluation Metrics
-10. Explainable AI
-11. Health Insurance Applications
-12. Production Deployment
-13. Governance
-14. Best Practices
-15. Summary
+Esta flexibilidad es útil cuando el portafolio es grande y heterogéneo. También aumenta el riesgo de sobreajuste, relaciones espurias y resultados difíciles de explicar.
 
----
+## 2. Predicción frente a inferencia
 
-## 1 Introduction
+La inferencia estadística se interesa por parámetros, supuestos y relaciones estructurales. La predicción prioriza el desempeño en observaciones futuras. En reserving se necesitan ambas perspectivas:
 
-Machine Learning (ML) extends statistical reserving by allowing algorithms to discover complex nonlinear relationships directly from historical claims.
+| Pregunta | Enfoque dominante |
+|---|---|
+| ¿Qué variables explican el retraso? | Inferencia y diagnóstico |
+| ¿Cuánto se pagará después del corte? | Predicción |
+| ¿Qué reserva debe registrarse? | Decisión actuarial y financiera |
+| ¿Qué incertidumbre rodea la estimación? | Modelación predictiva y escenarios |
 
-Unlike deterministic reserving methods,
+Una buena predicción no determina por sí sola la reserva registrada. La selección final debe considerar materialidad, incertidumbre, consistencia contable y conocimiento del negocio.
 
-ML models are generally
+## 3. Unidades de modelación
 
-- data-driven,
-- highly flexible,
-- predictive.
+### Nivel de reclamación
 
-Their objective is
+Cada fila representa una reclamación, factura o episodio. Los objetivos pueden ser:
 
-not necessarily
+- pago futuro;
+- monto final permitido;
+- probabilidad de cierre;
+- tiempo hasta pago;
+- probabilidad y monto de glosa;
+- severidad condicional a un estado.
 
-to estimate development factors,
-
-but to estimate future liabilities directly.
-
----
-
-## 2 Evolution of Reserving
-
-```
-Deterministic
-
-↓
-
-Stochastic
-
-↓
-
-Regression
-
-↓
-
-GLM
-
-↓
-
-GAM
-
-↓
-
-Bayesian
-
-↓
-
-Machine Learning
-
-↓
-
-Artificial Intelligence
-```
-
-Machine Learning represents
-
-an evolution,
-
-not a replacement,
-
-of actuarial reserving.
-
----
-
-## 3 Why Machine Learning?
-
-Modern insurers generate
-
-millions
-
-of claim records.
-
-Traditional triangles
-
-compress information.
-
-Machine Learning can use
-
-claim-level data,
-
-including
-
-- diagnosis
-- procedure
-- provider
-- member
-- geography
-- inflation
-- seasonality
-- risk adjustment
-- utilization
-
-simultaneously.
-
----
-
-## 4 Machine Learning Paradigm
-
-Classical Reserving
-
-```
-Historical Pattern
-
-↓
-
-Projection
-
-↓
-
-Reserve
-```
-
-Machine Learning
-
-```
-Historical Claims
-
-↓
-
-Feature Engineering
-
-↓
-
-Training
-
-↓
-
-Prediction
-
-↓
-
-Reserve
-```
-
----
-
-## 5 Types of Learning
-
-## Supervised Learning
-
-Known target.
-
-Typical reserving applications
-
-- Ultimate Loss
-- IBNR
-- Paid Amount
-- Claim Duration
-
----
-
-## Unsupervised Learning
-
-Unknown target.
-
-Applications
-
-- Fraud detection
-- Portfolio segmentation
-- Claim clustering
-
----
-
-## Reinforcement Learning
-
-Rarely used
-
-for reserving.
-
-Potential applications
-
-include
-
-claims management optimization.
-
----
-
-## 6 Typical Prediction Targets
-
-Machine Learning may estimate
-
-- Ultimate Loss
-- Incremental Paid
-- Outstanding Reserve
-- Claim Closure Probability
-- Development Factor
-- Frequency
-- Severity
-
----
-
-## 7 Data Sources
-
-Modern reserving combines
-
-Claims
-
-+
-
-Eligibility
-
-+
-
-Provider
-
-+
-
-Enrollment
-
-+
-
-Diagnosis
-
-+
-
-Pharmacy
-
-+
-
-Financial
-
-+
-
-External Data
-
----
-
-## 8 Feature Engineering
-
-Typical variables include
-
-## Claim Features
-
-- Paid Amount
-- Case Reserve
-- Lag
-- Diagnosis
-- Procedure
-- Claim Type
-
----
-
-## Member Features
-
-- Age
-- Gender
-- Risk Score
-- Chronic Conditions
-
----
-
-## Provider Features
-
-- Specialty
-- Hospital
-- Network
-- Contract
-
----
-
-## Calendar Features
-
-- Month
-- Quarter
-- Season
-- Inflation
-- COVID Indicator
-
----
-
-## Product Features
-
-- Commercial
-- Medicare Advantage
-- Medicaid
-- ACA
-- Employer Group
-
----
-
-## 9 Data Preparation
-
-Typical workflow
-
-```
-Raw Claims
-
-↓
-
-Cleaning
-
-↓
-
-Validation
-
-↓
-
-Missing Values
-
-↓
-
-Encoding
-
-↓
-
-Scaling
-
-↓
-
-Feature Engineering
-
-↓
-
-Training Dataset
-```
-
----
-
-## 10 Feature Encoding
-
-Categorical variables
-
-may require
-
-- One-Hot Encoding
-- Target Encoding
-- Embeddings
-
-Continuous variables
-
-may require
-
-- Standardization
-- Normalization
-- Log Transformations
-
----
-
-## 11 Train-Test Split
-
-Typical split
-
-```
-Training
-
-70%
-
-Validation
-
-15%
-
-Testing
-
-15%
-```
-
-Time-based splits
-
-are preferred
-
-for reserving.
-
----
-
-## 12 Cross Validation
-
-Recommended methods
-
-- Rolling Window
-- Time Series Split
-- Nested Cross Validation
-
-Random shuffling
-
-should generally be avoided
-
-because claim development is time-dependent.
-
----
-
-## 13 Machine Learning Algorithms
-
-Common reserving algorithms include
-
-### Linear Models
-
-- Ridge
-- Lasso
-- Elastic Net
-
----
-
-### Tree Models
-
-- Decision Tree
-- Random Forest
-- Extra Trees
-
----
-
-### Boosting
-
-- XGBoost
-- LightGBM
-- CatBoost
-- Gradient Boosting
-
----
-
-### Neural Networks
-
-- MLP
-- CNN
-- LSTM
-- Transformer
-
----
-
-### Bayesian Models
-
-- Bayesian Neural Networks
-- Gaussian Processes
-
----
-
-## 14 Tree-Based Learning
-
-Decision trees partition
-
-the feature space.
-
-Advantages
-
-- nonlinear
-- interpretable
-- interaction effects
-
-Weakness
-
-high variance.
-
----
-
-Random Forest
-
-reduces variance
-
-through bagging.
-
----
-
-Gradient Boosting
-
-reduces bias
-
-through sequential learning.
-
----
-
-## 15 Loss Functions
-
-Common objective functions
-
-| Target | Loss Function |
-|---------|---------------|
-| Regression | MSE |
-| Robust Regression | MAE |
-| Insurance | Gamma Deviance |
-| Tweedie | Tweedie Deviance |
-| Quantile | Pinball Loss |
-
----
-
-## 16 Evaluation Metrics
-
-Model performance should include
-
-RMSE
+La reserva agregada puede construirse como:
 
 $$
-RMSE=
-\sqrt{
-\frac1n
-\sum
-(y-\hat y)^2
-}
+\widehat R = \sum_{k \in \mathcal{O}} \widehat Y_k^{\mathrm{futuro}} + \widehat R_{\mathrm{no\ reportado}}
 $$
 
----
+donde $\mathcal{O}$ representa obligaciones conocidas al corte. Debe evitarse confundir la predicción de cuentas conocidas con el IBNR puro de eventos todavía no reportados.
 
-MAE
+### Nivel de celda
+
+Cada observación corresponde a una celda origen-desarrollo-calendario. El modelo estima pagos incrementales, incurridos o conteos. Esta estructura facilita la comparación con Chain Ladder, GLM y GAM.
+
+### Nivel de segmento
+
+El objetivo puede ser PMPM, frecuencia, severidad o costo agregado por producto, región, contrato o cohorte. Es útil cuando los datos individuales no están disponibles o cuando la decisión se toma a nivel de portafolio.
+
+## 4. Fecha de corte y fuga de información
+
+Una variable es admisible solamente si estaba disponible en la fecha de valoración que se pretende reconstruir. La fuga de información (*data leakage*) ocurre cuando el entrenamiento utiliza información conocida después del corte.
+
+Ejemplos de fuga:
+
+- estado final de una reclamación aún abierta;
+- pago total observado al cierre definitivo;
+- glosa resuelta después de la valoración;
+- variables calculadas con diagonales futuras;
+- codificaciones corregidas retrospectivamente sin reconstruir su versión histórica;
+- imputaciones realizadas con todo el periodo de prueba.
+
+El dataset debe reconstruirse como una fotografía histórica:
+
+```text
+Fecha de valoración
+        │
+        ├── Información observable al corte → variables
+        └── Desarrollo posterior            → objetivo
+```
+
+## 5. Definición del objetivo
+
+El objetivo debe corresponder a una cantidad económica y temporal precisa.
+
+| Objetivo | Definición posible | Riesgo principal |
+|---|---|---|
+| Pago futuro | Pagos posteriores al corte | Cuentas no conocidas |
+| Ultimate | Pago total al cierre | Censura y cola |
+| IBNR | Ultimate menos observado | Mezcla de componentes |
+| Tiempo hasta cierre | Duración restante | Censura |
+| Probabilidad de pago | Evento dentro de un horizonte | Desbalance de clases |
+| Cuantil de costo | Percentil condicional | Calibración |
+
+Cuando existe censura, excluir observaciones incompletas introduce sesgo. Deben considerarse técnicas de supervivencia, ventanas de maduración o ponderación adecuada.
+
+## 6. Ingeniería de variables
+
+Las variables deben tener significado operativo y mantenerse reproducibles.
+
+### Variables de desarrollo
+
+- meses desde ocurrencia;
+- días desde radicación;
+- pagos acumulados;
+- número de movimientos;
+- relación pagado/incurrido;
+- tiempo desde último movimiento;
+- estado actual.
+
+### Variables clínicas y de exposición
+
+- grupo diagnóstico;
+- procedimiento o tipo de servicio;
+- edad y grupo de riesgo;
+- condición crónica;
+- exposición o afiliados equivalentes;
+- utilización histórica observable.
+
+### Variables contractuales y operativas
+
+- modalidad de pago;
+- prestador y red;
+- canal de facturación;
+- estado de auditoría;
+- glosa o devolución vigente;
+- lote, plataforma o proceso de recepción.
+
+Las categorías de alta cardinalidad requieren tratamiento explícito para valores raros y categorías nuevas. El historial del prestador debe calcularse únicamente con información anterior al corte.
+
+## 7. Partición temporal
+
+Una partición aleatoria suele sobreestimar el desempeño porque mezcla periodos de valoración.
+
+La separación recomendada respeta el tiempo:
+
+```text
+Entrenamiento        Validación          Prueba
+periodos antiguos    periodo posterior   periodo más reciente
+```
+
+El backtesting *rolling-origin* repite la estimación en varios cierres:
+
+| Iteración | Entrenamiento | Validación |
+|---|---|---|
+| 1 | hasta 2022 | 2023 |
+| 2 | hasta 2023 | 2024 |
+| 3 | hasta 2024 | 2025 |
+
+Cada iteración debe reconstruir variables, transformaciones y universos como habrían existido en ese momento.
+
+## 8. Familias de modelos
+
+### Modelos lineales regularizados
+
+Ridge, Lasso y Elastic Net ofrecen benchmarks transparentes y controlan colinealidad. Son útiles antes de adoptar modelos más complejos.
+
+### Árboles y boosting
+
+Random Forest, Gradient Boosting, XGBoost, LightGBM y CatBoost capturan no linealidades e interacciones. Se estudian con detalle en el [capítulo 19](19-tree-based-models-for-loss-reserving.md).
+
+### Redes neuronales
+
+Pueden modelar datos de alta dimensionalidad y secuencias, pero requieren mayor volumen, control y capacidad de cómputo. Se desarrollan en el [capítulo 20](20-deep-learning-for-loss-reserving.md).
+
+### Supervivencia y modelos multiestado
+
+Son apropiados para tiempo hasta reporte, pago, cierre o transición entre estados. En muchos problemas de salud resultan más naturales que una regresión directa del monto final.
+
+## 9. Funciones de pérdida
+
+La función de pérdida debe ser coherente con el objetivo y su soporte.
+
+| Objetivo | Pérdida o distribución |
+|---|---|
+| Monto continuo | MAE, MSE, Huber |
+| Severidad positiva | Gamma o lognormal |
+| Frecuencia | Poisson o binomial negativa |
+| Frecuencia-severidad | Tweedie |
+| Cuantiles | Pinball loss |
+| Clasificación | Log loss |
+| Tiempo hasta evento | Pérdida de supervivencia |
+
+Minimizar MSE individual no garantiza una reserva agregada sin sesgo. Puede ser necesario ponderar por exposición, monto o segmento y calibrar posteriormente el total.
+
+## 10. Métricas actuariales
+
+Las métricas individuales deben complementarse con medidas agregadas.
 
 $$
-MAE=
-\frac1n
-\sum
-|y-\hat y|
+\mathrm{MAE} = \frac{1}{n}\sum_{i=1}^{n}|y_i-\widehat y_i|
 $$
 
----
+$$
+\mathrm{RMSE} = \sqrt{\frac{1}{n}\sum_{i=1}^{n}(y_i-\widehat y_i)^2}
+$$
 
-MAPE
+$$
+\mathrm{Sesgo\ agregado} = \frac{\sum_i \widehat y_i-\sum_i y_i}{\sum_i y_i}
+$$
 
-Useful
+También deben revisarse:
 
-when claim amounts
+- error por cohorte de origen;
+- error por fecha de valoración;
+- suficiencia acumulada;
+- estabilidad de la reserva entre cierres;
+- desempeño por producto, prestador y nivel de riesgo;
+- cobertura de intervalos;
+- impacto financiero de errores extremos.
 
-remain positive.
+## 11. Benchmarks y valor incremental
 
----
+Todo modelo de ML debe compararse contra alternativas más simples:
 
-R²
+- Chain Ladder;
+- Bornhuetter-Ferguson;
+- métodos PMPM;
+- frecuencia-severidad;
+- GLM o GAM;
+- una predicción histórica simple.
 
-Measures explained variability.
+La complejidad se justifica cuando la mejora es material, estable, reproducible y útil para la decisión. Ganar una métrica promedio mientras aumenta el sesgo de reserva no constituye una mejora.
 
----
+## 12. Incertidumbre predictiva
 
-## 17 Feature Importance
+Una predicción puntual no representa la distribución de la obligación. Entre las alternativas se encuentran:
 
-Machine Learning models
+- bootstrap;
+- ensembles;
+- regresión cuantílica;
+- conformal prediction;
+- modelos probabilísticos;
+- simulación de frecuencia y severidad;
+- escenarios de inflación, cola y cambios operativos.
 
-allow estimation of
+Debe distinguirse riesgo de proceso, parámetros, modelo, datos y entorno externo. Ninguna técnica automática captura por sí sola todos estos componentes.
 
-variable importance.
+## 13. Explicabilidad
 
-Typical outputs
+La explicabilidad debe responder preguntas concretas:
 
-```
-Development
+- ¿por qué cambió la reserva respecto al cierre anterior?;
+- ¿qué variables impulsan una predicción material?;
+- ¿el modelo responde razonablemente a cambios de exposición o desarrollo?;
+- ¿existen segmentos con comportamiento inestable?;
 
-32%
+Herramientas frecuentes:
 
-Paid-to-Date
+- importancia por permutación;
+- SHAP;
+- partial dependence;
+- accumulated local effects;
+- análisis de sensibilidad;
+- comparación contra un modelo interpretable.
 
-24%
+La importancia predictiva no demuestra causalidad.
 
-Diagnosis
+## 14. Aplicación a seguros de salud
 
-18%
+ML puede apoyar:
 
-Provider
+- estimación de cuentas conocidas pendientes;
+- predicción de pagos tardíos;
+- detección de reclamaciones de alto costo;
+- desarrollo por prestador o contrato;
+- frecuencia y severidad por población;
+- probabilidad de glosa o devolución;
+- conciliación entre pagado e incurrido.
 
-10%
+Los modelos deben capturar o someterse a escenarios para inflación médica, estacionalidad, cambios de red, epidemias, actualizaciones tarifarias y variaciones en la mezcla de afiliados.
 
-Region
+## 15. Consideraciones para Colombia
 
-8%
+En el contexto colombiano deben preservarse, cuando apliquen:
 
-Other
+- fecha de prestación;
+- fecha de radicación;
+- factura electrónica de venta;
+- registros RIPS;
+- estados de auditoría y glosa;
+- pagos y notas de ajuste;
+- modalidad contractual;
+- fuente y periodo de exposición.
 
-8%
-```
+La salida debe reconciliarse con cuentas conocidas, provisiones contables, saldos por prestador y reglas internas de reconocimiento. El modelo no sustituye la trazabilidad entre prestación, factura, auditoría y pago.
 
----
+## 16. Ejemplo conceptual en Python
 
-## 18 Explainable AI
-
-Explainability
-
-is essential
-
-for actuarial governance.
-
-Common tools
-
-- SHAP
-- LIME
-- PDP
-- ICE
-
-These methods explain
-
-why
-
-the model
-
-made a prediction.
-
----
-
-## 19 SHAP Values
-
-SHAP
-
-decomposes
-
-each prediction
-
-into
-
-feature contributions.
-
-Example
-
-```
-Reserve
-
-120
-
-+
-
-Diagnosis
-
-+15
-
-+
-
-Age
-
-+10
-
-+
-
-Provider
-
-−6
-
-=
-
-139
-```
-
----
-
-## 20 Model Monitoring
-
-Production models require
-
-continuous monitoring.
-
-Metrics include
-
-- Drift
-- Stability
-- Calibration
-- Prediction Error
-- Data Quality
-
----
-
-## 21 Health Insurance Applications
-
-Machine Learning is particularly effective for
-
-- Medicare Advantage
-- Medicaid
-- Pharmacy
-- Stop-Loss
-- Provider Reimbursement
-- Risk Adjustment
-- High-Cost Claim Prediction
-- Claim Closure
-
----
-
-## 22 Python Example
+El siguiente ejemplo muestra una estructura reproducible. Los nombres de variables deben adaptarse al dataset real.
 
 ```python
-from lightgbm import LGBMRegressor
-
-model = LGBMRegressor(
-
-n_estimators=500,
-
-learning_rate=0.05,
-
-max_depth=6
-
-)
-
-model.fit(X_train,y_train)
-
-prediction = model.predict(X_test)
-```
-
----
-
-## 23 XGBoost Example
-
-```python
-from xgboost import XGBRegressor
-
-model = XGBRegressor(
-
-objective="reg:squarederror",
-
-max_depth=6,
-
-n_estimators=500
-
-)
-
-model.fit(X_train,y_train)
-```
-
----
-
-## 24 Scikit-Learn Pipeline
-
-```python
+from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error
 from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder
 
-pipeline = Pipeline([
+numeric_features = [
+    "development_month",
+    "paid_to_date",
+    "case_reserve",
+    "claim_age_days",
+]
 
-("preprocess", transformer),
+categorical_features = [
+    "service_group",
+    "provider_type",
+    "contract_type",
+]
 
-("model", LGBMRegressor())
+preprocess = ColumnTransformer(
+    transformers=[
+        ("categorical", OneHotEncoder(handle_unknown="ignore"), categorical_features),
+    ],
+    remainder="passthrough",
+)
 
-])
+model = Pipeline(
+    steps=[
+        ("preprocess", preprocess),
+        (
+            "regressor",
+            RandomForestRegressor(
+                n_estimators=500,
+                min_samples_leaf=20,
+                random_state=20260714,
+                n_jobs=-1,
+            ),
+        ),
+    ]
+)
+
+model.fit(train[numeric_features + categorical_features], train["future_paid"])
+prediction = model.predict(test[numeric_features + categorical_features])
+
+mae = mean_absolute_error(test["future_paid"], prediction)
+bias = (prediction.sum() - test["future_paid"].sum()) / test["future_paid"].sum()
 ```
 
----
+La partición `train` y `test` debe construirse por fecha de valoración, no mediante muestreo aleatorio.
 
-## 25 Governance
+## 17. Producción y monitoreo
 
-Every production ML model should include
+Un flujo de producción mínimo incluye:
 
-✓ Data Validation
+```text
+Fuentes versionadas
+        ↓
+Validación de datos
+        ↓
+Construcción de variables al corte
+        ↓
+Modelo y calibración
+        ↓
+Agregación y reconciliación
+        ↓
+Reporte, aprobación y monitoreo
+```
 
-✓ Feature Documentation
+Monitorear como mínimo:
 
-✓ Hyperparameter Documentation
+- cambios de esquema y categorías;
+- distribución de variables;
+- error observado cuando madura el desarrollo;
+- sesgo por segmento;
+- estabilidad entre cierres;
+- desviación frente al benchmark;
+- frecuencia de reglas posteriores al modelo.
 
-✓ Version Control
+## 18. Gobierno del modelo
 
-✓ Performance Monitoring
+La documentación debe incluir:
 
-✓ Model Drift Detection
+1. objetivo actuarial y población;
+2. fecha de corte y definición del target;
+3. fuentes, transformaciones y variables excluidas;
+4. arquitectura e hiperparámetros;
+5. benchmarks y criterios de selección;
+6. validación temporal y backtesting;
+7. incertidumbre y escenarios;
+8. explicabilidad y pruebas de razonabilidad;
+9. limitaciones y usos no permitidos;
+10. responsables, aprobaciones y monitoreo.
 
-✓ Reproducibility
+Este marco es consistente con la atención que ASOP 23 presta a la calidad de datos, ASOP 41 a la comunicación y ASOP 56 al gobierno de modelos.
 
-✓ Peer Review
+## 19. Checklist de adopción
 
-✓ Independent Validation
+Antes de utilizar ML en una reserva oficial, confirmar:
 
----
+- [ ] El objetivo está definido en términos económicos y temporales.
+- [ ] Todas las variables eran observables al corte.
+- [ ] La validación respeta el tiempo.
+- [ ] Existe un benchmark actuarial reproducible.
+- [ ] La mejora es material y estable.
+- [ ] El sesgo agregado es aceptable.
+- [ ] La incertidumbre está cuantificada.
+- [ ] Los movimientos materiales pueden explicarse.
+- [ ] La salida se reconcilia con controles financieros.
+- [ ] Existe monitoreo y un procedimiento de contingencia.
 
-## 26 Relationship with ASOPs
+## Conclusiones
 
-Machine Learning reserving should comply with
+Machine Learning puede aportar granularidad y capacidad predictiva al reserving de salud, especialmente en portafolios grandes y heterogéneos. Su adopción debe comenzar con una formulación actuarial clara, datos reconstruidos al corte y benchmarks simples.
 
-| ASOP | Relevance |
-|-------|-----------|
-| ASOP 5 | Incurred Health Claims |
-| ASOP 23 | Data Quality |
-| ASOP 41 | Communications |
-| ASOP 56 | Modeling |
-| ASOP 12 | Risk Classification |
+El modelo más complejo no es necesariamente el mejor. La alternativa adecuada es aquella que combina precisión, estabilidad, explicabilidad, incertidumbre y capacidad de operación dentro de un proceso gobernado.
 
----
+## Referencias
 
-## 27 Comparison
+- ASOP No. 5, *Incurred Health and Disability Claims*.
+- ASOP No. 23, *Data Quality*.
+- ASOP No. 41, *Actuarial Communications*.
+- ASOP No. 56, *Modeling*.
+- Hastie, T., Tibshirani, R. y Friedman, J. *The Elements of Statistical Learning*.
+- Wüthrich, M. V. y Merz, M. *Statistical Foundations of Actuarial Learning and its Applications*.
 
-| Method | Interpretability | Predictive Power |
-|----------|-----------------|------------------|
-| Chain Ladder | Excellent | Moderate |
-| GLM | Excellent | High |
-| GAM | High | Very High |
-| Bayesian | High | Very High |
-| Random Forest | Moderate | Very High |
-| XGBoost | Moderate | Excellent |
-| Neural Network | Low | Excellent |
+## Capítulos relacionados
 
----
-
-## 28 Limitations
-
-Machine Learning
-
-does not eliminate
-
-the need
-
-for actuarial judgment.
-
-Potential risks include
-
-- Overfitting
-- Data Leakage
-- Model Drift
-- Regulatory Challenges
-- Limited Interpretability
-- Poor Extrapolation
-
----
-
-## 29 Best Practices
-
-Always
-
-- benchmark against Chain Ladder,
-- compare with GLM,
-- perform backtesting,
-- validate assumptions,
-- monitor production,
-- document model governance,
-- use explainability methods.
-
-Machine Learning should augment,
-
-not replace,
-
-professional actuarial judgment.
-
----
-
-## Key Takeaways
-
-Machine Learning enables reserving models to learn complex nonlinear relationships from claim-level data while incorporating hundreds of explanatory variables.
-
-Compared with classical actuarial methods,
-
-ML often delivers superior predictive performance,
-
-especially for large Health Insurance portfolios.
-
-However,
-
-successful implementation requires
-
-robust governance,
-
-explainability,
-
-continuous monitoring,
-
-and adherence to actuarial standards.
-
-The future of actuarial reserving is likely to combine
-
-classical reserving,
-
-statistical inference,
-
-Bayesian methods,
-
-and Machine Learning
-
-within a unified predictive framework.
-
----
-
-## References
-
-- Hastie, Tibshirani & Friedman. *The Elements of Statistical Learning.*
-- Bishop, C. *Pattern Recognition and Machine Learning.*
-- Goodfellow, Bengio & Courville. *Deep Learning.*
-- Wüthrich, M. *Machine Learning in Non-Life Insurance.*
-- England & Verrall (2002).
-- ASOP No. 5 – Incurred Health and Disability Claims.
-- ASOP No. 23 – Data Quality.
-- ASOP No. 41 – Actuarial Communications.
-- ASOP No. 56 – Modeling.
-
----
-
-## Next Chapter
-
-➡️ **19-tree-based-models-for-loss-reserving.md**
+Anterior: [Reserving bayesiano](../part-04-statistical-models/17-bayesian-loss-reserving.md).  
+Siguiente: [Modelos basados en árboles para reservas actuariales](19-tree-based-models-for-loss-reserving.md).

@@ -1,481 +1,425 @@
 ---
-title: "Deep Learning for Loss Reserving"
-part: "Parte V · Machine Learning"
-chapter: 20
-language: "es"
+title: "Deep Learning para reservas actuariales"
+description: "Marco de aplicación, validación y gobierno de redes neuronales para reservas de seguros de salud y datos longitudinales de reclamaciones."
 status: "draft"
+version: "0.1.10"
+chapter: "20"
+part: "part-05-machine-learning"
+language: "es"
 last_updated: "2026-07-14"
 ---
 
-# Deep Learning for Loss Reserving
+# Deep Learning para reservas actuariales
 
-Este capítulo introduce el uso de deep learning en reserving actuarial. El objetivo no es reemplazar automáticamente los métodos clásicos, sino ubicar las redes neuronales dentro de una arquitectura metodológica controlada, comparable y auditable.
+El aprendizaje profundo, o *deep learning*, utiliza redes neuronales de múltiples capas para representar relaciones complejas. En reserving puede ser útil con datos granulares, alta dimensionalidad e historias longitudinales, pero también aumenta el riesgo de sobreajuste, opacidad y dependencia tecnológica.
 
-En seguros de salud, deep learning puede ser útil cuando existen datos granulares, alta dimensionalidad, patrones no lineales e historias longitudinales de reclamaciones. También puede ser inapropiado cuando el portafolio es pequeño, la calidad de datos es débil, la trazabilidad regulatoria es prioritaria o la mejora frente a métodos más simples no compensa el riesgo de modelo.
+El objetivo no es reemplazar automáticamente los métodos clásicos. Una red neuronal debe demostrar valor incremental frente a Chain Ladder, GLM, GAM y árboles, respetando la fecha de corte y los controles actuariales.
 
 ## Objetivos de aprendizaje
 
-Al terminar este capítulo, el lector debería poder:
+Al finalizar este capítulo, el lector podrá:
 
-- Identificar cuándo deep learning agrega valor frente a GLM, GAM, árboles, boosting o métodos clásicos.
-- Formular problemas de reserving como predicción supervisada, predicción secuencial, supervivencia o transición de estados.
-- Reconocer arquitecturas relevantes: redes densas, embeddings, redes recurrentes, convoluciones temporales y transformers.
-- Diseñar variables y targets evitando leakage temporal.
-- Evaluar incertidumbre, calibración y estabilidad.
-- Integrar deep learning dentro de un marco de gobierno actuarial.
+- identificar problemas de reserving apropiados para deep learning;
+- distinguir redes densas, embeddings, modelos secuenciales y transformers;
+- seleccionar objetivos y funciones de pérdida coherentes;
+- diseñar validación temporal sin fuga de información;
+- evaluar calibración, incertidumbre y estabilidad;
+- establecer benchmarks, explicabilidad y gobierno de producción.
 
-## 1. Rol de deep learning en reserving
+## 1. Cuándo considerar deep learning
 
-Deep learning es una familia de modelos de alta capacidad. Esa capacidad permite capturar relaciones complejas, pero también aumenta el riesgo de sobreajuste, inestabilidad y opacidad.
+Puede ser razonable cuando:
 
-En reserving, puede apoyar cuatro problemas principales:
+- existen cientos de miles o millones de observaciones;
+- hay variables categóricas de alta cardinalidad;
+- la secuencia de eventos contiene información;
+- existen interacciones difíciles de especificar;
+- el modelo se reestima y monitorea con infraestructura adecuada;
+- la mejora frente a modelos simples es material y persistente.
 
-| Problema | Ejemplo | Salida |
-|---|---|---|
-| Predicción de monto | Valor final esperado de una reclamación | Media, cuantiles o distribución |
-| Predicción de desarrollo | Pagos futuros por periodo | Trayectoria esperada |
-| Predicción de estado | Pago, glosa, cierre o reapertura | Probabilidades |
-| Predicción agregada | Reserva por cohorte o segmento | Reserva esperada e intervalo |
+Puede ser inadecuado cuando:
 
-La pregunta actuarial relevante no es si la red neuronal ajusta bien in-sample. La pregunta es si mejora la estimación fuera de muestra, con estabilidad, explicabilidad y gobierno suficientes.
+- el portafolio es pequeño;
+- la historia es corta o cambió estructuralmente;
+- la trazabilidad de datos es débil;
+- el objetivo está mal definido;
+- la explicación regulatoria es prioritaria;
+- no existe capacidad de validación y monitoreo.
 
-## 2. Cuándo considerar deep learning
+## 2. Formulaciones del problema
 
-Deep learning puede ser razonable cuando se cumplen varias condiciones:
+### Predicción a nivel de reclamación
 
-- Volumen suficiente de datos históricos granulares.
-- Múltiples fuentes: reclamaciones, afiliados, prestadores, contratos, autorizaciones, facturación y pagos.
-- Relaciones no lineales fuertes.
-- Interacciones entre edad, diagnóstico, servicio, proveedor, contrato y calendario.
-- Necesidad de modelar trayectorias o secuencias.
-- Capacidad de validación, monitoreo y documentación.
+Cada observación representa una reclamación o factura. El objetivo puede ser:
 
-No debería ser la primera opción cuando:
-
-- El portafolio tiene pocos años de experiencia.
-- Hay cambios regulatorios recientes no representados en los datos.
-- La operación de facturación o pago cambió materialmente.
-- El modelo no puede explicarse suficientemente.
-- Un GLM, GAM o boosting ofrece desempeño similar con mayor trazabilidad.
-
-## 3. Formulaciones del problema
-
-### Predicción claim-level
-
-Cada reclamación se modela como unidad individual. El objetivo puede ser:
-
-- monto final permitido;
-- monto final pagado;
-- probabilidad de pago;
+- monto futuro pagado;
+- monto final reconocido;
 - probabilidad de glosa;
 - tiempo hasta cierre;
-- monto pendiente condicional al estado actual.
+- probabilidad de reapertura;
+- distribución de severidad pendiente.
 
-Esta formulación es natural en salud porque permite usar variables clínicas, contractuales y operativas.
+### Predicción por celda
 
-### Predicción por celda de triángulo
-
-Cada observación representa una celda origen-desarrollo-calendario. El modelo predice pagos incrementales, incurridos o conteos.
-
-Esta formulación preserva la lógica actuarial tradicional y facilita comparación contra Chain Ladder, Mack, Bootstrap, GLM y GAM.
+Cada observación es una celda origen-desarrollo-calendario. La red estima pagos incrementales, conteos o parámetros de una distribución. Esto facilita reconciliación con el triángulo.
 
 ### Predicción secuencial
 
-Cada reclamación o cohorte tiene una historia temporal:
+Una reclamación o cohorte tiene una historia ordenada:
 
 $$
-x_{i,1}, x_{i,2}, \ldots, x_{i,t}
+x_{i,1},x_{i,2},\ldots,x_{i,t}
 $$
 
-El modelo aprende cómo evoluciona la reclamación o cohorte en el tiempo. Es útil cuando los eventos de autorización, radicación, glosa, respuesta y pago tienen orden informativo.
+El modelo utiliza pagos, estados y eventos anteriores para predecir el siguiente periodo o el resultado final.
 
 ### Modelos multiestado
 
-Las redes neuronales también pueden estimar probabilidades de transición entre estados:
+Pueden estimarse probabilidades de transición:
 
 $$
-\Pr(S_{t+1}=j \mid S_t=i, X_t)
+\Pr(S_{t+1}=j\mid S_t=i,X_t)
 $$
 
-Esto es especialmente relevante para glosas, devoluciones, pagos parciales, cierres y reaperturas.
+Esta formulación es relevante para radicación, auditoría, glosa, respuesta, pago, cierre y reapertura.
 
-## 4. Variables explicativas
+## 3. Variables admisibles
 
-Las variables deben estar disponibles al momento de valoración. Incluir información futura produce leakage y puede invalidar el modelo.
+Todas las variables deben existir al corte.
 
-| Dimensión | Variables |
+| Dimensión | Ejemplos |
 |---|---|
-| Afiliado | edad, sexo, región, grupo de riesgo |
-| Prestación | tipo de servicio, código, complejidad, ámbito |
-| Prestador | tipo de prestador, red, histórico observado |
-| Contrato | modalidad de pago, tarifa, capitación, paquete |
-| Tiempo | mes de ocurrencia, mes de reporte, rezago |
-| Operación | canal, estado de auditoría, días desde radicación |
-| Historia | pagos observados, ajustes, estado actual |
+| Afiliado | edad, región, grupo de riesgo |
+| Prestación | servicio, código, complejidad, ámbito |
+| Prestador | tipo, red, historial anterior al corte |
+| Contrato | modalidad, tarifa, paquete, capitación |
+| Tiempo | ocurrencia, reporte, desarrollo, calendario |
+| Operación | auditoría, canal, días desde radicación |
+| Historia | pagos y ajustes observados, estado vigente |
 
-Variables no admisibles al corte:
+No son admisibles el monto final, pagos futuros, estado final de cierre ni glosas resueltas después de la valoración.
 
-- monto final observado;
-- pagos posteriores a la fecha de valoración;
-- estado de cierre futuro;
-- glosas resueltas después del corte;
-- cualquier variable creada con información futura.
+## 4. Redes densas
 
-## 5. Arquitecturas principales
-
-### Redes densas
-
-Una red densa es adecuada para datos tabulares con variables numéricas y categóricas codificadas:
+Una red densa transforma un vector de variables mediante capas sucesivas:
 
 $$
-\hat{y}=f_\theta(X)
+h^{(\ell)}=\sigma\left(W^{(\ell)}h^{(\ell-1)}+b^{(\ell)}\right)
 $$
+
+La salida puede estimar un monto, probabilidad, cuantil o parámetro de distribución.
 
 Ventajas:
 
-- flexible;
-- compatible con datos tabulares;
-- puede modelar relaciones no lineales.
+- modela relaciones no lineales;
+- admite muchas variables;
+- combina datos numéricos y categóricos codificados.
 
 Limitaciones:
 
 - puede sobreajustar;
-- requiere validación temporal estricta;
+- exige escalamiento y regularización;
 - suele ser menos interpretable que GLM, GAM o árboles.
 
-### Embeddings categóricos
+## 5. Embeddings categóricos
 
-Los embeddings permiten representar variables categóricas de alta cardinalidad, como prestador, diagnóstico, municipio o producto:
+Un embedding representa una categoría mediante un vector aprendido:
 
 $$
-e_c \in \mathbb{R}^k
+e_c\in\mathbb{R}^k
 $$
 
-Esto puede mejorar la representación de categorías, pero requiere controles para categorías raras, cambios de codificación y nuevos prestadores.
+Puede utilizarse para prestador, diagnóstico, municipio, servicio o producto. Deben controlarse:
 
-### Redes recurrentes
+- categorías raras;
+- categorías nuevas;
+- cambios de codificación;
+- dimensionalidad excesiva;
+- riesgo de que el embedding memorice el target.
 
-Las redes recurrentes, incluyendo LSTM y GRU, procesan secuencias. Son útiles cuando el orden de eventos importa:
+## 6. Modelos secuenciales
 
-- secuencia de estados de una reclamación;
-- pagos mensuales observados;
-- historial de autorizaciones;
-- cambios en glosas y respuestas.
+### LSTM y GRU
+
+Procesan eventos en orden y conservan un estado interno. Pueden modelar pagos mensuales, cambios de estado y tiempos entre movimientos.
 
 ### Convoluciones temporales
 
-Las convoluciones temporales capturan patrones locales en series de desarrollo:
+Capturan patrones locales en una ventana:
 
 $$
-(P_{t-3}, P_{t-2}, P_{t-1}, P_t) \rightarrow P_{t+1}
+(P_{t-3},P_{t-2},P_{t-1},P_t)\longrightarrow P_{t+1}
 $$
 
-Pueden ser más estables y eficientes que redes recurrentes en algunos problemas.
+Pueden entrenarse en paralelo y resultar más estables que redes recurrentes en algunos problemas.
 
 ### Transformers
 
-Los transformers pueden modelar dependencias largas y atención entre eventos. En reserving, podrían aplicarse a historiales granulares de reclamaciones o prestadores.
+La atención permite relacionar eventos distantes. Su uso requiere volumen suficiente, control de máscaras temporales y comparación rigurosa con alternativas más simples.
 
-Su adopción debe ser conservadora. Requieren volumen significativo, infraestructura y pruebas sólidas de estabilidad.
+## 7. Funciones de pérdida
 
-## 6. Funciones de pérdida
-
-La función de pérdida debe reflejar el objetivo actuarial.
-
-| Objetivo | Función de pérdida |
+| Objetivo | Pérdida o distribución |
 |---|---|
 | Monto esperado | MAE, MSE, Huber |
-| Conteos | Poisson, binomial negativa |
-| Severidad positiva | Gamma, lognormal |
+| Conteo | Poisson o binomial negativa |
+| Severidad positiva | Gamma o lognormal |
 | Frecuencia-severidad | Tweedie |
-| Cuantiles | Pinball loss |
-| Distribución predictiva | Negative log-likelihood |
-| Clasificación de estado | Cross-entropy |
+| Cuantil | Pinball loss |
+| Estado | Cross-entropy |
 | Tiempo hasta evento | Pérdida de supervivencia |
+| Distribución | Log-verosimilitud negativa |
 
-Para reserving no basta optimizar error individual. También importan sesgo agregado, estabilidad por cohorte, calibración y desempeño en periodos recientes.
+La función debe evaluarse junto con sesgo agregado y suficiencia por cohorte. Una mejora en pérdida individual puede coexistir con una reserva total sesgada.
 
-## 7. Incertidumbre predictiva
+## 8. Restricciones y regularización
 
-Deep learning no produce automáticamente incertidumbre actuarial confiable. Se requieren métodos adicionales:
+Controles habituales:
 
-- ensembles;
+- penalización L1 o L2;
+- dropout;
+- parada temprana;
+- normalización;
+- reducción de capacidad;
+- límites en embeddings;
+- aumento de datos cuando sea defendible;
+- calibración posterior.
+
+Para evitar predicciones negativas puede utilizarse una distribución positiva, una transformación o una activación como `softplus`. Cualquier ajuste posterior debe documentarse.
+
+## 9. Incertidumbre predictiva
+
+Una red estándar produce una estimación puntual. Para cuantificar incertidumbre pueden considerarse:
+
+- ensembles de redes;
 - bootstrap;
 - Monte Carlo dropout;
-- redes bayesianas aproximadas;
-- modelos de cuantiles;
+- cuantiles;
+- modelos probabilísticos;
 - conformal prediction;
-- simulación predictiva.
+- simulación de escenarios.
 
-La incertidumbre debe analizarse por componente:
+Debe distinguirse:
 
 | Componente | Descripción |
 |---|---|
-| Riesgo de proceso | Variabilidad futura |
-| Riesgo de parámetro | Incertidumbre de estimación |
-| Riesgo de modelo | Arquitectura y supuestos |
-| Riesgo operacional | Cambios de datos o procesos |
-| Riesgo externo | Regulación, inflación médica, shocks |
+| Proceso | Variabilidad futura de reclamaciones |
+| Parámetros | Incertidumbre del entrenamiento |
+| Modelo | Arquitectura y especificación |
+| Datos | Calidad, cobertura y drift |
+| Entorno | Inflación, regulación y shocks |
 
-## 8. Benchmarks mínimos
+La variabilidad entre semillas no representa por sí sola todos estos riesgos.
 
-Todo modelo de deep learning debe compararse contra métodos más simples:
+## 10. Benchmarks mínimos
+
+Antes de adoptar deep learning deben estimarse alternativas como:
 
 - Chain Ladder;
-- Mack Chain Ladder;
-- Bootstrap Chain Ladder;
+- Mack y Bootstrap;
 - Bornhuetter-Ferguson;
-- Cape Cod;
-- GLM;
-- GAM;
-- árboles y boosting;
-- métodos PMPM o frecuencia-severidad en salud.
+- GLM y GAM;
+- Random Forest o gradient boosting;
+- métodos PMPM o frecuencia-severidad.
 
-Si la mejora no es material y estable, deep learning no está justificado para producción.
+Si la mejora no es material, estable y explicable, la red no está justificada para producción.
 
-## 9. Validación temporal
+## 11. Validación temporal
 
-La validación debe respetar el tiempo. Un split aleatorio puede generar leakage.
+La separación debe respetar la secuencia de valoración:
 
-Estrategia recomendada:
-
-1. Entrenar con periodos antiguos.
-2. Validar con periodos posteriores.
-3. Probar con periodos aún más recientes.
-4. Hacer backtesting rolling-origin.
-5. Evaluar por cohorte, producto, prestador y segmento.
-6. Comparar contra cierres reales.
-
-Ejemplo:
-
-| Train | Validation | Test |
+| Entrenamiento | Validación | Prueba |
 |---|---|---|
 | 2019–2022 | 2023 | 2024 |
 | 2020–2023 | 2024 | 2025 |
 
-## 10. Métricas de evaluación
+El procedimiento debe:
 
-Las métricas deben combinar precisión individual y suficiencia agregada.
+1. reconstruir datos disponibles al corte;
+2. ajustar preprocesamiento solo con entrenamiento;
+3. elegir arquitectura con validación;
+4. reservar la prueba para evaluación final;
+5. repetir en varios cierres;
+6. analizar cohortes y segmentos.
 
-| Métrica | Uso |
-|---|---|
-| MAE | Error absoluto robusto |
-| RMSE | Penaliza errores grandes |
-| Bias agregado | Control de suficiencia |
-| Error por cohorte | Diagnóstico actuarial |
-| Pinball loss | Cuantiles |
-| Coverage | Cobertura de intervalos |
-| Calibration plots | Calibración probabilística |
-| Reserve-to-actual | Evaluación final de reservas |
+## 12. Métricas
 
-La métrica principal debe definirse antes del entrenamiento.
+Combinar precisión individual y suficiencia agregada:
 
-## 11. Interpretabilidad
+- MAE y RMSE;
+- sesgo total;
+- error por periodo de origen;
+- estabilidad entre valoraciones;
+- pinball loss para cuantiles;
+- cobertura de intervalos;
+- calibración probabilística;
+- reserva estimada frente al desarrollo real.
 
-La interpretabilidad es obligatoria para adopción práctica. Métodos útiles:
+La métrica principal y los límites de aceptación deben definirse antes del ajuste final.
 
-- importancia por permutación;
+## 13. Interpretabilidad
+
+No es necesario explicar cada peso de la red, pero sí demostrar comportamiento razonable.
+
+Herramientas útiles:
+
 - SHAP;
+- importancia por permutación;
 - partial dependence;
 - accumulated local effects;
 - análisis de sensibilidad;
-- stress testing por segmento;
-- comparación contra GLM o GAM.
+- escenarios y stress testing;
+- comparación con GLM, GAM o árboles.
 
-El objetivo no es explicar cada peso de la red. El objetivo es demostrar que el comportamiento del modelo es razonable, estable y consistente con conocimiento actuarial.
+También deben revisarse predicciones extremas, categorías raras y movimientos materiales entre cierres.
 
-## 12. Restricciones actuariales
+## 14. Aplicaciones en seguros de salud
 
-Los modelos pueden violar restricciones naturales si no se controlan:
+Deep learning puede apoyar:
 
-- predicciones negativas;
-- reservas decrecientes sin justificación;
-- sensibilidad extrema a variables marginales;
-- discontinuidades por categorías raras;
-- extrapolación no controlada.
-
-Controles posibles:
-
-- transformación logarítmica;
-- distribuciones positivas;
-- clipping documentado;
-- calibración posterior;
-- restricciones de monotonicidad;
-- reglas de negocio posteriores al modelo.
-
-## 13. Aplicaciones en seguros de salud
-
-En salud, deep learning puede apoyar:
-
-- predicción de cuentas pendientes;
+- pagos futuros por reclamación;
 - severidad por diagnóstico o prestación;
-- probabilidad de glosa;
-- tiempo de resolución;
-- detección de prestadores atípicos;
-- patrones de alto costo;
-- desarrollo por canal de facturación;
-- reservas para contratos prospectivos;
-- estimación de pagos tardíos.
+- probabilidad y resolución de glosas;
+- reclamaciones de alto costo;
+- desarrollo por proveedor;
+- pagos tardíos;
+- reservas por contrato;
+- utilización longitudinal.
 
-Pero salud introduce riesgos específicos:
+Riesgos específicos incluyen cambios de red, inflación médica, estacionalidad, epidemias, codificación clínica y modificaciones tarifarias.
 
-- cambios en redes;
-- inflación médica;
-- estacionalidad;
-- epidemias;
-- cambios de codificación;
-- modificaciones tarifarias;
-- comportamiento administrativo de prestadores;
-- cambios regulatorios.
+## 15. Contexto colombiano
 
-## 14. Aplicación al contexto colombiano
+Las aplicaciones deben preservar trazabilidad entre:
 
-En Colombia, las aplicaciones deben considerar:
+- prestación;
+- autorización cuando aplique;
+- radicación;
+- factura electrónica de venta;
+- RIPS;
+- auditoría y glosa;
+- notas de ajuste;
+- contabilización y pago.
 
-- trazabilidad entre prestación, factura, RIPS, FEV y pago;
-- glosas, devoluciones y controversias;
-- cuentas conocidas pendientes;
-- contratos capitados y pagos prospectivos;
-- alto costo;
-- mecanismos especiales de financiación;
-- diferencias entre fecha de prestación, radicación, contabilización y pago.
-
-Deep learning puede ser útil para modelar estados y tiempos de resolución, pero la reserva final debe reconciliarse con saldos contables, auditoría médica y controles regulatorios internos.
-
-## 15. Flujo de implementación
-
-Un flujo mínimo incluye:
-
-1. Definir objetivo actuarial.
-2. Definir fecha de corte.
-3. Definir variables admisibles.
-4. Construir dataset reproducible.
-5. Separar train, validation y test temporalmente.
-6. Entrenar benchmarks simples.
-7. Entrenar deep learning.
-8. Evaluar desempeño y estabilidad.
-9. Analizar interpretabilidad.
-10. Calibrar incertidumbre.
-11. Ejecutar backtesting.
-12. Documentar supuestos.
-13. Aprobar uso.
-14. Monitorear drift.
+Los modelos secuenciales pueden representar estados y tiempos de resolución, pero la reserva final debe reconciliarse con saldos contables, cuentas conocidas, auditoría médica y controles internos.
 
 ## 16. Ejemplo conceptual en Python
-
-```python
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_absolute_error
-
-features = [
-    "development_month",
-    "claim_age_days",
-    "paid_to_date",
-    "provider_type",
-    "service_group",
-    "contract_type",
-]
-
-target = "future_paid_amount"
-
-X = df[features]
-y = df[target]
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X,
-    y,
-    test_size=0.2,
-    shuffle=False,
-)
-```
-
-En producción debe usarse split temporal explícito, control de leakage, versionamiento de datos y comparación contra benchmarks.
-
-## 17. Ejemplo conceptual de red neuronal
 
 ```python
 import tensorflow as tf
 from tensorflow import keras
 
-model = keras.Sequential([
-    keras.layers.Input(shape=(n_features,)),
-    keras.layers.Dense(128, activation="relu"),
-    keras.layers.Dropout(0.10),
-    keras.layers.Dense(64, activation="relu"),
-    keras.layers.Dense(1, activation="softplus"),
-])
+tf.keras.utils.set_random_seed(20260714)
+
+model = keras.Sequential(
+    [
+        keras.layers.Input(shape=(n_features,)),
+        keras.layers.Dense(128, activation="relu"),
+        keras.layers.Dropout(0.10),
+        keras.layers.Dense(64, activation="relu"),
+        keras.layers.Dense(1, activation="softplus"),
+    ]
+)
 
 model.compile(
     optimizer=keras.optimizers.Adam(learning_rate=0.001),
     loss="mae",
 )
+
+callbacks = [
+    keras.callbacks.EarlyStopping(
+        monitor="val_loss",
+        patience=10,
+        restore_best_weights=True,
+    )
+]
+
+history = model.fit(
+    X_train,
+    y_train,
+    validation_data=(X_validation, y_validation),
+    epochs=200,
+    batch_size=512,
+    callbacks=callbacks,
+    verbose=0,
+)
 ```
 
-La activación `softplus` evita predicciones negativas. Aun así, el modelo requiere validación actuarial y calibración.
+La semilla mejora reproducibilidad, pero operaciones paralelas y hardware diferente todavía pueden producir variaciones. Deben fijarse versiones y conservarse artefactos del entrenamiento.
 
-## 18. Gobierno del modelo
+## 17. Modelos híbridos
 
-La documentación mínima debe incluir:
+Una red puede complementar, no reemplazar, la estructura actuarial:
 
-- objetivo de negocio y objetivo actuarial;
-- población cubierta;
-- variables utilizadas y excluidas;
-- fecha de corte;
-- definición del target;
-- arquitectura;
-- función de pérdida;
-- benchmarks;
-- validación temporal;
-- resultados por segmento;
-- limitaciones;
-- plan de monitoreo;
-- responsables de aprobación.
+- predecir ajustes sobre un benchmark;
+- estimar factores condicionados por variables;
+- modelar cuentas conocidas y conservar un método agregado para no reportadas;
+- combinar predicciones mediante credibilidad;
+- calibrar el total a una estimación actuarial aprobada.
 
-## 19. Riesgos principales
+La combinación debe definirse antes de observar el resultado final y validarse históricamente.
+
+## 18. Producción y monitoreo
+
+Conservar:
+
+1. snapshot de datos y fecha de corte;
+2. código de preprocesamiento;
+3. arquitectura y pesos;
+4. función de pérdida;
+5. semillas y dependencias;
+6. resultados de validación;
+7. benchmarks;
+8. calibración e incertidumbre;
+9. explicación de predicciones materiales;
+10. aprobaciones y límites de uso.
+
+Monitorear drift de variables, categorías desconocidas, error maduro, sesgo agregado, estabilidad y dependencia del postprocesamiento.
+
+## 19. Riesgos y mitigaciones
 
 | Riesgo | Mitigación |
 |---|---|
-| Leakage temporal | Variables observables al corte |
+| Leakage temporal | Reconstrucción estricta al corte |
 | Sobreajuste | Regularización y backtesting |
-| Opacidad | Interpretabilidad y documentación |
-| Drift | Monitoreo periódico |
+| Opacidad | Explicabilidad y benchmarks |
+| Drift | Monitoreo y revisión periódica |
 | Sesgo por segmento | Métricas segmentadas |
-| Extrapolación | Límites y reglas de negocio |
-| Falsa precisión | Intervalos y escenarios |
+| Extrapolación | Límites y escenarios |
+| Falsa precisión | Intervalos y comunicación clara |
+| Dependencia tecnológica | Versionamiento y contingencia |
 
 ## 20. Checklist de adopción
 
-Antes de usar deep learning para una reserva oficial, confirmar:
+- [ ] El objetivo está definido en términos actuariales.
+- [ ] Las variables son observables al corte.
+- [ ] Existe suficiente volumen y maduración.
+- [ ] El benchmark clásico está documentado.
+- [ ] La validación respeta el tiempo.
+- [ ] La mejora es material y estable.
+- [ ] El sesgo agregado está dentro del límite.
+- [ ] La incertidumbre está calibrada.
+- [ ] El comportamiento puede explicarse.
+- [ ] Existe un modelo o procedimiento de contingencia.
+- [ ] La salida se reconcilia con controles financieros.
 
-- El objetivo está definido en términos actuariales.
-- Las variables son observables al corte.
-- Existe benchmark clásico documentado.
-- El split de validación respeta el tiempo.
-- El modelo mejora de forma material y estable.
-- Los errores agregados son aceptables.
-- Los intervalos están calibrados.
-- El comportamiento es explicable.
-- El modelo está documentado.
-- Existe plan de monitoreo.
-- La reserva se reconcilia con saldos y controles financieros.
+## Conclusiones
 
-## 21. Conclusiones
+Deep learning puede ampliar el conjunto de herramientas de reserving cuando existen datos granulares y patrones complejos. Su mayor capacidad también amplifica el costo de una mala definición del objetivo, leakage o drift.
 
-Deep learning puede ampliar el conjunto de herramientas de reserving, especialmente cuando existen datos granulares y patrones complejos. Sin embargo, su uso debe ser disciplinado.
-
-En seguros de salud, el potencial más relevante está en modelos claim-level, modelos de estados, predicción de glosas, pagos tardíos y patrones de desarrollo por proveedor o contrato. Aun así, la reserva final debe integrarse con criterios actuariales, contables, regulatorios y operativos.
+La adopción debe ser gradual: comenzar con benchmarks, validar en varios cierres, demostrar valor incremental y conservar un proceso explicable y auditable. La red es un componente de la estimación, no la decisión actuarial completa.
 
 ## Referencias
 
-- ASOP No. 1, Introductory Actuarial Standard of Practice.
-- ASOP No. 23, Data Quality.
-- ASOP No. 38, Using Models Outside the Actuary's Area of Expertise.
-- ASOP No. 43, Property/Casualty Unpaid Claim Estimates.
-- ASOP No. 56, Modeling.
-- Wüthrich, M. V. Machine Learning in Individual Claims Reserving.
-- Gabrielli, A., Richman, R., and Wüthrich, M. Neural Network Embedding of the Over-Dispersed Poisson Reserving Model.
-- Richman, R. AI in Actuarial Science.
+- ASOP No. 23, *Data Quality*.
+- ASOP No. 38, *Using Models Outside the Actuary’s Area of Expertise*.
+- ASOP No. 41, *Actuarial Communications*.
+- ASOP No. 56, *Modeling*.
+- Goodfellow, I., Bengio, Y. y Courville, A. *Deep Learning*.
+- Gabrielli, A., Richman, R. y Wüthrich, M. V. “Neural Network Embedding of the Over-Dispersed Poisson Reserving Model”.
+- Wüthrich, M. V. y Merz, M. *Statistical Foundations of Actuarial Learning and its Applications*.
 
-## Próximo capítulo
+## Capítulos relacionados
 
-➡️ **[Health Insurance Reserving Specificities](../part-06-health-specific/21-health-insurance-reserving-specificities.md)**
+Anterior: [Modelos basados en árboles para reservas actuariales](19-tree-based-models-for-loss-reserving.md).  
+Siguiente: [Particularidades del reserving en seguros de salud](../part-06-health-specific/21-health-insurance-reserving-specificities.md).

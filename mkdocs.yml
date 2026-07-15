@@ -104,10 +104,10 @@ nav:
     - 15 · Modelos lineales generalizados: part-04-statistical-models/15-glm-for-loss-reserving.md
     - 16 · Modelos aditivos generalizados: part-04-statistical-models/16-gam-for-loss-reserving.md
     - 17 · Reserving bayesiano: part-04-statistical-models/17-bayesian-loss-reserving.md
-  - Parte V · Machine Learning:
-      - 18 · Machine Learning for Loss Reserving: part-05-machine-learning/18-machine-learning-for-loss-reserving.md
-      - 19 · Tree-Based Models for Loss Reserving: part-05-machine-learning/19-tree-based-models-for-loss-reserving.md
-      - 20 · Deep Learning for Loss Reserving: part-05-machine-learning/20-deep-learning-for-loss-reserving.md
+  - Parte 5 · Machine Learning:
+      - 18 · Machine Learning para reservas actuariales: part-05-machine-learning/18-machine-learning-for-loss-reserving.md
+      - 19 · Modelos basados en árboles para reservas actuariales: part-05-machine-learning/19-tree-based-models-for-loss-reserving.md
+      - 20 · Deep Learning para reservas actuariales: part-05-machine-learning/20-deep-learning-for-loss-reserving.md
   - Parte VI · Especificidades de salud:
       - 21 · Particularidades del reserving en seguros de salud: part-06-health-specific/21-health-insurance-reserving-specificities.md
       - 22 · Health Claim Lifecycle and Operational Lags: part-06-health-specific/22-health-claim-lifecycle-and-operational-lags.md
