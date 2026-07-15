@@ -1,0 +1,139 @@
+/* =========================================================
+   Identidad corporativa · Javier Forero
+   Requiere stylesheets/igrasans.css generado localmente.
+   ========================================================= */
+
+.md-header__title,
+.home-hero h1,
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  font-family: var(--md-text-font);
+}
+
+.md-logo img {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.jf-corporate-footer {
+  color: #ffffff;
+  background:
+    linear-gradient(
+      110deg,
+      #260080 0%,
+      #4e00ff 58%,
+      #7c4dff 100%
+    );
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.jf-corporate-footer__inner {
+  display: grid;
+  grid-template-columns: minmax(15rem, 1.3fr) minmax(16rem, 1fr) auto;
+  gap: 1.4rem;
+  align-items: center;
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.jf-corporate-footer__brand {
+  display: flex;
+  gap: 0.85rem;
+  align-items: center;
+  min-width: 0;
+}
+
+.jf-corporate-footer__logo {
+  flex: 0 0 auto;
+  width: 3.1rem;
+  height: 3.1rem;
+}
+
+.jf-corporate-footer__brand strong,
+.jf-corporate-footer__brand span {
+  display: block;
+}
+
+.jf-corporate-footer__brand strong {
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 750;
+  letter-spacing: 0.01em;
+}
+
+.jf-corporate-footer__brand span {
+  margin-top: 0.15rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.76rem;
+}
+
+.jf-corporate-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  justify-content: center;
+}
+
+.jf-corporate-footer a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.jf-corporate-footer a:hover,
+.jf-corporate-footer a:focus-visible {
+  color: #e6dcff;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.jf-corporate-footer__legal {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: flex-end;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 0.7rem;
+  text-align: right;
+}
+
+[data-md-color-scheme="slate"] .jf-corporate-footer {
+  background:
+    linear-gradient(
+      110deg,
+      #17004d 0%,
+      #3500b8 58%,
+      #5d23ff 100%
+    );
+}
+
+@media screen and (max-width: 960px) {
+  .jf-corporate-footer__inner {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .jf-corporate-footer__legal {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .jf-corporate-footer__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .jf-corporate-footer__links {
+    justify-content: flex-start;
+  }
+
+  .jf-corporate-footer__legal {
+    grid-column: auto;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

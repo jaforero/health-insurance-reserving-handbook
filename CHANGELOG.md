@@ -4,6 +4,18 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 
 ## [Unreleased]
 
+### Agregado
+
+- Tipografía corporativa IgraSans autoalojada.
+- Logo actuarial y favicon propios.
+- Footer corporativo con enlaces a Javier Forero, CV, GitHub y LinkedIn.
+- Integración nativa con Google Analytics 4 mediante `G-MQ3K8EVKV0`.
+
+### Cambiado
+
+- Títulos HTML específicos para el handbook y sus páginas internas.
+- Metadata de autor y color del navegador.
+
 ### Cambiado
 
 - Aplicación de la identidad visual morada de Javier Forero al handbook.
