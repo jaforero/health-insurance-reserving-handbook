@@ -1,7 +1,7 @@
 site_name: Health Insurance Reserving Handbook
 site_description: Manual técnico de IBNR, reserving y modelación actuarial para seguros de salud, con aplicaciones al sistema de salud colombiano.
 site_author: Health Insurance Reserving Handbook
-site_url: ""
+site_url: "https://jaforero.github.io/health-insurance-reserving-handbook/"
 
 docs_dir: docs
 site_dir: site
