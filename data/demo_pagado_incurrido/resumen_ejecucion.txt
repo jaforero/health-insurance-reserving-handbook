@@ -1,0 +1,9 @@
+=== Demo pagado vs. incurrido en salud ===
+Directorio de salida: data/demo_pagado_incurrido
+Celdas observadas: 55
+Años de origen: 2016-2025
+Año de valuación: 2025
+IBNR total Chain Ladder base pagada: 195,702,991,010.47
+Reserva caso observada total: 125,369,011,589.69
+IBNR total sobre base incurrida: 78,895,803,774.42
+No pagado total sobre base incurrida: 204,264,815,364.11

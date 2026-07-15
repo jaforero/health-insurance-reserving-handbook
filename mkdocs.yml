@@ -133,3 +133,5 @@ nav:
   - Demos prácticos:
       - 01 · Triángulos simulados de reclamaciones de salud: examples/01-demo-triangulos-simulados-salud.md
       - 01 · Simulated health claims triangles (EN): examples/01-simulated-health-triangles-demo.md
+      - 02 · Pagado vs. incurrido en salud: examples/02-demo-pagado-vs-incurrido-salud.md
+      - 02 · Paid vs. incurred health triangles (EN): examples/02-paid-vs-incurred-health-demo.md
