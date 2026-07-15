@@ -1,626 +1,216 @@
 ---
-title: "Chain Ladder Method"
-part: "Parte II · Métodos clásicos"
-chapter: 6
+title: Método Chain Ladder
+description: Explicación práctica del método Chain Ladder para estimar ultimate e IBNR a partir de triángulos acumulados de pagos o incurridos.
+status: draft
+version: "0.1.6"
+chapter: "06"
+part: "part-02-classical-reserving"
 language: "es"
-status: "draft"
 last_updated: "2026-07-14"
 ---
 
-06-chain-ladder-method.md
----
-title: Chain Ladder Method
-subtitle: Mathematical Foundations, Statistical Interpretation and Practical Implementation
-author: Health Insurance Reserving Handbook
-version: 1.0
-chapter: 06
-status: Draft
-last_updated: 2026-07-13
----
+# Método Chain Ladder
 
-# Chain Ladder Method
+Chain Ladder es uno de los métodos clásicos más usados en reserving actuarial. Su lógica es directa: si los años de origen históricos muestran un patrón de desarrollo relativamente estable, ese patrón puede usarse para proyectar los años de origen inmaduros hacia ultimate.
 
-> *"Chain Ladder is not a forecasting algorithm. It is an estimator of future claim development under the assumption that historical development patterns remain stable."*
+El método se aplica normalmente sobre triángulos acumulados. Puede usarse sobre pagos acumulados, incurridos acumulados, número de reclamaciones o cualquier medida que tenga un patrón de desarrollo razonablemente interpretable.
 
----
+## Idea central
 
-## Learning Objectives
-
-After completing this chapter, the reader should be able to:
-
-- Understand the assumptions underlying Chain Ladder.
-- Derive the algorithm mathematically.
-- Compute ultimate losses.
-- Estimate IBNR.
-- Explain why Chain Ladder works.
-- Recognize situations where it should not be applied.
-- Implement the method in Python, R and SQL.
-
----
-
-## Table of Contents
-
-1. Introduction
-2. Historical Background
-3. Core Assumptions
-4. Mathematical Derivation
-5. Algorithm
-6. Estimating Ultimate Losses
-7. Estimating IBNR
-8. Numerical Example
-9. Statistical Interpretation
-10. Advantages
-11. Limitations
-12. Health Insurance Applications
-13. Implementation
-14. Validation
-15. Best Practices
-16. Summary
-
----
-
-## 1. Introduction
-
-The Chain Ladder Method is the most widely used deterministic reserving technique.
-
-Its objective is simple:
-
-Estimate future claim development from historical development patterns.
-
-Despite its apparent simplicity,
-
-it remains the foundation of modern reserving.
-
-Many stochastic methods,
-
-including Mack Chain Ladder,
-
-Bootstrap Chain Ladder,
-
-and several Bayesian approaches,
-
-begin with this estimator.
-
----
-
-## 2. Historical Background
-
-The Chain Ladder Method emerged during the first half of the twentieth century.
-
-Its popularity results from three characteristics:
-
-- simplicity
-- transparency
-- reproducibility
-
-Today,
-
-it remains one of the standard reserving methods recognized by actuarial practice worldwide.
-
----
-
-## 3. Fundamental Assumptions
-
-Chain Ladder assumes:
-
-## Stable Development
-
-Historical development is representative of future development.
-
----
-
-## Independence
-
-Accident periods develop independently.
-
----
-
-## Homogeneity
-
-Claims arise from a homogeneous portfolio.
-
----
-
-## No Structural Changes
-
-The reserving process assumes no material changes in
-
-- legislation
-- claim handling
-- provider contracts
-- benefit design
-- inflation regime
-
----
-
-## Sufficient Credibility
-
-Historical observations contain enough information to estimate future development.
-
----
-
-## 4. Mathematical Framework
-
-Let
+Sea \(C_{i,j}\) el valor acumulado para el año de origen \(i\) a edad de desarrollo \(j\). Chain Ladder estima factores de desarrollo entre edades:
 
 $$
-C_{ij}
+f_j =
+\frac{\sum_i C_{i,j+1}}{\sum_i C_{i,j}}
 $$
 
-represent cumulative losses for accident period
+Luego proyecta cada año de origen desde su última edad observada \(k\) hasta ultimate:
 
 $$
-i
+Ultimate_i = C_{i,k} \times \prod_{j=k}^{J-1} f_j
 $$
 
-at development period
+El IBNR se calcula como:
 
 $$
-j
+IBNR_i = Ultimate_i - C_{i,k}
 $$
 
-The observed triangle is
+La simplicidad del método es su principal fortaleza y también su principal riesgo. Si el patrón histórico no es representativo, la proyección puede ser engañosa.
+
+## Datos requeridos
+
+Para aplicar Chain Ladder se necesita:
+
+- un triángulo acumulado;
+- una definición consistente de periodo de origen;
+- una definición consistente de edad de desarrollo;
+- datos observados hasta una fecha de valuación;
+- suficiente historia para estimar factores;
+- revisión de cambios operativos o de mezcla.
+
+En salud, estos requisitos deben revisarse con cuidado porque los lags de radicación, auditoría, glosas y pago pueden cambiar por política interna, regulación, red de prestadores o tipo de contrato.
+
+## Cálculo paso a paso
+
+El proceso básico es:
+
+1. Construir el triángulo acumulado.
+2. Calcular factores observados entre edades.
+3. Seleccionar factores edad-a-edad.
+4. Calcular factores acumulados hacia ultimate.
+5. Proyectar ultimate por año de origen.
+6. Calcular IBNR por año de origen.
+7. Revisar resultados y sensibilidad.
+
+## Ejemplo conceptual
+
+Supongamos un triángulo acumulado:
+
+| Año origen | dev_0 | dev_1 | dev_2 |
+| --- | ---: | ---: | ---: |
+| 2022 | 100 | 150 | 180 |
+| 2023 | 120 | 168 |  |
+| 2024 | 130 |  |  |
+
+El factor seleccionado de `dev_0` a `dev_1` es:
 
 $$
-\mathcal{T}
-
-=
-
-\{C_{ij}: i+j\le n\}
+f_0 =
+\frac{150 + 168}{100 + 120}
+= 1.445
 $$
 
-Our objective is to estimate
+El factor de `dev_1` a `dev_2` es:
 
 $$
-C_{i,n}
+f_1 =
+\frac{180}{150}
+= 1.200
 $$
 
-for incomplete accident periods.
-
----
-
-## 5. Development Factors
-
-From Chapter 05,
-
-development factors are
+Para 2024, observado solo en `dev_0`, el factor acumulado hacia ultimate es:
 
 $$
-f_j
-
-=
-
-\frac{\sum_i C_{i,j+1}}
-
-{\sum_i C_{ij}}
+CDF_0 = 1.445 \times 1.200 = 1.734
 $$
 
-These summarize average historical growth between consecutive development ages.
-
----
-
-## 6. Projecting Future Development
-
-Suppose
-
-Current cumulative
-
-```
-150
-```
-
-Development factor
-
-```
-1.20
-```
-
-Estimated next cumulative
-
-```
-150 × 1.20
-
-=
-
-180
-```
-
-The process continues until ultimate.
-
----
-
-## 7. Chain Ladder Algorithm
-
-Step 1
-
-Construct cumulative triangle.
-
----
-
-Step 2
-
-Calculate age-to-age factors.
-
----
-
-Step 3
-
-Select development factors.
-
----
-
-Step 4
-
-Project each incomplete accident year.
-
----
-
-Step 5
-
-Estimate ultimate losses.
-
----
-
-Step 6
-
-Calculate IBNR.
-
----
-
-## 8. Ultimate Losses
-
-Suppose
-
-Observed cumulative
-
-```
-150
-```
-
-Remaining development
-
-```
-1.20
-
-×
-
-1.05
-```
-
-Then
-
-Cumulative Development Factor
-
-```
-1.26
-```
-
-Ultimate
+Entonces:
 
 $$
-Ultimate
-
-=
-
-150
-
-×
-
-1.26
-
-=
-
-189
+Ultimate_{2024} = 130 \times 1.734 = 225.4
 $$
 
----
-
-## 9. IBNR
-
-IBNR equals
-
 $$
-IBNR
-
-=
-
-Ultimate
-
--
-
-Reported
+IBNR_{2024} = 225.4 - 130 = 95.4
 $$
 
-Example
+## Aplicación sobre base pagada
 
-Ultimate
-
-```
-189
-```
-
-Observed
-
-```
-150
-```
-
-IBNR
-
-```
-39
-```
-
----
-
-## 10. Numerical Example
-
-Observed cumulative triangle
-
-| Accident |12|24|36|
-|-----------|---|---|---|
-|2020|100|120|125|
-|2021|200|250|260|
-|2022|300|345| |
-
-Selected factors
-
-| Development | Factor |
-|--------------|--------|
-|12→24|1.1917|
-|24→36|1.0405|
-
-For Accident Year 2022
-
-Observed
-
-```
-345
-```
-
-Ultimate
-
-```
-345
-
-×
-
-1.0405
-
-=
-
-358.97
-```
-
-IBNR
-
-```
-13.97
-```
-
----
-
-## 11. Statistical Interpretation
-
-Chain Ladder estimates
-
-the conditional expectation
-
-of future cumulative losses
-
-given observed cumulative losses.
-
-Symbolically,
+En base pagada, Chain Ladder proyecta pagos futuros. La interpretación es:
 
 $$
-E
-
-[
-
-C_{i,j+1}
-
-|
-
-C_{ij}
-
-]
-
-≈
-
-f_j
-
-C_{ij}
+IBNR^{pagado} = Ultimate - Pagado\ acumulado
 $$
 
-Thus,
+Esta estimación incluye todo lo no pagado. Si no se separa reserva caso, el resultado puede interpretarse como pasivo pendiente total sobre base pagada, no exclusivamente IBNR puro.
 
-the method estimates expected future development,
+La base pagada suele ser objetiva, pero puede tener mayor rezago. En salud, esto puede producir factores altos en edades tempranas y mayor sensibilidad en años recientes.
 
-not individual claim outcomes.
+## Aplicación sobre base incurrida
 
----
+En base incurrida:
 
-## 12. Why Chain Ladder Works
+$$
+Incurrido = Pagado + Reserva\ caso
+$$
 
-The method succeeds because
+Chain Ladder proyecta el incurrido observado hacia ultimate:
 
-claim development often exhibits
+$$
+IBNR^{incurrido} = Ultimate - Incurrido\ observado
+$$
 
-stable proportional growth.
+El pasivo no pagado total se puede leer como:
 
-If historical maturation remains consistent,
+$$
+No\ pagado = Reserva\ caso + IBNR^{incurrido}
+$$
 
-future maturation can be estimated using historical averages.
+La base incurrida puede ser más madura, pero depende de la calidad y consistencia de las reservas caso.
 
----
+## Supuestos implícitos
 
-## 13. Advantages
+Chain Ladder supone que:
 
-✔ Simple
+- los patrones históricos de desarrollo son aplicables al futuro;
+- la mezcla de riesgo no cambia de forma material;
+- la operación de reporte, auditoría y pago es estable;
+- no hay efectos calendario dominantes sin ajuste;
+- los datos son comparables entre años de origen;
+- los factores seleccionados representan el desarrollo esperado.
 
-✔ Transparent
+Estos supuestos rara vez se cumplen perfectamente. La tarea actuarial es evaluar si son suficientemente razonables para el uso previsto.
 
-✔ Fast
+## Riesgos comunes
 
-✔ Widely accepted
+Errores frecuentes:
 
-✔ Easy to audit
+- aplicar Chain Ladder a triángulos incrementales por accidente;
+- reemplazar celdas no observadas por cero;
+- mezclar bases pagadas e incurridas;
+- ignorar pagos negativos o reversos;
+- usar factores contaminados por cambios operativos;
+- no segmentar portafolios con patrones distintos;
+- interpretar resultados como exactos en vez de estimaciones.
 
-✔ Reproducible
+En salud, otro riesgo importante es no separar cambios de utilización real de cambios en rezagos administrativos.
 
-✔ Foundation of many stochastic methods
+## Implementación mínima en Python
 
----
-
-## 14. Limitations
-
-Chain Ladder performs poorly when
-
-- inflation changes rapidly
-- operational practices change
-- portfolios are immature
-- exposure changes significantly
-- catastrophes occur
-- credibility is low
-
-Professional judgment is therefore essential.
-
----
-
-## 15. Health Insurance Considerations
-
-Health Insurance introduces additional complexities
-
-including
-
-- provider reimbursement changes
-- pharmacy reversals
-- retroactive eligibility
-- encounter claims
-- seasonality
-- payment corrections
-- coding intensity changes
-
-Pure Chain Ladder often requires adjustments.
-
----
-
-## 16. Python Example
+Una estructura básica es:
 
 ```python
-import chainladder as cl
+factors = {}
 
-triangle = cl.Triangle(data)
+for age in development_ages[:-1]:
+    current = triangle[age]
+    next_age = triangle[age + 1]
+    valid = current.notna() & next_age.notna() & (current > 0)
+    factors[age] = next_age[valid].sum() / current[valid].sum()
 
-model = cl.Chainladder()
+ultimate = {}
 
-result = model.fit(triangle)
+for origin_year, row in triangle.iterrows():
+    latest_age = row.last_valid_index()
+    latest_value = row[latest_age]
+    cdf = 1.0
 
-ultimate = result.ultimate_
+    for age in range(latest_age, max(development_ages)):
+        cdf *= factors[age]
 
-ibnr = result.ibnr_
+    ultimate[origin_year] = latest_value * cdf
 ```
 
----
+El código debe complementarse con controles de datos, diagnósticos y trazabilidad de supuestos.
 
-## 17. R Example
+## Buenas prácticas
 
-```r
-library(ChainLadder)
+Para usar Chain Ladder de forma defendible:
 
-fit <- ChainLadder(triangle)
+- mostrar triángulo acumulado;
+- mostrar factores observados;
+- justificar factores seleccionados;
+- revisar sensibilidad;
+- comparar bases pagada e incurrida;
+- documentar exclusiones;
+- explicar cambios operativos relevantes;
+- reconciliar resultados con datos fuente.
 
-summary(fit)
-```
+Chain Ladder no reemplaza el juicio actuarial. Es una forma estructurada de trasladar patrones históricos hacia años inmaduros.
 
----
+## Capítulos relacionados
 
-## 18. SQL Example
+Anterior: [Factores edad-a-edad](../part-01-foundations/05-age-to-age-development-factors.md).  
+Siguiente: [Diagnósticos de Chain Ladder](07-chain-ladder-diagnostics.md).
 
-Although Chain Ladder itself is usually implemented outside SQL,
-
-SQL is commonly used to prepare
-
-- cumulative triangles
-- development factors
-- accident period summaries
-
-before actuarial modeling.
-
----
-
-## 19. Validation
-
-Before accepting results,
-
-review
-
-✓ development factors
-
-✓ maturity
-
-✓ calendar effects
-
-✓ inflation
-
-✓ outliers
-
-✓ operational changes
-
-✓ reconciliation
-
----
-
-## 20. Best Practices
-
-Never apply Chain Ladder blindly.
-
-Always
-
-- inspect link ratios
-- understand claim operations
-- compare alternative methods
-- document assumptions
-- validate projections
-
-Chain Ladder should be considered a baseline estimator,
-
-not the final actuarial answer.
-
----
-
-## Key Takeaways
-
-Chain Ladder estimates future claim development using historical proportional growth.
-
-Its validity depends on stable development patterns.
-
-It is deterministic,
-
-transparent,
-
-and computationally efficient.
-
-Modern stochastic reserving extends,
-
-rather than replaces,
-
-Chain Ladder.
-
----
-
-## References
-
-- Mack (1993)
-- England & Verrall (2002)
-- Wüthrich & Merz (2008)
-- Friedland, *Estimating Unpaid Claims Using Basic Techniques*
-- Taylor, *Loss Reserving*
-- ASOP No. 23 – Data Quality
-- ASOP No. 56 – Modeling
-
----
-
-## Next Chapter
-
-➡️ **07-chain-ladder-diagnostics-and-assumption-testing.md**

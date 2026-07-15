@@ -1,735 +1,186 @@
 ---
-title: "Benktander Method"
-part: "Parte II · Métodos clásicos"
-chapter: 12
+title: Método Benktander
+description: Explicación del método Benktander como combinación iterativa entre Bornhuetter-Ferguson y Chain Ladder para estimar ultimate e IBNR.
+status: draft
+version: "0.1.6"
+chapter: "12"
+part: "part-02-classical-reserving"
 language: "es"
-status: "draft"
 last_updated: "2026-07-14"
 ---
 
-12-benktander-method.md
----
-title: Benktander Method
-subtitle: Iterative Credibility Reserving Between Chain Ladder and Bornhuetter-Ferguson
-author: Health Insurance Reserving Handbook
-version: 1.0
-chapter: 12
-status: Draft
-last_updated: 2026-07-13
----
+# Método Benktander
 
-# Benktander Method
+El método Benktander puede entenderse como un puente entre Bornhuetter-Ferguson y Chain Ladder. Usa una expectativa previa, como BF, pero permite que la experiencia observada gane más peso de forma gradual.
 
-> *"Bornhuetter-Ferguson trusts the prior. Chain Ladder trusts the data. Benktander gradually shifts trust from the prior to the observed experience."*
+En términos prácticos, Benktander es útil cuando se quiere evitar la sensibilidad completa de Chain Ladder en años inmaduros, pero también se quiere que la experiencia observada influya más que en un BF puro.
 
----
+## Intuición
 
-## Learning Objectives
-
-After completing this chapter, the reader should be able to:
-
-- Understand the motivation behind the Benktander method.
-- Explain why it is considered an iterative Bornhuetter-Ferguson model.
-- Derive the Benktander equations.
-- Implement multiple Benktander iterations.
-- Understand the credibility interpretation.
-- Compare Benktander with Chain Ladder and Bornhuetter-Ferguson.
-- Apply the method to Health Insurance portfolios.
-
----
-
-## Table of Contents
-
-1. Introduction
-2. Historical Background
-3. Motivation
-4. Conceptual Framework
-5. Mathematical Derivation
-6. First Iteration
-7. General Iterative Form
-8. Convergence
-9. Practical Example
-10. Comparison with Other Methods
-11. Health Insurance Applications
-12. Implementation
-13. Diagnostics
-14. Best Practices
-15. Summary
-
----
-
-## 1. Introduction
-
-Benktander occupies the middle ground between
-
-- Bornhuetter-Ferguson
-- Chain Ladder
-
-Instead of assuming
-
-either
-
-complete credibility
-
-or
-
-limited credibility,
-
-it allows credibility to increase gradually.
-
-The method therefore produces a sequence of reserve estimates that converge toward Chain Ladder as more credibility is assigned to observed development.
-
----
-
-## 2. Historical Background
-
-Gunnar Benktander introduced the method during the 1970s.
-
-The objective was to reduce the dependence on the Expected Loss Ratio while avoiding the instability of pure Chain Ladder.
-
-Today,
-
-Benktander is frequently used for
-
-- immature portfolios
-- catastrophe business
-- specialty insurance
-- Health Insurance products undergoing rapid change
-
----
-
-## 3. Motivation
-
-Consider an accident year that has developed only 20%.
-
-Chain Ladder assumes
-
-the observed 20%
-
-fully represents future development.
-
-Bornhuetter-Ferguson assumes
-
-the remaining 80%
-
-should follow the expected ultimate.
-
-Reality usually lies between these extremes.
-
-Benktander provides that compromise.
-
----
-
-## 4. Credibility Interpretation
-
-Suppose
-
-Current development
-
-contains
-
-some information,
-
-but
-
-not enough
-
-to replace actuarial expectations.
-
-Benktander updates the reserve iteratively.
-
-Each iteration increases credibility assigned to observed experience.
-
-Eventually,
-
-the estimate converges toward Chain Ladder.
-
----
-
-## 5. Relationship Among Methods
-
-```
-Expected Ultimate
-
-↓
-
-Bornhuetter-Ferguson
-
-↓
-
-Benktander
-
-↓
-
-Chain Ladder
-```
-
-This progression reflects increasing reliance on observed claim experience.
-
----
-
-## 6. Bornhuetter-Ferguson Review
-
-Recall
-
-Expected Ultimate
+Bornhuetter-Ferguson estima la parte no desarrollada usando una pérdida esperada previa:
 
 $$
-U_0
-=
-Premium
-\times
-ELR
+Ultimate^{BF} =
+Observado + Esperado \times (1 - p)
 $$
 
-Reported
+Chain Ladder estima ultimate proyectando lo observado:
 
 $$
-R
+Ultimate^{CL} =
+\frac{Observado}{p}
 $$
 
-Percent Reported
+Benktander combina ambas ideas. Parte de una expectativa previa y la actualiza con el desarrollo observado.
+
+## Fórmula de primer orden
+
+Una forma común de expresar Benktander es:
 
 $$
-p
-=
-\frac1{CDF}
+Ultimate^{B}_i =
+Observado_i + Ultimate^{BF}_i \times (1 - p_i)
 $$
 
-Percent Unreported
+donde:
+
+- \(Observado_i\) es el monto acumulado observado;
+- \(Ultimate^{BF}_i\) es el ultimate estimado por BF;
+- \(p_i\) es el porcentaje desarrollado.
+
+Esta expresión genera una estimación entre BF y Chain Ladder, dependiendo de la madurez.
+
+## Interpretación como credibilidad
+
+Benktander puede verse como una forma de dar credibilidad parcial a la experiencia observada. Cuando el año de origen es inmaduro, la expectativa previa conserva peso. Cuando gana madurez, el observado tiene mayor influencia.
+
+En términos conceptuales:
 
 $$
-q
-=
-1-p
+Ultimate^{B} =
+w \times Ultimate^{CL} + (1 - w) \times Ultimate^{BF}
 $$
 
-Bornhuetter-Ferguson
+donde el peso \(w\) aumenta con la madurez. La fórmula exacta puede variar según la implementación, pero la intuición es la misma: combinar desarrollo observado y expectativa previa.
+
+## Relación con BF
+
+BF usa la expectativa previa para la parte no observada. Benktander toma el resultado BF y lo vuelve a desarrollar parcialmente. Por eso suele quedar más cerca de Chain Ladder que BF, pero no tan sensible como Chain Ladder puro.
+
+Para años muy inmaduros:
+
+- Chain Ladder puede ser inestable;
+- BF puede ser demasiado dependiente de la expectativa previa;
+- Benktander puede ofrecer una transición intermedia.
+
+## Ejemplo conceptual
+
+Supongamos:
+
+- observado: 100;
+- CDF: 2.0;
+- porcentaje desarrollado: 50%;
+- pérdida esperada: 180.
+
+BF:
 
 $$
-U_{BF}
-=
-R
-+
-qU_0
+Ultimate^{BF} =
+100 + 180 \times 0.50 = 190
 $$
 
----
-
-## 7. First Benktander Iteration
-
-The first Benktander estimate is
+Benktander:
 
 $$
-U_1
-=
-R
-+
-qU_{BF}
+Ultimate^{B} =
+100 + 190 \times 0.50 = 195
 $$
 
-Replacing
-
-\(U_{BF}\)
-
-gives
+Chain Ladder:
 
 $$
-U_1
-=
-R
-+
-q(R+qU_0)
+Ultimate^{CL} =
+100 \times 2.0 = 200
 $$
 
-Simplifying
+En este ejemplo, Benktander queda entre BF y Chain Ladder.
 
-$$
-U_1
-=
-(1+q)R
-+
-q^2U_0
-$$
+## Cuándo usar Benktander
 
-Notice
+Benktander puede ser útil cuando:
 
-the observed experience receives more weight than under BF.
+- existe expectativa previa razonable;
+- los años recientes tienen baja madurez;
+- Chain Ladder parece demasiado sensible;
+- BF parece demasiado conservador o demasiado rígido;
+- se busca una transición gradual hacia experiencia observada;
+- se quiere comparar varios métodos clásicos.
 
----
+En salud, puede ser útil para segmentos donde existe presupuesto técnico o costo esperado, pero también se quiere reconocer la experiencia emergente del año.
 
-## 8. General Iterative Form
+## Riesgos
 
-The recursive equation is
+El método comparte riesgos con BF y Chain Ladder:
 
-$$
-U_{k+1}
-=
-R
-+
-qU_k
-$$
+- si la expectativa previa es débil, el resultado también lo será;
+- si los factores de desarrollo están contaminados, la transición hacia Chain Ladder hereda ese sesgo;
+- si se aplica mecánicamente, puede parecer más sofisticado sin agregar mejor juicio;
+- puede ser difícil de comunicar si no se explica la intuición.
 
-where
+Benktander no elimina incertidumbre. Solo cambia el balance entre expectativa previa y experiencia observada.
 
-- \(U_k\) is the previous iteration.
-- \(q\) is the unreported percentage.
+## Comparación de métodos
 
-Each iteration incorporates additional credibility.
+Una práctica útil es mostrar una tabla por año de origen:
 
----
+| Año origen | Chain Ladder | BF | Benktander |
+| --- | ---: | ---: | ---: |
+| 2023 | 210 | 200 | 205 |
+| 2024 | 230 | 215 | 222 |
+| 2025 | 250 | 220 | 235 |
 
-## 9. Closed-Form Solution
+Si Benktander está sistemáticamente cerca de Chain Ladder, la experiencia observada domina. Si está cerca de BF, la expectativa previa domina.
 
-Expanding the recursion,
-
-$$
-U_k
-=
-R
-\sum_{i=0}^{k-1}
-q^i
-+
-q^kU_0
-$$
-
-Since
-
-$$
-\sum_{i=0}^{k-1}
-q^i
-=
-\frac{1-q^k}{1-q}
-$$
-
-we obtain
-
-$$
-U_k
-=
-R
-\frac{1-q^k}{1-q}
-+
-q^kU_0
-$$
-
----
-
-## 10. Convergence
-
-Because
-
-$$
-0<q<1
-$$
-
-then
-
-$$
-q^k
-\rightarrow
-0
-$$
-
-as
-
-$$
-k\rightarrow\infty
-$$
-
-Therefore
-
-$$
-U_k
-\rightarrow
-\frac{R}{1-q}
-$$
-
-Since
-
-$$
-1-q
-=
-p
-=
-\frac1{CDF}
-$$
-
-the limit becomes
-
-$$
-U_\infty
-=
-R
-\times
-CDF
-$$
-
-which is precisely the
-
-Chain Ladder estimate.
-
----
-
-## 11. Interpretation
-
-Iteration
-
-0
-
-↓
-
-Bornhuetter-Ferguson
-
-Iteration
-
-∞
-
-↓
-
-Chain Ladder
-
-Benktander therefore forms a continuous bridge between the two methods.
-
----
-
-## 12. Numerical Example
-
-Suppose
-
-Reported
-
-40
-
-Expected Ultimate
-
-100
-
-CDF
-
-2.50
-
-Then
-
-Percent Reported
-
-40%
-
-Percent Unreported
-
-60%
-
----
-
-## Bornhuetter-Ferguson
-
-IBNR
-
-60
-
-Ultimate
-
-100
-
----
-
-## First Benktander Iteration
-
-$$
-40
-+
-0.60(100)
-=
-100
-$$
-
----
-
-## Second Iteration
-
-$$
-40
-+
-0.60(100)
-=
-100
-$$
-
-Suppose instead
-
-Expected Ultimate
-
-80
-
-Iteration sequence
-
-|Iteration|Ultimate|
-|----------|--------|
-|BF|88.0|
-|1|92.8|
-|2|95.7|
-|3|97.4|
-|4|98.5|
-|∞|100.0|
-
-The estimate gradually approaches Chain Ladder.
-
----
-
-## 13. Comparison with Chain Ladder
-
-Chain Ladder
-
-- Complete credibility.
-- Fully data-driven.
-- Sensitive to immature years.
-
-Benktander
-
-- Partial credibility.
-- Stable.
-- Iterative.
-- Smooth transition toward observed development.
-
----
-
-## 14. Comparison with Bornhuetter-Ferguson
-
-Bornhuetter-Ferguson
-
-- Single credibility level.
-
-Benktander
-
-- Increasing credibility.
-- Multiple iterations.
-- Flexible.
-
----
-
-## 15. Health Insurance Applications
-
-Benktander performs well when
-
-- enrollment changes rapidly,
-- provider contracts change,
-- benefit redesign occurs,
-- ACA markets mature,
-- Medicaid programs expand,
-- Medicare Advantage membership grows quickly.
-
-These situations often invalidate pure Chain Ladder while making a fixed BF prior too restrictive.
-
----
-
-## 16. Python Example
+## Implementación mínima
 
 ```python
-reported = 40
+percent_reported = 1 / cdf
 
-expected = 80
+expected_loss = exposure * expected_cost_per_unit
+bf_ultimate = observed + expected_loss * (1 - percent_reported)
 
-cdf = 2.5
-
-q = 1 - 1/cdf
-
-ultimate = expected
-
-for i in range(5):
-
-    ultimate = reported + q * ultimate
-
-    print(i + 1, ultimate)
+benktander_ultimate = observed + bf_ultimate * (1 - percent_reported)
+benktander_ibnr = benktander_ultimate - observed
 ```
 
----
+Esta implementación debe acompañarse de sensibilidad en `expected_cost_per_unit` y en factores de desarrollo.
 
-## 17. R Example
+## Uso en reportes
 
-```r
-reported <- 40
+Benktander suele ser útil en reportes comparativos, no necesariamente como único método final. Puede mostrar cómo cambia la estimación al dar más peso a experiencia observada.
 
-expected <- 80
+Un reporte puede presentar:
 
-cdf <- 2.5
+- Chain Ladder como método basado en experiencia;
+- BF como método basado en expectativa previa;
+- Benktander como método intermedio;
+- selección final como juicio documentado.
 
-q <- 1 - 1/cdf
+## Buenas prácticas
 
-ultimate <- expected
+Para usar Benktander:
 
-for(i in 1:5){
+- documentar expectativa previa;
+- mostrar porcentaje desarrollado;
+- comparar contra BF y Chain Ladder;
+- explicar por qué se requiere método intermedio;
+- evaluar sensibilidad;
+- evitar selección automática sin criterio.
 
- ultimate <- reported + q*ultimate
+El valor del método está en su interpretación, no en su complejidad.
 
- print(ultimate)
+## Capítulos relacionados
 
-}
-```
+Anterior: [Bornhuetter-Ferguson](11-bornhuetter-ferguson.md).  
+Siguiente: [Método Cape Cod](13-cape-cod-method.md).
 
----
-
-## 18. SQL Example
-
-Recursive Common Table Expression
-
-```sql
-WITH RECURSIVE benktander AS (
-
-SELECT
-
-1 AS iteration,
-
-expected_ultimate AS reserve
-
-UNION ALL
-
-SELECT
-
-iteration + 1,
-
-reported + q * reserve
-
-FROM benktander
-
-WHERE iteration < 5
-
-)
-
-SELECT *
-
-FROM benktander;
-```
-
----
-
-## 19. Diagnostics
-
-Before applying Benktander,
-
-review
-
-✓ Expected Loss Ratio
-
-✓ Premium adequacy
-
-✓ Development factors
-
-✓ Portfolio maturity
-
-✓ Structural changes
-
-✓ Product mix
-
-✓ Credibility of prior assumptions
-
----
-
-## 20. Advantages
-
-✔ Stable.
-
-✔ Less volatile than Chain Ladder.
-
-✔ More adaptive than BF.
-
-✔ Naturally incorporates credibility.
-
-✔ Smooth convergence.
-
-✔ Easy to explain.
-
----
-
-## 21. Limitations
-
-Requires
-
-Expected Ultimate.
-
-Choice of iteration number
-
-is subjective.
-
-Not appropriate
-
-if
-
-Expected Loss Ratio
-
-is unreliable.
-
----
-
-## 22. Decision Framework
-
-| Portfolio | Preferred Method |
-|------------|------------------|
-| Mature | Chain Ladder |
-| Immature | BF |
-| Moderately Mature | Benktander |
-| New Product | BF |
-| Transitional Portfolio | Benktander |
-| Highly Stable | Chain Ladder |
-
----
-
-## 23. Best Practices
-
-Run
-
-Chain Ladder,
-
-Bornhuetter-Ferguson,
-
-and
-
-Benktander
-
-together.
-
-Investigate material differences.
-
-Document
-
-the rationale
-
-for selecting
-
-the final reserve.
-
-Treat Benktander
-
-as a credibility model,
-
-not merely another reserving algorithm.
-
----
-
-## Key Takeaways
-
-The Benktander method extends Bornhuetter-Ferguson by increasing the credibility assigned to observed claims through successive iterations.
-
-The sequence converges mathematically to the Chain Ladder estimate, making Benktander a flexible bridge between prior expectations and empirical development.
-
-Its primary strength lies in balancing actuarial judgment with observed experience, making it particularly valuable for moderately mature portfolios and evolving Health Insurance products.
-
----
-
-## References
-
-- Benktander, G. (1976). *An Approach to Credibility in Claims Reserving.*
-- Born, R. & Ferguson, R. (1972).
-- Mack, T. (1993).
-- England & Verrall (2002).
-- Friedland, J. *Estimating Unpaid Claims Using Basic Techniques.*
-- Wüthrich & Merz (2008).
-- Taylor, G. *Loss Reserving.*
-- ASOP No. 5 – Incurred Health and Disability Claims.
-- ASOP No. 23 – Data Quality.
-- ASOP No. 56 – Modeling.
-
----
-
-## Next Chapter
-
-➡️ **13-cape-cod-method.md**

@@ -1,715 +1,205 @@
 ---
-title: "Cape Cod Method"
-part: "Parte II · Métodos clásicos"
-chapter: 13
+title: Método Cape Cod
+description: Explicación del método Cape Cod para estimar pérdidas esperadas a partir de exposición y experiencia desarrollada, combinando exposición y desarrollo.
+status: draft
+version: "0.1.6"
+chapter: "13"
+part: "part-02-classical-reserving"
 language: "es"
-status: "draft"
 last_updated: "2026-07-14"
 ---
 
-13-cape-cod-method.md
----
-title: Cape Cod Method
-subtitle: Empirical Credibility Reserving Using Exposure-Based Expected Loss Ratios
-author: Health Insurance Reserving Handbook
-version: 1.0
-chapter: 13
-status: Draft
-last_updated: 2026-07-13
----
+# Método Cape Cod
 
-# Cape Cod Method
+El método Cape Cod es un método clásico que estima una pérdida esperada usando la propia experiencia histórica desarrollada y una medida de exposición. Puede verse como una forma de construir una expectativa previa para métodos como Bornhuetter-Ferguson, pero derivada de la experiencia del portafolio.
 
-> *"Chain Ladder trusts history. Bornhuetter-Ferguson trusts actuarial expectations. Cape Cod estimates those expectations directly from historical experience."*
+En salud, Cape Cod es útil cuando se dispone de exposición razonable, como meses-miembro, vidas aseguradas, primas devengadas, unidades de contrato o población cubierta.
 
----
+## Idea central
 
-## Learning Objectives
+Cape Cod estima una tasa esperada de pérdida o costo por exposición. Luego usa esa tasa para calcular la pérdida esperada de cada año de origen.
 
-After completing this chapter, the reader should be able to:
-
-- Understand the actuarial motivation for the Cape Cod Method.
-- Explain how Cape Cod differs from Bornhuetter-Ferguson.
-- Estimate the Expected Loss Ratio (ELR) from observed data.
-- Calculate Ultimate Losses using Cape Cod.
-- Understand the statistical assumptions behind the method.
-- Apply Cape Cod to Health Insurance portfolios.
-- Compare Cape Cod with Chain Ladder and Bornhuetter-Ferguson.
-
----
-
-## Table of Contents
-
-1. Introduction
-2. Historical Background
-3. Why Cape Cod?
-4. Conceptual Framework
-5. Mathematical Formulation
-6. Estimating the ELR
-7. Estimating Ultimate Losses
-8. Numerical Example
-9. Relationship with Other Reserving Methods
-10. Health Insurance Applications
-11. Implementation
-12. Diagnostics
-13. Best Practices
-14. Summary
-
----
-
-## 1. Introduction
-
-The Cape Cod Method is one of the most important credibility-based reserving techniques.
-
-Conceptually,
-
-it combines the philosophy of
-
-- Chain Ladder
-- Bornhuetter-Ferguson
-
-while removing one important limitation:
-
-the Expected Loss Ratio (ELR)
-
-does **not** need to come from pricing or expert judgment.
-
-Instead,
-
-it is estimated directly from the portfolio.
-
----
-
-## 2. Historical Background
-
-The method was developed by actuaries at Cape Cod Associates.
-
-Its principal innovation was estimating the expected loss ratio from historical exposure and observed losses rather than treating it as an external assumption.
-
-Today,
-
-Cape Cod is widely used in
-
-- Property & Casualty
-- Health Insurance
-- Workers Compensation
-- Reinsurance
-
----
-
-## 3. Motivation
-
-Suppose
-
-a company launches
-
-a relatively new product.
-
-Chain Ladder may overreact because little development has emerged.
-
-Bornhuetter-Ferguson requires an externally selected ELR.
-
-Cape Cod instead estimates
-
-the ELR directly from
-
-- exposure,
-- reported claims,
-- development factors.
-
-This reduces subjectivity.
-
----
-
-## 4. Conceptual Framework
-
-Cape Cod assumes
-
-Ultimate Loss
-
-=
-
-Exposure
-
-×
-
-Estimated ELR
-
-Unlike BF,
-
-the ELR is estimated
-
-from observed experience.
-
----
-
-## 5. Inputs Required
-
-Cape Cod requires
-
-- Earned Premium
-- Development Factors
-- Reported Losses
-- Exposure
-- Accident Periods
-
-Unlike Chain Ladder,
-
-premium information is essential.
-
----
-
-## 6. Mathematical Framework
-
-Suppose
-
-for accident year
-
-*i*
-
-Exposure
+La lógica es:
 
 $$
-E_i
+Pérdida\ esperada_i =
+Exposición_i \times Tasa\ esperada
 $$
 
-Observed Loss
+La tasa esperada se estima a partir de experiencia histórica ajustada por desarrollo:
 
 $$
-R_i
+Tasa\ esperada =
+\frac{\sum_i Observado_i}
+{\sum_i Exposición_i \times p_i}
 $$
 
-CDF
+donde \(p_i\) es el porcentaje desarrollado del año de origen \(i\).
+
+## Relación con Bornhuetter-Ferguson
+
+BF requiere una pérdida esperada previa. Cape Cod puede proveer esa expectativa:
 
 $$
-F_i
+E_i = Exposición_i \times Tasa\ Cape\ Cod
 $$
 
-Expected Ultimate
+Luego BF calcula:
 
 $$
-U_i
-=
-E_i
-\times
-ELR
+Ultimate^{BF}_i =
+Observado_i + E_i \times (1 - p_i)
 $$
 
----
+Por eso Cape Cod no siempre se presenta como método aislado; muchas veces se usa para calibrar la expectativa previa.
 
-## 7. Percent Reported
+## Componentes del método
 
-As in Bornhuetter-Ferguson,
+Cape Cod necesita:
 
-the reported proportion is
+- observados acumulados;
+- factores de desarrollo o porcentajes desarrollados;
+- exposición por año de origen;
+- selección de años incluidos;
+- ajustes de tendencia o nivel de costo, si aplica.
 
-$$
-p_i
-=
-\frac1{CDF_i}
-$$
+En salud, la exposición debe elegirse con cuidado. Meses-miembro suele ser más informativo que número de pólizas si la permanencia varía.
 
-The expected reported amount is
+## Porcentaje desarrollado
 
-$$
-E_i
-\times
-ELR
-\times
-p_i
-$$
-
----
-
-## 8. Estimating the ELR
-
-Cape Cod estimates
-
-the Expected Loss Ratio
-
-using all accident years simultaneously.
-
-The estimator is
+Igual que en BF:
 
 $$
-\widehat{ELR}
-=
-\frac
-{\sum_i R_i}
-{\sum_i E_i p_i}
+p_i = \frac{1}{CDF_i}
 $$
 
-where
+Si un año está 60% desarrollado, su observado representa aproximadamente 60% del ultimate esperado.
 
-- numerator = reported losses
-- denominator = adjusted earned exposure
-
-This is one of the defining equations of the method.
-
----
-
-## Interpretation
-
-Older accident years
-
-contribute more credibility,
-
-because
-
-their reported percentage
-
-is close to
-
-100%.
-
-Immature years
-
-receive less weight.
-
----
-
-## 9. Estimating Ultimate Losses
-
-After estimating
+Cape Cod ajusta la exposición por ese porcentaje:
 
 $$
-\widehat{ELR}
+Exposición\ desarrollada_i =
+Exposición_i \times p_i
 $$
 
-Ultimate losses become
+Esto evita comparar un año maduro con uno inmaduro como si tuvieran la misma cantidad de información.
+
+## Ejemplo conceptual
+
+Supongamos:
+
+| Año | Observado | Exposición | % desarrollado |
+| --- | ---: | ---: | ---: |
+| 2022 | 900 | 1,000 | 100% |
+| 2023 | 800 | 1,100 | 80% |
+| 2024 | 500 | 1,200 | 50% |
+
+La exposición desarrollada es:
 
 $$
-U_i
-=
-E_i
-\times
-\widehat{ELR}
+1,000 \times 1.00 + 1,100 \times 0.80 + 1,200 \times 0.50
+= 2,480
 $$
 
----
-
-IBNR is
+El observado total es:
 
 $$
-IBNR_i
-=
-U_i
-(1-p_i)
+900 + 800 + 500 = 2,200
 $$
 
----
-
-Ultimate estimate
+La tasa Cape Cod es:
 
 $$
-Ultimate_i
-=
-Reported_i
-+
-IBNR_i
+\frac{2,200}{2,480} = 0.887
 $$
 
----
-
-## 10. Numerical Example
-
-Suppose
-
-| Accident | Premium | Reported | CDF |
-|-----------|---------|----------|-----|
-|2022|100|65|1.25|
-|2023|110|50|1.60|
-|2024|120|20|2.50|
-
----
-
-## Step 1
-
-Compute
-
-Percent Reported
-
-| Accident | Reported % |
-|-----------|------------|
-|2022|80%|
-|2023|62.5%|
-|2024|40%|
-
----
-
-## Step 2
-
-Adjusted Exposure
-
-| Accident | Premium × Reported % |
-|-----------|---------------------|
-|2022|80|
-|2023|68.75|
-|2024|48|
-
-Total
-
-196.75
-
----
-
-## Step 3
-
-Observed Losses
-
-65
-
-+
-
-50
-
-+
-
-20
-
-=
-
-135
-
----
-
-## Step 4
-
-Estimated ELR
+La pérdida esperada para 2024 sería:
 
 $$
-135
-
-/
-
-196.75
-
-=
-
-68.6\%
+1,200 \times 0.887 = 1,064
 $$
 
----
+## Ajuste por tendencia
 
-## Step 5
+Si los costos médicos crecen con el tiempo, la experiencia histórica debe ajustarse antes de estimar la tasa.
 
-Expected Ultimate
+Una forma simple:
 
-| Accident | Ultimate |
-|-----------|----------|
-|2022|68.6|
-|2023|75.5|
-|2024|82.3|
+$$
+Observado\ ajustado_i =
+Observado_i \times (1 + t)^{n_i}
+$$
 
----
+También puede ajustarse la exposición o la tasa esperada. La clave es que todos los años queden en una base comparable.
 
-## Step 6
+Sin ajuste de tendencia, Cape Cod puede subestimar años recientes si los costos médicos aumentan.
 
-IBNR
+## Cuándo usar Cape Cod
 
-2024
+Cape Cod es útil cuando:
 
-Expected Ultimate
+- hay exposición confiable;
+- los años tienen distinta madurez;
+- se quiere una pérdida esperada basada en experiencia propia;
+- los años recientes son inmaduros;
+- se necesita calibrar BF;
+- se quiere estabilizar estimaciones en segmentos pequeños.
 
-82.3
+En salud, puede ser útil para comparar costo por miembro, costo por afiliado expuesto o costo por unidad contractual.
 
-Reported
+## Riesgos
 
-20
+Riesgos principales:
 
-IBNR
+- exposición mal definida;
+- mezcla de riesgo cambiante;
+- tendencia médica no ajustada;
+- inclusión de años atípicos;
+- cambios de beneficio o cobertura;
+- uso de experiencia inmadura sin ajuste correcto;
+- segmentación insuficiente.
 
-62.3
+La tasa Cape Cod puede parecer objetiva, pero depende de decisiones de selección y ajuste.
 
----
+## Comparación con Chain Ladder
 
-## 11. Statistical Interpretation
+Chain Ladder usa principalmente el patrón de desarrollo del observado. Cape Cod introduce exposición.
 
-Cape Cod estimates
+Si la exposición crece rápido, Chain Ladder puede interpretar crecimiento de volumen como crecimiento de siniestralidad. Cape Cod ayuda a separar volumen y costo esperado por unidad.
 
-a common Expected Loss Ratio
+Sin embargo, si la exposición no captura la complejidad del riesgo, el método puede ser insuficiente. En salud, dos portafolios con los mismos meses-miembro pueden tener morbilidad muy distinta.
 
-using
-
-Maximum Likelihood–type reasoning
-
-under the assumption
-
-that
-
-historical reported losses
-
-provide an unbiased estimate
-
-of expected reported losses.
-
-It therefore reduces
-
-dependence on subjective pricing assumptions.
-
----
-
-## 12. Relationship Among Methods
-
-```
-Chain Ladder
-
-↓
-
-Pure historical development
-
----------------------------
-
-Bornhuetter-Ferguson
-
-↓
-
-External ELR
-
----------------------------
-
-Cape Cod
-
-↓
-
-Estimated ELR
-
----------------------------
-
-Benktander
-
-↓
-
-Iterative Credibility
-```
-
----
-
-## 13. Comparison
-
-| Feature | Chain Ladder | BF | Cape Cod |
-|----------|--------------|----|----------|
-| Uses Premium | ✘ | ✔ | ✔ |
-| Uses ELR | ✘ | External | Estimated |
-| Credibility | High | Low | Moderate |
-| Suitable for Immature Years | Limited | Excellent | Excellent |
-| Requires Pricing Assumptions | No | Yes | No |
-
----
-
-## 14. Health Insurance Applications
-
-Cape Cod is particularly useful when
-
-- premium information is reliable,
-- enrollment is stable,
-- benefit changes are moderate,
-- actuarial pricing assumptions are unavailable.
-
-Examples include
-
-- ACA Individual Markets
-- Medicaid Managed Care
-- Medicare Advantage
-- Employer Group Insurance
-
----
-
-## 15. Python Example
+## Implementación mínima
 
 ```python
-import pandas as pd
+percent_developed = 1 / cdf
+developed_exposure = exposure * percent_developed
 
-df["reported_pct"] = 1 / df["cdf"]
+cape_cod_rate = observed.sum() / developed_exposure.sum()
 
-elr = (
-    df["reported"].sum()
-    /
-    (df["premium"] * df["reported_pct"]).sum()
-)
-
-df["ultimate"] = df["premium"] * elr
-
-df["ibnr"] = df["ultimate"] * (1 - df["reported_pct"])
+expected_loss = exposure * cape_cod_rate
+bf_ibnr = expected_loss * (1 - percent_developed)
+bf_ultimate = observed + bf_ibnr
 ```
 
----
+La implementación debe permitir exclusiones, ajustes de tendencia y segmentación.
 
-## 16. R Example
+## Buenas prácticas
 
-```r
-df$reportedPct <- 1 / df$cdf
+Para usar Cape Cod:
 
-elr <- sum(df$reported) /
-       sum(df$premium * df$reportedPct)
+- definir exposición con precisión;
+- revisar cambios de mix;
+- ajustar tendencia si es material;
+- excluir años atípicos con justificación;
+- comparar contra Chain Ladder y BF externo;
+- documentar sensibilidad de la tasa esperada;
+- reconciliar con indicadores de costo por miembro.
 
-df$ultimate <- df$premium * elr
+Cape Cod es más útil cuando conecta reserving con exposición y pricing técnico.
 
-df$ibnr <- df$ultimate * (1 - df$reportedPct)
-```
+## Capítulos relacionados
 
----
+Anterior: [Método Benktander](12-benktander-method.md).  
+Siguiente: [Comparación de métodos clásicos de reserving](14-classical-reserving-methods-comparison.md).
 
-## 17. SQL Example
-
-```sql
-SELECT
-
-SUM(reported)
-
-/
-
-SUM(premium * (1.0 / cdf))
-
-AS estimated_elr
-
-FROM reserving;
-```
-
----
-
-## 18. Diagnostics
-
-Before applying Cape Cod
-
-verify
-
-✓ Premium completeness
-
-✓ Exposure consistency
-
-✓ Stable development factors
-
-✓ Homogeneous portfolio
-
-✓ No material pricing changes
-
-✓ No structural breaks
-
-✓ Reasonable CDFs
-
----
-
-## 19. Common Mistakes
-
-Using written premium instead of earned premium.
-
-Ignoring exposure changes.
-
-Applying one ELR to heterogeneous products.
-
-Ignoring changes in underwriting.
-
-Using outdated development factors.
-
----
-
-## 20. Advantages
-
-✔ Objective ELR estimation.
-
-✔ Stable for immature accident years.
-
-✔ Less subjective than BF.
-
-✔ Combines pricing and reserving.
-
-✔ Easy to communicate.
-
-✔ Well accepted in actuarial practice.
-
----
-
-## 21. Limitations
-
-Assumes
-
-- homogeneous expected loss ratios,
-- stable exposure,
-- consistent pricing.
-
-Not appropriate
-
-if premium adequacy changes materially between accident years.
-
----
-
-## 22. Practical Decision Framework
-
-| Situation | Preferred Method |
-|------------|------------------|
-| Mature portfolio | Chain Ladder |
-| New product | Bornhuetter-Ferguson |
-| Reliable premium data | Cape Cod |
-| Stable exposure | Cape Cod |
-| Highly volatile pricing | BF |
-| Low credibility | Cape Cod |
-
----
-
-## 23. Best Practices
-
-Estimate reserves using
-
-- Chain Ladder
-- Bornhuetter-Ferguson
-- Cape Cod
-
-Compare
-
-Ultimate
-
-IBNR
-
-ELR
-
-Prediction consistency
-
-Document
-
-why
-
-the selected method
-
-best reflects the portfolio.
-
-Never rely on a single reserving technique.
-
----
-
-## Key Takeaways
-
-Cape Cod combines exposure information with historical development to estimate an Expected Loss Ratio directly from observed data.
-
-Compared with Bornhuetter-Ferguson,
-
-it reduces dependence on externally selected pricing assumptions.
-
-Compared with Chain Ladder,
-
-it provides greater stability for immature accident years.
-
-For many Health Insurance portfolios,
-
-Cape Cod offers an excellent compromise between empirical experience and actuarial credibility.
-
----
-
-## References
-
-- Bühlmann, H. *Credibility Theory.*
-- Friedland, J. *Estimating Unpaid Claims Using Basic Techniques.*
-- England, P. & Verrall, R. (2002).
-- Mack, T. (1993).
-- Wüthrich, M. & Merz, M. (2008).
-- Taylor, G. *Loss Reserving.*
-- CAS Study Notes.
-- ASOP No. 5 – Incurred Health and Disability Claims.
-- ASOP No. 23 – Data Quality.
-- ASOP No. 56 – Modeling.
-
----
-
-## Next Chapter
-
-➡️ **14-comparison-of-classical-reserving-methods.md**
