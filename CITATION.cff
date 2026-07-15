@@ -1,20 +1,20 @@
 cff-version: 1.2.0
 title: "Health Insurance Reserving Handbook"
-message: "If you use this handbook, please cite it using this metadata."
+message: "Si utiliza este handbook, cítelo mediante estos metadatos."
 type: software
 authors:
   - family-names: "Forero"
     given-names: "Javier"
 repository-code: "https://github.com/jaforero/health-insurance-reserving-handbook"
-abstract: "Technical handbook on IBNR, reserving, actuarial modeling, health insurance reserving, and applications to the Colombian health system."
+url: "https://jaforero.github.io/health-insurance-reserving-handbook/"
+abstract: "Manual técnico y reproducible sobre IBNR, reservas actuariales y desarrollo de reclamaciones en seguros de salud, con aplicaciones al sistema colombiano."
 keywords:
   - IBNR
-  - reserving
-  - actuarial science
-  - health insurance
+  - reservas actuariales
+  - triángulos de desarrollo
+  - seguros de salud
+  - ciencia actuarial
   - Colombia
-  - MkDocs
 license: MIT
-version: "0.1.0"
+version: "0.1.3"
 date-released: "2026-07-14"
-
