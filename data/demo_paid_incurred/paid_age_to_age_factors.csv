@@ -1,0 +1,10 @@
+from_dev,to_dev,selected_factor,observations,method
+0,1,1.694655,9,volume_weighted
+1,2,1.290343,8,volume_weighted
+2,3,1.162632,7,volume_weighted
+3,4,1.079414,6,volume_weighted
+4,5,1.076632,5,volume_weighted
+5,6,1.035460,4,volume_weighted
+6,7,1.014199,3,volume_weighted
+7,8,1.035213,2,volume_weighted
+8,9,1.000000,1,volume_weighted

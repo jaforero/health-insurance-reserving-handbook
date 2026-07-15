@@ -1,0 +1,9 @@
+=== Paid vs. incurred health demo ===
+Output directory: data/demo_paid_incurred
+Observed cells: 55
+Origin years: 2016-2025
+Valuation year: 2025
+Total paid-basis Chain Ladder IBNR: 195,702,991,010.47
+Total observed case reserve: 125,369,011,589.69
+Total incurred-basis IBNR: 78,895,803,774.42
+Total unpaid on incurred basis: 204,264,815,364.11

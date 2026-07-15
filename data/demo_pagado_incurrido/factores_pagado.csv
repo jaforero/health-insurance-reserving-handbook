@@ -1,0 +1,10 @@
+desde_dev,hasta_dev,factor_seleccionado,observaciones,metodo
+0,1,1.694655,9,ponderado_por_volumen
+1,2,1.290343,8,ponderado_por_volumen
+2,3,1.162632,7,ponderado_por_volumen
+3,4,1.079414,6,ponderado_por_volumen
+4,5,1.076632,5,ponderado_por_volumen
+5,6,1.035460,4,ponderado_por_volumen
+6,7,1.014199,3,ponderado_por_volumen
+7,8,1.035213,2,ponderado_por_volumen
+8,9,1.000000,1,ponderado_por_volumen
