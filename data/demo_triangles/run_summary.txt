@@ -1,0 +1,18 @@
+Demo triangles run summary
+==========================
+
+Seed: 20260714
+Origin years: 2016-2025
+Valuation year: 2025
+Maximum development age: 9
+Observed cells: 55
+
+Total latest cumulative paid: 197,418,518,993.82
+Total Chain Ladder ultimate paid: 259,115,535,297.32
+Total Chain Ladder IBNR: 61,697,016,303.50
+
+Interpretation:
+- The data are synthetic and reproducible.
+- Amounts are nominal simulated currency units.
+- The result is a deterministic Chain Ladder demonstration, not a production reserving model.
+- Future extensions can add incurred triangles, bootstrap uncertainty, GLMs, calendar effects, and health-specific claim adjudication states.

@@ -130,3 +130,5 @@ nav:
       - 38 · Colombia Solvency, Liquidity and Stress Testing: part-07-colombia/38-colombia-solvency-liquidity-and-stress-testing.md
       - 39 · Colombia Scenario Planning and Reform Roadmap: part-07-colombia/39-colombia-scenario-planning-and-reform-roadmap.md
       - 40 · Colombia Implementation Playbook and Templates: part-07-colombia/40-colombia-implementation-playbook-and-templates.md
+  - Demos prácticos:
+      - 01 · Triángulos simulados de reclamaciones de salud: examples/01-simulated-health-triangles-demo.md
