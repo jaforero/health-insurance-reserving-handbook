@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 500" role="img">
+<rect width="920" height="500" fill="#ffffff"/>
+<style>
+text { font-family: Inter, Arial, sans-serif; fill: #1f2937; }
+.title { font-size: 24px; font-weight: 700; }
+.subtitle { font-size: 13px; fill: #52606d; }
+.label { font-size: 10px; }
+.value { font-size: 8px; font-family: Menlo, Consolas, monospace; }
+</style>
+<text x="28" y="38" class="title">Monthly paid maturity curve</text>
+<text x="28" y="62" class="subtitle">Empirical average of 36 complete months · cumulative share of 24-month ultimate</text>
+<line x1="85" y1="364.0" x2="885" y2="364.0" stroke="#e5e7eb"/>
+<text x="73" y="368.0" class="label" text-anchor="end">20%</text>
+<line x1="85" y1="298.0" x2="885" y2="298.0" stroke="#e5e7eb"/>
+<text x="73" y="302.0" class="label" text-anchor="end">40%</text>
+<line x1="85" y1="232.0" x2="885" y2="232.0" stroke="#e5e7eb"/>
+<text x="73" y="236.0" class="label" text-anchor="end">60%</text>
+<line x1="85" y1="166.0" x2="885" y2="166.0" stroke="#e5e7eb"/>
+<text x="73" y="170.0" class="label" text-anchor="end">80%</text>
+<line x1="85" y1="100.0" x2="885" y2="100.0" stroke="#e5e7eb"/>
+<text x="73" y="104.0" class="label" text-anchor="end">100%</text>
+<line x1="85" y1="100" x2="85" y2="430" stroke="#374151"/>
+<line x1="85" y1="430" x2="885" y2="430" stroke="#374151"/>
+<text x="85.0" y="455" class="label" text-anchor="middle">0</text>
+<text x="185.0" y="455" class="label" text-anchor="middle">3</text>
+<text x="285.0" y="455" class="label" text-anchor="middle">6</text>
+<text x="385.0" y="455" class="label" text-anchor="middle">9</text>
+<text x="485.0" y="455" class="label" text-anchor="middle">12</text>
+<text x="585.0" y="455" class="label" text-anchor="middle">15</text>
+<text x="685.0" y="455" class="label" text-anchor="middle">18</text>
+<text x="785.0" y="455" class="label" text-anchor="middle">21</text>
+<text x="885.0" y="455" class="label" text-anchor="middle">24</text>
+<polyline points="85.0,338.8 118.3,280.7 151.7,237.9 185.0,204.9 218.3,178.0 251.7,157.3 285.0,141.3 318.3,129.2 351.7,120.5 385.0,113.9 418.3,109.2 451.7,106.1 485.0,104.0 518.3,102.6 551.7,101.6 585.0,101.1 618.3,100.7 651.7,100.4 685.0,100.2 718.3,100.2 751.7,100.1 785.0,100.1 818.3,100.0 851.7,100.0 885.0,100.0" fill="none" stroke="#3659a7" stroke-width="3"/>
+<circle cx="85.0" cy="338.75433516383134" r="4" fill="#ffffff" stroke="#3659a7" stroke-width="2"/>
+<text x="85.0" y="328.75433516383134" class="label" text-anchor="middle">27.7%</text>
+<circle cx="185.0" cy="204.89657388405215" r="4" fill="#ffffff" stroke="#3659a7" stroke-width="2"/>
+<text x="185.0" y="194.89657388405215" class="label" text-anchor="middle">68.2%</text>
+<circle cx="285.0" cy="141.30873154664457" r="4" fill="#ffffff" stroke="#3659a7" stroke-width="2"/>
+<text x="285.0" y="131.30873154664457" class="label" text-anchor="middle">87.5%</text>
+<circle cx="485.0" cy="103.9770934100223" r="4" fill="#ffffff" stroke="#3659a7" stroke-width="2"/>
+<text x="485.0" y="93.9770934100223" class="label" text-anchor="middle">98.8%</text>
+<circle cx="685.0" cy="100.24718084466612" r="4" fill="#ffffff" stroke="#3659a7" stroke-width="2"/>
+<text x="685.0" y="90.24718084466612" class="label" text-anchor="middle">99.9%</text>
+<circle cx="885.0" cy="100.0" r="4" fill="#ffffff" stroke="#3659a7" stroke-width="2"/>
+<text x="885.0" y="90.0" class="label" text-anchor="middle">100.0%</text>
+<text x="485.0" y="482" class="subtitle" text-anchor="middle">Development month</text>
+</svg>

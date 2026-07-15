@@ -23,7 +23,7 @@ El proyecto contiene actualmente:
 
 - **40 capítulos** técnicos en español;
 - **7 partes** temáticas;
-- **2 demos prácticos bilingües** con datos sintéticos;
+- **3 demos prácticos bilingües** con datos sintéticos;
 - generadores reproducibles en Python;
 - visualizaciones SVG de triángulos actuariales;
 - auditoría estructural, preflight y construcción estricta con MkDocs.
@@ -61,6 +61,13 @@ Compara madurez, reserva caso, factores de desarrollo y resultados Chain Ladder 
 - [Abrir demo en español](examples/02-demo-pagado-vs-incurrido-salud.md)
 - [Open English demo](examples/02-paid-vs-incurred-health-demo.md)
 
+### 3. Triángulos mensuales de reclamaciones pagadas
+
+Utiliza 60 meses de origen y desarrollo 0–24, con una visualización actuarial tradicional, curva de maduración y conteo de observaciones por factor.
+
+- [Abrir demo en español](examples/03-demo-triangulos-mensuales-salud.md)
+- [Open English demo](examples/03-monthly-health-triangles-demo.md)
+
 ## Rutas de aprendizaje
 
 ### Ruta A · Construir una primera estimación de IBNR
@@ -71,6 +78,7 @@ Compara madurez, reserva caso, factores de desarrollo y resultados Chain Ladder 
 4. [Factores edad-a-edad](part-01-foundations/05-age-to-age-development-factors.md)
 5. [Método Chain Ladder](part-02-classical-reserving/06-chain-ladder-method.md)
 6. [Demo de triángulos simulados](examples/01-demo-triangulos-simulados-salud.md)
+7. [Demo de triángulos mensuales](examples/03-demo-triangulos-mensuales-salud.md)
 
 ### Ruta B · Comparar métodos y dependencia del prior
 

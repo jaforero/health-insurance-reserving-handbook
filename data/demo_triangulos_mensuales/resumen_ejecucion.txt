@@ -1,0 +1,10 @@
+=== Demo de triángulos mensuales pagados de salud ===
+Mes de valuación: 2025-12
+Meses de origen: 60
+Meses de desarrollo: 0-24
+Celdas observadas: 1200
+Orígenes completos: 36
+Mínimo de observaciones por factor: 36
+IBNR total Chain Ladder: 77,957,625,915.76
+Semilla: 20260714
+Nota: 60/24 es una configuración didáctica defendible, no un mínimo universal.
