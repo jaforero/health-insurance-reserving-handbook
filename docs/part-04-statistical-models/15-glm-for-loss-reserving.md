@@ -1,548 +1,439 @@
 ---
-title: "GLM for Loss Reserving"
-part: "Parte IV · Modelos estadísticos"
-chapter: 15
+title: Modelos lineales generalizados para reserving
+description: Guía práctica para modelar reclamaciones incrementales y estimar reservas mediante modelos lineales generalizados con distribuciones y enlaces actuarialmente apropiados.
+status: draft
+version: "0.1.8"
+chapter: "15"
+part: "part-04-statistical-models"
 language: "es"
-status: "draft"
 last_updated: "2026-07-14"
 ---
 
-15-generalized-linear-models-for-reserving.md
----
-title: Generalized Linear Models (GLM) for Loss Reserving
-subtitle: Statistical Modeling of Incremental Claims Development
-author: Health Insurance Reserving Handbook
-version: 1.0
-chapter: 15
-status: Draft
-last_updated: 2026-07-13
----
+# Modelos lineales generalizados para reserving
 
-# Generalized Linear Models (GLM) for Loss Reserving
+Los modelos lineales generalizados, o GLM por sus siglas en inglés, permiten representar el desarrollo de reclamaciones dentro de un marco estadístico explícito. A diferencia de un método determinístico, un GLM especifica una distribución, una relación entre media y varianza, un predictor y una función de enlace.
 
-> *"Classical reserving methods extrapolate historical patterns. Generalized Linear Models explain why those patterns occur."*
+En reserving, los GLM suelen aplicarse a celdas incrementales. Pueden reproducir la estructura de Chain Ladder y extenderla con exposición, inflación, producto, región, prestador u otras variables explicativas.
 
----
+## Objetivos
 
-## Learning Objectives
+Al finalizar este capítulo, el lector podrá:
 
-After completing this chapter, the reader should be able to:
+- identificar los componentes de un GLM;
+- seleccionar una distribución y una función de enlace;
+- formular un modelo sobre un triángulo incremental;
+- incorporar exposición mediante un *offset*;
+- interpretar coeficientes y predicciones;
+- diagnosticar sobre-dispersión y mala especificación;
+- proyectar el triángulo inferior;
+- cuantificar incertidumbre de proceso y parámetros;
+- reconocer riesgos de aplicación en seguros de salud.
 
-- Understand why GLMs represent a major advancement over traditional reserving methods.
-- Derive the GLM formulation for claims reserving.
-- Model incremental claims using exponential family distributions.
-- Select appropriate link functions.
-- Estimate model parameters using Maximum Likelihood Estimation (MLE).
-- Evaluate model fit using statistical diagnostics.
-- Apply GLMs to Health Insurance reserving.
-- Compare GLMs with Chain Ladder and credibility methods.
+## Por qué usar un GLM
 
----
+Chain Ladder resume el desarrollo mediante factores. Un GLM permite expresar el mismo problema como una relación estadística entre celdas.
 
-## Table of Contents
+Esta formulación aporta:
 
-1. Introduction
-2. Why Move Beyond Chain Ladder?
-3. Statistical Foundations
-4. The Exponential Family
-5. Components of a GLM
-6. The Reserving Model
-7. Choice of Distribution
-8. Link Functions
-9. Parameter Estimation
-10. Model Diagnostics
-11. Practical Example
-12. Health Insurance Applications
-13. Advantages and Limitations
-14. Best Practices
-15. Summary
+- estimación por máxima verosimilitud o cuasi-verosimilitud;
+- errores estándar de parámetros;
+- residuos y medidas de ajuste;
+- comparación de especificaciones;
+- incorporación de variables adicionales;
+- validación fuera de muestra;
+- simulación predictiva.
 
----
+El GLM no elimina la necesidad de construir y validar correctamente el triángulo. Una estructura estadística sofisticada no compensa errores en periodos de origen, edades de desarrollo o fecha de valuación.
 
-## 1. Introduction
+## Componentes del modelo
 
-Traditional reserving techniques rely almost exclusively on historical development factors.
+Un GLM tiene tres elementos.
 
-Generalized Linear Models (GLMs) provide a statistical framework capable of modeling claim development while simultaneously incorporating explanatory variables.
+### Componente aleatorio
 
-Rather than asking
-
-> "How did claims develop historically?"
-
-GLMs ask
-
-> "Which factors explain claim development?"
-
-This represents a fundamental shift from empirical extrapolation toward statistical inference.
-
----
-
-## 2. Why Move Beyond Chain Ladder?
-
-Chain Ladder assumes
-
-- stable development,
-- homogeneous portfolios,
-- proportional growth.
-
-However, modern Health Insurance portfolios often exhibit
-
-- provider mix changes,
-- inflation,
-- benefit redesign,
-- geographic heterogeneity,
-- regulatory changes,
-- coding changes,
-- enrollment growth.
-
-These factors cannot be modeled directly using deterministic methods.
-
-GLMs can incorporate them explicitly.
-
----
-
-## 3. Statistical Foundations
-
-A GLM extends ordinary linear regression by allowing:
-
-- Non-normal response distributions.
-- Non-linear relationships between predictors and the mean.
-- Variance structures consistent with insurance data.
-
-The framework consists of three components:
-
-1. Random Component
-2. Systematic Component
-3. Link Function
-
----
-
-## 4. The Exponential Family
-
-A response variable \(Y\) belongs to the exponential family if its density can be written as
+La variable respuesta (Y_i) pertenece a una familia de dispersión exponencial. Su media y varianza se expresan como:
 
 $$
-f(y;\theta,\phi)
-=
-\exp\left(
-\frac{y\theta-b(\theta)}{a(\phi)}
-+c(y,\phi)
-\right)
+E[Y_i]=\mu_i
 $$
 
-where
-
-- \(\theta\) = canonical parameter,
-- \(\phi\) = dispersion parameter.
-
-Common reserving distributions include:
-
-| Distribution | Typical Use |
-|--------------|-------------|
-| Poisson | Claim Counts |
-| Gamma | Severity |
-| Inverse Gaussian | Heavy-tailed Severity |
-| Tweedie | Aggregate Losses |
-| Negative Binomial | Overdispersed Counts |
-
----
-
-## 5. Random Component
-
-Suppose
-
 $$
-Y_{ij}
+\operatorname{Var}(Y_i)=\phi V(\mu_i)
 $$
 
-represents incremental paid losses.
+donde:
 
-Assume
+- \(\mu_i\) es la media condicional;
+- \(\phi\) es el parámetro de dispersión;
+- \(V(\mu_i)\) es la función de varianza.
 
-$$
-Y_{ij}
-\sim
-Gamma(\mu_{ij},\phi)
-$$
+### Componente sistemático
 
-or
+El predictor lineal es:
 
 $$
-Y_{ij}
-\sim
-Tweedie(\mu_{ij},\phi,p)
+\eta_i = \beta_0 + \beta_1x_{i1}+\cdots+\beta_px_{ip}
 $$
 
-depending on portfolio characteristics.
+### Función de enlace
 
----
-
-## 6. Systematic Component
-
-The expected claim amount is modeled as
+La función de enlace conecta la media con el predictor:
 
 $$
-\eta_{ij}
-=
-X_{ij}\beta
+g(\mu_i)=\eta_i
 $$
 
-where
-
-- \(X\) = design matrix,
-- \(\beta\) = parameter vector.
-
-Potential predictors include
-
-- Accident Year
-- Development Period
-- Calendar Year
-- Line of Business
-- Region
-- Provider Type
-- Product
-- Inflation Index
-
----
-
-## 7. Link Function
-
-The link function connects the expected value
+El enlace logarítmico es frecuente en reserving porque garantiza medias positivas:
 
 $$
-\mu
-=
-E(Y)
+\log(\mu_i)=\eta_i
 $$
 
-with the linear predictor.
+## Formulación sobre el triángulo
 
-General form
-
-$$
-g(\mu)=X\beta
-$$
-
-Common choices
-
-| Link | Formula |
-|-------|----------|
-| Identity | \(g(\mu)=\mu\) |
-| Log | \(g(\mu)=\log(\mu)\) |
-| Logit | \(g(\mu)=\log(\mu/(1-\mu))\) |
-
-The log link is most common in reserving because claim amounts are strictly positive.
-
----
-
-## 8. Reserving GLM
-
-One common specification is
+Sea (Y_{i,j}) el monto incremental del periodo de origen (i) a edad de desarrollo (j). Una especificación básica es:
 
 $$
-\log(\mu_{ij})
-=
-\alpha_i
-+
-\beta_j
+\log(\mu_{i,j})=\alpha_i+\beta_j
 $$
 
-where
+donde:
 
-- \(\alpha_i\) represents Accident Year effects.
-- \(\beta_j\) represents Development Period effects.
+- \(\alpha_i\) representa diferencias entre periodos de origen;
+- \(\beta_j\) representa el patrón de desarrollo.
 
-Extensions include
-
-$$
-\log(\mu_{ij})
-=
-\alpha_i
-+
-\beta_j
-+
-\gamma_k
-+
-\delta X
-$$
-
-where
-
-- \(\gamma_k\) = Calendar effects,
-- \(X\) = additional covariates.
-
----
-
-## 9. Maximum Likelihood Estimation
-
-Parameters are estimated by maximizing
+Una extensión con exposición (e_i) utiliza:
 
 $$
-L(\beta)
-=
-\prod_i
-f(y_i|\beta)
+\log(\mu_{i,j})=
+\log(e_i)+\alpha_i+\beta_j
 $$
 
-or equivalently
+El término \(\log(e_i)\) es un *offset*: su coeficiente se fija en uno.
+
+También pueden incluirse variables como producto, región, tipo de servicio o indicador de cambio operativo:
 
 $$
-\ell(\beta)
-=
-\sum_i
-\log
-f(y_i|\beta)
+\log(\mu_{i,j})=
+\log(e_i)+\alpha_i+\beta_j+x_{i,j}^{\top}\gamma
 $$
 
-Numerical optimization methods include
+## Origen, desarrollo y calendario
 
-- Newton-Raphson,
-- Fisher Scoring,
-- Iteratively Reweighted Least Squares (IRLS).
-
----
-
-## 10. Model Diagnostics
-
-A fitted GLM should always be evaluated using:
-
-### Residual Analysis
-
-- Pearson Residuals
-- Deviance Residuals
-- Anscombe Residuals
-
-### Goodness-of-Fit
-
-- Deviance
-- AIC
-- BIC
-- Log-Likelihood
-
-### Predictive Performance
-
-- RMSE
-- MAE
-- MAPE
-
----
-
-## 11. Practical Example
-
-Suppose the following incremental payments:
-
-| AY | Dev | Incremental |
-|----|-----|-------------|
-|2022|12|120|
-|2022|24|45|
-|2023|12|150|
-|2023|24|60|
-
-Model
+El periodo calendario está determinado por origen y desarrollo:
 
 $$
-\log(\mu)
-=
-\beta_0
-+
-\beta_{AY}
-+
-\beta_{Dev}
+calendario=origen+desarrollo
 $$
 
-Estimated coefficients
+Por esta relación, un modelo con conjuntos completos de efectos categóricos de origen, desarrollo y calendario no es identificable sin restricciones adicionales.
 
-| Parameter | Estimate |
-|------------|---------:|
-|Intercept|4.52|
-|AY2023|0.18|
-|Dev24|-0.94|
+Opciones habituales:
 
-Interpretation:
+- modelar origen y desarrollo;
+- sustituir parte de los efectos por tendencias;
+- imponer restricciones de identificación;
+- usar penalización;
+- incluir variables calendario específicas y justificadas;
+- aplicar un modelo jerárquico o suavizado.
 
-- AY2023 has approximately \(e^{0.18}-1 \approx 19.7\%\) higher expected incremental losses than AY2022, all else equal.
-- Development month 24 has substantially lower expected incremental losses than development month 12.
+La parametrización debe permitir separar razonablemente desarrollo, tendencia y choque calendario.
 
----
+## Selección de distribución
 
-## 12. Python Example
+| Familia | Función de varianza | Uso posible | Advertencia |
+| --- | --- | --- | --- |
+| Poisson | \(V(\mu)=\mu\) | Conteos o estructura Chain Ladder | Puede subestimar dispersión |
+| Poisson sobredispersado | \(V(\mu)=\mu\), \(\phi\) libre | Incrementales no negativos | Es una formulación de cuasi-verosimilitud |
+| Gamma | \(V(\mu)=\mu^2\) | Montos positivos continuos | No admite ceros ni negativos |
+| Tweedie | \(V(\mu)=\mu^p\) | Mezcla de ceros y montos positivos | Requiere seleccionar o estimar \(p\) |
+| Binomial negativa | \(V(\mu)=\mu+\kappa\mu^2\) | Conteos sobredispersos | No es una distribución de montos agregados |
+
+La familia debe elegirse según la naturaleza de la respuesta, no únicamente por el menor AIC.
+
+### Incrementales negativos
+
+Reversos, recuperaciones, glosas y ajustes pueden producir valores negativos. Poisson, Gamma y Tweedie estándar no los admiten.
+
+Antes de modelar se debe decidir si corresponde:
+
+- corregir un error de datos;
+- separar pagos y recuperaciones;
+- agregar periodos;
+- usar otra distribución;
+- modelar componentes positivos y negativos;
+- aplicar escenarios fuera del GLM principal.
+
+## Exposición y pesos
+
+La exposición puede representar afiliados-mes, pólizas, vidas o unidades de riesgo. Debe distinguirse entre:
+
+- *offset*, que ajusta la media esperada por exposición;
+- peso de frecuencia, que representa observaciones repetidas;
+- peso de varianza, que modifica la precisión relativa.
+
+Usar exposición como peso cuando corresponde un *offset* cambia la interpretación del modelo.
+
+## Estimación
+
+Los parámetros se estiman maximizando la log-verosimilitud:
+
+$$
+\ell(\beta)=
+\sum_i \log f(y_i\mid \beta,\phi)
+$$
+
+En muchos GLM, el cálculo se realiza mediante mínimos cuadrados reponderados iterativamente, o IRLS.
+
+La estimación produce:
+
+- coeficientes;
+- matriz de covarianza;
+- valores ajustados;
+- residuos;
+- deviance;
+- log-verosimilitud;
+- criterios de información, cuando son comparables.
+
+## Interpretación con enlace logarítmico
+
+Si un coeficiente es \(\beta_k\), el cambio multiplicativo esperado es:
+
+$$
+\exp(\beta_k)
+$$
+
+Por ejemplo, \(\beta_k=0.10\) implica, manteniendo lo demás constante:
+
+$$
+\exp(0.10)-1\approx10.5\%
+$$
+
+Para variables categóricas, la interpretación siempre es respecto de la categoría de referencia.
+
+## Proyección del triángulo inferior
+
+Después de ajustar el modelo a las celdas observadas:
+
+1. construir las covariables de cada celda futura;
+2. calcular \(\widehat\eta_{i,j}\);
+3. transformar a la escala de respuesta;
+4. sumar incrementales futuros por periodo de origen;
+5. obtener ultimate e IBNR.
+
+Con enlace logarítmico:
+
+$$
+\widehat\mu_{i,j}=\exp(\widehat\eta_{i,j})
+$$
+
+$$
+\widehat{IBNR}=
+\sum_{i,j\in\text{futuro}}\widehat\mu_{i,j}
+$$
+
+La matriz futura debe conservar la misma codificación de variables, niveles categóricos y tratamiento de exposición usados en el ajuste.
+
+## Incertidumbre predictiva
+
+El error estándar de la media ajustada no equivale a la incertidumbre de la reserva futura.
+
+Una distribución predictiva debe incluir:
+
+- incertidumbre de parámetros;
+- riesgo de proceso;
+- dependencia relevante;
+- incertidumbre de cola;
+- riesgo de modelo mediante escenarios o modelos alternativos.
+
+Opciones de cálculo:
+
+- simulación paramétrica de coeficientes y proceso;
+- Bootstrap;
+- aproximación delta;
+- modelo bayesiano;
+- combinación con escenarios actuariales.
+
+## Diagnósticos
+
+### Residuos
+
+Revisar residuos de Pearson y deviance por:
+
+- periodo de origen;
+- edad de desarrollo;
+- periodo calendario;
+- producto o segmento;
+- tamaño del valor ajustado.
+
+Patrones sistemáticos indican mala especificación.
+
+### Dispersión
+
+Una estimación conceptual es:
+
+$$
+\widehat\phi=
+\frac{\sum_i r_{P,i}^2}{n-p}
+$$
+
+Valores muy superiores a uno bajo Poisson sugieren sobre-dispersión. La causa puede ser heterogeneidad, dependencia, variables omitidas o una familia inadecuada.
+
+### Influencia
+
+Investigar:
+
+- leverage;
+- distancia de Cook;
+- celdas con gran deviance;
+- sensibilidad al retirar diagonales o filas.
+
+### Ajuste y selección
+
+Usar con cautela:
+
+- deviance;
+- AIC y BIC;
+- log-verosimilitud;
+- validación temporal;
+- error predictivo en diagonales retenidas.
+
+AIC solo es comparable entre modelos ajustados a la misma respuesta y datos bajo verosimilitudes compatibles.
+
+## Validación temporal
+
+Un esquema útil es el *backtesting* por fecha de corte:
+
+1. reconstruir un triángulo histórico;
+2. ajustar el GLM;
+3. predecir la siguiente diagonal;
+4. comparar predicción y observación;
+5. repetir para varios cierres.
+
+Métricas posibles:
+
+- sesgo total;
+- MAE;
+- RMSE;
+- deviance predictiva;
+- cobertura de intervalos;
+- error por edad y segmento.
+
+MAPE puede ser inestable cuando existen valores cercanos a cero.
+
+## Ejemplo en Python
+
+El siguiente ejemplo usa nombres de clase vigentes en `statsmodels` y un enlace logarítmico explícito:
 
 ```python
+import numpy as np
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 
+observed = df.loc[df["is_observed"]].copy()
+
 model = smf.glm(
-    formula="incremental ~ C(accident_year) + C(development)",
-    data=df,
+    formula=(
+        "incremental_paid ~ "
+        "C(origin_period) + C(development_age)"
+    ),
+    data=observed,
     family=sm.families.Gamma(
         link=sm.families.links.Log()
-    )
+    ),
+    offset=np.log(observed["exposure"]),
 )
 
-results = model.fit()
-
-print(results.summary())
+result = model.fit()
+print(result.summary())
 ```
 
----
+Este ejemplo requiere incrementales positivos. Para predecir, el *offset* futuro debe suministrarse nuevamente con la exposición correspondiente.
 
-## 13. R Example
+## Ejemplo en R
 
 ```r
-glm_fit <- glm(
-
-incremental ~
-
-factor(accident_year)+
-
-factor(development),
-
-family=Gamma(link="log"),
-
-data=df
-
+fit <- glm(
+  incremental_paid ~
+    factor(origin_period) +
+    factor(development_age) +
+    offset(log(exposure)),
+  family = Gamma(link = "log"),
+  data = observed
 )
 
-summary(glm_fit)
+summary(fit)
 ```
 
----
+## Aplicación en seguros de salud
 
-## 14. SQL Preparation
+Los GLM pueden incorporar explícitamente:
 
-Although model estimation typically occurs in R or Python,
+- afiliados-mes;
+- grupo etario y sexo;
+- región;
+- producto y plan de beneficios;
+- tipo de prestador;
+- ámbito hospitalario o ambulatorio;
+- inflación médica;
+- utilización;
+- canal de radicación;
+- cambio de contrato;
+- indicador de gran reclamación.
 
-SQL is frequently used to prepare the design matrix.
+Debe evitarse introducir variables conocidas solo después de la fecha de valuación. Eso produciría fuga de información y una validación artificialmente favorable.
 
-```sql
-SELECT
+## Comparación con Chain Ladder
 
-accident_year,
+| Aspecto | Chain Ladder | GLM |
+| --- | --- | --- |
+| Patrón de desarrollo | Factores explícitos | Efectos estimados |
+| Variables adicionales | Limitadas | Sí |
+| Distribución | No explícita | Explícita o cuasi-likelihood |
+| Residuos | Diagnósticos auxiliares | Parte central del modelo |
+| Inferencia | Limitada | Sí |
+| Validación predictiva | Posible | Natural dentro del flujo |
+| Complejidad | Baja | Media |
 
-development,
+Un GLM de origen y desarrollo puede reproducir una estructura equivalente a Chain Ladder bajo determinadas especificaciones. Por eso Chain Ladder es un benchmark natural.
 
-calendar_year,
+## Controles de producción
 
-product,
+Documentar:
 
-provider,
+1. definición de la respuesta;
+2. celdas observadas y futuras;
+3. exposición y *offset*;
+4. familia y enlace;
+5. variables y codificación;
+6. restricciones de identificación;
+7. tratamiento de ceros y negativos;
+8. dispersión;
+9. diagnósticos;
+10. validación temporal;
+11. incertidumbre predictiva;
+12. versión de datos, código y dependencias;
+13. comparación con métodos actuariales de referencia.
 
-SUM(incremental_paid) AS incremental
+## Buenas prácticas
 
-FROM claims
+- comenzar con una especificación simple;
+- utilizar Chain Ladder como benchmark;
+- justificar familia y enlace;
+- revisar origen, desarrollo y calendario;
+- separar predicción de la media y distribución predictiva;
+- validar con cierres históricos;
+- probar sensibilidad a segmentación y cola;
+- comunicar limitaciones y riesgo de modelo.
 
-GROUP BY
+## Referencias
 
-accident_year,
+- McCullagh, P. y Nelder, J. A. *Generalized Linear Models*.
+- England, P. D. y Verrall, R. J. *Stochastic Claims Reserving in General Insurance*.
+- Wüthrich, M. V. y Merz, M. *Stochastic Claims Reserving Methods in Insurance*.
+- [Documentación oficial de GLM en statsmodels](https://www.statsmodels.org/stable/glm.html).
 
-development,
+## Capítulos relacionados
 
-calendar_year,
-
-product,
-
-provider;
-```
-
----
-
-## 15. Health Insurance Applications
-
-GLMs are particularly effective for modeling:
-
-- Medical claims.
-- Pharmacy claims.
-- Provider-specific development.
-- Geographic variation.
-- Benefit design changes.
-- Inflation adjustments.
-- Risk adjustment effects.
-- Medicare Advantage.
-- Medicaid Managed Care.
-
-Unlike deterministic methods,
-
-GLMs allow explicit adjustment for operational and business drivers.
-
----
-
-## 16. Comparison with Classical Methods
-
-| Feature | Chain Ladder | GLM |
-|----------|--------------|-----|
-| Historical Development | ✓ | ✓ |
-| Covariates | ✘ | ✓ |
-| Statistical Inference | Limited | ✓ |
-| Confidence Intervals | Limited | ✓ |
-| Hypothesis Testing | ✘ | ✓ |
-| Model Selection | ✘ | ✓ |
-| Calendar Effects | Limited | ✓ |
-
----
-
-## 17. Advantages
-
-- Flexible.
-- Statistically rigorous.
-- Handles multiple explanatory variables.
-- Easily extended.
-- Suitable for predictive analytics.
-- Integrates with modern machine learning workflows.
-
----
-
-## 18. Limitations
-
-- Greater computational complexity.
-- Requires statistical expertise.
-- Sensitive to model specification.
-- Requires sufficient data volume.
-- Interpretation becomes more difficult as model complexity increases.
-
----
-
-## 19. Best Practices
-
-- Begin with exploratory data analysis.
-- Validate triangle construction.
-- Compare several distributions.
-- Evaluate alternative link functions.
-- Check residual diagnostics.
-- Assess overdispersion.
-- Compare with Chain Ladder.
-- Document model assumptions and selection criteria.
-- Perform out-of-sample validation.
-
----
-
-## 20. Key Takeaways
-
-Generalized Linear Models extend classical reserving by modeling incremental claims as realizations from an exponential family distribution.
-
-Unlike Chain Ladder,
-
-GLMs incorporate explanatory variables, allow formal statistical inference, and provide a unified framework for testing hypotheses, estimating uncertainty, and improving predictive accuracy.
-
-For modern Health Insurance reserving,
-
-GLMs represent the natural transition from deterministic actuarial methods to statistical and predictive modeling.
-
----
-
-## References
-
-- McCullagh, P. & Nelder, J. A. (1989). *Generalized Linear Models.*
-- England, P. & Verrall, R. (2002). *Stochastic Claims Reserving in General Insurance.*
-- Wüthrich, M. & Merz, M. (2008). *Stochastic Claims Reserving Methods in Insurance.*
-- Taylor, G. *Loss Reserving.*
-- Friedland, J. *Estimating Unpaid Claims Using Basic Techniques.*
-- ASOP No. 5 – Incurred Health and Disability Claims.
-- ASOP No. 23 – Data Quality.
-- ASOP No. 41 – Actuarial Communications.
-- ASOP No. 56 – Modeling.
-
----
-
-## Next Chapter
-
-➡️ **16-generalized-additive-models-gam.md**
+Anterior: [Comparación entre Mack y Bootstrap](../part-03-stochastic-reserving/10-comparing-mack-vs-bootstrap.md).  
+Siguiente: [Modelos aditivos generalizados](16-gam-for-loss-reserving.md).

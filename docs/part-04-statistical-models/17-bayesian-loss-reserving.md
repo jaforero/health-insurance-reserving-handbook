@@ -1,888 +1,486 @@
 ---
-title: "Bayesian Loss Reserving"
-part: "Parte IV · Modelos estadísticos"
-chapter: 17
+title: Reserving bayesiano
+description: Introducción práctica al reserving bayesiano para combinar información previa y experiencia observada, obtener distribuciones posteriores y proyectar el IBNR.
+status: draft
+version: "0.1.8"
+chapter: "17"
+part: "part-04-statistical-models"
 language: "es"
-status: "draft"
 last_updated: "2026-07-14"
 ---
 
-17-bayesian-loss-reserving.md
----
-title: Bayesian Loss Reserving
-subtitle: Probabilistic Inference for Ultimate Losses and IBNR Estimation
-author: Health Insurance Reserving Handbook
-version: 1.0
-chapter: 17
-status: Draft
-last_updated: 2026-07-13
----
+# Reserving bayesiano
 
-# Bayesian Loss Reserving
+El reserving bayesiano combina información previa con datos observados para obtener una distribución posterior de parámetros, ultimates e IBNR. En lugar de limitarse a una estimación puntual, representa explícitamente la incertidumbre que el modelo reconoce.
 
-> *"Classical reserving estimates one reserve. Bayesian reserving estimates an entire probability distribution of possible reserves."*
+Su valor es especialmente claro cuando existe información externa relevante, segmentos con poca experiencia o estructuras jerárquicas. Su principal riesgo es producir resultados aparentemente precisos a partir de priors, likelihoods o dependencias mal especificadas.
 
----
+## Objetivos
 
-## Learning Objectives
+Al finalizar este capítulo, el lector podrá:
 
-After completing this chapter, the reader should be able to:
+- interpretar prior, likelihood y posterior;
+- diferenciar distribución posterior y posterior predictiva;
+- construir una formulación bayesiana de reserving;
+- utilizar modelos jerárquicos para credibilidad parcial;
+- interpretar intervalos creíbles y predictivos;
+- revisar diagnósticos de MCMC;
+- realizar verificaciones predictivas;
+- documentar sensibilidad, gobierno y limitaciones.
 
-- Understand Bayesian inference in the context of loss reserving.
-- Derive posterior distributions for reserve estimates.
-- Explain prior, likelihood, and posterior distributions.
-- Build hierarchical Bayesian reserving models.
-- Apply Markov Chain Monte Carlo (MCMC).
-- Interpret credible intervals.
-- Compare Bayesian reserving with Mack, Bootstrap, and GLMs.
-- Apply Bayesian methods to Health Insurance.
+## Teorema de Bayes
 
----
-
-## Table of Contents
-
-1. Introduction
-2. Why Bayesian Reserving?
-3. Bayesian Philosophy
-4. Bayes' Theorem
-5. Prior Distributions
-6. Likelihood Functions
-7. Posterior Distribution
-8. Hierarchical Models
-9. MCMC Algorithms
-10. Bayesian Chain Ladder
-11. Bayesian GLM
-12. Practical Example
-13. Model Diagnostics
-14. Health Insurance Applications
-15. Implementation
-16. Best Practices
-17. Summary
-
----
-
-## 1. Introduction
-
-Bayesian reserving represents one of the most powerful statistical frameworks available to actuaries.
-
-Unlike deterministic methods,
-
-which produce
-
-a single reserve estimate,
-
-Bayesian methods estimate
-
-the entire probability distribution
-
-of future liabilities.
-
-Instead of asking
-
-> "What is the reserve?"
-
-Bayesian reserving asks
-
-> "Given the observed data and our prior knowledge, what is the probability distribution of the reserve?"
-
----
-
-## 2. Why Bayesian Reserving?
-
-Traditional methods assume
-
-parameters are fixed
-
-but unknown.
-
-Bayesian statistics assumes
-
-parameters themselves
-
-are random variables.
-
-This distinction fundamentally changes
-
-how uncertainty is quantified.
-
----
-
-## 3. Bayesian Philosophy
-
-Bayesian inference combines
-
-Previous Knowledge
-
-+
-
-Observed Data
-
-↓
-
-Updated Knowledge
-
-This process is repeated
-
-whenever new information becomes available.
-
----
-
-## 4. Bayes' Theorem
-
-The foundation of Bayesian statistics is
+Sea \(\theta\) el conjunto de parámetros y (y) los datos observados:
 
 $$
-P(\theta|Y)
-=
-\frac
-{
-P(Y|\theta)
-P(\theta)
-}
-{
-P(Y)
-}
+p(\theta\mid y)=
+\frac{p(y\mid \theta)p(\theta)}{p(y)}
 $$
 
-where
-
-- \(P(\theta)\) = Prior
-- \(P(Y|\theta)\) = Likelihood
-- \(P(\theta|Y)\) = Posterior
-- \(P(Y)\) = Evidence
-
----
-
-Interpretation
-
-Posterior
-
-=
-
-Likelihood
-
-×
-
-Prior
-
-normalized by
-
-Evidence.
-
----
-
-## 5. Prior Distributions
-
-The prior represents
-
-actuarial knowledge
-
-before observing
-
-current claims.
-
-Sources include
-
-- Pricing studies
-- Historical reserving
-- Expert judgment
-- Industry benchmarks
-- Previous accident years
-
----
-
-## Common Priors
-
-| Parameter | Prior |
-|------------|-------|
-| Claim Frequency | Poisson |
-| Severity | Gamma |
-| Variance | Inverse Gamma |
-| Regression Coefficients | Normal |
-| Correlation | LKJ |
-
----
-
-## 6. Likelihood Function
-
-Suppose
-
-incremental claims
-
-follow
-
-Gamma
-
-distribution.
-
-Then
+En forma proporcional:
 
 $$
-Y_i
-
-\sim
-
-Gamma(\mu_i,\phi)
+p(\theta\mid y)
+\propto
+p(y\mid \theta)p(\theta)
 $$
 
-The likelihood becomes
+donde:
+
+- \(p(\theta)\): distribución previa o *prior*;
+- \(p(y\mid \theta)\): verosimilitud o *likelihood*;
+- \(p(\theta\mid y)\): distribución posterior.
+
+## Distribución posterior predictiva
+
+La predicción de una celda futura \(\widetilde y\) integra la incertidumbre de parámetros:
 
 $$
-L(\theta)
-
-=
-
-\prod
-
-P(Y_i|\theta)
-$$
-
-which summarizes
-
-all information contained
-
-in observed claims.
-
----
-
-## 7. Posterior Distribution
-
-Combining
-
-prior
-
-and
-
-likelihood
-
-produces
-
-$$
-P(\theta|Y)
-$$
-
-The posterior summarizes
-
-everything currently known
-
-about the unknown parameter.
-
-Posterior quantities include
-
-- Posterior Mean
-- Posterior Median
-- Posterior Variance
-- Credible Intervals
-
----
-
-## 8. Posterior Predictive Distribution
-
-Future claims are predicted using
-
-$$
-P(\tilde Y|Y)
-
-=
-
+p(\widetilde y\mid y)=
 \int
-
-P(\tilde Y|\theta)
-
-P(\theta|Y)
-
-d\theta
+p(\widetilde y\mid \theta)
+p(\theta\mid y)
+\,d\theta
 $$
 
-This integrates
+Cada muestra posterior de parámetros genera una posible trayectoria futura. Al agregar celdas futuras se obtiene una distribución posterior predictiva del IBNR.
 
-parameter uncertainty
+## Prior o información previa
 
-and
+El prior puede incorporar:
 
-process uncertainty
+- experiencia de cierres anteriores;
+- estudios de pricing;
+- benchmarks externos;
+- experiencia de productos similares;
+- restricciones físicas o actuariales;
+- juicio experto estructurado.
 
-simultaneously.
+Tipos habituales:
 
----
+- débilmente informativo;
+- informativo;
+- jerárquico;
+- robusto;
+- de regularización.
 
-## 9. Hierarchical Bayesian Models
+Un prior no informativo en una parametrización puede ser informativo después de una transformación. Por eso debe evaluarse en la escala de resultados actuariales, no solo en la escala de coeficientes.
 
-Insurance portfolios are naturally hierarchical.
+## Verificación predictiva previa
 
-Example
-
-```
-Portfolio
-
-│
-
-├── Product
-
-│
-
-├── Region
-
-│
-
-├── Provider
-
-│
-
-└── Accident Year
-```
-
-Hierarchical models
-
-borrow information
-
-across related groups.
-
-This is especially valuable
-
-for sparse Health Insurance data.
-
----
-
-## Example
+Antes de usar los datos, se simula desde:
 
 $$
-Y_{ij}
+p(\widetilde y)=
+\int p(\widetilde y\mid \theta)p(\theta)\,d\theta
+$$
 
+Las simulaciones deben producir valores plausibles de:
+
+- incrementales;
+- factores implícitos;
+- ultimate;
+- IBNR;
+- severidad y dispersión;
+- cola.
+
+Si el prior permite con alta probabilidad reservas absurdas, debe revisarse antes del ajuste.
+
+## Likelihood
+
+La likelihood representa el mecanismo generador de los datos observados. Posibles elecciones:
+
+- Poisson u ODP;
+- Gamma;
+- Tweedie;
+- lognormal;
+- binomial negativa para conteos;
+- frecuencia y severidad;
+- modelos de estados para pagado, incurrido y reserva caso.
+
+El soporte debe ser compatible con ceros, negativos y reversos. La elección también determina la relación entre media y varianza.
+
+## Modelo bayesiano sobre el triángulo
+
+Para un incremental positivo (Y_{i,j}):
+
+$$
+Y_{i,j}\sim
+\operatorname{Gamma}(\mu_{i,j},\phi)
+$$
+
+con:
+
+$$
+\log(\mu_{i,j})=
+\log(e_i)+\alpha_i+\beta_j
+$$
+
+Los efectos pueden tener priors:
+
+$$
+\alpha_i\sim N(0,\sigma_{\alpha}^2)
+$$
+
+$$
+\beta_j\sim N(m_j,\sigma_{\beta}^2)
+$$
+
+La identificación requiere una categoría de referencia, una restricción de suma cero u otra parametrización equivalente.
+
+## Chain Ladder bayesiano
+
+Los factores de desarrollo pueden tratarse como variables aleatorias:
+
+$$
+\log(f_j)\sim N(m_j,s_j^2)
+$$
+
+y la proyección puede formularse como:
+
+$$
+C_{i,j+1}\mid C_{i,j},f_j,\sigma_j
 \sim
-
-Gamma(\mu_{ij},\phi)
+p(C_{i,j+1}\mid C_{i,j},f_j,\sigma_j)
 $$
 
-$$
-\log(\mu_{ij})
-
-=
-
-\alpha
-
-+
-
-u_i
-
-+
-
-v_j
-$$
-
-where
-
-- \(u_i\) = random Accident Year effect.
-- \(v_j\) = random Development effect.
-
----
-
-## 10. Bayesian Chain Ladder
-
-Chain Ladder
-
-can be reformulated
-
-as
-
-a Bayesian hierarchical model.
-
-Development factors become
-
-random variables.
-
-Instead of
-
-one LDF,
-
-we estimate
-
-a posterior distribution
-
-for every LDF.
-
-This naturally produces
-
-uncertainty intervals.
-
----
-
-## 11. Bayesian GLM
-
-The GLM
-
-$$
-g(\mu)=X\beta
-$$
-
-becomes
-
-$$
-\beta
-
-\sim
-
-Normal(0,\sigma^2)
-$$
-
-Posterior inference
-
-estimates
-
-the entire distribution
-
-of
-
-$$
-\beta
-$$
-
-rather than
-
-a single coefficient.
-
----
-
-## 12. Markov Chain Monte Carlo
-
-Closed-form solutions
-
-rarely exist.
-
-Instead,
-
-posterior distributions
-
-are approximated
-
-through simulation.
-
-Common algorithms
-
-- Gibbs Sampling
-- Metropolis-Hastings
-- Hamiltonian Monte Carlo
-- No-U-Turn Sampler (NUTS)
-
----
-
-## 13. Hamiltonian Monte Carlo
-
-HMC
-
-uses
-
-gradient information
-
-to efficiently explore
-
-high-dimensional posterior distributions.
-
-Advantages
-
-- Fast convergence
-- Low autocorrelation
-- High efficiency
-
-Modern Bayesian software
-
-uses
-
-NUTS
-
-by default.
-
----
-
-## 14. Practical Example
-
-Suppose
-
-Observed Incremental Claims
-
-```
-120
-
-135
-
-150
-
-145
-
-160
+La posterior de cada (f_j) combina la experiencia del triángulo con la información previa. La cola puede incluirse como otro parámetro aleatorio.
+
+## Modelos jerárquicos
+
+Los portafolios de salud tienen niveles naturales:
+
+```text
+Portafolio
+├── Producto
+├── Región
+├── Prestador
+├── Cohorte
+└── Periodo de origen
 ```
 
-Prior
+Un efecto por segmento puede expresarse como:
 
 $$
-\mu
-
-\sim
-
-Normal(140,20^2)
+\gamma_s\sim N(\mu_{\gamma},\tau_{\gamma}^2)
 $$
 
-Observed likelihood
+Los segmentos con poca información se acercan al promedio del grupo, mientras que los segmentos con más datos conservan mayor independencia. Este mecanismo es una forma de credibilidad parcial.
 
-updates
+La agrupación solo es válida si los segmentos son comparables. Compartir información entre poblaciones estructuralmente diferentes puede introducir sesgo.
 
-the posterior.
+## Priors de regularización
 
-Posterior Mean
+Los coeficientes de regresión pueden usar priors normales o Student-(t) centrados en cero. Las escalas deben seleccionarse en función del enlace.
 
-147
+Con enlace logarítmico, un coeficiente de 1 implica multiplicar la media por:
 
-Posterior SD
+$$
+e^1\approx2.72
+$$
 
-8
+Por tanto, un prior (N(0,10^2)) puede ser extremadamente amplio en la escala de costos. La escala debe comprobarse mediante simulación previa.
 
-95% Credible Interval
+Para parámetros positivos pueden usarse distribuciones half-normal, exponencial o lognormal, según el significado actuarial.
 
-131
+## Inferencia computacional
 
-163
+Las posteriores rara vez tienen solución cerrada. Métodos frecuentes:
 
-Interpretation
+- Gibbs;
+- Metropolis-Hastings;
+- Hamiltonian Monte Carlo;
+- NUTS;
+- inferencia variacional, con validación adicional.
 
-There is a 95% posterior probability
+HMC y NUTS utilizan gradientes para explorar posteriores de alta dimensión. Su eficiencia no elimina problemas de geometría, identificación o priors inadecuados.
 
-that the true expected claim amount
+## Diagnósticos de MCMC
 
-lies between
+### Cadenas y trazas
 
-131
+Las cadenas deben explorar la misma región posterior sin tendencias persistentes ni bloqueos.
 
-and
+### \(\widehat R\)
 
-163.
+\(\widehat R\) compara variación entre y dentro de cadenas. Valores alejados de uno indican falta de convergencia.
 
----
+### Tamaño efectivo de muestra
 
-## 15. Credible Interval vs Confidence Interval
+El ESS traduce autocorrelación en una cantidad aproximada de muestras independientes.
 
-| Bayesian | Frequentist |
-|------------|-------------|
-| Credible Interval | Confidence Interval |
-| Probability statement about parameter | Long-run sampling property |
-| Direct interpretation | Indirect interpretation |
+### Error estándar Monte Carlo
 
-Example
+El MCSE cuantifica el error numérico de estimar una cantidad posterior con una muestra finita.
 
-95% Credible Interval
+### Divergencias
 
-means
+Las transiciones divergentes pueden indicar regiones posteriores difíciles o parametrización inadecuada. No deben ignorarse aumentando ciegamente el número de iteraciones.
 
-there is
+### Energía y autocorrelación
 
-95%
+Revisar diagnósticos específicos del algoritmo y la persistencia entre muestras.
 
-posterior probability
+Los umbrales de aceptación deben definirse en el estándar del proyecto y evaluarse junto con gráficos y sensibilidad.
 
-that the parameter
+## Verificación predictiva posterior
 
-lies inside the interval.
+Se simulan réplicas:
 
----
+$$
+y^{rep}\sim p(y^{rep}\mid y)
+$$
 
-## 16. Health Insurance Applications
+y se comparan con los datos observados mediante:
 
-Bayesian reserving performs particularly well for
+- totales por diagonal;
+- distribución de incrementales;
+- ceros y extremos;
+- factores implícitos;
+- residuos por origen, desarrollo y calendario;
+- estadísticos de cola;
+- patrones por segmento.
 
-- Rare diseases
-- Small products
-- Medicaid expansion
-- Medicare Advantage
-- Emerging benefit designs
-- Provider-specific reserving
-- Pharmacy reserving
-- Regional segmentation
+Un modelo puede converger numéricamente y aun representar mal los datos.
 
-because
+## Intervalo creíble e intervalo predictivo
 
-information is shared
+Un intervalo creíble para un parámetro describe su probabilidad posterior condicional al modelo y los datos.
 
-across related populations.
+Un intervalo predictivo para la reserva futura incluye además riesgo de proceso. Por eso suele ser más amplio.
 
----
+No deben confundirse:
 
-## 17. Python Example (PyMC)
+- posterior de la media esperada;
+- posterior de parámetros;
+- posterior predictiva del IBNR;
+- distribución de suficiencia frente a una reserva registrada.
+
+## Cálculo del IBNR
+
+Para cada muestra posterior (m):
+
+1. simular o predecir cada celda futura;
+2. agregar por periodo de origen;
+3. sumar el triángulo inferior;
+4. almacenar \(IBNR^{(m)}\).
+
+Entonces pueden calcularse:
+
+$$
+E[IBNR\mid y]
+$$
+
+$$
+Q_q(IBNR\mid y)
+$$
+
+$$
+P(IBNR>R_{booked}\mid y)
+$$
+
+Estos resultados siguen condicionados al modelo y a los priors.
+
+## Ejemplo en Python con PyMC
+
+El siguiente modelo Gamma usa la parametrización por media y desviación estándar disponible en PyMC:
 
 ```python
+import numpy as np
 import pymc as pm
 
-with pm.Model():
+origin_idx = observed["origin_idx"].to_numpy()
+development_idx = observed["development_idx"].to_numpy()
+exposure = observed["exposure"].to_numpy()
+y_observed = observed["incremental_paid"].to_numpy()
 
-    beta0 = pm.Normal("beta0",0,10)
+with pm.Model() as model:
+    intercept = pm.Normal("intercept", mu=0.0, sigma=2.0)
+    sigma_origin = pm.HalfNormal("sigma_origin", sigma=0.5)
 
-    sigma = pm.HalfNormal("sigma",5)
+    origin_raw = pm.Normal(
+        "origin_raw",
+        mu=0.0,
+        sigma=1.0,
+        shape=observed["origin_idx"].nunique(),
+    )
+    origin_effect = origin_raw * sigma_origin
 
-    mu = beta0
-
-    y = pm.Gamma(
-
-        "y",
-
-        mu=mu,
-
-        sigma=sigma,
-
-        observed=data
-
+    development_effect = pm.Normal(
+        "development_effect",
+        mu=0.0,
+        sigma=1.0,
+        shape=observed["development_idx"].nunique(),
     )
 
-    trace = pm.sample()
+    log_mu = (
+        intercept
+        + origin_effect[origin_idx]
+        + development_effect[development_idx]
+        + np.log(exposure)
+    )
+    mu = pm.math.exp(log_mu)
+
+    coefficient_of_variation = pm.HalfNormal(
+        "coefficient_of_variation",
+        sigma=0.5,
+    )
+
+    paid = pm.Gamma(
+        "paid",
+        mu=mu,
+        sigma=coefficient_of_variation * mu,
+        observed=y_observed,
+    )
+
+    idata = pm.sample(
+        draws=2000,
+        tune=2000,
+        chains=4,
+        random_seed=20260714,
+        target_accept=0.9,
+    )
+
+    pm.sample_posterior_predictive(
+        idata,
+        extend_inferencedata=True,
+        random_seed=20260714,
+    )
 ```
 
----
+El modelo es ilustrativo. Una implementación de producción debe imponer identificación, construir predicciones de celdas futuras y validar priors, geometría y posterior predictiva.
 
-## 18. Stan Example
-
-```stan
-parameters{
-
-real beta0;
-
-real<lower=0> sigma;
-
-}
-
-model{
-
-beta0 ~ normal(0,10);
-
-sigma ~ cauchy(0,5);
-
-y ~ gamma(beta0,sigma);
-
-}
-```
-
----
-
-## 19. R Example (brms)
+## Ejemplo en R con `brms`
 
 ```r
 library(brms)
 
 fit <- brm(
-
-incremental ~
-
-accident_year+
-
-development,
-
-family=Gamma(),
-
-data=df
-
+  incremental_paid ~
+    factor(development_age) +
+    (1 | origin_period) +
+    offset(log(exposure)),
+  family = Gamma(link = "log"),
+  prior = c(
+    prior(normal(0, 1), class = "b"),
+    prior(normal(0, 2), class = "Intercept"),
+    prior(exponential(2), class = "sd")
+  ),
+  data = observed,
+  chains = 4,
+  iter = 4000,
+  seed = 20260714
 )
+
+summary(fit)
+pp_check(fit)
 ```
 
----
-
-## 20. Diagnostics
-
-Evaluate
-
-✓ Trace plots
-
-✓ Posterior density
-
-✓ Effective Sample Size (ESS)
-
-✓ R-hat
-
-✓ Divergent transitions
-
-✓ Posterior Predictive Checks
-
-✓ Autocorrelation
-
-✓ Monte Carlo Standard Error
-
----
-
-## 21. Comparison
-
-| Method | Output |
-|----------|--------|
-| Chain Ladder | Point Estimate |
-| Mack | Standard Error |
-| Bootstrap | Empirical Distribution |
-| GLM | Regression Estimates |
-| Bayesian | Full Posterior Distribution |
-
----
-
-## 22. Advantages
-
-✔ Naturally incorporates prior knowledge.
-
-✔ Quantifies all sources of uncertainty.
-
-✔ Handles sparse data.
-
-✔ Hierarchical modeling.
-
-✔ Full predictive distributions.
-
-✔ Excellent for decision analysis.
-
----
-
-## 23. Limitations
-
-Requires
-
-computational resources.
-
-Requires
-
-prior specification.
-
-Posterior estimation
-
-may be slow.
-
-Model validation
-
-is more complex.
-
-Interpretation
-
-requires statistical expertise.
-
----
-
-## 24. Production Workflow
-
-```
-Raw Claims
-
-↓
-
-Data Validation
-
-↓
-
-Triangle Construction
-
-↓
-
-Feature Engineering
-
-↓
-
-Prior Selection
-
-↓
-
-Bayesian Model
-
-↓
-
-MCMC
-
-↓
-
-Posterior Diagnostics
-
-↓
-
-Posterior Prediction
-
-↓
-
-Reserve Distribution
-
-↓
-
-Governance
-```
-
----
-
-## 25. Best Practices
-
-Begin
-
-with
-
-GLM.
-
-Extend
-
-to
-
-Bayesian GLM.
-
-Use
-
-weakly informative priors
-
-unless
-
-strong prior knowledge exists.
-
-Always
-
-perform
-
-Posterior Predictive Checks.
-
-Compare
-
-posterior reserves
-
-against
-
-Mack
-
-Bootstrap
-
-and
-
-Chain Ladder.
-
-Document
-
-priors
-
-carefully.
-
----
-
-## Key Takeaways
-
-Bayesian reserving extends traditional actuarial methods by treating unknown parameters as random variables and estimating their full posterior distributions.
-
-Unlike deterministic or frequentist approaches,
-
-Bayesian models naturally combine prior actuarial knowledge with observed claims experience,
-
-making them particularly valuable for Health Insurance portfolios characterized by sparse data, rapidly changing environments, or hierarchical structures.
-
-Modern computational tools have made Bayesian reserving practical for production environments,
-
-provided that appropriate diagnostics and governance are applied.
-
----
-
-## References
-
-- Gelman, A. et al. (2021). *Bayesian Data Analysis.*
-- Kruschke, J. (2015). *Doing Bayesian Data Analysis.*
-- McElreath, R. (2020). *Statistical Rethinking.*
-- England, P. & Verrall, R. (2002).
-- Wüthrich, M. & Merz, M. (2008).
-- Taylor, G. *Loss Reserving.*
-- ASOP No. 23 – Data Quality.
-- ASOP No. 41 – Actuarial Communications.
-- ASOP No. 56 – Modeling.
-
----
-
-## Next Chapter
-
-➡️ **18-machine-learning-for-loss-reserving.md**
+## Aplicación en seguros de salud
+
+El enfoque bayesiano es útil para:
+
+- productos nuevos;
+- regiones o prestadores con poca experiencia;
+- enfermedades de alto costo;
+- integración de pricing y reserving;
+- actualización secuencial por cierre;
+- modelos de frecuencia y severidad;
+- combinación de información pagada e incurrida;
+- incorporación explícita de incertidumbre de cola.
+
+Debe tenerse especial cuidado con:
+
+- cambios de población;
+- reformas regulatorias;
+- sesgo de selección;
+- información previa no comparable;
+- grandes reclamaciones;
+- dependencia entre prestadores y periodos;
+- datos censurados o incompletos.
+
+## Comparación con otros métodos
+
+| Método | Resultado principal | Información previa | Distribución predictiva |
+| --- | --- | --- | --- |
+| Chain Ladder | Estimación puntual | Implícita en factores | No |
+| Mack | MSEP y error estándar | No explícita | Requiere aproximación |
+| Bootstrap | Muestra predictiva | Historia observada | Sí, bajo el esquema de simulación |
+| GLM | Coeficientes y media | No explícita | Mediante extensión o simulación |
+| Bayesiano | Posterior y posterior predictiva | Explícita | Sí |
+
+## Sensibilidad
+
+Repetir el análisis con:
+
+- priors alternativos plausibles;
+- distintas familias;
+- otra segmentación;
+- cola alternativa;
+- inclusión y exclusión de periodos atípicos;
+- parametrización centrada y no centrada;
+- modelos con y sin efecto calendario.
+
+Las decisiones materiales deben reflejarse en escenarios, no ocultarse dentro de un único prior.
+
+## Controles de producción
+
+Documentar:
+
+1. modelo generador y likelihood;
+2. parametrización e identificación;
+3. priors y su justificación;
+4. verificaciones predictivas previas;
+5. algoritmo e hiperparámetros;
+6. semilla y versiones;
+7. diagnósticos de convergencia;
+8. verificaciones predictivas posteriores;
+9. construcción del triángulo futuro;
+10. agregación y dependencia;
+11. sensibilidad;
+12. comparación con benchmarks;
+13. limitaciones y revisión independiente.
+
+## Buenas prácticas
+
+- comenzar con un GLM o modelo jerárquico simple;
+- justificar priors en la escala actuarial;
+- realizar simulación predictiva previa;
+- usar parametrizaciones identificables;
+- revisar divergencias y ESS;
+- validar la posterior predictiva;
+- comparar con Chain Ladder, Mack y Bootstrap;
+- separar incertidumbre cuantificada y riesgo estructural;
+- mantener el modelo reproducible y revisable.
+
+## Referencias
+
+- Gelman, A. et al. *Bayesian Data Analysis*.
+- McElreath, R. *Statistical Rethinking*.
+- Wüthrich, M. V. y Merz, M. *Stochastic Claims Reserving Methods in Insurance*.
+- [Documentación oficial de la distribución Gamma en PyMC](https://www.pymc.io/projects/docs/en/stable/api/distributions/generated/pymc.Gamma.html).
+
+## Capítulos relacionados
+
+Anterior: [Modelos aditivos generalizados](16-gam-for-loss-reserving.md).  
+Siguiente: [Machine learning para reserving](../part-05-machine-learning/18-machine-learning-for-loss-reserving.md).

@@ -1,813 +1,429 @@
 ---
-title: "GAM for Loss Reserving"
-part: "Parte IV · Modelos estadísticos"
-chapter: 16
+title: Modelos aditivos generalizados para reserving
+description: Introducción práctica a los modelos aditivos generalizados para representar patrones no lineales de desarrollo, calendario, exposición y tendencia médica.
+status: draft
+version: "0.1.8"
+chapter: "16"
+part: "part-04-statistical-models"
 language: "es"
-status: "draft"
 last_updated: "2026-07-14"
 ---
 
-16-generalized-additive-models-gam.md
----
-title: Generalized Additive Models (GAM) for Loss Reserving
-subtitle: Nonlinear Statistical Modeling for Modern Health Insurance Reserving
-author: Health Insurance Reserving Handbook
-version: 1.0
-chapter: 16
-status: Draft
-last_updated: 2026-07-13
----
+# Modelos aditivos generalizados para reserving
 
-# Generalized Additive Models (GAM)
+Los modelos aditivos generalizados, o GAM, extienden los GLM reemplazando algunos efectos lineales o categóricos por funciones suaves estimadas a partir de los datos.
 
-> *"Generalized Linear Models assume relationships are linear on the transformed scale. Generalized Additive Models allow the data to determine the shape of those relationships."*
+Esta flexibilidad es útil cuando el desarrollo, la tendencia médica, la estacionalidad o la utilización cambian de manera no lineal. La suavización puede reducir la volatilidad de estimar un coeficiente independiente para cada edad, pero también introduce decisiones de regularización que deben validarse.
 
----
+## Objetivos
 
-## Learning Objectives
+Al finalizar este capítulo, el lector podrá:
 
-After completing this chapter, the reader should be able to:
+- explicar la relación entre GLM y GAM;
+- interpretar bases, splines y penalización;
+- leer grados efectivos de libertad;
+- seleccionar y validar parámetros de suavización;
+- modelar desarrollo, calendario y estacionalidad;
+- detectar sobreajuste y concurvidad;
+- proyectar celdas futuras;
+- aplicar GAM a reserving de salud con gobierno apropiado.
 
-- Understand why GAMs extend GLMs.
-- Explain smooth functions and penalized splines.
-- Model nonlinear development patterns.
-- Select smoothing parameters.
-- Prevent overfitting.
-- Interpret GAM effects.
-- Apply GAMs to Health Insurance reserving.
-- Compare GAMs with GLMs and classical reserving methods.
+## Del GLM al GAM
 
----
-
-## Table of Contents
-
-1. Introduction
-2. Motivation
-3. From GLM to GAM
-4. Mathematical Foundations
-5. Basis Functions
-6. Penalized Splines
-7. Smoothing Parameter Selection
-8. Model Estimation
-9. Diagnostics
-10. Practical Example
-11. Health Insurance Applications
-12. Comparison with GLM
-13. Advantages
-14. Limitations
-15. Best Practices
-16. Summary
-
----
-
-## 1. Introduction
-
-Generalized Linear Models assume
-
-that each predictor contributes linearly on the transformed scale.
-
-In practice,
-
-insurance data rarely behave linearly.
-
-Examples include
-
-- claim development
-- medical inflation
-- age effects
-- provider efficiency
-- utilization
-- seasonality
-
-Generalized Additive Models (GAMs)
-
-replace linear effects
-
-with smooth functions estimated directly from the data.
-
----
-
-## 2. Motivation
-
-Suppose development follows
-
-```
-Month
-
-↓
-
-Rapid Growth
-
-↓
-
-Plateau
-
-↓
-
-Slow Tail
-```
-
-A GLM forces
-
-one coefficient
-
-for each development period.
-
-A GAM estimates
-
-a smooth development curve.
-
-This often produces
-
-more stable predictions.
-
----
-
-## 3. From GLM to GAM
-
-GLM
+Un GLM tiene la forma:
 
 $$
-g(\mu)=X\beta
+g(\mu_i)=\beta_0+x_i^{\top}\beta
 $$
 
-GAM
+Un GAM permite:
 
 $$
-g(\mu)
-
-=
-
-\beta_0
-
-+
-
-\sum_j
-
-f_j(x_j)
+g(\mu_i)=\beta_0+
+f_1(x_{i1})+
+f_2(x_{i2})+
+\cdots+
+f_q(x_{iq})
 $$
 
-where
+Las funciones \(f_k\) se estiman como curvas suaves. El modelo sigue siendo aditivo en la escala del enlace, aunque la relación con cada predictor puede ser no lineal.
+
+## Por qué suavizar
+
+En un GLM categórico, cada edad de desarrollo puede tener su propio coeficiente. Con pocos datos, esos coeficientes pueden ser inestables.
+
+Un suavizador comparte información entre edades cercanas y puede representar:
+
+- descenso rápido seguido de una cola lenta;
+- tendencia médica que cambia gradualmente;
+- estacionalidad anual;
+- relación no lineal entre utilización y costo;
+- comportamiento de prestadores según volumen;
+- efectos de edad del afiliado.
+
+La suavización no debe ocultar cambios reales. Un quiebre regulatorio o de sistema puede requerir un indicador explícito o un modelo por regímenes.
+
+## Representación mediante bases
+
+Una función suave puede escribirse como:
 
 $$
-f_j(\cdot)
+f(x)=\sum_{k=1}^{K}b_k(x)\theta_k
 $$
 
-are smooth functions estimated from the data.
+donde:
 
----
+- \(b_k(x)\) son funciones base;
+- \(\theta_k\) son coeficientes;
+- (K) determina el tamaño máximo de la base.
 
-## Interpretation
+Bases frecuentes:
 
-Instead of estimating
+- splines de regresión de placa delgada;
+- splines cúbicos;
+- B-splines;
+- splines cíclicos;
+- productos tensoriales para interacciones.
 
-one coefficient
+Un (K) grande no obliga a una curva compleja si existe penalización suficiente, pero aumenta costo y puede complicar el ajuste.
 
-per predictor,
+## Penalización
 
-the model estimates
-
-one smooth curve
-
-per predictor.
-
----
-
-## 4. Why Smooth Functions?
-
-Suppose
-
-Medical Inflation
-
-affects reserves.
-
-True relationship
-
-```
-Reserve
-
-▲
-
-│
-
-│      ****
-
-│    **
-
-│  **
-
-│**
-
-└────────────► Inflation
-```
-
-GLM
-
-fits
-
-straight lines.
-
-GAM
-
-fits
-
-smooth curves.
-
----
-
-## 5. Mathematical Formulation
-
-Suppose
-
-Incremental Loss
-
-$$
-Y_i
-$$
-
-Then
-
-$$
-Y_i
-
-\sim
-
-Gamma(\mu_i,\phi)
-$$
-
-or
-
-Tweedie.
-
-The model becomes
-
-$$
-g(\mu_i)
-
-=
-
-\beta_0
-
-+
-
-f_1(Development)
-
-+
-
-f_2(AccidentYear)
-
-+
-
-f_3(CalendarYear)
-
-+
-
-f_4(Age)
-
-+
-...
-$$
-
----
-
-## 6. Basis Functions
-
-Smooth functions are represented as
-
-linear combinations
-
-of basis functions.
-
-Example
-
-$$
-f(x)
-
-=
-
-\sum
-
-\beta_k
-
-B_k(x)
-$$
-
-where
-
-$$
-B_k(x)
-$$
-
-may be
-
-- B-Splines
-- Cubic Splines
-- Thin Plate Splines
-- Natural Splines
-
----
-
-## 7. Penalized Splines
-
-Without restriction,
-
-smooth curves overfit.
-
-Penalty term
+Para evitar curvas excesivamente onduladas se añade una penalización, por ejemplo:
 
 $$
 \lambda
-
-\int
-
-(f''(x))^2
-
-dx
+\int [f''(x)]^2\,dx
 $$
 
-controls complexity.
+El parámetro \(\lambda\) controla el compromiso entre ajuste y suavidad:
 
-Interpretation
+- \(\lambda\) grande: curva más suave;
+- \(\lambda\) pequeño: curva más flexible.
 
-Large
-
-$$
-\lambda
-$$
-
-↓
-
-Smooth curve
-
-Small
+En forma matricial, el criterio penalizado puede expresarse como:
 
 $$
-\lambda
+-2\ell(\theta)+
+\sum_m \lambda_m\theta^{\top}S_m\theta
 $$
 
-↓
+donde \(S_m\) es una matriz de penalización.
 
-Flexible curve
+## Grados efectivos de libertad
 
----
+Los grados efectivos de libertad, EDF, resumen la complejidad estimada de un efecto suave.
 
-## 8. Effective Degrees of Freedom (EDF)
+Interpretación aproximada:
 
-Unlike GLMs,
+- EDF cercano a 1: efecto casi lineal;
+- EDF moderado: curvatura relevante;
+- EDF alto: patrón complejo que requiere revisión.
 
-GAMs estimate
+Un EDF alto no prueba sobreajuste, pero debe evaluarse junto con validación, tamaño de muestra, residuos y estabilidad temporal.
 
-Effective Degrees of Freedom
+## Selección de suavización
 
-rather than simply
+Métodos frecuentes:
 
-number of coefficients.
+- REML;
+- máxima verosimilitud;
+- GCV;
+- UBRE o AIC, según la familia y escala;
+- validación cruzada temporal.
 
-Interpretation
+En `mgcv`, `method="REML"` permite estimar parámetros de suavización mediante máxima verosimilitud restringida. La selección automática debe complementarse con validación actuarial.
 
-EDF
+## Formulación para reserving
 
-≈1
-
-↓
-
-Almost linear.
-
-EDF
-
-≫1
-
-↓
-
-Highly nonlinear.
-
----
-
-## 9. Choosing the Smoothing Parameter
-
-Common methods
-
-- Generalized Cross Validation (GCV)
-- REML
-- ML
-- AIC
-- UBRE
-
-Modern actuarial software
-
-typically uses
-
-REML.
-
----
-
-## 10. Model Estimation
-
-Parameter estimation
-
-alternates between
-
-- likelihood maximization
-- smoothing optimization
-
-using
-
-Penalized Iteratively Reweighted Least Squares
-
-(P-IRLS).
-
----
-
-## 11. Practical Example
-
-Suppose
-
-Incremental Claims
-
-depend on
-
-- Development
-- Calendar Year
-- Inflation
-
-Model
+Sea (Y_{i,j}) el incremental de origen (i) y desarrollo (j). Un modelo posible es:
 
 $$
-\log(\mu)
-
-=
-
-\beta_0
-
-+
-
-f_1(Development)
-
-+
-
-f_2(CalendarYear)
-
-+
-
-f_3(Inflation)
+\log(\mu_{i,j})=
+\log(e_i)+
+f_{dev}(j)+
+f_{origin}(i)+
+x_{i,j}^{\top}\gamma
 $$
 
-Estimated EDF
+Una extensión con calendario es:
 
-| Variable | EDF |
-|-----------|----:|
-|Development|5.8|
-|Calendar|2.4|
-|Inflation|1.1|
+$$
+\log(\mu_{i,j})=
+\log(e_i)+
+f_{dev}(j)+
+f_{calendar}(i+j)+
+x_{i,j}^{\top}\gamma
+$$
 
-Interpretation
+Origen, desarrollo y calendario mantienen una relación exacta. Usar tres suavizadores flexibles sin restricciones puede producir confusión de efectos e inestabilidad. La estructura debe ser identificable y responder a una hipótesis actuarial.
 
-Development exhibits
+## Estacionalidad
 
-strong nonlinear behavior.
+Para datos mensuales, la estacionalidad puede modelarse con un spline cíclico:
 
-Inflation
+$$
+f_{season}(mes),
+\qquad f_{season}(1)=f_{season}(13)
+$$
 
-is approximately linear.
+La continuidad entre diciembre y enero evita un salto artificial en el borde.
 
----
+La estacionalidad observada debe distinguirse de:
 
-## 12. Health Insurance Example
+- días hábiles;
+- calendario de pagos;
+- cierres contables;
+- vacaciones;
+- campañas de radicación;
+- cambios de utilización.
 
-Medical utilization often follows
+## Interacciones
 
-```
-High
+Un efecto conjunto puede representarse con productos tensoriales:
 
-↓
+$$
+f(desarrollo, calendario)
+$$
 
-Moderate
+o:
 
-↓
+$$
+f(utilización, severidad)
+$$
 
-Stable
-```
+Las interacciones aumentan rápidamente la complejidad y requieren suficiente cobertura de datos. No deben usarse para llenar regiones futuras muy alejadas de la experiencia observada.
 
-rather than
+## Concurvidad
 
-a straight line.
+La concurvidad es el análogo no lineal de la multicolinealidad. Ocurre cuando una función suave puede explicarse mediante otras funciones del modelo.
 
-Similarly,
+Consecuencias:
 
-provider reimbursement
+- efectos individuales inestables;
+- bandas amplias;
+- interpretación ambigua;
+- sensibilidad a pequeñas variaciones de datos;
+- extrapolación poco confiable.
 
-may increase
+En triángulos, la relación origen-desarrollo-calendario es una fuente natural de concurvidad.
 
-nonlinearly
+## Distribución y enlace
 
-over time.
+Los GAM usan las mismas familias conceptuales que los GLM:
 
-GAM captures these relationships naturally.
+- Poisson o cuasi-Poisson;
+- Gamma;
+- Tweedie;
+- binomial negativa;
+- otras familias compatibles con la respuesta.
 
----
+La suavización no resuelve incompatibilidades de soporte. Un GAM Gamma sigue sin admitir ceros o negativos.
 
-## 13. Python Example
+## Proyección futura
 
-```python
-from pygam import GammaGAM, s
+Para proyectar el triángulo inferior:
 
-gam = GammaGAM(
+1. construir las covariables futuras;
+2. verificar que estén dentro de un rango razonable;
+3. predecir en la escala del enlace;
+4. transformar a montos incrementales;
+5. agregar por origen y total;
+6. incorporar incertidumbre de parámetros y proceso.
 
-s(0)+
+Los splines pueden extrapolar linealmente o según reglas de borde que no representan una cola actuarial. La extrapolación debe revisarse visualmente y compararse con un tail factor o escenario explícito.
 
-s(1)+
+## Diagnósticos
 
-s(2)
+Revisar:
 
-)
+- residuos de deviance y Pearson;
+- residuos por origen, desarrollo y calendario;
+- EDF por término;
+- suficiencia de dimensión de base;
+- concurvidad;
+- influencia;
+- dispersión;
+- bandas de incertidumbre;
+- ajuste en bordes;
+- desempeño fuera de muestra.
 
-gam.fit(X,y)
+### Señales de sobreajuste
 
-gam.summary()
-```
+- curvas con oscilaciones sin interpretación;
+- gran variación entre cierres;
+- excelente ajuste interno y mal *backtesting*;
+- predicciones negativas o extremas en otra familia o enlace;
+- alta sensibilidad a (K), penalización o pocas observaciones.
 
----
+### Señales de subajuste
 
-## 14. R Example
+- patrones claros en residuos;
+- EDF pegado al límite de la base;
+- sesgo sistemático por edad;
+- estacionalidad remanente;
+- errores concentrados en cambios de pendiente.
+
+## Validación
+
+La validación aleatoria puede filtrar información futura en un problema triangular. Es preferible usar:
+
+- retención de diagonales;
+- validación por fecha de corte;
+- ventanas temporales móviles;
+- comparación de cierres históricos;
+- validación por segmento.
+
+Comparar siempre con:
+
+- Chain Ladder;
+- GLM más simple;
+- método a priori cuando exista poca madurez;
+- escenarios estructurales.
+
+## Ejemplo en R
+
+El paquete `mgcv` permite especificar suavizadores mediante `s()` y seleccionar suavización por REML:
 
 ```r
 library(mgcv)
 
 fit <- gam(
-
-incremental ~
-
-s(development)+
-
-s(calendar_year)+
-
-s(inflation),
-
-family=Gamma(link="log"),
-
-data=df,
-
-method="REML"
-
+  incremental_paid ~
+    s(development_age, k = 8) +
+    s(calendar_index, k = 8) +
+    factor(product) +
+    offset(log(exposure)),
+  family = Gamma(link = "log"),
+  data = observed,
+  method = "REML"
 )
 
 summary(fit)
-
-plot(fit)
+gam.check(fit)
+concurvity(fit, full = TRUE)
 ```
 
----
-
-## 15. Interpretation of Smooth Functions
-
-Unlike GLMs,
-
-coefficients
-
-are not interpreted directly.
-
-Instead,
-
-interpret
-
-- shape
-- trend
-- turning points
-- confidence bands
-
-Plots become essential.
-
----
-
-## 16. Diagnostics
-
-Review
-
-✓ Residuals
-
-✓ Deviance
-
-✓ EDF
-
-✓ Concurvity
-
-✓ AIC
-
-✓ GCV
-
-✓ QQ Plot
-
-✓ Scale Parameter
-
----
-
-## 17. Concurvity
-
-GAM analogue
-
-of multicollinearity.
-
-Occurs when
-
-smooth predictors
-
-contain similar information.
-
-High concurvity
-
-reduces interpretability.
-
----
-
-## 18. Comparison with GLM
-
-| Feature | GLM | GAM |
-|----------|-----|-----|
-| Linear Effects | ✓ | ✓ |
-| Nonlinear Effects | ✘ | ✓ |
-| Splines | ✘ | ✓ |
-| Smooth Functions | ✘ | ✓ |
-| Automatic Curve Estimation | ✘ | ✓ |
-| Interpretability | High | Moderate |
-
----
-
-## 19. Health Insurance Applications
-
-GAM performs particularly well for
-
-- claim development
-- seasonality
-- provider behavior
-- utilization curves
-- inflation
-- risk adjustment
-- enrollment growth
-- aging populations
-
----
-
-## 20. Advantages
-
-✔ Flexible
-
-✔ Captures nonlinear relationships
-
-✔ Excellent predictive performance
-
-✔ Handles complex trends
-
-✔ Automatic smoothing
-
-✔ Interpretable visualization
-
----
-
-## 21. Limitations
-
-Requires
-
-larger datasets.
-
-Computationally intensive.
-
-Less interpretable
-
-than GLMs.
-
-Sensitive to
-
-smoothing parameter selection.
-
----
-
-## 22. Production Workflow
-
-```
-Raw Claims
-
-↓
-
-Feature Engineering
-
-↓
-
-Train/Test Split
-
-↓
-
-GLM Benchmark
-
-↓
-
-GAM
-
-↓
-
-Residual Analysis
-
-↓
-
-Cross Validation
-
-↓
-
-Reserve Prediction
-
-↓
-
-Governance
+Para un efecto mensual cíclico:
+
+```r
+seasonal_fit <- gam(
+  incremental_paid ~
+    s(development_age, k = 8) +
+    s(month_of_year, bs = "cc", k = 12) +
+    offset(log(exposure)),
+  family = Gamma(link = "log"),
+  data = observed,
+  method = "REML",
+  knots = list(month_of_year = c(0.5, 12.5))
+)
 ```
 
----
+## Ejemplo conceptual en Python
 
-## 23. Comparison with Classical Reserving
+Una implementación con `pyGAM` puede estructurarse así:
 
-| Feature | Chain Ladder | GLM | GAM |
-|----------|--------------|-----|-----|
-| Development Factors | ✓ | Implicit | Implicit |
-| Covariates | ✘ | ✓ | ✓ |
-| Nonlinear Effects | ✘ | ✘ | ✓ |
-| Statistical Tests | Limited | ✓ | ✓ |
-| Smooth Curves | ✘ | ✘ | ✓ |
-| Predictive Accuracy | Moderate | High | Very High |
+```python
+from pygam import GammaGAM, f, s
 
----
+model = GammaGAM(
+    s(0, n_splines=8) +
+    s(1, n_splines=8) +
+    f(2)
+)
 
-## 24. Best Practices
+model.gridsearch(X_train, y_train)
+prediction = model.predict(X_future)
+```
 
-Use
+Las columnas del ejemplo representan desarrollo, calendario y producto. El tratamiento de exposición, restricciones y versiones de la API debe validarse antes de producción.
 
-GLM
+## Aplicación en seguros de salud
 
-as baseline.
+Los GAM pueden representar:
 
-Fit
+- curva de desarrollo de pagos;
+- utilización por edad;
+- estacionalidad de servicios;
+- tendencia médica no lineal;
+- comportamiento por volumen de prestador;
+- efectos de duración de afiliación;
+- relaciones entre exposición y severidad;
+- cambios graduales de codificación.
 
-GAM
+No deben suavizarse indiscriminadamente:
 
-only
+- reformas con fecha definida;
+- cambios de sistema;
+- modificaciones contractuales discretas;
+- epidemias;
+- depuración extraordinaria de cuentas.
 
-if diagnostics indicate
+Estos eventos suelen requerir variables indicadoras, segmentación o escenarios.
 
-nonlinear relationships.
+## Comparación de modelos
 
-Avoid
+| Aspecto | Chain Ladder | GLM | GAM |
+| --- | --- | --- | --- |
+| Desarrollo | Factores | Efectos lineales o categóricos | Curva suave |
+| Variables adicionales | Limitadas | Sí | Sí |
+| No linealidad | Implícita | Mediante diseño | Directa mediante suavizadores |
+| Regularización | No usual | Opcional | Central |
+| Interpretación | Alta | Alta o media | Media, apoyada en gráficos |
+| Riesgo de sobreajuste | Bajo o medio | Medio | Medio o alto sin control |
+| Extrapolación | Mediante factores | Según predictor | Sensible a bordes y bases |
 
-overfitting
+## Incertidumbre
 
-through
+Las bandas de un efecto suave no son intervalos predictivos de reserva.
 
-REML
+Para la distribución de reserva se requiere considerar:
 
-or
+- covarianza de coeficientes y suavizadores;
+- incertidumbre del parámetro de suavización;
+- riesgo de proceso;
+- cola;
+- dependencia entre celdas y segmentos;
+- riesgo de modelo.
 
-cross-validation.
+Puede utilizarse simulación a partir de la distribución aproximada de coeficientes, Bootstrap o una formulación bayesiana.
 
-Compare
+## Controles de producción
 
-predictions
+Documentar:
 
-against
+1. familia y enlace;
+2. variables lineales y suaves;
+3. tipo y tamaño de bases;
+4. método de suavización;
+5. restricciones de identificación;
+6. exposición y *offset*;
+7. tratamiento de bordes;
+8. concurvidad;
+9. diagnóstico de dimensión de base;
+10. validación temporal;
+11. incertidumbre predictiva;
+12. comparación con GLM y Chain Ladder;
+13. versiones de software.
 
-GLM
+## Buenas prácticas
 
-and
+- ajustar primero un GLM interpretable;
+- añadir suavizadores solo donde exista una hipótesis;
+- visualizar cada efecto con bandas;
+- revisar bordes y extrapolación;
+- validar por cierre, no solo aleatoriamente;
+- controlar concurvidad;
+- probar sensibilidad a bases y penalización;
+- traducir el resultado a una narrativa actuarial clara.
 
-Chain Ladder.
+## Referencias
 
-Document
+- Hastie, T. y Tibshirani, R. *Generalized Additive Models*.
+- Wood, S. N. *Generalized Additive Models: An Introduction with R*.
+- [Documentación oficial de `gam` en `mgcv`](https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/gam.html).
 
-all smoothing decisions.
+## Capítulos relacionados
 
----
-
-## Key Takeaways
-
-Generalized Additive Models extend GLMs by replacing linear effects with smooth functions estimated directly from the data.
-
-This flexibility allows GAMs to model complex nonlinear relationships frequently observed in Health Insurance reserving, such as claim development, inflation, provider behavior and seasonality.
-
-When combined with appropriate diagnostics and regularization,
-
-GAMs provide a powerful balance between predictive performance and statistical interpretability.
-
----
-
-## References
-
-- Hastie, T. & Tibshirani, R. (1990). *Generalized Additive Models.*
-- Wood, S. (2017). *Generalized Additive Models: An Introduction with R.*
-- McCullagh, P. & Nelder, J. *Generalized Linear Models.*
-- England & Verrall (2002).
-- Wüthrich & Merz (2008).
-- Taylor, G. *Loss Reserving.*
-- ASOP No. 23 – Data Quality.
-- ASOP No. 41 – Actuarial Communications.
-- ASOP No. 56 – Modeling.
-
----
-
-## Next Chapter
-
-➡️ **17-bayesian-loss-reserving.md**
+Anterior: [Modelos lineales generalizados](15-glm-for-loss-reserving.md).  
+Siguiente: [Reserving bayesiano](17-bayesian-loss-reserving.md).
