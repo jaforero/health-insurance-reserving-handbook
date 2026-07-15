@@ -1,13 +1,16 @@
 ---
-title: "Colombia Solvency, Liquidity and Stress Testing"
-part: "Parte VII · Colombia"
+title: "Solvencia, liquidez y pruebas de estrés en salud"
+description: "Marco para evaluar solvencia, liquidez, suficiencia patrimonial y escenarios de estrés asociados con reservas de salud."
 chapter: 38
+part: "part-07-colombia"
 language: "es"
 status: "draft"
+version: "0.1.11"
 last_updated: "2026-07-14"
+jurisdiction: "Colombia"
 ---
 
-# Colombia Solvency, Liquidity and Stress Testing
+# Solvencia, liquidez y pruebas de estrés en salud
 
 Este capítulo desarrolla un marco actuarial para analizar solvencia, liquidez y escenarios de estrés en aseguramiento de salud en Colombia. Conecta la suficiencia de UPC, reservas IBNR, alto costo, glosas, cuentas por pagar, flujo de caja, patrimonio, riesgo de modelo y sostenibilidad financiera.
 
@@ -46,11 +49,7 @@ La solvencia puede deteriorarse por subestimación de reservas, insuficiencia de
 Una visión actuarial de solvencia puede representarse como:
 
 $$
-\text{Posición económica} = \text{Activos admisibles}
--
-\text{Pasivos técnicos}
--
-\text{Otros pasivos}
+\text{Posición económica} = \text{Activos admisibles} - \text{Pasivos técnicos} - \text{Otros pasivos}
 $$
 
 Donde:
@@ -75,18 +74,13 @@ La liquidez se mide por capacidad de cubrir pagos esperados.
 Modelo básico:
 
 $$
-\text{Gap de liquidez}_{t} = \text{Entradas de caja}_{t}
--
-\text{Salidas de caja}_{t}
+\text{Gap de liquidez}_{t} = \text{Entradas de caja}_{t} - \text{Salidas de caja}_{t}
 $$
 
 Con acumulado:
 
 $$
-\text{Caja acumulada}_{t} = \text{Caja inicial}
-+
-\sum_{k=1}^{t}
-\text{Gap de liquidez}_{k}
+\text{Caja acumulada}_{t} = \text{Caja inicial} + \sum_{k=1}^{t} \text{Gap de liquidez}_{k}
 $$
 
 Entradas típicas:
@@ -191,9 +185,7 @@ Un escenario determinístico puede decir: “inflación médica +8%, rezago pago
 Un modelo estocástico puede simular miles de trayectorias de frecuencia, severidad, pagos, glosas y caja para estimar percentiles:
 
 $$
-\text{Capital económico}_{99\%} = Q_{99\%}(\text{Pérdida})
--
-E[\text{Pérdida}]
+\text{Capital económico}_{99\%} = Q_{99\%}(\text{Pérdida}) - E[\text{Pérdida}]
 $$
 
 También puede usarse TVaR:
@@ -252,14 +244,7 @@ Los escenarios deben capturar al menos algunas dependencias. De lo contrario, su
 Un modelo mínimo de liquidez médica puede proyectar:
 
 $$
-\text{Pagos}_{t} = f(
-\text{Reconocido pendiente},
-\text{IBNR},
-\text{patrón de pago},
-\text{glosas},
-\text{alto costo},
-\text{capacidad de caja}
-)
+\text{Pagos}_{t} = f( \text{Reconocido pendiente}, \text{IBNR}, \text{patrón de pago}, \text{glosas}, \text{alto costo}, \text{capacidad de caja} )
 $$
 
 Componentes:
@@ -332,15 +317,13 @@ La respuesta puede incluir:
 La suficiencia UPC puede evaluarse como:
 
 $$
-\text{Ratio de suficiencia} = \frac{\text{Ingreso UPC esperado}}
-{\text{Costo médico esperado} + \text{gasto administrativo técnico}}
+\text{Ratio de suficiencia} = \frac{\text{Ingreso UPC esperado}} {\text{Costo médico esperado} + \text{gasto administrativo técnico}}
 $$
 
 Bajo estrés:
 
 $$
-\text{Ratio estrés} = \frac{\text{Ingreso UPC estrés}}
-{\text{Costo médico estrés} + \text{gasto técnico estrés}}
+\text{Ratio estrés} = \frac{\text{Ingreso UPC estrés}} {\text{Costo médico estrés} + \text{gasto técnico estrés}}
 $$
 
 Si el ratio está persistentemente por debajo de 1, el problema no es solo de liquidez. Es un déficit técnico.
@@ -394,11 +377,7 @@ ASOP 57 enfatiza que, cuando se emiten opiniones sobre reservas y elementos actu
 Una prueba simplificada de adecuación:
 
 $$
-\text{Activos líquidos y realizables}
-\geq
-\text{Pasivos técnicos esperados}
-+
-\text{stress de pasivos}
+\text{Activos líquidos y realizables} \geq \text{Pasivos técnicos esperados} + \text{stress de pasivos}
 $$
 
 Si no se cumple, se requiere análisis de mitigación:
@@ -477,9 +456,7 @@ Los valores son ilustrativos; deben calibrarse con experiencia propia y juicio t
 Un modelo de capital económico puede estimar:
 
 $$
-\text{Capital requerido} = Q_{\alpha}(\text{Pérdida económica})
--
-\text{Pérdida esperada}
+\text{Capital requerido} = Q_{\alpha}(\text{Pérdida económica}) - \text{Pérdida esperada}
 $$
 
 La pérdida económica puede incluir:

@@ -117,19 +117,19 @@ nav:
       - 26 · Health Provider Contracts and Payment Models: part-06-health-specific/26-health-provider-contracts-and-payment-models.md
       - 27 · Health Claims Audit, Denials and Disputes: part-06-health-specific/27-health-claims-audit-denials-and-disputes.md
       - 28 · Health Reserving Governance, Controls and Reporting: part-06-health-specific/28-health-reserving-governance-controls-and-reporting.md
-  - Parte VII · Colombia:
-      - 29 · Colombia Health Reserving Methodologies: part-07-colombia/29-colombia-health-reserving-methodologies.md
-      - 30 · Colombia Paid vs. Incurred Triangles: part-07-colombia/30-colombia-paid-vs-incurred-triangles.md
-      - 31 · Colombia Data and Multistate Models: part-07-colombia/31-colombia-data-and-multistate-models.md
-      - 32 · Colombia Glosas and Disputes: part-07-colombia/32-colombia-glosas-and-disputes.md
-      - 33 · Colombia Capitation and Prospective Payments: part-07-colombia/33-colombia-capitation-and-prospective-payments.md
-      - 34 · Colombia UPC Risk Adjustment and Morbidity: part-07-colombia/34-colombia-upc-risk-adjustment-and-morbidity.md
-      - 35 · Colombia High-Cost Conditions and Risk Pooling: part-07-colombia/35-colombia-high-cost-conditions-and-risk-pooling.md
-      - 36 · Colombia RIPS-FEV Data Quality and Validation: part-07-colombia/36-colombia-rips-fev-data-quality-and-validation.md
-      - 37 · Colombia IBNR Technical Provisions and Regulatory Reporting: part-07-colombia/37-colombia-ibnr-technical-provisions-and-regulatory-reporting.md
-      - 38 · Colombia Solvency, Liquidity and Stress Testing: part-07-colombia/38-colombia-solvency-liquidity-and-stress-testing.md
-      - 39 · Colombia Scenario Planning and Reform Roadmap: part-07-colombia/39-colombia-scenario-planning-and-reform-roadmap.md
-      - 40 · Colombia Implementation Playbook and Templates: part-07-colombia/40-colombia-implementation-playbook-and-templates.md
+  - Parte 7 · Colombia:
+      - 29 · Metodologías de reservas de salud: part-07-colombia/29-colombia-health-reserving-methodologies.md
+      - 30 · Triángulos pagados e incurridos: part-07-colombia/30-colombia-paid-vs-incurred-triangles.md
+      - 31 · Datos y modelos multiestado: part-07-colombia/31-colombia-data-and-multistate-models.md
+      - 32 · Glosas, devoluciones y controversias: part-07-colombia/32-colombia-glosas-and-disputes.md
+      - 33 · Capitación y pagos prospectivos: part-07-colombia/33-colombia-capitation-and-prospective-payments.md
+      - 34 · UPC, ajuste de riesgo y morbilidad: part-07-colombia/34-colombia-upc-risk-adjustment-and-morbidity.md
+      - 35 · Alto costo y mutualización de riesgos: part-07-colombia/35-colombia-high-cost-conditions-and-risk-pooling.md
+      - 36 · Calidad y validación de datos RIPS–FEV: part-07-colombia/36-colombia-rips-fev-data-quality-and-validation.md
+      - 37 · IBNR, provisiones y reporte regulatorio: part-07-colombia/37-colombia-ibnr-technical-provisions-and-regulatory-reporting.md
+      - 38 · Solvencia, liquidez y pruebas de estrés: part-07-colombia/38-colombia-solvency-liquidity-and-stress-testing.md
+      - 39 · Escenarios y hoja de ruta de reforma: part-07-colombia/39-colombia-scenario-planning-and-reform-roadmap.md
+      - 40 · Playbook de implementación y plantillas: part-07-colombia/40-colombia-implementation-playbook-and-templates.md
   - Demos prácticos:
       - 01 · Triángulos simulados de reclamaciones de salud: examples/01-demo-triangulos-simulados-salud.md
       - 01 · Simulated health claims triangles (EN): examples/01-simulated-health-triangles-demo.md

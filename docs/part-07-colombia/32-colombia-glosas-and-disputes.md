@@ -1,35 +1,13 @@
 ---
-title: "Colombia Glosas and Disputes"
-part: "Parte VII · Colombia"
+title: "Modelación actuarial de glosas, devoluciones y controversias en salud"
+description: "Tratamiento actuarial de glosas, devoluciones, conciliaciones y controversias dentro de las reservas de salud colombianas."
 chapter: 32
+part: "part-07-colombia"
 language: "es"
 status: "draft"
+version: "0.1.11"
 last_updated: "2026-07-14"
----
-
-24-colombian-health-reserving-glosas-and-disputes.md
----
-title: Modelación actuarial de glosas, devoluciones y controversias en salud
-subtitle: Estimación de obligaciones pendientes, probabilidad de reconocimiento y tiempos de resolución en Colombia
-author: Health Insurance Reserving Handbook
-version: 1.0
-chapter: 24
-status: Draft
-jurisdiction: Colombia
-last_updated: 2026-07-14
-language: es
-tags:
-  - Colombia
-  - IBNR
-  - reservas técnicas
-  - glosas
-  - devoluciones
-  - cuentas médicas
-  - controversias
-  - EPS
-  - IPS
-  - supervivencia
-  - modelos multiestado
+jurisdiction: "Colombia"
 ---
 
 # Modelación actuarial de glosas, devoluciones y controversias en salud
@@ -134,23 +112,17 @@ Una cuenta puede:
 
 Desde una perspectiva actuarial, existen al menos tres variables aleatorias:
 
-\[
-A_m
-=
-\text{resultado final de la controversia}
-\]
+$$
+A_m = \text{resultado final de la controversia}
+$$
 
-\[
-Q_m
-=
-\text{proporción finalmente reconocida}
-\]
+$$
+Q_m = \text{proporción finalmente reconocida}
+$$
 
-\[
-T_m
-=
-\text{tiempo hasta resolución o pago}
-\]
+$$
+T_m = \text{tiempo hasta resolución o pago}
+$$
 
 La reserva debe considerar las tres.
 
@@ -368,11 +340,9 @@ Una misma línea puede tener más de una controversia.
 
 Unidad recomendada:
 
-\[
-m
-=
-(\text{factura},\text{línea},\text{código},\text{secuencia})
-\]
+$$
+m = (\text{factura},\text{línea},\text{código},\text{secuencia})
+$$
 
 ## 7.5 Episodio de disputa
 
@@ -508,17 +478,17 @@ reglas_conciliacion
 
 Ejemplos:
 
-\[
+$$
 Causal \times Prestador
-\]
+$$
 
-\[
+$$
 Servicio \times Contrato
-\]
+$$
 
-\[
+$$
 Antigüedad \times TipoGlosa
-\]
+$$
 
 ---
 
@@ -526,64 +496,45 @@ Antigüedad \times TipoGlosa
 
 ## 10.1 Tasa de glosa inicial
 
-\[
-GIR
-=
-\frac{\text{valor inicialmente glosado}}
-{\text{valor auditado}}
-\]
+$$
+GIR = \frac{\text{valor inicialmente glosado}} {\text{valor auditado}}
+$$
 
 ## 10.2 Tasa final de no reconocimiento
 
-\[
-GFR
-=
-\frac{\text{valor definitivamente no reconocido}}
-{\text{valor controvertido}}
-\]
+$$
+GFR = \frac{\text{valor definitivamente no reconocido}} {\text{valor controvertido}}
+$$
 
 ## 10.3 Tasa de levantamiento
 
-\[
-LR
-=
-\frac{\text{valor glosado posteriormente reconocido}}
-{\text{valor inicialmente glosado}}
-\]
+$$
+LR = \frac{\text{valor glosado posteriormente reconocido}} {\text{valor inicialmente glosado}}
+$$
 
 ## 10.4 Proporción final reconocida
 
-\[
-Q_m
-=
-\frac{V_m^{reconocido}}
-{V_m^{controvertido}}
-\]
+$$
+Q_m = \frac{V_m^{reconocido}} {V_m^{controvertido}}
+$$
 
 ## 10.5 Tiempo hasta resolución
 
-\[
-T_m
-=
-FechaCierre_m-FechaGlosa_m
-\]
+$$
+T_m = FechaCierre_m-FechaGlosa_m
+$$
 
 ## 10.6 Tiempo hasta pago
 
-\[
-T_m^{pay}
-=
-FechaPagoFinal_m-FechaGlosa_m
-\]
+$$
+T_m^{pay} = FechaPagoFinal_m-FechaGlosa_m
+$$
 
 ## 10.7 Tasa de reapertura
 
-\[
-RR
-=
-\frac{\text{controversias reabiertas}}
-{\text{controversias cerradas}}
-\]
+$$
+RR = \frac{\text{controversias reabiertas}} {\text{controversias cerradas}}
+$$
 
 ---
 
@@ -591,22 +542,15 @@ RR
 
 Sea:
 
-\[
-A_m=
-\begin{cases}
-1,& \text{si existe reconocimiento positivo}\\
-0,& \text{si el reconocimiento es cero}
-\end{cases}
-\]
+$$
+A_m= \begin{cases} 1,& \text{si existe reconocimiento positivo}\\ 0,& \text{si el reconocimiento es cero} \end{cases}
+$$
 
 Modelo logístico:
 
-\[
-P(A_m=1\mid X_m)
-=
-\frac{\exp(X_m^\top\beta)}
-{1+\exp(X_m^\top\beta)}
-\]
+$$
+P(A_m=1\mid X_m) = \frac{\exp(X_m^\top\beta)} {1+\exp(X_m^\top\beta)}
+$$
 
 ## 11.1 Interpretación
 
@@ -632,29 +576,25 @@ Para cuentas con probabilidad estimada cercana a 0,70, aproximadamente 70% deber
 
 Condicionado a reconocimiento positivo:
 
-\[
-Q_m
-=
-\frac{V_m^{final}}{V_m^{controvertido}}
-\]
+$$
+Q_m = \frac{V_m^{final}}{V_m^{controvertido}}
+$$
 
 con:
 
-\[
+$$
 0<Q_m\leq1
-\]
+$$
 
 ## 12.1 Regresión beta
 
-\[
+$$
 Q_m\sim Beta(\mu_m\phi,(1-\mu_m)\phi)
-\]
+$$
 
-\[
-logit(\mu_m)
-=
-X_m^\top\gamma
-\]
+$$
+logit(\mu_m) = X_m^\top\gamma
+$$
 
 ## 12.2 Masa en cero y uno
 
@@ -666,17 +606,17 @@ La distribución suele presentar:
 
 Puede utilizarse una distribución inflada:
 
-\[
+$$
 P(Q=0)=\pi_0
-\]
+$$
 
-\[
+$$
 P(Q=1)=\pi_1
-\]
+$$
 
-\[
+$$
 Q\mid0<Q<1\sim Beta(\mu,\phi)
-\]
+$$
 
 ## 12.3 Modelo ordinal
 
@@ -694,13 +634,9 @@ Clasificaciones:
 
 La expectativa es:
 
-\[
-E[V_m^{final}]
-=
-P(A_m=1)
-E[Q_m\mid A_m=1]
-V_m^{controvertido}
-\]
+$$
+E[V_m^{final}] = P(A_m=1) E[Q_m\mid A_m=1] V_m^{controvertido}
+$$
 
 Cuando el valor final puede superar el controvertido por ajustes, debe utilizarse un modelo monetario directo.
 
@@ -718,32 +654,21 @@ Distribuciones posibles:
 
 ## 14.1 Supervivencia
 
-\[
-S(t)
-=
-P(T>t)
-\]
+$$
+S(t) = P(T>t)
+$$
 
 ## 14.2 Hazard
 
-\[
-h(t)
-=
-\lim_{\Delta t\to0}
-\frac{
-P(t\leq T<t+\Delta t\mid T\geq t)
-}{
-\Delta t
-}
-\]
+$$
+h(t) = \lim_{\Delta t\to0} \frac{ P(t\leq T<t+\Delta t\mid T\geq t) }{ \Delta t }
+$$
 
 ## 14.3 Cox
 
-\[
-h(t\mid X)
-=
-h_0(t)\exp(X^\top\delta)
-\]
+$$
+h(t\mid X) = h_0(t)\exp(X^\top\delta)
+$$
 
 ## 14.4 Modelos paramétricos
 
@@ -777,11 +702,9 @@ Desde el estado glosado, una cuenta puede terminar en:
 
 Sea $K$ el resultado final.
 
-\[
-F_k(t)
-=
-P(T\leq t,K=k)
-\]
+$$
+F_k(t) = P(T\leq t,K=k)
+$$
 
 No debe tratarse el rechazo como censura cuando es un resultado económico alternativo.
 
@@ -791,12 +714,9 @@ No debe tratarse el rechazo como censura cuando es un resultado económico alter
 
 ## 16.1 Intensidad
 
-\[
-\lambda_{rs}(t\mid X)
-=
-\lambda_{rs,0}(t)
-\exp(X^\top\beta_{rs})
-\]
+$$
+\lambda_{rs}(t\mid X) = \lambda_{rs,0}(t) \exp(X^\top\beta_{rs})
+$$
 
 ## 16.2 Transiciones principales
 
@@ -811,13 +731,9 @@ No debe tratarse el rechazo como censura cuando es un resultado económico alter
 
 ## 16.3 Reserva multiestado
 
-\[
-R_m(t)
-=
-\sum_s
-P(S_m(\infty)=s\mid S_m(t),X_m)
-E[V_m^{future}\mid s,S_m(t),X_m]
-\]
+$$
+R_m(t) = \sum_s P(S_m(\infty)=s\mid S_m(t),X_m) E[V_m^{future}\mid s,S_m(t),X_m]
+$$
 
 ---
 
@@ -825,19 +741,15 @@ E[V_m^{future}\mid s,S_m(t),X_m]
 
 ## 17.1 Pago parcial
 
-\[
-Saldo_m(t)
-=
-V_m^{ultimate}-P_m(t)
-\]
+$$
+Saldo_m(t) = V_m^{ultimate}-P_m(t)
+$$
 
 ## 17.2 Múltiples pagos
 
-\[
-P_m(t)
-=
-\sum_{k=1}^{N_m(t)}Z_{mk}
-\]
+$$
+P_m(t) = \sum_{k=1}^{N_m(t)}Z_{mk}
+$$
 
 ## 17.3 Acuerdos
 
@@ -861,24 +773,21 @@ Deben separarse de glosas porque obedecen a una decisión comercial o contractua
 
 ## 18.1 Probabilidad
 
-\[
+$$
 P(R_m=1\mid X_m)
-\]
+$$
 
 ## 18.2 Severidad adicional
 
-\[
+$$
 E[Z_m^{reopen}\mid R_m=1,X_m]
-\]
+$$
 
 ## 18.3 Reserva de reapertura
 
-\[
-R_m^{reopen}
-=
-P(R_m=1\mid X_m)
-E[Z_m^{reopen}\mid R_m=1,X_m]
-\]
+$$
+R_m^{reopen} = P(R_m=1\mid X_m) E[Z_m^{reopen}\mid R_m=1,X_m]
+$$
 
 ## 18.4 Materialidad
 
@@ -890,21 +799,15 @@ Si las reaperturas son inmateriales, pueden modelarse agregadamente mediante un 
 
 Para una controversia abierta:
 
-\[
-R_m
-=
-P(A_m=1\mid X_m)
-E[Q_m\mid A_m=1,X_m]
-V_m^{controvertido}
--
-P_m^{controvertido}
-\]
+$$
+R_m = P(A_m=1\mid X_m) E[Q_m\mid A_m=1,X_m] V_m^{controvertido} - P_m^{controvertido}
+$$
 
 con límite inferior:
 
-\[
+$$
 R_m\geq0
-\]
+$$
 
 cuando no se esperan recuperaciones negativas.
 
@@ -912,13 +815,9 @@ cuando no se esperan recuperaciones negativas.
 
 La porción no glosada debe reconocerse separadamente:
 
-\[
-R_m^{total}
-=
-R_m^{no\ controvertido}
-+
-R_m^{controvertido}
-\]
+$$
+R_m^{total} = R_m^{no\ controvertido} + R_m^{controvertido}
+$$
 
 ## 19.2 Evitar doble conteo
 
@@ -933,35 +832,27 @@ El saldo glosado no debe incluirse simultáneamente en:
 
 ## 20. Reserva agregada
 
-\[
-R^{glosas}
-=
-\sum_{m=1}^{M}R_m
-\]
+$$
+R^{glosas} = \sum_{m=1}^{M}R_m
+$$
 
 Por causal:
 
-\[
-R_c
-=
-\sum_{m:C_m=c}R_m
-\]
+$$
+R_c = \sum_{m:C_m=c}R_m
+$$
 
 Por antigüedad:
 
-\[
-R_a
-=
-\sum_{m:Aging_m=a}R_m
-\]
+$$
+R_a = \sum_{m:Aging_m=a}R_m
+$$
 
 Por prestador:
 
-\[
-R_p
-=
-\sum_{m:Provider_m=p}R_m
-\]
+$$
+R_p = \sum_{m:Provider_m=p}R_m
+$$
 
 La agregación debe reconciliarse con:
 
@@ -980,15 +871,9 @@ La estimación estadística puede estar sujeta a límites mínimos.
 
 En forma general:
 
-\[
-R_m^{booked}
-=
-\max
-\left(
-R_m^{actuarial},
-R_m^{regulatory}
-\right)
-\]
+$$
+R_m^{booked} = \max \left( R_m^{actuarial}, R_m^{regulatory} \right)
+$$
 
 cuando la norma aplicable establezca un piso.
 
@@ -1031,27 +916,21 @@ Desarrollo:
 
 ## 22.2 Triángulo de glosas levantadas
 
-\[
-L_{i,j}
-=
-\text{valor levantado en desarrollo }j
-\]
+$$
+L_{i,j} = \text{valor levantado en desarrollo }j
+$$
 
 ## 22.3 Triángulo de reconocimiento
 
-\[
-K_{i,j}
-=
-\text{valor reconocido acumulado}
-\]
+$$
+K_{i,j} = \text{valor reconocido acumulado}
+$$
 
 ## 22.4 Triángulo de pago
 
-\[
-P_{i,j}
-=
-\text{valor pagado acumulado}
-\]
+$$
+P_{i,j} = \text{valor pagado acumulado}
+$$
 
 ## 22.5 Limitación
 
@@ -1075,15 +954,15 @@ El Paid Chain Ladder puede confundir una demora en conciliación con una mayor o
 
 Separar:
 
-\[
+$$
 Paid^{NoGlosa}
-\]
+$$
 
 y:
 
-\[
+$$
 Paid^{Glosa}
-\]
+$$
 
 La mezcla puede producir factores inestables.
 
@@ -1093,31 +972,25 @@ La mezcla puede producir factores inestables.
 
 ## 24.1 Incurrido bruto
 
-\[
-I^{gross}
-=
-Paid+RadicadoPendiente
-\]
+$$
+I^{gross} = Paid+RadicadoPendiente
+$$
 
 Puede sobreestimar.
 
 ## 24.2 Incurrido neto
 
-\[
-I^{net}
-=
-Paid+RadicadoPendiente-Glosa
-\]
+$$
+I^{net} = Paid+RadicadoPendiente-Glosa
+$$
 
 Puede subestimar.
 
 ## 24.3 Incurrido esperado
 
-\[
-I^{expected}
-=
-Paid+E[PagoFuturo]
-\]
+$$
+I^{expected} = Paid+E[PagoFuturo]
+$$
 
 Es conceptualmente superior, sujeto a mínimos regulatorios.
 
@@ -1181,34 +1054,21 @@ Para cada fecha de corte:
 
 ## 26.2 Sesgo
 
-\[
-Bias
-=
-\sum_m
-(\widehat V_m-V_m)
-\]
+$$
+Bias = \sum_m (\widehat V_m-V_m)
+$$
 
 ## 26.3 MAE
 
-\[
-MAE
-=
-\frac{1}{M}
-\sum_m
-|\widehat V_m-V_m|
-\]
+$$
+MAE = \frac{1}{M} \sum_m |\widehat V_m-V_m|
+$$
 
 ## 26.4 Error agregado
 
-\[
-RelativeReserveError
-=
-\frac{
-\sum_m\widehat V_m-\sum_mV_m
-}{
-\sum_mV_m
-}
-\]
+$$
+RelativeReserveError = \frac{ \sum_m\widehat V_m-\sum_mV_m }{ \sum_mV_m }
+$$
 
 ## 26.5 Calibración
 
@@ -1236,19 +1096,15 @@ Prueba: periodo más reciente cerrado
 
 ## 27.1 Tasa de aceptación
 
-\[
-p_m^{stress}
-=
-\min(1,p_m+\Delta_p)
-\]
+$$
+p_m^{stress} = \min(1,p_m+\Delta_p)
+$$
 
 ## 27.2 Proporción reconocida
 
-\[
-q_m^{stress}
-=
-\min(1,q_m+\Delta_q)
-\]
+$$
+q_m^{stress} = \min(1,q_m+\Delta_q)
+$$
 
 ## 27.3 Demora
 
@@ -1500,73 +1356,45 @@ Supónganse cuatro grupos:
 
 ## 31.1 Facturación
 
-\[
-R_1
-=
-100(0.80)(0.90)
-=
-72
-\]
+$$
+R_1 = 100(0.80)(0.90) = 72
+$$
 
 ## 31.2 Tarifa
 
-\[
-R_2
-=
-80(0.65)(0.75)
-=
-39
-\]
+$$
+R_2 = 80(0.65)(0.75) = 39
+$$
 
 ## 31.3 Soportes
 
-\[
-R_3
-=
-60(0.55)(0.80)
-=
-26.4
-\]
+$$
+R_3 = 60(0.55)(0.80) = 26.4
+$$
 
 ## 31.4 Pertinencia
 
-\[
-R_4
-=
-40(0.35)(0.60)
-=
-8.4
-\]
+$$
+R_4 = 40(0.35)(0.60) = 8.4
+$$
 
 ## 31.5 Estimación actuarial
 
-\[
-R^{actuarial}
-=
-72+39+26.4+8.4
-=
-145.8
-\]
+$$
+R^{actuarial} = 72+39+26.4+8.4 = 145.8
+$$
 
 Si los pisos regulatorios aplicables producen una reserva mínima de 175:
 
-\[
-R^{booked}
-=
-\max(145.8,175)
-=
-175
-\]
+$$
+R^{booked} = \max(145.8,175) = 175
+$$
 
 Diferencia prudencial:
 
-\[
-Margin
-=
-175-145.8
-=
-29.2
-\]
+$$
+Margin = 175-145.8 = 29.2
+$$
 
 ---
 
@@ -1703,17 +1531,9 @@ Una devolución representa un evento de trámite que puede subsanarse. Una glosa
 
 La reserva actuarial apropiada puede expresarse como:
 
-\[
-R_m
-=
-P(\text{reconocimiento}\mid X_m)
-\times
-E[\text{proporción reconocida}\mid X_m]
-\times
-V_m^{controvertido}
--
-P_m
-\]
+$$
+R_m = P(\text{reconocimiento}\mid X_m) \times E[\text{proporción reconocida}\mid X_m] \times V_m^{controvertido} - P_m
+$$
 
 Este cálculo debe complementarse con:
 

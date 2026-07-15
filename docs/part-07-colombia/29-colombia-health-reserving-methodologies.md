@@ -1,36 +1,13 @@
 ---
-title: "Colombia Health Reserving Methodologies"
-part: "Parte VII · Colombia"
+title: "Metodologías de reservas en salud adaptadas al contexto colombiano"
+description: "Marco técnico para seleccionar, adaptar y gobernar metodologías de reservas e IBNR en el sistema de salud colombiano."
 chapter: 29
+part: "part-07-colombia"
 language: "es"
 status: "draft"
+version: "0.1.11"
 last_updated: "2026-07-14"
----
-
-21-colombian-health-reserving-methodologies.md
----
-
-title: Metodologías de reservas en salud adaptadas al contexto colombiano
-subtitle: Marco técnico, regulatorio y operativo para estimar obligaciones pendientes e IBNR
-author: Health Insurance Reserving Handbook
-version: 1.0
-chapter: 21
-status: Draft
-jurisdiction: Colombia
-last_updated: 2026-07-13
-language: es
-tags:
-
-* Colombia
-* IBNR
-* reservas técnicas
-* EPS
-* salud
-* glosas
-* UPC
-* ADRES
-* Supersalud
-
+jurisdiction: "Colombia"
 ---
 
 # Metodologías de reservas en salud adaptadas al contexto colombiano
@@ -353,11 +330,7 @@ Ejemplos:
 Una formulación general es:
 
 $$
-R_{KNL}
-=======
-
-\sum_{m=1}^{M}
-E[V_m\mid S_m,X_m]
+R_{KNL} ======= \sum_{m=1}^{M} E[V_m\mid S_m,X_m]
 $$
 
 donde:
@@ -380,10 +353,7 @@ Es la categoría más cercana al IBNR clásico:
 Definición conceptual:
 
 $$
-IBNR_t
-======
-
-E[U_t-O_t\mid\mathcal F_t]
+IBNR_t ====== E[U_t-O_t\mid\mathcal F_t]
 $$
 
 donde:
@@ -529,17 +499,10 @@ Sin historia de estados es difícil reconstruir:
 Como mínimo:
 
 $$
-\text{Valor bruto}
-------------------
-
-## \text{glosas aceptadas}
-
-## \text{descuentos}
-
+\text{Valor bruto} ------------------ ## \text{glosas aceptadas} ## \text{descuentos}
 $$
 \text{pagos}
 $$
-
 \text{saldo pendiente}
 $$
 
@@ -563,12 +526,7 @@ En Colombia no existe un único development lag.
 ## 7.1 Lag de prestación a radicación
 
 $$
-L^{PR}_m
-========
-
-## \text{fecha de radicación}
-
-\text{fecha de prestación}
+L^{PR}_m ======== ## \text{fecha de radicación} \text{fecha de prestación}
 $$
 
 Mide principalmente completitud de reporte.
@@ -576,12 +534,7 @@ Mide principalmente completitud de reporte.
 ## 7.2 Lag de radicación a auditoría
 
 $$
-L^{RA}_m
-========
-
-## \text{fecha de auditoría}
-
-\text{fecha de radicación}
+L^{RA}_m ======== ## \text{fecha de auditoría} \text{fecha de radicación}
 $$
 
 Mide eficiencia operativa de la entidad.
@@ -589,45 +542,25 @@ Mide eficiencia operativa de la entidad.
 ## 7.3 Lag de auditoría a glosa
 
 $$
-L^{AG}_m
-========
-
-## \text{fecha de glosa}
-
-\text{fecha de auditoría}
+L^{AG}_m ======== ## \text{fecha de glosa} \text{fecha de auditoría}
 $$
 
 ## 7.4 Lag de glosa a conciliación
 
 $$
-L^{GC}_m
-========
-
-## \text{fecha de conciliación}
-
-\text{fecha de glosa}
+L^{GC}_m ======== ## \text{fecha de conciliación} \text{fecha de glosa}
 $$
 
 ## 7.5 Lag de reconocimiento a pago
 
 $$
-L^{RP}_m
-========
-
-## \text{fecha de pago}
-
-\text{fecha de reconocimiento}
+L^{RP}_m ======== ## \text{fecha de pago} \text{fecha de reconocimiento}
 $$
 
 ## 7.6 Lag total
 
 $$
-L^{Total}_m
-===========
-
-## \text{fecha de pago}
-
-\text{fecha de prestación}
+L^{Total}_m =========== ## \text{fecha de pago} \text{fecha de prestación}
 $$
 
 El lag total mezcla comportamiento del prestador, auditoría, tesorería, contratación y disponibilidad de recursos. No debe interpretarse automáticamente como desarrollo clínico.
@@ -728,12 +661,7 @@ Medición directa y reconciliación.
 Modelos por estado:
 
 $$
-E[V_m]
-======
-
-P(\text{pago}_m)
-\times
-E[\text{monto pagado}_m\mid\text{pago}]
+E[V_m] ====== P(\text{pago}_m) \times E[\text{monto pagado}_m\mid\text{pago}]
 $$
 
 ## 9.3 Capa 3: no conocidas
@@ -741,10 +669,7 @@ $$
 Métodos de completitud:
 
 $$
-IBNR_i
-======
-
-U_i-O_i
+IBNR_i ====== U_i-O_i
 $$
 
 ## 9.4 Capa 4: ajustes estructurales
@@ -812,19 +737,11 @@ La comparación entre ellos permite separar:
 ## Fórmula
 
 $$
-\widehat f_j
-============
-
-\frac{\sum_i C_{i,j+1}}
-{\sum_i C_{ij}}
+\widehat f_j ============ \frac{\sum_i C_{i,j+1}} {\sum_i C_{ij}}
 $$
 
 $$
-\widehat U_i
-============
-
-C_{i,k_i}
-\prod_{j=k_i}^{J-1}\widehat f_j
+\widehat U_i ============ C_{i,k_i} \prod_{j=k_i}^{J-1}\widehat f_j
 $$
 
 El supuesto crítico es que (\widehat f_j) siga representando el proceso futuro.
@@ -882,27 +799,13 @@ Es especialmente útil para:
 En lugar de prima y ELR, puede utilizarse:
 
 $$
-U_i^{prior}
-===========
-
-N_i
-\times
-UPC_i
-\times
-r_i
+U_i^{prior} =========== N_i \times UPC_i \times r_i
 $$
 
 o:
 
 $$
-U_i^{prior}
-===========
-
-\text{Afiliados equivalentes}_i
-\times
-\text{PMPM esperado}_i
-\times
-\text{meses}
+U_i^{prior} =========== \text{Afiliados equivalentes}_i \times \text{PMPM esperado}_i \times \text{meses}
 $$
 
 donde (r_i) representa la proporción esperada destinada al costo objeto del análisis, ajustada por:
@@ -919,10 +822,7 @@ donde (r_i) representa la proporción esperada destinada al costo objeto del an�
 La reserva BF es:
 
 $$
-IBNR_i^{BF}
-===========
-
-U_i^{prior}(1-p_i)
+IBNR_i^{BF} =========== U_i^{prior}(1-p_i)
 $$
 
 donde (p_i) es la proporción completada.
@@ -974,10 +874,7 @@ Es uno de los enfoques más útiles para salud.
 Para el periodo de prestación (i):
 
 $$
-PMPM_i^{obs}
-============
-
-\frac{C_i^{obs}}{MM_i}
+PMPM_i^{obs} ============ \frac{C_i^{obs}}{MM_i}
 $$
 
 donde (MM_i) son afiliados-mes.
@@ -985,23 +882,11 @@ donde (MM_i) son afiliados-mes.
 Con factor de completitud (p_i):
 
 $$
-PMPM_i^{ult}
-============
-
-\frac{PMPM_i^{obs}}{p_i}
+PMPM_i^{ult} ============ \frac{PMPM_i^{obs}}{p_i}
 $$
 
 $$
-IBNR_i
-======
-
-MM_i
-\left(
-PMPM_i^{ult}
-------------
-
-PMPM_i^{obs}
-\right)
+IBNR_i ====== MM_i \left( PMPM_i^{ult} ------------ PMPM_i^{obs} \right)
 $$
 
 Debe ajustarse por:
@@ -1022,12 +907,7 @@ Debe ajustarse por:
 En lugar de modelar directamente el costo:
 
 $$
-U_i
-===
-
-N_i
-\times
-S_i
+U_i === N_i \times S_i
 $$
 
 donde:
@@ -1060,24 +940,11 @@ Es recomendable para:
 Un modelo incremental puede ser:
 
 $$
-Y_{ijd}
-\sim
-\text{Tweedie}(\mu_{ijd},\phi,p)
+Y_{ijd} \sim \text{Tweedie}(\mu_{ijd},\phi,p)
 $$
 
 $$
-\log(\mu_{ijd})
-===============
-
-\alpha_i
-+
-\beta_j
-+
-\gamma_{i+j}
-+
-\delta^\top X_{ijd}
-+
-\log(E_{ijd})
+\log(\mu_{ijd}) =============== \alpha_i + \beta_j + \gamma_{i+j} + \delta^\top X_{ijd} + \log(E_{ijd})
 $$
 
 donde:
@@ -1111,12 +978,7 @@ Permite separar efectos de ocurrencia, desarrollo y calendario.
 El modelo APC presenta problemas de identificabilidad porque:
 
 $$
-\text{calendario}
-=================
-
-\text{origen}
-+
-\text{desarrollo}
+\text{calendario} ================= \text{origen} + \text{desarrollo}
 $$
 
 Se requiere restricción, regularización o suavización.
@@ -1136,16 +998,7 @@ Se requiere restricción, regularización o suavización.
 Ejemplo:
 
 $$
-\log(\mu)
-=========
-
-s_1(\text{lag})
-+
-s_2(\text{calendario})
-+
-s_3(\text{afiliados})
-+
-\delta^\top X
+\log(\mu) ========= s_1(\text{lag}) + s_2(\text{calendario}) + s_3(\text{afiliados}) + \delta^\top X
 $$
 
 ---
@@ -1236,15 +1089,11 @@ Adecuados cuando:
 Ejemplo jerárquico:
 
 $$
-\theta_r
-\sim
-N(\mu_\theta,\tau^2)
+\theta_r \sim N(\mu_\theta,\tau^2)
 $$
 
 $$
-Y_{ir}
-\sim
-\text{Tweedie}(\mu_{ir},\phi,p)
+Y_{ir} \sim \text{Tweedie}(\mu_{ir},\phi,p)
 $$
 
 Esto permite compartir información entre regiones sin asumir que son idénticas.
@@ -1284,12 +1133,7 @@ No debe adoptarse únicamente porque produce menor RMSE.
 Para una cuenta glosada:
 
 $$
-R_m^{glosa}
-===========
-
-P(A_m=1\mid X_m)
-\times
-E[V_m\mid A_m=1,X_m]
+R_m^{glosa} =========== P(A_m=1\mid X_m) \times E[V_m\mid A_m=1,X_m]
 $$
 
 donde:
@@ -1302,19 +1146,13 @@ donde:
 ### Probabilidad de aceptación
 
 $$
-P(A_m=1)
-========
-
-\mathrm{logit}^{-1}(X_m^\top\beta)
+P(A_m=1) ======== \mathrm{logit}^{-1}(X_m^\top\beta)
 $$
 
 ### Proporción pagada
 
 $$
-Q_m
-===
-
-\frac{V_m^{pagado}}{V_m^{glosado}}
+Q_m === \frac{V_m^{pagado}}{V_m^{glosado}}
 $$
 
 Puede modelarse con:
@@ -1327,14 +1165,7 @@ Puede modelarse con:
 Reserva:
 
 $$
-R_m
-===
-
-P(A_m=1)
-\times
-E[Q_m\mid A_m=1]
-\times
-V_m^{glosado}
+R_m === P(A_m=1) \times E[Q_m\mid A_m=1] \times V_m^{glosado}
 $$
 
 ## 12.3 Restricción regulatoria
@@ -1342,14 +1173,7 @@ $$
 El resultado estadístico no sustituye los pisos regulatorios aplicables. El cálculo final debe ser:
 
 $$
-R_m^{final}
-===========
-
-\max
-\left(
-R_m^{modelo},
-R_m^{mínimo\ regulatorio}
-\right)
+R_m^{final} =========== \max \left( R_m^{modelo}, R_m^{mínimo\ regulatorio} \right)
 $$
 
 cuando la norma aplicable establezca un mínimo.
@@ -1390,18 +1214,7 @@ En capitación, el costo contractual puede devengarse por afiliado-mes, aunque e
 Para pagos fijos devengados:
 
 $$
-R_t^{cap}
-=========
-
-\sum_{p}
-MM_{pt}
-\times
-Tarifa_{pt}
------------
-
-Pagos_{pt}
-+
-Ajustes_{pt}
+R_t^{cap} ========= \sum_{p} MM_{pt} \times Tarifa_{pt} ----------- Pagos_{pt} + Ajustes_{pt}
 $$
 
 ## 13.3 Riesgo adicional
@@ -1451,9 +1264,7 @@ Deben separarse por:
 Cuando corresponda, es preferible mostrar:
 
 $$
-Reserva\ bruta
-\neq
-Reserva\ neta
+Reserva\ bruta \neq Reserva\ neta
 $$
 
 y reconocer separadamente un posible activo de recuperación solo cuando cumpla los criterios aplicables.
@@ -1475,9 +1286,7 @@ Se recomienda un modelo separado.
 ## 15.1 Frecuencia
 
 $$
-N_t
-\sim
-\text{NegBin}(\lambda_t,k)
+N_t \sim \text{NegBin}(\lambda_t,k)
 $$
 
 con offset de afiliados expuestos.
@@ -1485,14 +1294,7 @@ con offset de afiliados expuestos.
 ## 15.2 Severidad
 
 $$
-S_m
-===
-
-D_m
-\times
-B_m
-\times
-c_m
+S_m === D_m \times B_m \times c_m
 $$
 
 donde:
@@ -1521,10 +1323,7 @@ Separar:
 ## 16.1 Separación de attritional y large claims
 
 $$
-U = 
-U^{regular}
-+
-U^{alto\ costo}
+U = U^{regular} + U^{alto\ costo}
 $$
 
 El costo regular puede modelarse con triángulos. El alto costo puede requerir:
@@ -1600,10 +1399,7 @@ Para cada fecha histórica (t):
 Error:
 
 $$
-e_t
-===
-
-\widehat U_t-U_t^{observado}
+e_t === \widehat U_t-U_t^{observado}
 $$
 
 ## 18.2 Métricas
@@ -1611,44 +1407,25 @@ $$
 ### Sesgo
 
 $$
-Bias
-====
-
-\frac{1}{T}
-\sum_t
-(\widehat U_t-U_t)
+Bias ==== \frac{1}{T} \sum_t (\widehat U_t-U_t)
 $$
 
 ### Sesgo relativo
 
 $$
-RelativeBias
-============
-
-\frac{\sum_t(\widehat U_t-U_t)}
-{\sum_tU_t}
+RelativeBias ============ \frac{\sum_t(\widehat U_t-U_t)} {\sum_tU_t}
 $$
 
 ### MAE
 
 $$
-MAE
-===
-
-\frac{1}{T}
-\sum_t
-|\widehat U_t-U_t|
+MAE === \frac{1}{T} \sum_t |\widehat U_t-U_t|
 $$
 
 ### Cobertura
 
 $$
-Coverage
-========
-
-\frac{1}{T}
-\sum_t
-I(U_t\in[L_t,H_t])
+Coverage ======== \frac{1}{T} \sum_t I(U_t\in[L_t,H_t])
 $$
 
 ## 18.3 Pruebas prácticas
@@ -1820,17 +1597,7 @@ $$
 y proporción pagada esperada de 95%.
 
 $$
-R_{aud}
-=======
-
-80
-\times
-0.90
-\times
-0.95
-====
-
-68.4
+R_{aud} ======= 80 \times 0.90 \times 0.95 ==== 68.4
 $$
 
 ## 21.3 Glosas
@@ -1838,27 +1605,16 @@ $$
 Supóngase que el modelo estima recuperación de 45%.
 
 $$
-R_{glosa}^{modelo}
-==================
-
-40
-\times
-0.45
-====
-
-18
+R_{glosa}^{modelo} ================== 40 \times 0.45 ==== 18
 $$
 
 Si el mínimo aplicable fuera 50%:
 
 $$
-R_{glosa}^{final}
-=================
-
+R_{glosa}^{final} =================
 $$
 \max(18,20)
 $$
-
 20
 $$
 
@@ -1867,60 +1623,29 @@ $$
 Costo esperado:
 
 $$
-U^{prior}
-=========
-
-500{,}000
-\times
-800
-===
-
-400
+U^{prior} ========= 500{,}000 \times 800 === 400
 $$
 
 Por BF:
 
 $$
-IBNR^{BF}
-=========
-
-400
-\times
-(1-0.72)
-========
-
-112
+IBNR^{BF} ========= 400 \times (1-0.72) ======== 112
 $$
 
 Ultimate BF:
 
 $$
-U^{BF}
-======
-
+U^{BF} ======
 $$
 300+112
 $$
-
 412
 $$
 
 ## 21.5 Reserva total ilustrativa
 
 $$
-R^{total}
-=========
-
-120
-+
-68.4
-+
-20
-+
-112
-===
-
-320.4
+R^{total} ========= 120 + 68.4 + 20 + 112 === 320.4
 $$
 
 Este ejemplo es deliberadamente simplificado. En una aplicación real debe evitarse doble conteo entre cuentas conocidas y el componente de IBNR.

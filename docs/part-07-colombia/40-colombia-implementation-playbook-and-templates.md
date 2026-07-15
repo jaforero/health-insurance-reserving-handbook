@@ -1,13 +1,16 @@
 ---
-title: "Colombia Implementation Playbook and Templates"
-part: "Parte VII · Colombia"
+title: "Playbook de implementación y plantillas"
+description: "Guía de implementación, controles, entregables y plantillas para operacionalizar un proceso de reservas de salud."
 chapter: 40
+part: "part-07-colombia"
 language: "es"
 status: "draft"
+version: "0.1.11"
 last_updated: "2026-07-14"
+jurisdiction: "Colombia"
 ---
 
-# Colombia Implementation Playbook and Templates
+# Playbook de implementación y plantillas
 
 Este capítulo convierte la hoja de ruta técnica de Colombia en un playbook operativo. Su objetivo es entregar plantillas, checklists y estructuras de trabajo que puedan usarse para implementar reserving, IBNR, calidad de datos, ajuste por morbilidad, alto costo, solvencia, liquidez y reporting en una EPS, asegurador, consultor, auditor o equipo regulatorio.
 

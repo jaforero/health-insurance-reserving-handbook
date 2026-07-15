@@ -1,32 +1,13 @@
 ---
-title: "Colombia Paid vs. Incurred Triangles"
-part: "Parte VII · Colombia"
+title: "Triángulos de pagos vs. triángulos de incurridos"
+description: "Construcción, comparación y reconciliación de triángulos pagados e incurridos para reservas de salud en Colombia."
 chapter: 30
+part: "part-07-colombia"
 language: "es"
 status: "draft"
+version: "0.1.11"
 last_updated: "2026-07-14"
----
-
-22-paid-vs-incurred-triangles-colombia.md
----
-title: Triángulos de pagos vs. triángulos de incurridos
-subtitle: Selección, adaptación y reconciliación para reservas de salud en Colombia
-author: Health Insurance Reserving Handbook
-version: 1.0
-chapter: 22
-status: Draft
-jurisdiction: Colombia
-last_updated: 2026-07-14
-language: es
-tags:
-  - Colombia
-  - IBNR
-  - reservas técnicas
-  - triángulos
-  - pagos
-  - incurridos
-  - EPS
-  - glosas
+jurisdiction: "Colombia"
 ---
 
 # Triángulos de pagos vs. triángulos de incurridos
@@ -74,43 +55,35 @@ Cada celda acumulada representa el valor efectivamente pagado hasta un determina
 
 Sea:
 
-\[
+$$
 P_{i,j}
-\]
+$$
 
 el pago acumulado correspondiente al periodo de ocurrencia $i$, observado hasta el periodo de desarrollo $j$.
 
 El pago incremental es:
 
-\[
-p_{i,j}
-=
-P_{i,j}-P_{i,j-1}
-\]
+$$
+p_{i,j} = P_{i,j}-P_{i,j-1}
+$$
 
 con la convención:
 
-\[
+$$
 P_{i,-1}=0
-\]
+$$
 
 La estimación clásica del costo último es:
 
-\[
-\widehat{U}^{Paid}_i
-=
-P_{i,k_i}
-\prod_{j=k_i}^{J-1}
-\widehat f^{Paid}_j
-\]
+$$
+\widehat{U}^{Paid}_i = P_{i,k_i} \prod_{j=k_i}^{J-1} \widehat f^{Paid}_j
+$$
 
 La reserva pendiente de pago es:
 
-\[
-\widehat{R}^{Paid}_i
-=
-\widehat{U}^{Paid}_i-P_{i,k_i}
-\]
+$$
+\widehat{R}^{Paid}_i = \widehat{U}^{Paid}_i-P_{i,k_i}
+$$
 
 Esta reserva comprende toda la diferencia entre el costo último y los pagos efectuados.
 
@@ -122,11 +95,9 @@ Cada celda acumulada representa el costo reconocido hasta un determinado periodo
 
 Una definición tradicional es:
 
-\[
-I_{i,j}
-=
-P_{i,j}+O_{i,j}
-\]
+$$
+I_{i,j} = P_{i,j}+O_{i,j}
+$$
 
 donde:
 
@@ -135,39 +106,27 @@ donde:
 
 El costo último se estima mediante:
 
-\[
-\widehat{U}^{Incurred}_i
-=
-I_{i,k_i}
-\prod_{j=k_i}^{J-1}
-\widehat f^{Incurred}_j
-\]
+$$
+\widehat{U}^{Incurred}_i = I_{i,k_i} \prod_{j=k_i}^{J-1} \widehat f^{Incurred}_j
+$$
 
 El IBNR adicional no reconocido es:
 
-\[
-\widehat{IBNR}^{Incurred}_i
-=
-\widehat{U}^{Incurred}_i-I_{i,k_i}
-\]
+$$
+\widehat{IBNR}^{Incurred}_i = \widehat{U}^{Incurred}_i-I_{i,k_i}
+$$
 
 La obligación total pendiente de pago es:
 
-\[
-\widehat R^{Total}_i
-=
-O_{i,k_i}
-+
-\widehat{IBNR}^{Incurred}_i
-\]
+$$
+\widehat R^{Total}_i = O_{i,k_i} + \widehat{IBNR}^{Incurred}_i
+$$
 
 Equivalentemente:
 
-\[
-\widehat R^{Total}_i
-=
-\widehat{U}^{Incurred}_i-P_{i,k_i}
-\]
+$$
+\widehat R^{Total}_i = \widehat{U}^{Incurred}_i-P_{i,k_i}
+$$
 
 ---
 
@@ -203,11 +162,9 @@ La clasificación regulatoria entre obligaciones pendientes conocidas y obligaci
 
 La reserva:
 
-\[
-\widehat R^{Paid}
-=
-\widehat U-Paid
-\]
+$$
+\widehat R^{Paid} = \widehat U-Paid
+$$
 
 puede incluir conjuntamente:
 
@@ -223,21 +180,17 @@ puede incluir conjuntamente:
 
 La diferencia:
 
-\[
+$$
 \widehat U-Incurred
-\]
+$$
 
 representa solamente la porción todavía no incorporada en el incurrido registrado.
 
 Por tanto:
 
-\[
-\widehat R^{Paid}
-=
-Outstanding\ Known
-+
-\widehat{IBNR}^{Incurred}
-\]
+$$
+\widehat R^{Paid} = Outstanding\ Known + \widehat{IBNR}^{Incurred}
+$$
 
 Un IBNR calculado desde incurridos será normalmente menor que una reserva pendiente calculada desde pagos, porque parte de la obligación ya se encuentra incluida en el saldo conocido.
 
@@ -245,15 +198,15 @@ Un IBNR calculado desde incurridos será normalmente menor que una reserva pendi
 
 No deben compararse directamente:
 
-\[
+$$
 IBNR^{Paid}
-\]
+$$
 
 e:
 
-\[
+$$
 IBNR^{Incurred}
-\]
+$$
 
 sin reconciliar primero sus componentes.
 
@@ -273,32 +226,21 @@ La fecha de pago determina el desarrollo.
 
 ## 4.2 Desarrollo
 
-\[
-j
-=
-\mathrm{mes}
-(
-FechaPago-FechaPrestacion
-)
-\]
+$$
+j = \mathrm{mes} ( FechaPago-FechaPrestacion )
+$$
 
 El valor incremental es:
 
-\[
-p_{i,j}
-=
-\sum_{m\in(i,j)}
-PagoNeto_m
-\]
+$$
+p_{i,j} = \sum_{m\in(i,j)} PagoNeto_m
+$$
 
 El triángulo acumulado es:
 
-\[
-P_{i,j}
-=
-\sum_{h=0}^{j}
-p_{i,h}
-\]
+$$
+P_{i,j} = \sum_{h=0}^{j} p_{i,h}
+$$
 
 ## 4.3 Pagos netos
 
@@ -401,11 +343,9 @@ Métodos compatibles:
 
 ## 8.1 Definición tradicional
 
-\[
-I_{i,j}
-=
-P_{i,j}+O_{i,j}
-\]
+$$
+I_{i,j} = P_{i,j}+O_{i,j}
+$$
 
 El problema central es definir $O_{i,j}$.
 
@@ -426,23 +366,15 @@ Estas bases no son equivalentes.
 
 Una definición actuarial más robusta es:
 
-\[
-I^{Expected}_{i,j}
-=
-P_{i,j}
-+
-O^{Expected}_{i,j}
-\]
+$$
+I^{Expected}_{i,j} = P_{i,j} + O^{Expected}_{i,j}
+$$
 
 donde:
 
-\[
-O^{Expected}_{i,j}
-=
-\sum_{m}
-P(A_m=1\mid X_m)
-E[V_m^{Final}\mid A_m=1,X_m]
-\]
+$$
+O^{Expected}_{i,j} = \sum_{m} P(A_m=1\mid X_m) E[V_m^{Final}\mid A_m=1,X_m]
+$$
 
 con:
 
@@ -537,61 +469,45 @@ Se recomienda mantener variables separadas.
 
 ## 12.1 Facturado
 
-\[
-F_{i,j}
-=
-ValorFacturadoAcumulado
-\]
+$$
+F_{i,j} = ValorFacturadoAcumulado
+$$
 
 ## 12.2 Radicado
 
-\[
-R_{i,j}
-=
-ValorRadicadoAcumulado
-\]
+$$
+R_{i,j} = ValorRadicadoAcumulado
+$$
 
 ## 12.3 Auditado
 
-\[
-A_{i,j}
-=
-ValorAuditadoAcumulado
-\]
+$$
+A_{i,j} = ValorAuditadoAcumulado
+$$
 
 ## 12.4 Glosado
 
-\[
-G_{i,j}
-=
-ValorGlosadoAcumulado
-\]
+$$
+G_{i,j} = ValorGlosadoAcumulado
+$$
 
 ## 12.5 Reconocido
 
-\[
-K_{i,j}
-=
-ValorReconocidoAcumulado
-\]
+$$
+K_{i,j} = ValorReconocidoAcumulado
+$$
 
 ## 12.6 Pagado
 
-\[
-P_{i,j}
-=
-ValorPagadoAcumulado
-\]
+$$
+P_{i,j} = ValorPagadoAcumulado
+$$
 
 ## 12.7 Incurrido actuarial esperado
 
-\[
-I^{Act}_{i,j}
-=
-P_{i,j}
-+
-O^{Expected}_{i,j}
-\]
+$$
+I^{Act}_{i,j} = P_{i,j} + O^{Expected}_{i,j}
+$$
 
 No se recomienda denominar “incurrido” a una variable sin documentar cuál de estas bases utiliza.
 
@@ -608,17 +524,13 @@ Supóngase un periodo de prestación con:
 
 ## 13.1 Enfoque pagado
 
-\[
+$$
 P=60
-\]
+$$
 
-\[
-Reserve^{Paid}
-=
-120-60
-=
-60
-\]
+$$
+Reserve^{Paid} = 120-60 = 60
+$$
 
 La reserva incluye:
 
@@ -630,27 +542,19 @@ La reserva incluye:
 
 ## 13.2 Enfoque incurrido
 
-\[
-I
-=
-60+40
-=
-100
-\]
+$$
+I = 60+40 = 100
+$$
 
-\[
-IBNR^{Incurred}
-=
-120-100
-=
-20
-\]
+$$
+IBNR^{Incurred} = 120-100 = 20
+$$
 
 La reserva total pendiente es:
 
-\[
+$$
 40+20=60
-\]
+$$
 
 Ambos enfoques producen la misma obligación total si alcanzan el mismo ultimate y utilizan definiciones consistentes.
 
@@ -682,11 +586,9 @@ El efecto aparece indirectamente en el patrón de pagos.
 
 Si:
 
-\[
-I^{Gross}
-=
-Paid+Radicado
-\]
+$$
+I^{Gross} = Paid+Radicado
+$$
 
 puede sobreestimarse la obligación cuando parte de las cuentas radicadas no será reconocida.
 
@@ -694,30 +596,23 @@ puede sobreestimarse la obligación cuando parte de las cuentas radicadas no ser
 
 Si:
 
-\[
-I^{Net}
-=
-Paid+Radicado-Glosa
-\]
+$$
+I^{Net} = Paid+Radicado-Glosa
+$$
 
 puede subestimarse la obligación cuando parte de la glosa sea posteriormente levantada.
 
 ## 14.4 Enfoque esperado
 
-\[
-I^{Expected}
-=
-Paid+E[PagoFuturo]
-\]
+$$
+I^{Expected} = Paid+E[PagoFuturo]
+$$
 
 Para una cuenta glosada:
 
-\[
-E[PagoFuturo_m]
-=
-P(A_m=1\mid X_m)
-E[V_m^{Final}\mid A_m=1,X_m]
-\]
+$$
+E[PagoFuturo_m] = P(A_m=1\mid X_m) E[V_m^{Final}\mid A_m=1,X_m]
+$$
 
 Este enfoque debe reconciliarse con los mínimos y criterios regulatorios aplicables.
 
@@ -770,11 +665,9 @@ Un cambio en velocidad de pago no equivale a un cambio en ultimate.
 
 Defínase:
 
-\[
-Q_{i,j}
-=
-\frac{P_{i,j}}{I_{i,j}}
-\]
+$$
+Q_{i,j} = \frac{P_{i,j}}{I_{i,j}}
+$$
 
 Interpretación:
 
@@ -787,9 +680,9 @@ Interpretación:
 
 Debe evaluarse:
 
-\[
+$$
 E[Q_{i,j}]
-\]
+$$
 
 para cada edad de desarrollo.
 
@@ -821,23 +714,17 @@ Munich Chain Ladder utiliza la relación entre:
 
 ## 18.2 Variables
 
-\[
-P_{i,j}
-=
-PagosAcumulados
-\]
+$$
+P_{i,j} = PagosAcumulados
+$$
 
-\[
-I_{i,j}
-=
-IncurridosAcumulados
-\]
+$$
+I_{i,j} = IncurridosAcumulados
+$$
 
-\[
-Q_{i,j}
-=
-\frac{P_{i,j}}{I_{i,j}}
-\]
+$$
+Q_{i,j} = \frac{P_{i,j}}{I_{i,j}}
+$$
 
 ## 18.3 Aplicabilidad
 
@@ -970,23 +857,19 @@ flowchart TD
 
 Para cada periodo de origen:
 
-\[
+$$
 \widehat U^{Paid}_i
-\]
+$$
 
-\[
+$$
 \widehat U^{Incurred}_i
-\]
+$$
 
 Diferencia:
 
-\[
-D_i
-=
-\widehat U^{Paid}_i
--
-\widehat U^{Incurred}_i
-\]
+$$
+D_i = \widehat U^{Paid}_i - \widehat U^{Incurred}_i
+$$
 
 El análisis debe explicar si la diferencia se debe a:
 
@@ -1027,11 +910,9 @@ Revisar:
 
 ## 24.1 Indicador de velocidad
 
-\[
-PaymentSpeed_j
-=
-\frac{P_j}{U}
-\]
+$$
+PaymentSpeed_j = \frac{P_j}{U}
+$$
 
 Debe analizarse por:
 
@@ -1064,11 +945,9 @@ Revisar:
 
 ## 25.1 Cambio en adecuación
 
-\[
-Adequacy_{i,j}
-=
-\frac{I_{i,j}}{U_i^{Observed}}
-\]
+$$
+Adequacy_{i,j} = \frac{I_{i,j}}{U_i^{Observed}}
+$$
 
 Si la adecuación cambia sistemáticamente por calendario, el triángulo incurrido no es estacionario.
 
@@ -1085,19 +964,15 @@ Para una fecha histórica $t$:
 
 ## 26.1 Error pagado
 
-\[
-e^{Paid}_t
-=
-\widehat U^{Paid}_t-U_t
-\]
+$$
+e^{Paid}_t = \widehat U^{Paid}_t-U_t
+$$
 
 ## 26.2 Error incurrido
 
-\[
-e^{Incurred}_t
-=
-\widehat U^{Incurred}_t-U_t
-\]
+$$
+e^{Incurred}_t = \widehat U^{Incurred}_t-U_t
+$$
 
 ## 26.3 Métricas
 
@@ -1118,13 +993,9 @@ La selección debe apoyarse en evidencia histórica de la entidad, no únicament
 
 Puede utilizarse:
 
-\[
-\widehat U_i^{Selected}
-=
-w_i\widehat U_i^{Incurred}
-+
-(1-w_i)\widehat U_i^{Paid}
-\]
+$$
+\widehat U_i^{Selected} = w_i\widehat U_i^{Incurred} + (1-w_i)\widehat U_i^{Paid}
+$$
 
 Sin embargo, $w_i$ no debe ser arbitrario.
 
@@ -1143,12 +1014,9 @@ Puede depender de:
 
 Una aproximación es:
 
-\[
-w
-=
-\frac{1/MSE_{Incurred}}
-{1/MSE_{Incurred}+1/MSE_{Paid}}
-\]
+$$
+w = \frac{1/MSE_{Incurred}} {1/MSE_{Incurred}+1/MSE_{Paid}}
+$$
 
 Este esquema debe limitarse cuando existan cambios estructurales, porque el error histórico puede no representar el futuro.
 
@@ -1185,41 +1053,33 @@ Supóngase:
 
 ## 29.1 Reserva pagada
 
-\[
-R^{Paid}
-=
-150-100
-=
-50
-\]
+$$
+R^{Paid} = 150-100 = 50
+$$
 
 ## 29.2 IBNR incurrido
 
-\[
-IBNR^{Incurred}
-=
-142-130
-=
-12
-\]
+$$
+IBNR^{Incurred} = 142-130 = 12
+$$
 
 Si el saldo conocido pendiente es:
 
-\[
+$$
 130-100=30
-\]
+$$
 
 la reserva total incurrida es:
 
-\[
+$$
 30+12=42
-\]
+$$
 
 ## 29.3 Diferencia
 
-\[
+$$
 50-42=8
-\]
+$$
 
 Posibles explicaciones:
 
@@ -1379,17 +1239,9 @@ Por tanto, objetividad transaccional e información económica no son sinónimos
 
 Un modelo multietapa puede representar mejor el contexto colombiano:
 
-\[
-Prestación
-\rightarrow
-Radicación
-\rightarrow
-Auditoría
-\rightarrow
-Reconocimiento
-\rightarrow
-Pago
-\]
+$$
+Prestación \rightarrow Radicación \rightarrow Auditoría \rightarrow Reconocimiento \rightarrow Pago
+$$
 
 Cada etapa puede modelarse mediante:
 
@@ -1435,15 +1287,15 @@ Los triángulos pagados y de incurridos son representaciones complementarias del
 
 El enfoque pagado estima:
 
-\[
+$$
 Ultimate-Paid
-\]
+$$
 
 El enfoque incurrido estima:
 
-\[
+$$
 Ultimate-(Paid+Outstanding)
-\]
+$$
 
 Por ello, el primero contiene toda la obligación pendiente, mientras el segundo contiene únicamente la parte aún no reconocida.
 

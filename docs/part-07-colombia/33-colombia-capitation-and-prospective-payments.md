@@ -1,37 +1,13 @@
 ---
-title: "Colombia Capitation and Prospective Payments"
-part: "Parte VII · Colombia"
+title: "Reservas para capitación y modalidades de pago prospectivo en Colombia"
+description: "Criterios de reserva para capitación, pagos prospectivos y otras modalidades contractuales del sistema de salud colombiano."
 chapter: 33
+part: "part-07-colombia"
 language: "es"
 status: "draft"
+version: "0.1.11"
 last_updated: "2026-07-14"
----
-
-25-colombian-health-reserving-capitation-and-prospective-payments.md
----
-
-title: Reservas para capitación y modalidades de pago prospectivo en Colombia
-subtitle: Devengo contractual, riesgo médico retenido, liquidaciones y suficiencia actuarial
-author: Health Insurance Reserving Handbook
-version: 1.0
-chapter: 25
-status: Draft
-jurisdiction: Colombia
-last_updated: 2026-07-14
-language: es
-tags:
-
-* Colombia
-* reservas técnicas
-* capitación
-* pago global prospectivo
-* paquetes
-* riesgo compartido
-* EPS
-* IPS
-* IBNR
-* contratos de salud
-
+jurisdiction: "Colombia"
 ---
 
 # Reservas para capitación y modalidades de pago prospectivo en Colombia

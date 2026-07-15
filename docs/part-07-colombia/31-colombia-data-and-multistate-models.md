@@ -1,37 +1,13 @@
 ---
-title: "Colombia Data and Multistate Models"
-part: "Parte VII · Colombia"
+title: "Datos y modelos multiestado para reservas de salud en Colombia"
+description: "Arquitectura de datos y modelos multiestado para representar el ciclo de las reclamaciones y estimar reservas de salud en Colombia."
 chapter: 31
+part: "part-07-colombia"
 language: "es"
 status: "draft"
+version: "0.1.11"
 last_updated: "2026-07-14"
----
-
-23-colombian-health-reserving-data-and-multistate-models.md
----
-
-title: Datos y modelos multiestado para reservas de salud en Colombia
-subtitle: Modelación del proceso desde la prestación hasta el pago definitivo
-author: Health Insurance Reserving Handbook
-version: 1.0
-chapter: 23
-status: Draft
-jurisdiction: Colombia
-last_updated: 2026-07-14
-language: es
-tags:
-
-* Colombia
-* IBNR
-* reservas técnicas
-* modelos multiestado
-* RIPS
-* FEV
-* glosas
-* supervivencia
-* EPS
-* IPS
-
+jurisdiction: "Colombia"
 ---
 
 # Datos y modelos multiestado para reservas de salud en Colombia

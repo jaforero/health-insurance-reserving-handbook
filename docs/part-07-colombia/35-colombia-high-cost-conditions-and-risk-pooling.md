@@ -1,13 +1,16 @@
 ---
-title: "Colombia High-Cost Conditions and Risk Pooling"
-part: "Parte VII · Colombia"
+title: "Alto costo y mutualización de riesgos en Colombia"
+description: "Modelación de condiciones de alto costo, eventos catastróficos y mecanismos de mutualización de riesgo en salud."
 chapter: 35
+part: "part-07-colombia"
 language: "es"
 status: "draft"
+version: "0.1.11"
 last_updated: "2026-07-14"
+jurisdiction: "Colombia"
 ---
 
-# Colombia High-Cost Conditions and Risk Pooling
+# Alto costo y mutualización de riesgos en Colombia
 
 Este capítulo desarrolla un marco actuarial para modelar condiciones de alto costo, eventos catastróficos y mecanismos de mutualización de riesgo en el sistema de salud colombiano. El foco está en la relación entre alto costo, Cuenta de Alto Costo, MIPRES, presupuestos máximos, UPC, reservas IBNR y esquemas de compensación ex post.
 
@@ -187,12 +190,7 @@ La frecuencia puede modelarse por:
 Ejemplo de frecuencia esperada:
 
 $$
-\lambda_{g,t} =
-\text{exposición}_{g,t}
-\times
-\text{incidencia}_{g,t}
-\times
-\text{factor de detección}_{g,t}
+\lambda_{g,t} = \text{exposición}_{g,t} \times \text{incidencia}_{g,t} \times \text{factor de detección}_{g,t}
 $$
 
 donde $g$ puede ser EPS, región, condición, régimen o grupo clínico.
@@ -385,14 +383,7 @@ El IBNR total debe reconciliarse contra el costo esperado por cohorte clínica.
 Para Bornhuetter-Ferguson, el expected loss ratio puede ajustarse por alto costo:
 
 $$
-\text{ELR}_{g} =
-\text{ELR base}
-\times
-\text{factor de morbilidad}_{g}
-\times
-\text{factor alto costo}_{g}
-\times
-\text{factor tendencia}_{g}
+\text{ELR}_{g} = \text{ELR base} \times \text{factor de morbilidad}_{g} \times \text{factor alto costo}_{g} \times \text{factor tendencia}_{g}
 $$
 
 Donde:

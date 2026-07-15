@@ -1,13 +1,16 @@
 ---
-title: "Colombia RIPS-FEV Data Quality and Validation"
-part: "Parte VII · Colombia"
+title: "Calidad y validación de datos RIPS–FEV en Colombia"
+description: "Controles de calidad, consistencia y trazabilidad para datos RIPS y FEV usados en reservas de salud."
 chapter: 36
+part: "part-07-colombia"
 language: "es"
 status: "draft"
+version: "0.1.11"
 last_updated: "2026-07-14"
+jurisdiction: "Colombia"
 ---
 
-# Colombia RIPS-FEV Data Quality and Validation
+# Calidad y validación de datos RIPS–FEV en Colombia
 
 Este capítulo define un marco actuarial y operativo para validar datos de salud en Colombia cuando se usan para reserving, suficiencia UPC, ajuste de riesgo, alto costo, presupuestos prospectivos y monitoreo financiero. El énfasis está en RIPS, facturación electrónica de venta en salud, pagos, glosas, MIPRES, afiliación, prestadores y trazabilidad entre prestación, factura, reconocimiento y pago.
 
@@ -163,28 +166,19 @@ El reserving debe reconciliar al menos tres vistas:
 Una reconciliación mínima:
 
 $$
-\text{Facturado}
-- \text{Devuelto}
-- \text{Glosado no reconocido}
-= \text{Reconocido}
+\text{Facturado} - \text{Devuelto} - \text{Glosado no reconocido} = \text{Reconocido}
 $$
 
 Y:
 
 $$
-\text{Reconocido}
-- \text{Pagado}
-= \text{Pendiente reconocido}
+\text{Reconocido} - \text{Pagado} = \text{Pendiente reconocido}
 $$
 
 Además:
 
 $$
-\text{Pasivo total estimado} = \text{Pendiente reconocido}
-+
-\text{IBNR}
-+
-\text{IBNER}
+\text{Pasivo total estimado} = \text{Pendiente reconocido} + \text{IBNR} + \text{IBNER}
 $$
 
 donde IBNER representa desarrollo adicional sobre casos ya reportados.

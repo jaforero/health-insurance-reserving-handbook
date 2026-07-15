@@ -1,13 +1,16 @@
 ---
-title: "Colombia UPC Risk Adjustment and Morbidity"
-part: "Parte VII · Colombia"
+title: "UPC, ajuste de riesgo y morbilidad en Colombia"
+description: "Incorporación de morbilidad y ajuste de riesgo en el análisis de suficiencia de la UPC y en la gestión actuarial de salud."
 chapter: 34
+part: "part-07-colombia"
 language: "es"
 status: "draft"
+version: "0.1.11"
 last_updated: "2026-07-14"
+jurisdiction: "Colombia"
 ---
 
-# Colombia UPC Risk Adjustment and Morbidity
+# UPC, ajuste de riesgo y morbilidad en Colombia
 
 Este capítulo desarrolla una propuesta técnica para incorporar morbilidad en el análisis de suficiencia de la Unidad de Pago por Capitación (UPC) y en la gestión actuarial del riesgo en salud en Colombia. El objetivo no es sustituir el marco regulatorio vigente ni proponer una fórmula oficial, sino definir una arquitectura actuarial defendible para medir diferencias de riesgo clínico entre poblaciones, EPS, regiones, cohortes y periodos.
 
@@ -62,12 +65,7 @@ Ajustar por morbilidad significa calcular factores relativos de riesgo a partir 
 Un esquema general puede expresarse como:
 
 $$
-\text{UPC ajustada}_{i,t+1} =
-\text{UPC base}_{g(i),t+1}
-\times
-\text{factor de riesgo}_{i,t}
-\times
-\text{ajustes técnicos}_{i,t}
+\text{UPC ajustada}_{i,t+1} = \text{UPC base}_{g(i),t+1} \times \text{factor de riesgo}_{i,t} \times \text{ajustes técnicos}_{i,t}
 $$
 
 donde:
@@ -196,16 +194,7 @@ Un primer piloto puede implementarse con un GLM de costo anual o mensual por afi
 Forma general:
 
 $$
-E[C_i] =
-\exp(
-\beta_0
-+ \beta_1 \text{edad}_i
-+ \beta_2 \text{sexo}_i
-+ \beta_3 \text{zona}_i
-+ \beta_4 \text{régimen}_i
-+ \sum_k \gamma_k \text{condición}_{ik}
-+ \sum_j \delta_j \text{medicamento}_{ij}
-)
+E[C_i] = \exp( \beta_0 + \beta_1 \text{edad}_i + \beta_2 \text{sexo}_i + \beta_3 \text{zona}_i + \beta_4 \text{régimen}_i + \sum_k \gamma_k \text{condición}_{ik} + \sum_j \delta_j \text{medicamento}_{ij} )
 $$
 
 Distribuciones candidatas:
@@ -264,12 +253,7 @@ donde $w_i$ representa exposición, meses afiliado o ponderadores definidos por 
 La transferencia ajustada para una EPS o grupo puede calcularse como:
 
 $$
-\text{Transferencia}_G =
-\text{UPC base}_G
-\times
-RS_G
-\times
-\text{factor de normalización}
+\text{Transferencia}_G = \text{UPC base}_G \times RS_G \times \text{factor de normalización}
 $$
 
 El factor de normalización evita que el ajuste incremente automáticamente el gasto total del sistema si el objetivo es redistribuir recursos dentro de un presupuesto cerrado. Si el objetivo es estimar suficiencia real, el modelo debe permitir detectar déficit agregado.

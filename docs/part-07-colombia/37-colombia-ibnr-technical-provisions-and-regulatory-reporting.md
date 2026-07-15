@@ -1,13 +1,16 @@
 ---
-title: "Colombia IBNR Technical Provisions and Regulatory Reporting"
-part: "Parte VII · Colombia"
+title: "IBNR, provisiones técnicas y reporte regulatorio en Colombia"
+description: "Articulación entre IBNR, provisiones técnicas, cierre financiero y reporte regulatorio en el sistema de salud colombiano."
 chapter: 37
+part: "part-07-colombia"
 language: "es"
 status: "draft"
+version: "0.1.11"
 last_updated: "2026-07-14"
+jurisdiction: "Colombia"
 ---
 
-# Colombia IBNR Technical Provisions and Regulatory Reporting
+# IBNR, provisiones técnicas y reporte regulatorio en Colombia
 
 Este capítulo define un marco técnico para estimar, documentar, controlar y reportar provisiones de siniestros en salud en Colombia, con énfasis en IBNR, obligaciones conocidas, obligaciones no liquidadas, desarrollo de pagos, glosas, alto costo, suficiencia patrimonial y reporting regulatorio.
 
@@ -34,11 +37,7 @@ Una provisión técnica representa la mejor estimación disponible de obligacion
 Una forma general de descomposición es:
 
 $$
-\text{Pasivo total} =
-\text{Pendiente conocido}
-+ \text{IBNER}
-+ \text{IBNR}
-+ \text{Margen o ajuste prudencial}
+\text{Pasivo total} = \text{Pendiente conocido} + \text{IBNER} + \text{IBNR} + \text{Margen o ajuste prudencial}
 $$
 
 donde:
@@ -168,9 +167,7 @@ Por eso, cada factor seleccionado debe ir acompañado de diagnóstico operaciona
 Bornhuetter-Ferguson combina experiencia emergida con expectativa previa:
 
 $$
-\widehat{Ultimate}_{a}
-= \text{Emergido}_{a}
-+ \text{Expected}_{a} \times (1 - \% \text{emergido}_{a})
+\widehat{Ultimate}_{a} = \text{Emergido}_{a} + \text{Expected}_{a} \times (1 - \% \text{emergido}_{a})
 $$
 
 En salud, el expected puede construirse con:
@@ -192,15 +189,7 @@ El expected loss ratio para Colombia no debería ser plano si existen diferencia
 Una estructura posible:
 
 $$
-\text{ELR}_{g,t} = \text{ELR base}_{t}
-\times
-\text{factor morbilidad}_{g,t}
-\times
-\text{factor alto costo}_{g,t}
-\times
-\text{factor operación}_{g,t}
-\times
-\text{factor tendencia}_{t}
+\text{ELR}_{g,t} = \text{ELR base}_{t} \times \text{factor morbilidad}_{g,t} \times \text{factor alto costo}_{g,t} \times \text{factor operación}_{g,t} \times \text{factor tendencia}_{t}
 $$
 
 donde $g$ puede ser EPS, régimen, región, cohorte, contrato o segmento.
@@ -224,12 +213,7 @@ Una cuenta glosada puede:
 El IBNER de glosas puede modelarse como:
 
 $$
-E[\text{Reconocimiento futuro}] = \sum_i
-\text{Valor glosado}_i
-\times
-P(\text{levantamiento}_i)
-\times
-\text{porcentaje esperado reconocido}_i
+E[\text{Reconocimiento futuro}] = \sum_i \text{Valor glosado}_i \times P(\text{levantamiento}_i) \times \text{porcentaje esperado reconocido}_i
 $$
 
 Variables útiles:
@@ -330,8 +314,7 @@ Según el marco aplicable, puede requerirse o no un margen explícito. Técnicam
 Una estructura posible:
 
 $$
-\text{Provisión seleccionada} = \text{Estimación central}
-+ \text{margen técnico}
+\text{Provisión seleccionada} = \text{Estimación central} + \text{margen técnico}
 $$
 
 El margen no debe reemplazar una mala estimación central. Debe cuantificar incertidumbre residual.

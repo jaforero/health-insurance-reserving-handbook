@@ -1,13 +1,16 @@
 ---
-title: "Colombia Scenario Planning and Reform Roadmap"
-part: "Parte VII · Colombia"
+title: "Planeación de escenarios y hoja de ruta de reforma"
+description: "Planeación de escenarios actuariales y hoja de ruta para gestionar cambios regulatorios y reformas del sistema de salud colombiano."
 chapter: 39
+part: "part-07-colombia"
 language: "es"
 status: "draft"
+version: "0.1.11"
 last_updated: "2026-07-14"
+jurisdiction: "Colombia"
 ---
 
-# Colombia Scenario Planning and Reform Roadmap
+# Planeación de escenarios y hoja de ruta de reforma
 
 Este capítulo cierra el bloque Colombia con una hoja de ruta técnica para planear escenarios, priorizar reformas actuariales y secuenciar capacidades de reserving, datos, ajuste de riesgo, alto costo, solvencia y reporting. No es una propuesta legal ni una predicción política. Es un marco de implementación para transformar un sistema de estimación reactivo en una arquitectura actuarial prospectiva, trazable y gobernable.
 
