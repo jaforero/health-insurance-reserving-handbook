@@ -90,7 +90,7 @@ Al finalizar esta guía, el lector podrá:
 
 ## 1. El problema de decisión
 
-Sea \(D_t\) la información disponible a la fecha de valoración \(t\), \(U_i\) el costo *ultimate* del periodo de origen \(i\) y \(C_{i,k_i}\) el importe acumulado observado a su madurez disponible \(k_i\). La reserva central es:
+Sea $D_t$ la información disponible a la fecha de valoración $t$, $U_i$ el costo *ultimate* del periodo de origen $i$ y $C_{i,k_i}$ el importe acumulado observado a su madurez disponible $k_i$. La reserva central es:
 
 \[
 \widehat{R}_{i,t}
@@ -113,11 +113,11 @@ m^*
 
 donde:
 
-- \(\mathcal{C}_{\mathrm{eligible}}\) es el conjunto de candidatos que superan los gates mínimos;
-- \(a_m\) es la estimación o decisión producida por el método \(m\);
-- \(L\) representa la pérdida relevante para el propósito;
-- \(G(m)\) representa complejidad, riesgo de modelo, costo operativo y carga de gobierno;
-- \(\lambda\) refleja cuánto importa esa carga en la decisión.
+- $\mathcal{C}_{\mathrm{eligible}}$ es el conjunto de candidatos que superan los gates mínimos;
+- $a_m$ es la estimación o decisión producida por el método $m$;
+- $L$ representa la pérdida relevante para el propósito;
+- $G(m)$ representa complejidad, riesgo de modelo, costo operativo y carga de gobierno;
+- $\lambda$ refleja cuánto importa esa carga en la decisión.
 
 Esta formulación no implica que todos los términos puedan medirse con precisión. Su utilidad es exponer un supuesto oculto frecuente: **optimizar una sola métrica predictiva equivale a asumir que los demás costos son cero**.
 
@@ -323,7 +323,7 @@ Consulte [Age-to-Age Development Factors](part-01-foundations/05-age-to-age-deve
 
 **Candidato fuerte cuando:** los periodos son inmaduros y existe un prior de ultimate o ELR defendible.
 
-Si \(p_i\) es la proporción reportada y \(q_i=1-p_i\), entonces:
+Si $p_i$ es la proporción reportada y $q_i=1-p_i$, entonces:
 
 \[
 \widehat{U}^{BF}_i
@@ -426,7 +426,7 @@ Paid puede ser más objetivo, pero sensible a calendarios de pago. Incurred pued
 
 ## 9.2 Exposición
 
-Cuando la población cambia, el costo total mezcla exposición y costo unitario. Con member months \(MM_i\):
+Cuando la población cambia, el costo total mezcla exposición y costo unitario. Con member months $MM_i$:
 
 \[
 \widehat{U}_i
@@ -462,7 +462,7 @@ Consulte [Colombia Health Reserving Methodologies](part-07-colombia/29-colombia-
 
 La selección puede variar por periodo de origen. Obligar a que todos los periodos usen el mismo estimador puede ser menos coherente que aplicar una regla de credibilidad documentada.
 
-Sea \(p_i\) la proporción desarrollada y \(q_i=1-p_i\). Una forma general de combinación es:
+Sea $p_i$ la proporción desarrollada y $q_i=1-p_i$. Una forma general de combinación es:
 
 \[
 \widehat{U}_i
@@ -473,7 +473,7 @@ w_i\widehat{U}^{CL}_i
 \qquad 0\leq w_i\leq 1.
 \]
 
-La madurez puede informar \(w_i\), pero no debe determinarlo mecánicamente. Credibilidad también depende de volumen, estabilidad, ruptura estructural y calidad del prior.
+La madurez puede informar $w_i$, pero no debe determinarlo mecánicamente. Credibilidad también depende de volumen, estabilidad, ruptura estructural y calidad del prior.
 
 | Madurez y evidencia | Método central plausible | Challengers mínimos |
 |---|---|---|
@@ -488,7 +488,7 @@ La madurez puede informar \(w_i\), pero no debe determinarlo mecánicamente. Cre
 Una regla que cambia abruptamente de BF a Chain Ladder al cruzar un umbral de madurez puede producir saltos artificiales. Deben evaluarse:
 
 - continuidad del ultimate entre valoraciones;
-- sensibilidad a pequeñas variaciones de \(p_i\);
+- sensibilidad a pequeñas variaciones de $p_i$;
 - runoff por cohorte;
 - estabilidad de pesos o reglas de selección;
 - consistencia con nueva información.
@@ -525,18 +525,18 @@ Mack y Bootstrap suelen cuantificar incertidumbre condicional a una estructura. 
 
 La validación debe reconstruir lo que se conocía en cada fecha histórica. Usar información posterior para construir features, factores, segmentos o ultimate produce leakage.
 
-Para cada fecha de evaluación \(t\):
+Para cada fecha de evaluación $t$:
 
-1. congele datos disponibles hasta \(t\);
+1. congele datos disponibles hasta $t$;
 2. ajuste el método sin utilizar diagonales futuras;
-3. estime \(\widehat{U}_{i\mid t}\) o \(\widehat{R}_{i\mid t}\);
-4. avance a \(t+h\);
+3. estime $\widehat{U}_{i\mid t}$ o $\widehat{R}_{i\mid t}$;
+4. avance a $t+h$;
 5. compare con pagos emergentes y reserva revisada;
 6. repita sobre múltiples fechas y segmentos.
 
 ## 13.2 Métricas
 
-Si \(U_i^{eval}\) es un ultimate suficientemente maduro:
+Si $U_i^{eval}$ es un ultimate suficientemente maduro:
 
 \[
 e_i
@@ -547,7 +547,7 @@ e_i
 Sesgo agregado relativo:
 
 \[
-\operatorname{Bias}_{rel}
+\mathrm{Bias}_{rel}
 =
 \frac{\sum_i e_i}{\sum_i U_i^{eval}}.
 \]
@@ -555,12 +555,12 @@ Sesgo agregado relativo:
 Error absoluto ponderado:
 
 \[
-\operatorname{WAPE}
+\mathrm{WAPE}
 =
 \frac{\sum_i |e_i|}{\sum_i |U_i^{eval}|}.
 \]
 
-Runoff de reserva entre \(t\) y \(t+h\):
+Runoff de reserva entre $t$ y $t+h$:
 
 \[
 \rho_{t,h}
@@ -571,7 +571,7 @@ Runoff de reserva entre \(t\) y \(t+h\):
 }{\widehat{R}_t}.
 \]
 
-Con esta convención, \(\rho_{t,h}>0\) indica redundancia de la reserva previa y \(\rho_{t,h}<0\) deficiencia.
+Con esta convención, $\rho_{t,h}>0$ indica redundancia de la reserva previa y $\rho_{t,h}<0$ deficiencia.
 
 Para distribuciones predictivas deben evaluarse adicionalmente:
 
@@ -598,11 +598,11 @@ La evidencia debe incluir desempeño, estabilidad, diagnóstico económico y pla
 
 Considere un periodo reciente con:
 
-- acumulado observado: \(C=7.20\) millones;
-- proporción reportada seleccionada: \(p=0.80\);
-- proporción no reportada: \(q=0.20\);
-- prior de ultimate: \(U^{(0)}=10.00\) millones;
-- expectativa Cape Cod basada en exposición: \(U^{CC,0}=9.50\) millones.
+- acumulado observado: $C=7.20$ millones;
+- proporción reportada seleccionada: $p=0.80$;
+- proporción no reportada: $q=0.20$;
+- prior de ultimate: $U^{(0)}=10.00$ millones;
+- expectativa Cape Cod basada en exposición: $U^{CC,0}=9.50$ millones.
 
 ## 14.1 Resultados
 
@@ -676,7 +676,7 @@ Una selección defendible sería BF en 9.20 como estimación central, Benktander
 ## 14.3 Qué cambiaría la conclusión
 
 - Si el prior sobreestima sistemáticamente el ultimate, aumentaría el peso de experiencia.
-- Si el cambio de adjudicación reduce \(p\) real de 0.80 a 0.75, el Chain Ladder aumentaría a 9.60 y la interpretación cambiaría.
+- Si el cambio de adjudicación reduce $p$ real de 0.80 a 0.75, el Chain Ladder aumentaría a 9.60 y la interpretación cambiaría.
 - Si member months o mix de riesgo están mal medidos, Cape Cod perdería credibilidad.
 - Si el periodo madura sin deterioro, Benktander o Chain Ladder ganarían peso.
 - Si grandes claims explican la diferencia, se requeriría segmentar antes de escoger.

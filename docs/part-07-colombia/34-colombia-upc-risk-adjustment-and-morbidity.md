@@ -40,8 +40,8 @@ $$
 
 donde:
 
-- \(C_i\) es el costo esperado del afiliado \(i\);
-- \(X_i\) incluye edad, sexo, zona, régimen, morbilidad, diagnósticos, medicamentos, uso histórico, prestador, contrato y condiciones de alto costo;
+- $C_i$ es el costo esperado del afiliado $i$;
+- $X_i$ incluye edad, sexo, zona, régimen, morbilidad, diagnósticos, medicamentos, uso histórico, prestador, contrato y condiciones de alto costo;
 - el modelo demográfico aproxima solo una parte del riesgo;
 - el modelo clínico busca capturar diferencias adicionales en necesidad esperada de recursos.
 
@@ -72,9 +72,9 @@ $$
 
 donde:
 
-- \(\text{UPC base}_{g(i),t+1}\) es la UPC base para el grupo demográfico o normativo;
-- \(\text{factor de riesgo}_{i,t}\) resume la carga clínica observada en el periodo base;
-- \(\text{ajustes técnicos}_{i,t}\) pueden incluir región, régimen, dispersión geográfica, redes, alta complejidad, inflación médica esperada o factores de transición.
+- $\text{UPC base}_{g(i),t+1}$ es la UPC base para el grupo demográfico o normativo;
+- $\text{factor de riesgo}_{i,t}$ resume la carga clínica observada en el periodo base;
+- $\text{ajustes técnicos}_{i,t}$ pueden incluir región, régimen, dispersión geográfica, redes, alta complejidad, inflación médica esperada o factores de transición.
 
 El ajuste puede ser:
 
@@ -93,7 +93,7 @@ El punto crítico es que el modelo debe distinguir necesidad esperada de recurso
 
 ASOP No. 45, sobre metodologías de ajuste de riesgo basadas en estado de salud, establece una idea central: los modelos de ajuste de riesgo se usan para cuantificar diferencias relativas de uso esperado de recursos por diferencias en estado de salud. También enfatiza que el actuario debe considerar uso previsto, versión del modelo, impacto en incentivos, calidad de datos, población, periodo de estimación, recalibración y comunicación de limitaciones.
 
-Aplicado a Colombia, esto implica que un modelo de UPC ajustada por morbilidad no debe evaluarse solo por su \(R^2\), AUC o error predictivo. Debe evaluarse por:
+Aplicado a Colombia, esto implica que un modelo de UPC ajustada por morbilidad no debe evaluarse solo por su $R^2$, AUC o error predictivo. Debe evaluarse por:
 
 - finalidad: suficiencia UPC, compensación entre EPS, monitoreo de riesgo o reserving;
 - datos disponibles y su calidad;
@@ -259,7 +259,7 @@ $$
 RS_G = \frac{\sum_{i \in G} w_i RS_i}{\sum_{i \in G} w_i}
 $$
 
-donde \(w_i\) representa exposición, meses afiliado o ponderadores definidos por el esquema.
+donde $w_i$ representa exposición, meses afiliado o ponderadores definidos por el esquema.
 
 La transferencia ajustada para una EPS o grupo puede calcularse como:
 

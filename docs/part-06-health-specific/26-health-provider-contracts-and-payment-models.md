@@ -86,7 +86,7 @@ $$
 
 donde:
 
-- \(N_t\) es la población o exposición reconocida;
+- $N_t$ es la población o exposición reconocida;
 - la tarifa capitada puede variar por grupo, riesgo, región o contrato.
 
 La reserva no se calcula igual que en pago por evento. Debe considerar:

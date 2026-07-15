@@ -40,9 +40,9 @@ $$
 
 donde:
 
-- \(E\) es la exposición;
-- \(U\) es la utilización por unidad de exposición;
-- \(S\) es la severidad o costo promedio por servicio, reclamación o evento.
+- $E$ es la exposición;
+- $U$ es la utilización por unidad de exposición;
+- $S$ es la severidad o costo promedio por servicio, reclamación o evento.
 
 Dependiendo de la granularidad, esta relación puede formularse de varias formas:
 
@@ -240,13 +240,13 @@ Cuando la exposición cambia rápidamente, un triángulo de montos puede mostrar
 
 En salud, una alternativa común a los triángulos tradicionales es estimar el costo último por PMPM usando factores de completitud.
 
-Si \(C_{t,d}\) es el costo observado para el periodo de servicio \(t\) al desarrollo \(d\), y \(E_t\) es la exposición, entonces:
+Si $C_{t,d}$ es el costo observado para el periodo de servicio $t$ al desarrollo $d$, y $E_t$ es la exposición, entonces:
 
 $$
 \text{PMPM observado}_{t,d} = \frac{C_{t,d}}{E_t}
 $$
 
-Si \(q_d\) es el porcentaje esperado de completitud al desarrollo \(d\), entonces:
+Si $q_d$ es el porcentaje esperado de completitud al desarrollo $d$, entonces:
 
 $$
 \widehat{\text{PMPM último}}_{t} =
@@ -273,9 +273,9 @@ $$
 
 donde:
 
-- \(E\) es exposición;
-- \(\widehat{F}\) es frecuencia esperada por unidad de exposición;
-- \(\widehat{S}\) es severidad esperada por evento.
+- $E$ es exposición;
+- $\widehat{F}$ es frecuencia esperada por unidad de exposición;
+- $\widehat{S}$ es severidad esperada por evento.
 
 La reserva se obtiene como:
 
@@ -302,7 +302,7 @@ S^{\text{estandarizada}}_t =
 \sum_k w_{k,0} \times S_{k,t}
 $$
 
-donde \(w_{k,0}\) es la participación del servicio \(k\) en el periodo base.
+donde $w_{k,0}$ es la participación del servicio $k$ en el periodo base.
 
 Si la severidad estandarizada crece menos que la observada, parte del aumento proviene de cambio de mix.
 
@@ -316,7 +316,7 @@ $$
 E^{*} = \sum_i E_i \times r_i
 $$
 
-donde \(r_i\) es un factor de riesgo relativo.
+donde $r_i$ es un factor de riesgo relativo.
 
 Esto permite calcular PMPM ajustado:
 
@@ -339,9 +339,9 @@ $$
 
 donde:
 
-- \(T_U\) es tendencia de utilización;
-- \(T_S\) es tendencia de severidad o precio;
-- \(T_M\) es efecto de mix o morbilidad.
+- $T_U$ es tendencia de utilización;
+- $T_S$ es tendencia de severidad o precio;
+- $T_M$ es efecto de mix o morbilidad.
 
 En reserving, la tendencia puede afectar periodos recientes con desarrollo incompleto. No debe aplicarse mecánicamente sin validar si el cambio ya está reflejado en los datos observados.
 

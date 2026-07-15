@@ -107,7 +107,7 @@ El demo sigue este flujo:
 
 ## Fórmulas base
 
-Para un año de origen \(i\) y edad de desarrollo \(j\), el factor edad-a-edad seleccionado se calcula como:
+Para un año de origen $i$ y edad de desarrollo $j$, el factor edad-a-edad seleccionado se calcula como:
 
 $$
 f_j =
@@ -116,10 +116,10 @@ $$
 
 donde:
 
-- \(C_{i,j}\) es el pago acumulado para el año de origen \(i\) a edad de desarrollo \(j\);
-- la suma usa únicamente años de origen con observación disponible en \(j\) y \(j+1\).
+- $C_{i,j}$ es el pago acumulado para el año de origen $i$ a edad de desarrollo $j$;
+- la suma usa únicamente años de origen con observación disponible en $j$ y $j+1$.
 
-El factor acumulado hacia ultimate para un año con última edad observada \(k\) es:
+El factor acumulado hacia ultimate para un año con última edad observada $k$ es:
 
 $$
 CDF_k = \prod_{j=k}^{J-1} f_j

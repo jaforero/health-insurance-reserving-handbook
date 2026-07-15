@@ -1305,7 +1305,7 @@ $$
 P(A_m=1)
 ========
 
-\operatorname{logit}^{-1}(X_m^\top\beta)
+\mathrm{logit}^{-1}(X_m^\top\beta)
 $$
 
 ### Proporción pagada
@@ -1521,9 +1521,7 @@ Separar:
 ## 16.1 Separación de attritional y large claims
 
 $$
-U
-=
-
+U = 
 U^{regular}
 +
 U^{alto\ costo}

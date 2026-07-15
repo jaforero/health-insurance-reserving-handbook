@@ -107,7 +107,7 @@ The demo follows this flow:
 
 ## Core formulas
 
-For origin year \(i\) and development age \(j\), the selected age-to-age factor is:
+For origin year $i$ and development age $j$, the selected age-to-age factor is:
 
 $$
 f_j =
@@ -116,10 +116,10 @@ $$
 
 where:
 
-- \(C_{i,j}\) is cumulative paid for origin year \(i\) at development age \(j\);
-- the sum uses only origin years with available observations at both \(j\) and \(j+1\).
+- $C_{i,j}$ is cumulative paid for origin year $i$ at development age $j$;
+- the sum uses only origin years with available observations at both $j$ and $j+1$.
 
-The cumulative development factor to ultimate for an origin year with latest observed age \(k\) is:
+The cumulative development factor to ultimate for an origin year with latest observed age $k$ is:
 
 $$
 CDF_k = \prod_{j=k}^{J-1} f_j

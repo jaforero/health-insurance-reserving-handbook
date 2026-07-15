@@ -91,7 +91,7 @@ $$
 \mathrm{Var}(X_{i,j}) = \phi\mu_{i,j}
 $$
 
-donde \(\phi\) es el parámetro de dispersión.
+donde $\phi$ es el parámetro de dispersión.
 
 Una estructura multiplicativa es:
 
@@ -109,16 +109,14 @@ Bajo ciertas condiciones, esta formulación reproduce las estimaciones centrales
 
 ## Valores ajustados
 
-El Bootstrap suele trabajar sobre incrementales. Si \(\widehat C_{i,j}\) es el acumulado ajustado:
+El Bootstrap suele trabajar sobre incrementales. Si $\widehat C_{i,j}$ es el acumulado ajustado:
 
 $$
 \widehat X_{i,0}=\widehat C_{i,0}
 $$
 
 $$
-\widehat X_{i,j}
-=
-\widehat C_{i,j}-\widehat C_{i,j-1},
+\widehat X_{i,j} = \widehat C_{i,j}-\widehat C_{i,j-1},
 \qquad j>0
 $$
 
@@ -148,9 +146,7 @@ donde (N) es el número de celdas observadas y (p) el número efectivo de parám
 Como el modelo se estima con los mismos datos, los residuos brutos pueden subestimar la variabilidad. Una corrección común es:
 
 $$
-r_{i,j}^{adj}
-=
-r_{i,j}\sqrt{\frac{N}{N-p}}
+r_{i,j}^{adj} = r_{i,j}\sqrt{\frac{N}{N-p}}
 $$
 
 Otra opción utiliza el leverage de cada observación. La corrección seleccionada debe documentarse y aplicarse de manera consistente.
@@ -160,9 +156,7 @@ Otra opción utiliza el leverage de cada observación. La corrección selecciona
 Antes del remuestreo puede centrarse el conjunto:
 
 $$
-\widetilde r_{i,j}
-=
-r_{i,j}^{adj}-\overline r^{adj}
+\widetilde r_{i,j} = r_{i,j}^{adj}-\overline r^{adj}
 $$
 
 El centrado reduce el riesgo de introducir un sesgo sistemático en los pseudo-datos.
@@ -184,9 +178,7 @@ Para cada simulación (b=1,\ldots,B):
 Una construcción frecuente de pseudo-observaciones es:
 
 $$
-X_{i,j}^{*(b)}
-=
-\widehat X_{i,j}
+X_{i,j}^{*(b)} = \widehat X_{i,j}
 +
 r_{i,j}^{*(b)}\sqrt{\widehat X_{i,j}}
 $$
@@ -194,9 +186,7 @@ $$
 El factor reestimado en la simulación (b) es:
 
 $$
-\widehat f_j^{*(b)}
-=
-\frac{\sum_i C_{i,j+1}^{*(b)}}
+\widehat f_j^{*(b)} = \frac{\sum_i C_{i,j+1}^{*(b)}}
 {\sum_i C_{i,j}^{*(b)}}
 $$
 
@@ -207,7 +197,7 @@ R^{(b)}=
 \sum_{i,j\in\text{futuro}}X_{i,j}^{proc,(b)}
 $$
 
-El conjunto \(\{R^{(1)},\ldots,R^{(B)}\}\) aproxima la distribución predictiva bajo el modelo.
+El conjunto $\{R^{(1)},\ldots,R^{(B)}\}$ aproxima la distribución predictiva bajo el modelo.
 
 ## Simulación del riesgo de proceso
 
@@ -232,9 +222,7 @@ E[X_{i,j}^{proc}]=\widehat\mu_{i,j}
 $$
 
 $$
-\mathrm{Var}(X_{i,j}^{proc})
-=
-\widehat\phi\widehat\mu_{i,j}
+\mathrm{Var}(X_{i,j}^{proc}) = \widehat\phi\widehat\mu_{i,j}
 $$
 
 ### Otras opciones
@@ -272,9 +260,7 @@ $$
 El promedio de los resultados que exceden el percentil es:
 
 $$
-\mathrm{TVaR}_q(R)
-=
-E[R\mid R\ge Q_q(R)]
+\mathrm{TVaR}_q(R) = E[R\mid R\ge Q_q(R)]
 $$
 
 ### Probabilidad de insuficiencia

@@ -34,7 +34,7 @@ Tasa\ esperada =
 {\sum_i Exposición_i \times p_i}
 $$
 
-donde \(p_i\) es el porcentaje desarrollado del año de origen \(i\).
+donde $p_i$ es el porcentaje desarrollado del año de origen $i$.
 
 ## Relación con Bornhuetter-Ferguson
 

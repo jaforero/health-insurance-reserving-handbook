@@ -44,9 +44,9 @@ $$
 
 donde:
 
-- \(Observado_i\) es el monto acumulado observado;
-- \(Ultimate^{BF}_i\) es el ultimate estimado por BF;
-- \(p_i\) es el porcentaje desarrollado.
+- $Observado_i$ es el monto acumulado observado;
+- $Ultimate^{BF}_i$ es el ultimate estimado por BF;
+- $p_i$ es el porcentaje desarrollado.
 
 Esta expresión genera una estimación entre BF y Chain Ladder, dependiendo de la madurez.
 
@@ -61,7 +61,7 @@ Ultimate^{B} =
 w \times Ultimate^{CL} + (1 - w) \times Ultimate^{BF}
 $$
 
-donde el peso \(w\) aumenta con la madurez. La fórmula exacta puede variar según la implementación, pero la intuición es la misma: combinar desarrollo observado y expectativa previa.
+donde el peso $w$ aumenta con la madurez. La fórmula exacta puede variar según la implementación, pero la intuición es la misma: combinar desarrollo observado y expectativa previa.
 
 ## Relación con BF
 

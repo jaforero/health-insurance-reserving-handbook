@@ -25,9 +25,9 @@ $$
 
 donde:
 
-- \(i\) es el periodo de origen;
-- \(j\) es la edad de desarrollo;
-- \(X_{i,j}\) es el pago, incurrido o conteo observado únicamente en esa edad.
+- $i$ es el periodo de origen;
+- $j$ es la edad de desarrollo;
+- $X_{i,j}$ es el pago, incurrido o conteo observado únicamente en esa edad.
 
 Ejemplo:
 

@@ -97,7 +97,7 @@ $$
 E[M] = M_{\text{reconocido}} + p_{\text{reversión}} \times M_{\text{glosado}}
 $$
 
-Si \(p_{\text{reversión}} = 40\%\), entonces:
+Si $p_{\text{reversión}} = 40\%$, entonces:
 
 $$
 E[M] = 700 + 0.40 \times 300 = 820
@@ -200,7 +200,7 @@ R_{\text{glosa}} =
 \sum_i p_i \times M_i
 $$
 
-donde \(p_i\) es la probabilidad de reconocimiento y \(M_i\) es el monto objetado.
+donde $p_i$ es la probabilidad de reconocimiento y $M_i$ es el monto objetado.
 
 ## 10. Ajustes y recobros
 

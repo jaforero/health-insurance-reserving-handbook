@@ -62,7 +62,7 @@ Antes de aplicar métodos, es frecuente transformar triángulos.
 
 ### De incremental a acumulado
 
-Si \(X_{i,j}\) es el valor incremental del origen \(i\) en desarrollo \(j\), el acumulado es:
+Si $X_{i,j}$ es el valor incremental del origen $i$ en desarrollo $j$, el acumulado es:
 
 $$
 C_{i,j} = \sum_{k=0}^{j} X_{i,k}
@@ -72,7 +72,7 @@ Esta transformación se usa porque muchos métodos de desarrollo trabajan sobre 
 
 ### De acumulado a incremental
 
-Si \(C_{i,j}\) es acumulado, el incremental es:
+Si $C_{i,j}$ es acumulado, el incremental es:
 
 $$
 X_{i,j} = C_{i,j} - C_{i,j-1}
@@ -105,7 +105,7 @@ $$
 Monto\ ajustado_{i,j} = Monto_{i,j} \times (1 + t)^{n}
 $$
 
-donde \(t\) es una tasa de tendencia y \(n\) es el número de periodos de actualización.
+donde $t$ es una tasa de tendencia y $n$ es el número de periodos de actualización.
 
 Este ajuste debe usarse con cuidado: si se aplica tendencia y luego se seleccionan factores sin considerar el ajuste, se puede duplicar o distorsionar el efecto.
 

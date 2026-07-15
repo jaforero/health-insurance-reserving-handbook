@@ -72,13 +72,13 @@ $$
 
 donde:
 
-- \(N\) es el número aleatorio de eventos de alto costo;
-- \(X_j\) es la severidad del evento \(j\);
-- \(S\) es la pérdida agregada del periodo.
+- $N$ es el número aleatorio de eventos de alto costo;
+- $X_j$ es la severidad del evento $j$;
+- $S$ es la pérdida agregada del periodo.
 
-El valor esperado \(E[S]\) es necesario, pero no suficiente. Para solvencia, liquidez y presupuestos máximos también importan:
+El valor esperado $E[S]$ es necesario, pero no suficiente. Para solvencia, liquidez y presupuestos máximos también importan:
 
-- percentiles altos de \(S\);
+- percentiles altos de $S$;
 - varianza;
 - TVaR;
 - concentración por condición;
@@ -154,12 +154,12 @@ $$
 
 o alternativas:
 
-- \(N \sim\) binomial negativa si hay sobredispersión;
-- \(X \sim\) gamma, lognormal, Pareto o mezcla;
+- $N \sim$ binomial negativa si hay sobredispersión;
+- $X \sim$ gamma, lognormal, Pareto o mezcla;
 - dependencia entre eventos mediante factores de tendencia, región, proveedor o tecnología;
 - simulación Monte Carlo cuando no hay solución cerrada.
 
-El output no debe ser solo \(E[S]\). Debe incluir:
+El output no debe ser solo $E[S]$. Debe incluir:
 
 | Output | Uso |
 |---|---|
@@ -195,7 +195,7 @@ $$
 \text{factor de detección}_{g,t}
 $$
 
-donde \(g\) puede ser EPS, región, condición, régimen o grupo clínico.
+donde $g$ puede ser EPS, región, condición, régimen o grupo clínico.
 
 La frecuencia debe ajustarse por:
 
@@ -253,9 +253,9 @@ $$
 
 donde:
 
-- \(Y_t\) es el estado clínico en \(t\);
-- \(c_s\) es el costo esperado del estado \(s\);
-- \(P(Y_t=s)\) surge de la matriz de transición.
+- $Y_t$ es el estado clínico en $t$;
+- $c_s$ es el costo esperado del estado $s$;
+- $P(Y_t=s)$ surge de la matriz de transición.
 
 Este enfoque es útil para cohortes CAC y para presupuestar progresión clínica.
 
@@ -301,7 +301,7 @@ $$
 \text{cobertura} = \max(0, X - d)
 $$
 
-donde \(d\) es el deducible o attachment point.
+donde $d$ es el deducible o attachment point.
 
 Para portafolio:
 
@@ -397,7 +397,7 @@ $$
 
 Donde:
 
-- \(g\) puede ser EPS, región, cohorte o contrato;
+- $g$ puede ser EPS, región, cohorte o contrato;
 - el factor de morbilidad viene del capítulo 34;
 - el factor alto costo captura concentración en CAC, MIPRES o eventos extremos;
 - el factor tendencia captura inflación médica y adopción tecnológica.
@@ -456,10 +456,10 @@ $$
 
 donde:
 
-- \(Z\) es el peso de credibilidad;
-- \(\mu_{\text{local}}\) es la experiencia observada;
-- \(\mu_{\text{referencia}}\) puede ser nacional, sectorial o histórica;
-- \(\hat{\mu}\) es la severidad o frecuencia estimada.
+- $Z$ es el peso de credibilidad;
+- $\mu_{\text{local}}$ es la experiencia observada;
+- $\mu_{\text{referencia}}$ puede ser nacional, sectorial o histórica;
+- $\hat{\mu}$ es la severidad o frecuencia estimada.
 
 Esto evita reaccionar de forma excesiva a pocos casos extremos, sin ignorar evidencia local.
 

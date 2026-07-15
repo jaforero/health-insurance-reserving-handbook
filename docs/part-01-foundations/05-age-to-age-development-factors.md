@@ -17,13 +17,13 @@ Un factor edad-a-edad responde una pregunta concreta: dado lo observado a cierta
 
 ## Definición
 
-Sea \(C_{i,j}\) el valor acumulado para el periodo de origen \(i\) a edad de desarrollo \(j\). El factor observado entre \(j\) y \(j+1\) es:
+Sea $C_{i,j}$ el valor acumulado para el periodo de origen $i$ a edad de desarrollo $j$. El factor observado entre $j$ y $j+1$ es:
 
 $$
 f_{i,j} = \frac{C_{i,j+1}}{C_{i,j}}
 $$
 
-Si \(C_{i,j}\) es cero o no está observado, el factor no debe calcularse sin análisis adicional.
+Si $C_{i,j}$ es cero o no está observado, el factor no debe calcularse sin análisis adicional.
 
 Ejemplo:
 
@@ -71,7 +71,7 @@ También pueden usarse promedios recortados, exclusión de años atípicos o sel
 
 Los factores edad-a-edad se combinan para proyectar desde una edad observada hasta ultimate.
 
-Si un año de origen tiene última edad observada \(k\), el factor acumulado hacia ultimate es:
+Si un año de origen tiene última edad observada $k$, el factor acumulado hacia ultimate es:
 
 $$
 CDF_k = \prod_{j=k}^{J-1} f_j

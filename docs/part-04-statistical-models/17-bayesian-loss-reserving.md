@@ -30,7 +30,7 @@ Al finalizar este capítulo, el lector podrá:
 
 ## Teorema de Bayes
 
-Sea \(\theta\) el conjunto de parámetros y (y) los datos observados:
+Sea $\theta$ el conjunto de parámetros y (y) los datos observados:
 
 $$
 p(\theta\mid y)=
@@ -47,13 +47,13 @@ $$
 
 donde:
 
-- \(p(\theta)\): distribución previa o *prior*;
-- \(p(y\mid \theta)\): verosimilitud o *likelihood*;
-- \(p(\theta\mid y)\): distribución posterior.
+- $p(\theta)$: distribución previa o *prior*;
+- $p(y\mid \theta)$: verosimilitud o *likelihood*;
+- $p(\theta\mid y)$: distribución posterior.
 
 ## Distribución posterior predictiva
 
-La predicción de una celda futura \(\widetilde y\) integra la incertidumbre de parámetros:
+La predicción de una celda futura $\widetilde y$ integra la incertidumbre de parámetros:
 
 $$
 p(\widetilde y\mid y)=
@@ -221,9 +221,9 @@ HMC y NUTS utilizan gradientes para explorar posteriores de alta dimensión. Su 
 
 Las cadenas deben explorar la misma región posterior sin tendencias persistentes ni bloqueos.
 
-### \(\widehat R\)
+### $\widehat R$
 
-\(\widehat R\) compara variación entre y dentro de cadenas. Valores alejados de uno indican falta de convergencia.
+$\widehat R$ compara variación entre y dentro de cadenas. Valores alejados de uno indican falta de convergencia.
 
 ### Tamaño efectivo de muestra
 
@@ -283,7 +283,7 @@ Para cada muestra posterior (m):
 1. simular o predecir cada celda futura;
 2. agregar por periodo de origen;
 3. sumar el triángulo inferior;
-4. almacenar \(IBNR^{(m)}\).
+4. almacenar $IBNR^{(m)}$.
 
 Entonces pueden calcularse:
 

@@ -80,34 +80,34 @@ Las etiquetas tienen el siguiente significado:
 
 ## 3. Notación canónica
 
-Los subíndices \(i\) y \(j\) representan, respectivamente, periodo de origen y edad de desarrollo. Si un capítulo utiliza otra granularidad, debe declararla.
+Los subíndices $i$ y $j$ representan, respectivamente, periodo de origen y edad de desarrollo. Si un capítulo utiliza otra granularidad, debe declararla.
 
 | Símbolo | Definición canónica |
 |---|---|
-| \(i\) | Índice del periodo de origen: servicio, ocurrencia, reporte u otra cohorte declarada. |
-| \(j\) | Índice o edad de desarrollo desde el origen declarado. |
-| \(X_{i,j}\) | Importe incremental de la celda \((i,j)\). |
-| \(C_{i,j}\) | Importe acumulado: \(C_{i,j}=\sum_{h=0}^{j}X_{i,h}\). La medida —pagado, incurrido, allowed u otra— debe indicarse. |
-| \(P_{i,j}\) | Pagos acumulados observados para origen \(i\) a desarrollo \(j\). |
-| \(O_{i,j}\) | Reserva de caso pendiente registrada para reclamos reportados. |
-| \(I_{i,j}\) | Incurrido reportado acumulado: \(I_{i,j}=P_{i,j}+O_{i,j}\), salvo definición explícita distinta. |
-| \(U_i\) | Costo *ultimate* de la cohorte \(i\) bajo una base, cobertura y horizonte definidos. |
-| \(R_i(C)\) | Reserva o desarrollo pendiente respecto de la medida observada \(C\): \(R_i(C)=U_i-C_{i,k_i}\). |
-| \(R_i^{(P)}\) | Pasivo de claims no pagados antes de otros ajustes: \(R_i^{(P)}=U_i-P_{i,k_i}\). |
-| \(R_i^{(I)}\) | Desarrollo pendiente sobre incurrido reportado: \(R_i^{(I)}=U_i-I_{i,k_i}\). |
-| \(f_j\) | Factor edad-a-edad desde \(j\) hasta \(j+1\). |
-| \(F_j\) | Factor acumulado desde \(j\) hasta *ultimate*; también denominado CDF. |
-| \(p_{i,j}\) | Proporción estimada reportada, pagada o completada a \(j\), según se declare. |
-| \(q_{i,j}\) | Proporción pendiente: \(q_{i,j}=1-p_{i,j}\). |
-| \(E_i\) | Exposición correspondiente a la cohorte \(i\). |
-| \(MM_i\) | Meses-miembro de la cohorte \(i\). |
-| \(N_i\) | Conteo de reclamos, personas o eventos; el objeto contado debe declararse. |
-| \(S_i\) | Severidad media: costo dividido por el conteo coherente con ese costo. |
-| \(D_t\) | Información que estaba disponible en la fecha de valoración \(t\). |
-| \(\widehat{\theta}\) | Estimación puntual de un parámetro o cantidad \(\theta\). |
+| $i$ | Índice del periodo de origen: servicio, ocurrencia, reporte u otra cohorte declarada. |
+| $j$ | Índice o edad de desarrollo desde el origen declarado. |
+| $X_{i,j}$ | Importe incremental de la celda $(i,j)$. |
+| $C_{i,j}$ | Importe acumulado: $C_{i,j}=\sum_{h=0}^{j}X_{i,h}$. La medida —pagado, incurrido, allowed u otra— debe indicarse. |
+| $P_{i,j}$ | Pagos acumulados observados para origen $i$ a desarrollo $j$. |
+| $O_{i,j}$ | Reserva de caso pendiente registrada para reclamos reportados. |
+| $I_{i,j}$ | Incurrido reportado acumulado: $I_{i,j}=P_{i,j}+O_{i,j}$, salvo definición explícita distinta. |
+| $U_i$ | Costo *ultimate* de la cohorte $i$ bajo una base, cobertura y horizonte definidos. |
+| $R_i(C)$ | Reserva o desarrollo pendiente respecto de la medida observada $C$: $R_i(C)=U_i-C_{i,k_i}$. |
+| $R_i^{(P)}$ | Pasivo de claims no pagados antes de otros ajustes: $R_i^{(P)}=U_i-P_{i,k_i}$. |
+| $R_i^{(I)}$ | Desarrollo pendiente sobre incurrido reportado: $R_i^{(I)}=U_i-I_{i,k_i}$. |
+| $f_j$ | Factor edad-a-edad desde $j$ hasta $j+1$. |
+| $F_j$ | Factor acumulado desde $j$ hasta *ultimate*; también denominado CDF. |
+| $p_{i,j}$ | Proporción estimada reportada, pagada o completada a $j$, según se declare. |
+| $q_{i,j}$ | Proporción pendiente: $q_{i,j}=1-p_{i,j}$. |
+| $E_i$ | Exposición correspondiente a la cohorte $i$. |
+| $MM_i$ | Meses-miembro de la cohorte $i$. |
+| $N_i$ | Conteo de reclamos, personas o eventos; el objeto contado debe declararse. |
+| $S_i$ | Severidad media: costo dividido por el conteo coherente con ese costo. |
+| $D_t$ | Información que estaba disponible en la fecha de valoración $t$. |
+| $\widehat{\theta}$ | Estimación puntual de un parámetro o cantidad $\theta$. |
 
 !!! note "La reserva depende de la base"
-    Si \(C=P\), \(U-C\) representa claims no pagados. Si \(C=I=P+O\), \(U-C\) representa desarrollo adicional sobre lo ya reportado y reservado. Es incorrecto presentar ambos resultados como “IBNR” sin indicar la convención.
+    Si $C=P$, $U-C$ representa claims no pagados. Si $C=I=P+O$, $U-C$ representa desarrollo adicional sobre lo ya reportado y reservado. Es incorrecto presentar ambos resultados como “IBNR” sin indicar la convención.
 
 ## 4. Distinciones que no deben colapsarse
 
@@ -121,7 +121,7 @@ Los subíndices \(i\) y \(j\) representan, respectivamente, periodo de origen y 
 | Fecha de adjudicación | Decisión operativa sobre elegibilidad, cobertura e importe | Puede haber readjudicaciones y reversos |
 | Fecha de pago | Movimiento de efectivo o compensación reconocida como pago | Puede diferir de la fecha contable |
 | Fecha contable | Reconocimiento en un periodo financiero | Depende de políticas de cierre y contabilización |
-| Fecha de valoración | Corte de información usado para estimar | Determina qué información pertenece a \(D_t\) |
+| Fecha de valoración | Corte de información usado para estimar | Determina qué información pertenece a $D_t$ |
 | Periodo de origen | Cohorte agrupada por servicio, ocurrencia, reporte u otra fecha | Debe nombrarse; “mes del claim” es insuficiente |
 | Periodo calendario | Intersección entre origen y desarrollo | Mezcla efectos de múltiples cohortes y puede revelar shocks operativos |
 
@@ -142,21 +142,21 @@ Los subíndices \(i\) y \(j\) representan, respectivamente, periodo de origen y 
 
 ### 4.3 Componentes de claims no pagados
 
-Bajo la convención canónica \(I=P+O\):
+Bajo la convención canónica $I=P+O$:
 
 \[
 R_i^{(P)}=U_i-P_i=O_i+\left(U_i-I_i\right).
 \]
 
-La expresión \(U_i-I_i\) puede combinar reclamos verdaderamente no reportados e insuficiencia o exceso de reservas de caso. Por eso, el handbook aplica la siguiente política:
+La expresión $U_i-I_i$ puede combinar reclamos verdaderamente no reportados e insuficiencia o exceso de reservas de caso. Por eso, el handbook aplica la siguiente política:
 
 | Término | Definición preferida | Nota de uso |
 |---|---|---|
 | IBNR puro | Obligación por eventos incurridos que aún no han sido reportados a la entidad | No incluye reserva de caso |
-| RBNS | Reserva para reclamos reportados pero no liquidados | Suele aproximarse con \(O_i\), sujeto a la definición del sistema |
+| RBNS | Reserva para reclamos reportados pero no liquidados | Suele aproximarse con $O_i$, sujeto a la definición del sistema |
 | IBNER | Desarrollo esperado por insuficiencia o exceso de la estimación registrada para reclamos reportados | Puede ser negativo; no es un margen |
-| IBNR amplio | \(U_i-I_i\), cuando la práctica local agrupa IBNR puro e IBNER | Debe rotularse “IBNR incluido IBNER” |
-| Claims no pagados | \(U_i-P_i\), antes o después de gastos, recuperables y descuento según se declare | Incluye reserva de caso y desarrollo pendiente |
+| IBNR amplio | $U_i-I_i$, cuando la práctica local agrupa IBNR puro e IBNER | Debe rotularse “IBNR incluido IBNER” |
+| Claims no pagados | $U_i-P_i$, antes o después de gastos, recuperables y descuento según se declare | Incluye reserva de caso y desarrollo pendiente |
 
 ### 4.4 Riesgo e incertidumbre
 
@@ -215,7 +215,7 @@ La expresión \(U_i-I_i\) puede combinar reclamos verdaderamente no reportados e
 
 **Case reserve.** Véase **reserva de caso**.
 
-**CDF (*cumulative development factor*).** Factor acumulado desde una edad de desarrollo hasta *ultimate*: \(F_j=\prod_{h=j}^{J-1} f_h\), incluyendo cola cuando corresponda. No es un *link ratio* individual.
+**CDF (*cumulative development factor*).** Factor acumulado desde una edad de desarrollo hasta *ultimate*: $F_j=\prod_{h=j}^{J-1} f_h$, incluyendo cola cuando corresponda. No es un *link ratio* individual.
 
 **Cierre de claim.** Estado operativo que indica que no se espera actividad adicional bajo una regla del sistema. No prueba que el costo sea *ultimate* ni impide reaperturas.
 
@@ -223,7 +223,7 @@ La expresión \(U_i-I_i\) puede combinar reclamos verdaderamente no reportados e
 
 **Claim de alto costo.** Claim, episodio o persona cuyo costo excede un umbral definido. El umbral, la base —bruta o neta—, el periodo y el tratamiento del exceso deben documentarse.
 
-**Claims no pagados (*unpaid claims*).** Obligación estimada atribuible a claims y gastos incluidos que todavía no se ha pagado a la fecha de valoración. Véase \(R^{(P)}\).
+**Claims no pagados (*unpaid claims*).** Obligación estimada atribuible a claims y gastos incluidos que todavía no se ha pagado a la fecha de valoración. Véase $R^{(P)}$.
 
 **Cohorte.** Conjunto de observaciones que comparten un origen o característica definida. Una cohorte no es necesariamente un periodo de calendario.
 
@@ -273,11 +273,11 @@ La expresión \(U_i-I_i\) puede combinar reclamos verdaderamente no reportados e
 
 ### F
 
-**Factor de completitud.** Proporción acumulada estimada observada a una edad: \(p_j\). Si se deriva de un CDF sin ajustes, \(p_j=1/F_j\). Debe nombrarse “de reporte”, “de reconocimiento” o “de pago”.
+**Factor de completitud.** Proporción acumulada estimada observada a una edad: $p_j$. Si se deriva de un CDF sin ajustes, $p_j=1/F_j$. Debe nombrarse “de reporte”, “de reconocimiento” o “de pago”.
 
 **Factor de cola (*tail factor*).** Factor que representa desarrollo más allá de la última edad observada. Su selección debe incluir horizonte, extrapolación, sensibilidad y riesgo de reaperturas o recuperaciones.
 
-**Factor de desarrollo edad-a-edad.** Multiplicador \(f_j\) que relaciona acumulados de edades consecutivas. Un promedio histórico es un estimador, no una propiedad fija del portafolio.
+**Factor de desarrollo edad-a-edad.** Multiplicador $f_j$ que relaciona acumulados de edades consecutivas. Un promedio histórico es un estimador, no una propiedad fija del portafolio.
 
 **Fee-for-service (FFS).** Modalidad en la que el pago se asocia con servicios individuales. La existencia de tarifas por servicio no elimina auditoría, paquetes, topes ni recuperaciones.
 
@@ -367,7 +367,7 @@ La expresión \(U_i-I_i\) puede combinar reclamos verdaderamente no reportados e
 
 ### O
 
-**Offset.** Componente conocido del predictor lineal, frecuentemente \(\log(E_i)\), cuyo coeficiente se fija en uno. No es una covariable libre.
+**Offset.** Componente conocido del predictor lineal, frecuentemente $\log(E_i)$, cuyo coeficiente se fija en uno. No es una covariable libre.
 
 **Origen.** Dimensión que agrupa la experiencia por la fecha que inicia el desarrollo. Debe declararse el evento y la granularidad.
 
@@ -379,13 +379,13 @@ La expresión \(U_i-I_i\) puede combinar reclamos verdaderamente no reportados e
 
 **Parámetro.** Cantidad fija pero desconocida dentro de un modelo. Debe distinguirse de una observación futura y de un hiperparámetro.
 
-**Percentil.** Valor \(q_\alpha\) tal que una proporción \(\alpha\) de la distribución queda en o por debajo, según convención. Su interpretación depende de la distribución modelada.
+**Percentil.** Valor $q_\alpha$ tal que una proporción $\alpha$ de la distribución queda en o por debajo, según convención. Su interpretación depende de la distribución modelada.
 
 **Periodo de desarrollo.** Intervalo discreto usado para medir maduración. No siempre coincide con un mes calendario exacto.
 
 **PGP (pago global prospectivo) — Jurisdiccional/contractual.** Acuerdo prospectivo por un conjunto de servicios, población, periodo y reglas de liquidación. El acrónimo no determina por sí solo qué riesgo fue transferido.
 
-**PMPM (*per member per month*).** Costo o ingreso por mes-miembro: \(\mathrm{PMPM}=\text{importe}/MM\). El numerador y la elegibilidad del denominador deben compartir cobertura y periodo.
+**PMPM (*per member per month*).** Costo o ingreso por mes-miembro: $\mathrm{PMPM}=\text{importe}/MM$. El numerador y la elegibilidad del denominador deben compartir cobertura y periodo.
 
 **Población expuesta.** Conjunto de personas o unidades que cumplen las reglas de elegibilidad para una cobertura y periodo. No equivale necesariamente a afiliados registrados al cierre.
 
@@ -395,7 +395,7 @@ La expresión \(U_i-I_i\) puede combinar reclamos verdaderamente no reportados e
 
 **Prior.** Distribución o expectativa anterior a la evidencia modelada. Puede basarse en experiencia externa, presupuesto, tarifas o juicio; su fuente y sensibilidad deben declararse.
 
-**Proporción no reportada.** \(q_j=1-p_j\), donde \(p_j\) es una proporción de reporte definida. No es idéntica a la proporción no pagada.
+**Proporción no reportada.** $q_j=1-p_j$, donde $p_j$ es una proporción de reporte definida. No es idéntica a la proporción no pagada.
 
 **Provisión.** Importe reconocido bajo un marco contable, regulatorio o de gestión específico. Debe nombrarse el marco; no usar como equivalente universal de reserva.
 

@@ -105,16 +105,16 @@ El demo sigue este flujo:
 
 ## Fórmulas base
 
-Para una edad de desarrollo \(j\), el factor edad-a-edad se calcula como:
+Para una edad de desarrollo $j$, el factor edad-a-edad se calcula como:
 
 $$
 f_j =
 \frac{\sum_i C_{i,j+1}}{\sum_i C_{i,j}}
 $$
 
-donde \(C\) puede ser el triángulo pagado o el triángulo incurrido.
+donde $C$ puede ser el triángulo pagado o el triángulo incurrido.
 
-La reserva caso observada para el año de origen \(i\) y edad \(j\) se calcula como:
+La reserva caso observada para el año de origen $i$ y edad $j$ se calcula como:
 
 $$
 ReservaCaso_{i,j} = Incurrido_{i,j} - Pagado_{i,j}

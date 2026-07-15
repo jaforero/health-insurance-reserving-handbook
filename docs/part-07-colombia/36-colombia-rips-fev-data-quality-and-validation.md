@@ -180,9 +180,7 @@ $$
 Además:
 
 $$
-\text{Pasivo total estimado}
-=
-\text{Pendiente reconocido}
+\text{Pasivo total estimado} = \text{Pendiente reconocido}
 +
 \text{IBNR}
 +

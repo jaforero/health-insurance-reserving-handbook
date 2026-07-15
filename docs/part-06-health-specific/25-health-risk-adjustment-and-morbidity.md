@@ -53,9 +53,9 @@ $$
 
 donde:
 
-- \(C_i\) es el costo esperado del individuo \(i\);
-- \(X_i\) es el vector de características de riesgo;
-- \(\mu_i\) es el costo esperado ajustado.
+- $C_i$ es el costo esperado del individuo $i$;
+- $X_i$ es el vector de características de riesgo;
+- $\mu_i$ es el costo esperado ajustado.
 
 El resultado puede expresarse como un score relativo:
 
@@ -63,7 +63,7 @@ $$
 r_i = \frac{\mu_i}{\bar{\mu}}
 $$
 
-Si \(r_i = 1.50\), el individuo tiene costo esperado 50% superior al promedio de referencia.
+Si $r_i = 1.50$, el individuo tiene costo esperado 50% superior al promedio de referencia.
 
 ## 3. Por qué importa en reserving
 
@@ -91,9 +91,9 @@ $$
 
 donde:
 
-- \(E_i\) es la exposición del individuo;
-- \(r_i\) es su score de riesgo relativo;
-- \(E^*\) es la exposición equivalente ajustada.
+- $E_i$ es la exposición del individuo;
+- $r_i$ es su score de riesgo relativo;
+- $E^*$ es la exposición equivalente ajustada.
 
 El PMPM ajustado puede calcularse como:
 
@@ -265,7 +265,7 @@ Toda variable de ajuste de riesgo debe tener una fecha de observación y debe ve
 
 Un score de riesgo debe calibrarse contra experiencia observada.
 
-Si \(r_i\) es el score relativo y \(\bar{C}\) es el costo promedio, entonces:
+Si $r_i$ es el score relativo y $\bar{C}$ es el costo promedio, entonces:
 
 $$
 \widehat{C}_i = r_i \bar{C}
@@ -320,7 +320,7 @@ $$
 
 donde:
 
-- \(E_t^*\) es exposición ajustada por riesgo;
+- $E_t^*$ es exposición ajustada por riesgo;
 - el PMPM esperado ajustado representa costo esperado por unidad de riesgo.
 
 La reserva BF sería:
@@ -337,25 +337,19 @@ Esto evita aplicar el mismo costo esperado a periodos con diferente morbilidad.
 En métodos de completitud PMPM, el ajuste de riesgo permite comparar periodos recientes contra una base homogénea:
 
 $$
-\text{PMPM observado ajustado}_{t,d}
-=
-\frac{C_{t,d}}{E_t^*}
+\text{PMPM observado ajustado}_{t,d} = \frac{C_{t,d}}{E_t^*}
 $$
 
 Luego:
 
 $$
-\widehat{\text{PMPM último ajustado}}_{t}
-=
-\frac{\text{PMPM observado ajustado}_{t,d}}{q_d}
+\widehat{\text{PMPM último ajustado}}_{t} = \frac{\text{PMPM observado ajustado}_{t,d}}{q_d}
 $$
 
 Finalmente:
 
 $$
-\widehat{C}_{t}
-=
-E_t^* \times \widehat{\text{PMPM último ajustado}}_{t}
+\widehat{C}_{t} = E_t^* \times \widehat{\text{PMPM último ajustado}}_{t}
 $$
 
 Este enfoque es útil cuando cambia la composición clínica de la población.

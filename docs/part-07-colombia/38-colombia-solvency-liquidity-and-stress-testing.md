@@ -46,9 +46,7 @@ La solvencia puede deteriorarse por subestimación de reservas, insuficiencia de
 Una visión actuarial de solvencia puede representarse como:
 
 $$
-\text{Posición económica}
-=
-\text{Activos admisibles}
+\text{Posición económica} = \text{Activos admisibles}
 -
 \text{Pasivos técnicos}
 -
@@ -77,9 +75,7 @@ La liquidez se mide por capacidad de cubrir pagos esperados.
 Modelo básico:
 
 $$
-\text{Gap de liquidez}_{t}
-=
-\text{Entradas de caja}_{t}
+\text{Gap de liquidez}_{t} = \text{Entradas de caja}_{t}
 -
 \text{Salidas de caja}_{t}
 $$
@@ -87,9 +83,7 @@ $$
 Con acumulado:
 
 $$
-\text{Caja acumulada}_{t}
-=
-\text{Caja inicial}
+\text{Caja acumulada}_{t} = \text{Caja inicial}
 +
 \sum_{k=1}^{t}
 \text{Gap de liquidez}_{k}
@@ -197,9 +191,7 @@ Un escenario determinístico puede decir: “inflación médica +8%, rezago pago
 Un modelo estocástico puede simular miles de trayectorias de frecuencia, severidad, pagos, glosas y caja para estimar percentiles:
 
 $$
-\text{Capital económico}_{99\%}
-=
-Q_{99\%}(\text{Pérdida})
+\text{Capital económico}_{99\%} = Q_{99\%}(\text{Pérdida})
 -
 E[\text{Pérdida}]
 $$
@@ -207,9 +199,7 @@ $$
 También puede usarse TVaR:
 
 $$
-\text{TVaR}_{99\%}
-=
-E[\text{Pérdida} \mid \text{Pérdida} > Q_{99\%}]
+\text{TVaR}_{99\%} = E[\text{Pérdida} \mid \text{Pérdida} > Q_{99\%}]
 $$
 
 TVaR es útil cuando la cola extrema importa, como en alto costo.
@@ -226,11 +216,11 @@ $$
 
 donde:
 
-- \(U_t\) es capital o excedente disponible;
-- \(U_0\) es excedente inicial;
-- \(P_t\) son ingresos o primas;
-- \(S_t\) son siniestros o costos médicos;
-- \(E_t\) son gastos y otros egresos.
+- $U_t$ es capital o excedente disponible;
+- $U_0$ es excedente inicial;
+- $P_t$ son ingresos o primas;
+- $S_t$ son siniestros o costos médicos;
+- $E_t$ son gastos y otros egresos.
 
 Riesgo de ruina:
 
@@ -262,9 +252,7 @@ Los escenarios deben capturar al menos algunas dependencias. De lo contrario, su
 Un modelo mínimo de liquidez médica puede proyectar:
 
 $$
-\text{Pagos}_{t}
-=
-f(
+\text{Pagos}_{t} = f(
 \text{Reconocido pendiente},
 \text{IBNR},
 \text{patrón de pago},
@@ -344,18 +332,14 @@ La respuesta puede incluir:
 La suficiencia UPC puede evaluarse como:
 
 $$
-\text{Ratio de suficiencia}
-=
-\frac{\text{Ingreso UPC esperado}}
+\text{Ratio de suficiencia} = \frac{\text{Ingreso UPC esperado}}
 {\text{Costo médico esperado} + \text{gasto administrativo técnico}}
 $$
 
 Bajo estrés:
 
 $$
-\text{Ratio estrés}
-=
-\frac{\text{Ingreso UPC estrés}}
+\text{Ratio estrés} = \frac{\text{Ingreso UPC estrés}}
 {\text{Costo médico estrés} + \text{gasto técnico estrés}}
 $$
 
@@ -493,9 +477,7 @@ Los valores son ilustrativos; deben calibrarse con experiencia propia y juicio t
 Un modelo de capital económico puede estimar:
 
 $$
-\text{Capital requerido}
-=
-Q_{\alpha}(\text{Pérdida económica})
+\text{Capital requerido} = Q_{\alpha}(\text{Pérdida económica})
 -
 \text{Pérdida esperada}
 $$
@@ -511,7 +493,7 @@ La pérdida económica puede incluir:
 - gastos financieros;
 - shocks regulatorios o tecnológicos.
 
-El nivel \(\alpha\) debe definirse según apetito de riesgo y uso del modelo.
+El nivel $\alpha$ debe definirse según apetito de riesgo y uso del modelo.
 
 ## 21. Prueba de continuidad operativa
 

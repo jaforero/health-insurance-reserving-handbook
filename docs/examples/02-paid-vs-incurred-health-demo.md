@@ -105,16 +105,16 @@ The demo follows this flow:
 
 ## Core formulas
 
-For development age \(j\), the age-to-age factor is:
+For development age $j$, the age-to-age factor is:
 
 $$
 f_j =
 \frac{\sum_i C_{i,j+1}}{\sum_i C_{i,j}}
 $$
 
-where \(C\) can be the paid triangle or the incurred triangle.
+where $C$ can be the paid triangle or the incurred triangle.
 
-Observed case reserve for origin year \(i\) and age \(j\) is:
+Observed case reserve for origin year $i$ and age $j$ is:
 
 $$
 CaseReserve_{i,j} = Incurred_{i,j} - Paid_{i,j}

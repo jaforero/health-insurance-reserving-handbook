@@ -17,14 +17,14 @@ El método se aplica normalmente sobre triángulos acumulados. Puede usarse sobr
 
 ## Idea central
 
-Sea \(C_{i,j}\) el valor acumulado para el año de origen \(i\) a edad de desarrollo \(j\). Chain Ladder estima factores de desarrollo entre edades:
+Sea $C_{i,j}$ el valor acumulado para el año de origen $i$ a edad de desarrollo $j$. Chain Ladder estima factores de desarrollo entre edades:
 
 $$
 f_j =
 \frac{\sum_i C_{i,j+1}}{\sum_i C_{i,j}}
 $$
 
-Luego proyecta cada año de origen desde su última edad observada \(k\) hasta ultimate:
+Luego proyecta cada año de origen desde su última edad observada $k$ hasta ultimate:
 
 $$
 Ultimate_i = C_{i,k} \times \prod_{j=k}^{J-1} f_j

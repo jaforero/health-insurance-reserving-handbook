@@ -78,7 +78,7 @@ Sea:
 P_{i,j}
 \]
 
-el pago acumulado correspondiente al periodo de ocurrencia \(i\), observado hasta el periodo de desarrollo \(j\).
+el pago acumulado correspondiente al periodo de ocurrencia $i$, observado hasta el periodo de desarrollo $j$.
 
 El pago incremental es:
 
@@ -130,8 +130,8 @@ P_{i,j}+O_{i,j}
 
 donde:
 
-- \(P_{i,j}\): pagos acumulados;
-- \(O_{i,j}\): obligaciones o saldos pendientes reconocidos.
+- $P_{i,j}$: pagos acumulados;
+- $O_{i,j}$: obligaciones o saldos pendientes reconocidos.
 
 El costo último se estima mediante:
 
@@ -276,7 +276,7 @@ La fecha de pago determina el desarrollo.
 \[
 j
 =
-\operatorname{mes}
+\mathrm{mes}
 (
 FechaPago-FechaPrestacion
 )
@@ -407,7 +407,7 @@ I_{i,j}
 P_{i,j}+O_{i,j}
 \]
 
-El problema central es definir \(O_{i,j}\).
+El problema central es definir $O_{i,j}$.
 
 En Colombia puede corresponder a:
 
@@ -446,9 +446,9 @@ E[V_m^{Final}\mid A_m=1,X_m]
 
 con:
 
-- \(A_m=1\): la cuenta resulta total o parcialmente pagadera;
-- \(X_m\): características de la cuenta;
-- \(V_m^{Final}\): valor final esperado.
+- $A_m=1$: la cuenta resulta total o parcialmente pagadera;
+- $X_m$: características de la cuenta;
+- $V_m^{Final}$: valor final esperado.
 
 Esta definición evita equiparar automáticamente el valor radicado con la obligación económica final.
 
@@ -778,9 +778,9 @@ Q_{i,j}
 
 Interpretación:
 
-- \(Q\) bajo: gran proporción del incurrido está pendiente;
-- \(Q\) alto: gran parte del incurrido ha sido pagada;
-- \(Q>1\): posible liberación, error de definición o valores negativos;
+- $Q$ bajo: gran proporción del incurrido está pendiente;
+- $Q$ alto: gran parte del incurrido ha sido pagada;
+- $Q>1$: posible liberación, error de definición o valores negativos;
 - variaciones abruptas: cambios de pago o adecuación de saldos.
 
 ## 17.1 Diagnóstico por desarrollo
@@ -1076,7 +1076,7 @@ Si la adecuación cambia sistemáticamente por calendario, el triángulo incurri
 
 ## 26. Backtesting comparativo
 
-Para una fecha histórica \(t\):
+Para una fecha histórica $t$:
 
 1. reconstruir el triángulo pagado disponible;
 2. reconstruir el triángulo incurrido disponible;
@@ -1126,7 +1126,7 @@ w_i\widehat U_i^{Incurred}
 (1-w_i)\widehat U_i^{Paid}
 \]
 
-Sin embargo, \(w_i\) no debe ser arbitrario.
+Sin embargo, $w_i$ no debe ser arbitrario.
 
 Puede depender de:
 

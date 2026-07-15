@@ -38,7 +38,7 @@ donde:
 
 ## Fórmula general
 
-Si \(A_i\) es el monto observado para el año de origen \(i\), \(E_i\) es la pérdida esperada a priori y \(p_i\) es el porcentaje desarrollado, entonces:
+Si $A_i$ es el monto observado para el año de origen $i$, $E_i$ es la pérdida esperada a priori y $p_i$ es el porcentaje desarrollado, entonces:
 
 $$
 Ultimate^{BF}_i = A_i + E_i \times (1 - p_i)
@@ -50,7 +50,7 @@ $$
 IBNR^{BF}_i = E_i \times (1 - p_i)
 $$
 
-En base pagada, \(A_i\) puede ser pagado acumulado. En base incurrida, puede ser incurrido acumulado.
+En base pagada, $A_i$ puede ser pagado acumulado. En base incurrida, puede ser incurrido acumulado.
 
 ## Porcentaje desarrollado
 

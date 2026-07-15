@@ -192,9 +192,7 @@ El expected loss ratio para Colombia no debería ser plano si existen diferencia
 Una estructura posible:
 
 $$
-\text{ELR}_{g,t}
-=
-\text{ELR base}_{t}
+\text{ELR}_{g,t} = \text{ELR base}_{t}
 \times
 \text{factor morbilidad}_{g,t}
 \times
@@ -205,7 +203,7 @@ $$
 \text{factor tendencia}_{t}
 $$
 
-donde \(g\) puede ser EPS, régimen, región, cohorte, contrato o segmento.
+donde $g$ puede ser EPS, régimen, región, cohorte, contrato o segmento.
 
 El factor operación no debe usarse para esconder ineficiencias. Debe capturar cambios reales de desarrollo, radicación, reconocimiento o pago.
 
@@ -226,9 +224,7 @@ Una cuenta glosada puede:
 El IBNER de glosas puede modelarse como:
 
 $$
-E[\text{Reconocimiento futuro}]
-=
-\sum_i
+E[\text{Reconocimiento futuro}] = \sum_i
 \text{Valor glosado}_i
 \times
 P(\text{levantamiento}_i)
@@ -334,9 +330,7 @@ Según el marco aplicable, puede requerirse o no un margen explícito. Técnicam
 Una estructura posible:
 
 $$
-\text{Provisión seleccionada}
-=
-\text{Estimación central}
+\text{Provisión seleccionada} = \text{Estimación central}
 + \text{margen técnico}
 $$
 

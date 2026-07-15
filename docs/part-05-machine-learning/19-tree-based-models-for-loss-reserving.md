@@ -184,9 +184,7 @@ Residual Sum of Squares
 
 $$
 RSS
-
-=
-
+ = 
 \sum
 
 (y_i-\bar y)^2

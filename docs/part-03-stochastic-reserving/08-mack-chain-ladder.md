@@ -76,7 +76,7 @@ $$
 = \sigma_j^2 C_{i,j}
 $$
 
-El parámetro \(\sigma_j^2\) representa la variabilidad del paso de desarrollo (j) a (j+1). La varianza aumenta con el volumen acumulado, aunque la variabilidad relativa tiende a disminuir.
+El parámetro $\sigma_j^2$ representa la variabilidad del paso de desarrollo (j) a (j+1). La varianza aumenta con el volumen acumulado, aunque la variabilidad relativa tiende a disminuir.
 
 Una generalización frecuente utiliza:
 
@@ -85,7 +85,7 @@ $$
 = \sigma_j^2 C_{i,j}^{\alpha}
 $$
 
-con un parámetro \(\alpha\) seleccionado según la estructura de varianza. La versión clásica corresponde a \(\alpha=1\).
+con un parámetro $\alpha$ seleccionado según la estructura de varianza. La versión clásica corresponde a $\alpha=1$.
 
 ### Independencia entre periodos de origen
 
@@ -160,12 +160,10 @@ Surge porque los factores y las varianzas se estiman con una muestra histórica 
 
 ## Error cuadrático medio de predicción
 
-Para una reserva estimada \(\widehat R\), el error cuadrático medio de predicción se interpreta como:
+Para una reserva estimada $\widehat R$, el error cuadrático medio de predicción se interpreta como:
 
 $$
-\mathrm{MSEP}(\widehat R)
-=
-\text{varianza de proceso}
+\mathrm{MSEP}(\widehat R) = \text{varianza de proceso}
 +
 \text{varianza de parámetros}
 $$

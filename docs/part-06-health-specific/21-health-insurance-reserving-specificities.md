@@ -145,15 +145,15 @@ El handbook usa la notación de [glossary.md](../glossary.md):
 R_i(C)=U_i-C_{i,k_i},
 \]
 
-donde \(U_i\) es el costo *ultimate* de la cohorte \(i\) y \(C_{i,k_i}\) es la medida acumulada observada a la edad disponible \(k_i\).
+donde $U_i$ es el costo *ultimate* de la cohorte $i$ y $C_{i,k_i}$ es la medida acumulada observada a la edad disponible $k_i$.
 
-Si \(C=P\), la reserva representa claims no pagados respecto de pagos acumulados:
+Si $C=P$, la reserva representa claims no pagados respecto de pagos acumulados:
 
 \[
 R_i^{(P)}=U_i-P_{i,k_i}.
 \]
 
-Si \(C=I=P+O\), donde \(O\) es la reserva de caso, la reserva representa desarrollo adicional sobre incurrido reportado:
+Si $C=I=P+O$, donde $O$ es la reserva de caso, la reserva representa desarrollo adicional sobre incurrido reportado:
 
 \[
 R_i^{(I)}=U_i-I_{i,k_i}.
@@ -229,7 +229,7 @@ Los sistemas de salud suelen contener varias medidas de costo. No son intercambi
 | Si el propósito es... | Medida candidata | Control mínimo |
 |---|---|---|
 | Estimar cash flow futuro | `paid` | conciliación bancaria o contable, anulaciones y recuperaciones |
-| Estimar claims no pagados | `paid` contra \(U\) | tratamiento de pagos parciales, anticipos y glosas |
+| Estimar claims no pagados | `paid` contra $U$ | tratamiento de pagos parciales, anticipos y glosas |
 | Estimar desarrollo sobre reportado | `reported incurred` | calidad y consistencia de reservas de caso |
 | Medir costo económico reconocido | `allowed` | reglas de adjudicación, contratos y glosas |
 | Vigilar presión operativa | `billed` y cuentas recibidas | separación de cuentas válidas, duplicados y devoluciones |

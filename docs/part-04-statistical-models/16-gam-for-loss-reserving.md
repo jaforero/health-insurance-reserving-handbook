@@ -46,7 +46,7 @@ f_2(x_{i2})+
 f_q(x_{iq})
 $$
 
-Las funciones \(f_k\) se estiman como curvas suaves. El modelo sigue siendo aditivo en la escala del enlace, aunque la relación con cada predictor puede ser no lineal.
+Las funciones $f_k$ se estiman como curvas suaves. El modelo sigue siendo aditivo en la escala del enlace, aunque la relación con cada predictor puede ser no lineal.
 
 ## Por qué suavizar
 
@@ -73,8 +73,8 @@ $$
 
 donde:
 
-- \(b_k(x)\) son funciones base;
-- \(\theta_k\) son coeficientes;
+- $b_k(x)$ son funciones base;
+- $\theta_k$ son coeficientes;
 - (K) determina el tamaño máximo de la base.
 
 Bases frecuentes:
@@ -96,10 +96,10 @@ $$
 \int [f''(x)]^2\,dx
 $$
 
-El parámetro \(\lambda\) controla el compromiso entre ajuste y suavidad:
+El parámetro $\lambda$ controla el compromiso entre ajuste y suavidad:
 
-- \(\lambda\) grande: curva más suave;
-- \(\lambda\) pequeño: curva más flexible.
+- $\lambda$ grande: curva más suave;
+- $\lambda$ pequeño: curva más flexible.
 
 En forma matricial, el criterio penalizado puede expresarse como:
 
@@ -108,7 +108,7 @@ $$
 \sum_m \lambda_m\theta^{\top}S_m\theta
 $$
 
-donde \(S_m\) es una matriz de penalización.
+donde $S_m$ es una matriz de penalización.
 
 ## Grados efectivos de libertad
 

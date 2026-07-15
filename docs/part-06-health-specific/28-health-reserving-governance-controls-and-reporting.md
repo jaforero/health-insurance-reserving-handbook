@@ -317,9 +317,7 @@ La reserva actuarial debe reconciliarse con:
 Una reconciliación típica:
 
 $$
-\text{Pasivo estimado}
-=
-\text{Cuentas conocidas}
+\text{Pasivo estimado} = \text{Cuentas conocidas}
 + \text{IBNR}
 + \text{IBNER}
 + \text{Disputas esperadas}

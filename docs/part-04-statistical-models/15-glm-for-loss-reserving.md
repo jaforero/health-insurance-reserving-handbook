@@ -63,9 +63,9 @@ $$
 
 donde:
 
-- \(\mu_i\) es la media condicional;
-- \(\phi\) es el parámetro de dispersión;
-- \(V(\mu_i)\) es la función de varianza.
+- $\mu_i$ es la media condicional;
+- $\phi$ es el parámetro de dispersión;
+- $V(\mu_i)$ es la función de varianza.
 
 ### Componente sistemático
 
@@ -99,8 +99,8 @@ $$
 
 donde:
 
-- \(\alpha_i\) representa diferencias entre periodos de origen;
-- \(\beta_j\) representa el patrón de desarrollo.
+- $\alpha_i$ representa diferencias entre periodos de origen;
+- $\beta_j$ representa el patrón de desarrollo.
 
 Una extensión con exposición (e_i) utiliza:
 
@@ -109,7 +109,7 @@ $$
 \log(e_i)+\alpha_i+\beta_j
 $$
 
-El término \(\log(e_i)\) es un *offset*: su coeficiente se fija en uno.
+El término $\log(e_i)$ es un *offset*: su coeficiente se fija en uno.
 
 También pueden incluirse variables como producto, región, tipo de servicio o indicador de cambio operativo:
 
@@ -143,11 +143,11 @@ La parametrización debe permitir separar razonablemente desarrollo, tendencia y
 
 | Familia | Función de varianza | Uso posible | Advertencia |
 | --- | --- | --- | --- |
-| Poisson | \(V(\mu)=\mu\) | Conteos o estructura Chain Ladder | Puede subestimar dispersión |
-| Poisson sobredispersado | \(V(\mu)=\mu\), \(\phi\) libre | Incrementales no negativos | Es una formulación de cuasi-verosimilitud |
-| Gamma | \(V(\mu)=\mu^2\) | Montos positivos continuos | No admite ceros ni negativos |
-| Tweedie | \(V(\mu)=\mu^p\) | Mezcla de ceros y montos positivos | Requiere seleccionar o estimar \(p\) |
-| Binomial negativa | \(V(\mu)=\mu+\kappa\mu^2\) | Conteos sobredispersos | No es una distribución de montos agregados |
+| Poisson | $V(\mu)=\mu$ | Conteos o estructura Chain Ladder | Puede subestimar dispersión |
+| Poisson sobredispersado | $V(\mu)=\mu$, $\phi$ libre | Incrementales no negativos | Es una formulación de cuasi-verosimilitud |
+| Gamma | $V(\mu)=\mu^2$ | Montos positivos continuos | No admite ceros ni negativos |
+| Tweedie | $V(\mu)=\mu^p$ | Mezcla de ceros y montos positivos | Requiere seleccionar o estimar $p$ |
+| Binomial negativa | $V(\mu)=\mu+\kappa\mu^2$ | Conteos sobredispersos | No es una distribución de montos agregados |
 
 La familia debe elegirse según la naturaleza de la respuesta, no únicamente por el menor AIC.
 
@@ -197,13 +197,13 @@ La estimación produce:
 
 ## Interpretación con enlace logarítmico
 
-Si un coeficiente es \(\beta_k\), el cambio multiplicativo esperado es:
+Si un coeficiente es $\beta_k$, el cambio multiplicativo esperado es:
 
 $$
 \exp(\beta_k)
 $$
 
-Por ejemplo, \(\beta_k=0.10\) implica, manteniendo lo demás constante:
+Por ejemplo, $\beta_k=0.10$ implica, manteniendo lo demás constante:
 
 $$
 \exp(0.10)-1\approx10.5\%
@@ -216,7 +216,7 @@ Para variables categóricas, la interpretación siempre es respecto de la catego
 Después de ajustar el modelo a las celdas observadas:
 
 1. construir las covariables de cada celda futura;
-2. calcular \(\widehat\eta_{i,j}\);
+2. calcular $\widehat\eta_{i,j}$;
 3. transformar a la escala de respuesta;
 4. sumar incrementales futuros por periodo de origen;
 5. obtener ultimate e IBNR.

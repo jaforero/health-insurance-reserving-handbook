@@ -60,13 +60,13 @@ $$
 
 donde:
 
-- \(T_C\) es la tendencia del costo total;
-- \(T_E\) es el cambio de exposición;
-- \(T_U\) es la tendencia de utilización;
-- \(T_S\) es la tendencia de severidad o precio;
-- \(T_M\) es el efecto de mix, morbilidad o complejidad.
+- $T_C$ es la tendencia del costo total;
+- $T_E$ es el cambio de exposición;
+- $T_U$ es la tendencia de utilización;
+- $T_S$ es la tendencia de severidad o precio;
+- $T_M$ es el efecto de mix, morbilidad o complejidad.
 
-Para reserving, normalmente interesa aislar \(T_U\), \(T_S\) y \(T_M\), porque la exposición se modela explícitamente.
+Para reserving, normalmente interesa aislar $T_U$, $T_S$ y $T_M$, porque la exposición se modela explícitamente.
 
 ## 3. Tendencia de utilización
 
@@ -148,7 +148,7 @@ $$
 E^* = \sum_i E_i r_i
 $$
 
-donde \(r_i\) es un factor relativo de riesgo.
+donde $r_i$ es un factor relativo de riesgo.
 
 El PMPM ajustado por riesgo se calcula como:
 
@@ -208,9 +208,9 @@ $$
 I_m = \frac{\text{PMPM del mes } m}{\text{PMPM promedio anual}}
 $$
 
-donde \(I_m\) es un índice estacional del mes \(m\).
+donde $I_m$ es un índice estacional del mes $m$.
 
-Si enero tiene \(I_{ene}=1.10\), el costo esperado de enero es 10% superior al promedio anual, manteniendo constantes otros factores.
+Si enero tiene $I_{ene}=1.10$, el costo esperado de enero es 10% superior al promedio anual, manteniendo constantes otros factores.
 
 ## 10. Estacionalidad de reporte
 

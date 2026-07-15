@@ -134,7 +134,7 @@ No debe compararse un intervalo normal de Mack con percentiles Bootstrap sin exp
 
 ### Aproximación con Mack
 
-Con reserva \(\widehat R\) y error estándar \(SE\):
+Con reserva $\widehat R$ y error estándar $SE$:
 
 $$
 \widehat R\pm z_{1-\alpha/2}SE
@@ -144,7 +144,7 @@ La aproximación normal es simétrica. Una aproximación lognormal evita reserva
 
 ### Percentiles Bootstrap
 
-Si \(R^{(1)},\ldots,R^{(B)}\) son reservas simuladas:
+Si $R^{(1)},\ldots,R^{(B)}$ son reservas simuladas:
 
 $$
 L=Q_{\alpha/2}(R),

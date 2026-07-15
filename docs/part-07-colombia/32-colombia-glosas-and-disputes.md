@@ -775,7 +775,7 @@ Desde el estado glosado, una cuenta puede terminar en:
 4. cancelación;
 5. litigio o controversia prolongada.
 
-Sea \(K\) el resultado final.
+Sea $K$ el resultado final.
 
 \[
 F_k(t)
