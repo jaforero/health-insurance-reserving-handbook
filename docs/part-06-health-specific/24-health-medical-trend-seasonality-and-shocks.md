@@ -1,13 +1,15 @@
 ---
-title: "Health Medical Trend, Seasonality and Shocks"
-part: "Parte VI · Especificidades de salud"
+title: "Tendencia médica, estacionalidad y choques"
+description: "Tratamiento de la tendencia médica, la estacionalidad y los eventos extraordinarios que afectan el desarrollo de reclamaciones de salud."
 chapter: 24
+part: "part-06-health-specific"
 language: "es"
 status: "draft"
+version: "0.1.12"
 last_updated: "2026-07-14"
 ---
 
-# Health Medical Trend, Seasonality and Shocks
+# Tendencia médica, estacionalidad y choques
 
 Este capítulo desarrolla tres fuerzas que afectan directamente las reservas de salud: tendencia médica, estacionalidad y shocks. Aunque los métodos de reserving suelen apoyarse en patrones históricos de desarrollo, la experiencia de salud puede cambiar rápidamente por inflación médica, nuevas tecnologías, cambios de utilización, epidemias, ajustes regulatorios, cambios de red, acumulación de demanda o variaciones operativas.
 
@@ -54,8 +56,7 @@ Por tanto, aplicar una tasa única de tendencia sin diagnóstico puede ocultar r
 Una descomposición práctica separa exposición, utilización, severidad y mix:
 
 $$
-1 + T_C =
-(1 + T_E)(1 + T_U)(1 + T_S)(1 + T_M) - 1
+1 + T_C = (1 + T_E)(1 + T_U)(1 + T_S)(1 + T_M) - 1
 $$
 
 donde:
@@ -73,8 +74,7 @@ Para reserving, normalmente interesa aislar $T_U$, $T_S$ y $T_M$, porque la expo
 La tendencia de utilización mide cambios en la cantidad de servicios por unidad de exposición:
 
 $$
-T_U =
-\frac{U_t}{U_{t-1}} - 1
+T_U = \frac{U_t}{U_{t-1}} - 1
 $$
 
 Puede aumentar por:
@@ -105,8 +105,7 @@ El actuario debe validar si el cambio de utilización es clínico, administrativ
 La tendencia de severidad mide cambios en el costo promedio por servicio, evento o reclamación:
 
 $$
-T_S =
-\frac{S_t}{S_{t-1}} - 1
+T_S = \frac{S_t}{S_{t-1}} - 1
 $$
 
 Puede estar asociada con:
@@ -385,8 +384,7 @@ El backtesting debe responder:
 Una métrica útil es el error de PMPM último:
 
 $$
-\text{Error PMPM} =
-\frac{\widehat{\text{PMPM último}} - \text{PMPM real}}{\text{PMPM real}}
+\text{Error PMPM} = \frac{\widehat{\text{PMPM último}} - \text{PMPM real}}{\text{PMPM real}}
 $$
 
 También debe revisarse el error por segmento, no solo agregado.

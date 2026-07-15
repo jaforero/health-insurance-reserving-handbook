@@ -1,13 +1,15 @@
 ---
-title: "Health Reserving Governance, Controls and Reporting"
-part: "Parte VI · Especificidades de salud"
+title: "Gobierno, controles y reporte de reservas de salud"
+description: "Marco práctico de gobierno, controles, cierre actuarial, validación y reporte para procesos de reservas en seguros de salud."
 chapter: 28
+part: "part-06-health-specific"
 language: "es"
 status: "draft"
+version: "0.1.12"
 last_updated: "2026-07-14"
 ---
 
-# Health Reserving Governance, Controls and Reporting
+# Gobierno, controles y reporte de reservas de salud
 
 Este capítulo cierra el bloque de especificidades de salud con un marco práctico de gobierno, controles y reporting para reservas. En seguros de salud, la reserva no es únicamente un resultado de modelo. Es un proceso mensual o periódico que integra datos clínicos, operación de cuentas, contratos, contabilidad, tesorería, auditoría médica, regulación, juicio actuarial y comunicación ejecutiva.
 
@@ -317,11 +319,7 @@ La reserva actuarial debe reconciliarse con:
 Una reconciliación típica:
 
 $$
-\text{Pasivo estimado} = \text{Cuentas conocidas}
-+ \text{IBNR}
-+ \text{IBNER}
-+ \text{Disputas esperadas}
-- \text{Recuperaciones esperadas}
+\text{Pasivo estimado} = \text{Cuentas conocidas} + \text{IBNR} + \text{IBNER} + \text{Disputas esperadas} - \text{Recuperaciones esperadas}
 $$
 
 Las diferencias entre el pasivo actuarial y los saldos contables deben explicarse, no ocultarse.

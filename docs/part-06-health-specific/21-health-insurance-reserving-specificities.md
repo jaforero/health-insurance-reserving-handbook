@@ -1,13 +1,14 @@
 ---
-title: Particularidades del reserving en seguros de salud
+title: "Particularidades de las reservas en seguros de salud"
+description: "Marco técnico para reconocer obligaciones, seleccionar datos y métodos, y gobernar las reservas actuariales en seguros de salud."
+chapter: 21
+part: "part-06-health-specific"
+language: "es"
+status: "draft"
+version: "0.1.12"
+last_updated: "2026-07-14"
 subtitle: Marco técnico para obligaciones, datos, métodos y gobierno actuarial en salud
 author: Health Insurance Reserving Handbook
-version: 1.0
-chapter: 21
-part: VI - Health-Specific Reserving
-status: Draft
-last_updated: "2026-07-14"
-language: es
 jurisdiction: General con aplicaciones a Colombia
 tags:
   - health-insurance
@@ -50,7 +51,7 @@ sources:
   - FRIEDLAND-2010
 ---
 
-# Particularidades del reserving en seguros de salud
+# Particularidades de las reservas en seguros de salud
 
 > En salud, estimar reservas no es solo aplicar triángulos de desarrollo. Es traducir eventos clínicos, autorizaciones, facturas, glosas, pagos, contratos, morbilidad, calidad de datos y obligaciones regulatorias en una medida financiera defendible.
 
@@ -141,23 +142,23 @@ La pregunta debe identificar al menos:
 
 El handbook usa la notación de [glossary.md](../glossary.md):
 
-\[
+$$
 R_i(C)=U_i-C_{i,k_i},
-\]
+$$
 
 donde $U_i$ es el costo *ultimate* de la cohorte $i$ y $C_{i,k_i}$ es la medida acumulada observada a la edad disponible $k_i$.
 
 Si $C=P$, la reserva representa claims no pagados respecto de pagos acumulados:
 
-\[
+$$
 R_i^{(P)}=U_i-P_{i,k_i}.
-\]
+$$
 
 Si $C=I=P+O$, donde $O$ es la reserva de caso, la reserva representa desarrollo adicional sobre incurrido reportado:
 
-\[
+$$
 R_i^{(I)}=U_i-I_{i,k_i}.
-\]
+$$
 
 Estas dos cantidades no deben presentarse con el mismo nombre. En salud es frecuente que “IBNR” se use de forma amplia; el capítulo exige rotularlo como:
 
@@ -579,19 +580,9 @@ El reserving de salud debe separar desarrollo de tendencia.
 
 La tendencia médica puede descomponerse como:
 
-\[
-\text{Tendencia de costo}
-\approx
-\text{utilización}
-\times
-\text{precio unitario}
-\times
-\text{mix de servicios}
-\times
-\text{intensidad clínica}
-\times
-\text{cobertura}
-\]
+$$
+\text{Tendencia de costo} \approx \text{utilización} \times \text{precio unitario} \times \text{mix de servicios} \times \text{intensidad clínica} \times \text{cobertura}
+$$
 
 En la práctica, los componentes interactúan y no siempre son observables por separado. Aun así, la descomposición ayuda a evitar diagnósticos incorrectos.
 
@@ -673,27 +664,15 @@ Las glosas pueden crear desarrollo difícil de modelar porque no son simples pag
 
 Un modelo debe distinguir:
 
-\[
-\text{billed}
-\rightarrow
-\text{glosado}
-\rightarrow
-\text{aceptado}
-\rightarrow
-\text{pagado}
-\]
+$$
+\text{billed} \rightarrow \text{glosado} \rightarrow \text{aceptado} \rightarrow \text{pagado}
+$$
 
 de:
 
-\[
-\text{billed}
-\rightarrow
-\text{devuelto}
-\rightarrow
-\text{re-radicado}
-\rightarrow
-\text{auditado}
-\]
+$$
+\text{billed} \rightarrow \text{devuelto} \rightarrow \text{re-radicado} \rightarrow \text{auditado}
+$$
 
 Ambos flujos pueden verse similares en pagos acumulados, pero tienen implicaciones distintas para allowed, reservas, liquidez y litigios.
 

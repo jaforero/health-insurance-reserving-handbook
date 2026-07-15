@@ -1,13 +1,15 @@
 ---
-title: "Health Claim Lifecycle and Operational Lags"
-part: "Parte VI · Especificidades de salud"
+title: "Ciclo de vida de las reclamaciones de salud y rezagos operativos"
+description: "Relación entre el ciclo operativo de las reclamaciones de salud, sus fechas, estados y rezagos, y la estimación de reservas."
 chapter: 22
+part: "part-06-health-specific"
 language: "es"
 status: "draft"
+version: "0.1.12"
 last_updated: "2026-07-14"
 ---
 
-# Health Claim Lifecycle and Operational Lags
+# Ciclo de vida de las reclamaciones de salud y rezagos operativos
 
 Este capítulo desarrolla el ciclo operativo de una reclamación de salud y su relación con los rezagos actuariales. En seguros de salud, el desarrollo de pérdidas no depende únicamente del tiempo transcurrido desde la ocurrencia médica. También depende de procesos administrativos: autorización, prestación, facturación, radicación, auditoría, glosa, conciliación, contabilización y pago.
 

@@ -1,13 +1,15 @@
 ---
-title: "Health Exposure, Utilization and Severity"
-part: "Parte VI · Especificidades de salud"
+title: "Exposición, utilización y severidad en salud"
+description: "Descomposición del costo médico mediante exposición, utilización y severidad para análisis de reservas y suficiencia."
 chapter: 23
+part: "part-06-health-specific"
 language: "es"
 status: "draft"
+version: "0.1.12"
 last_updated: "2026-07-14"
 ---
 
-# Health Exposure, Utilization and Severity
+# Exposición, utilización y severidad en salud
 
 Este capítulo desarrolla tres motores fundamentales del costo médico en seguros de salud: exposición, utilización y severidad. En reserving, estos conceptos son necesarios para interpretar la experiencia histórica, construir metodologías de completitud, diseñar modelos frecuencia-severidad y evaluar si los patrones observados de pagos o incurridos reflejan desarrollo normal, cambio de mix, cambio de exposición o deterioro real del costo.
 
@@ -163,10 +165,7 @@ La utilización puede descomponerse en frecuencia e intensidad.
 Ejemplo hospitalario:
 
 $$
-\text{Costo hospitalario} =
-\text{admisiones} \times
-\text{días por admisión} \times
-\text{costo por día}
+\text{Costo hospitalario} = \text{admisiones} \times \text{días por admisión} \times \text{costo por día}
 $$
 
 Un aumento de costo puede venir de más admisiones, mayor estancia, mayor costo unitario o cambio hacia casos más complejos. La reserva debe distinguir estos motores cuando el cambio es material.
@@ -249,15 +248,13 @@ $$
 Si $q_d$ es el porcentaje esperado de completitud al desarrollo $d$, entonces:
 
 $$
-\widehat{\text{PMPM último}}_{t} =
-\frac{\text{PMPM observado}_{t,d}}{q_d}
+\widehat{\text{PMPM último}}_{t} = \frac{\text{PMPM observado}_{t,d}}{q_d}
 $$
 
 La reserva estimada es:
 
 $$
-\widehat{R}_{t} =
-E_t \times \widehat{\text{PMPM último}}_{t} - C_{t,d}
+\widehat{R}_{t} = E_t \times \widehat{\text{PMPM último}}_{t} - C_{t,d}
 $$
 
 Este enfoque es útil cuando la exposición está bien medida y el desarrollo es relativamente corto.
@@ -267,8 +264,7 @@ Este enfoque es útil cuando la exposición está bien medida y el desarrollo es
 El enfoque frecuencia-severidad estima por separado número de eventos y costo por evento.
 
 $$
-\widehat{C} =
-E \times \widehat{F} \times \widehat{S}
+\widehat{C} = E \times \widehat{F} \times \widehat{S}
 $$
 
 donde:
@@ -298,8 +294,7 @@ El mix puede distorsionar la interpretación de severidad. Supóngase que el cos
 Una forma simple de separar mix y severidad es fijar ponderaciones base:
 
 $$
-S^{\text{estandarizada}}_t =
-\sum_k w_{k,0} \times S_{k,t}
+S^{\text{estandarizada}}_t = \sum_k w_{k,0} \times S_{k,t}
 $$
 
 donde $w_{k,0}$ es la participación del servicio $k$ en el periodo base.
@@ -333,8 +328,7 @@ La tendencia médica combina cambios en utilización, severidad, tecnología, in
 Una descomposición práctica:
 
 $$
-1 + T =
-(1 + T_U)(1 + T_S)(1 + T_M) - 1
+1 + T = (1 + T_U)(1 + T_S)(1 + T_M) - 1
 $$
 
 donde:

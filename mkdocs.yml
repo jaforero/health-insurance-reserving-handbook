@@ -108,15 +108,15 @@ nav:
       - 18 · Machine Learning para reservas actuariales: part-05-machine-learning/18-machine-learning-for-loss-reserving.md
       - 19 · Modelos basados en árboles para reservas actuariales: part-05-machine-learning/19-tree-based-models-for-loss-reserving.md
       - 20 · Deep Learning para reservas actuariales: part-05-machine-learning/20-deep-learning-for-loss-reserving.md
-  - Parte VI · Especificidades de salud:
-      - 21 · Particularidades del reserving en seguros de salud: part-06-health-specific/21-health-insurance-reserving-specificities.md
-      - 22 · Health Claim Lifecycle and Operational Lags: part-06-health-specific/22-health-claim-lifecycle-and-operational-lags.md
-      - 23 · Health Exposure, Utilization and Severity: part-06-health-specific/23-health-exposure-utilization-and-severity.md
-      - 24 · Health Medical Trend, Seasonality and Shocks: part-06-health-specific/24-health-medical-trend-seasonality-and-shocks.md
-      - 25 · Health Risk Adjustment and Morbidity: part-06-health-specific/25-health-risk-adjustment-and-morbidity.md
-      - 26 · Health Provider Contracts and Payment Models: part-06-health-specific/26-health-provider-contracts-and-payment-models.md
-      - 27 · Health Claims Audit, Denials and Disputes: part-06-health-specific/27-health-claims-audit-denials-and-disputes.md
-      - 28 · Health Reserving Governance, Controls and Reporting: part-06-health-specific/28-health-reserving-governance-controls-and-reporting.md
+  - Parte 6 · Especificidades de salud:
+      - 21 · Particularidades de las reservas en salud: part-06-health-specific/21-health-insurance-reserving-specificities.md
+      - 22 · Ciclo de vida y rezagos operativos: part-06-health-specific/22-health-claim-lifecycle-and-operational-lags.md
+      - 23 · Exposición, utilización y severidad: part-06-health-specific/23-health-exposure-utilization-and-severity.md
+      - 24 · Tendencia médica, estacionalidad y choques: part-06-health-specific/24-health-medical-trend-seasonality-and-shocks.md
+      - 25 · Ajuste de riesgo y morbilidad: part-06-health-specific/25-health-risk-adjustment-and-morbidity.md
+      - 26 · Contratos con prestadores y modelos de pago: part-06-health-specific/26-health-provider-contracts-and-payment-models.md
+      - 27 · Auditoría, denegaciones y controversias: part-06-health-specific/27-health-claims-audit-denials-and-disputes.md
+      - 28 · Gobierno, controles y reporte: part-06-health-specific/28-health-reserving-governance-controls-and-reporting.md
   - Parte 7 · Colombia:
       - 29 · Metodologías de reservas de salud: part-07-colombia/29-colombia-health-reserving-methodologies.md
       - 30 · Triángulos pagados e incurridos: part-07-colombia/30-colombia-paid-vs-incurred-triangles.md

@@ -1,13 +1,15 @@
 ---
-title: "Health Claims Audit, Denials and Disputes"
-part: "Parte VI · Especificidades de salud"
+title: "Auditoría de reclamaciones, denegaciones y controversias"
+description: "Modelación del efecto de auditorías, denegaciones, glosas y controversias sobre el monto y el tiempo de las reservas de salud."
 chapter: 27
+part: "part-06-health-specific"
 language: "es"
 status: "draft"
+version: "0.1.12"
 last_updated: "2026-07-14"
 ---
 
-# Health Claims Audit, Denials and Disputes
+# Auditoría de reclamaciones, denegaciones y controversias
 
 Este capítulo desarrolla el efecto de la auditoría de cuentas médicas, las denegaciones, glosas, devoluciones y controversias sobre las reservas de salud. En muchos portafolios, una parte material del pasivo no corresponde a reclamaciones no reportadas, sino a reclamaciones conocidas cuyo monto final depende de auditoría médica, revisión contractual, documentación, conciliación y resolución de disputas.
 
@@ -196,8 +198,7 @@ Variables relevantes:
 La reserva por glosas puede modelarse como:
 
 $$
-R_{\text{glosa}} =
-\sum_i p_i \times M_i
+R_{\text{glosa}} = \sum_i p_i \times M_i
 $$
 
 donde $p_i$ es la probabilidad de reconocimiento y $M_i$ es el monto objetado.
@@ -234,8 +235,7 @@ Una cuenta cerrada puede reabrirse por:
 La tasa de reapertura es una métrica crítica:
 
 $$
-\text{Tasa de reapertura} =
-\frac{\text{cuentas reabiertas}}{\text{cuentas cerradas}}
+\text{Tasa de reapertura} = \frac{\text{cuentas reabiertas}}{\text{cuentas cerradas}}
 $$
 
 Aunque la tasa sea baja, la severidad puede ser alta.
@@ -340,17 +340,7 @@ El tiempo afecta flujo de caja y persistencia del pasivo.
 Las controversias pueden representarse como proceso multiestado:
 
 $$
-\text{Radicada}
-\rightarrow
-\text{Auditada}
-\rightarrow
-\text{Glosada}
-\rightarrow
-\text{Respondida}
-\rightarrow
-\text{Conciliada}
-\rightarrow
-\text{Pagada}
+\text{Radicada} \rightarrow \text{Auditada} \rightarrow \text{Glosada} \rightarrow \text{Respondida} \rightarrow \text{Conciliada} \rightarrow \text{Pagada}
 $$
 
 También puede existir transición a cierre sin pago:
@@ -529,12 +519,7 @@ Supóngase un inventario:
 Reserva:
 
 $$
-R =
-1{,}000
-+ 500(0.45)
-+ 300(0.70)
-+ 200(0.60)
-+ 150(0.30)
+R = 1{,}000 + 500(0.45) + 300(0.70) + 200(0.60) + 150(0.30)
 $$
 
 $$

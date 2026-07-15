@@ -1,13 +1,15 @@
 ---
-title: "Health Risk Adjustment and Morbidity"
-part: "Parte VI · Especificidades de salud"
+title: "Ajuste de riesgo y morbilidad en salud"
+description: "Uso de morbilidad y ajuste de riesgo para normalizar experiencia, explicar variaciones y mejorar las reservas de salud."
 chapter: 25
+part: "part-06-health-specific"
 language: "es"
 status: "draft"
+version: "0.1.12"
 last_updated: "2026-07-14"
 ---
 
-# Health Risk Adjustment and Morbidity
+# Ajuste de riesgo y morbilidad en salud
 
 Este capítulo desarrolla el ajuste de riesgo y la morbilidad como componentes centrales del reserving de salud. En una cartera médica, dos poblaciones con la misma exposición pueden tener costos esperados radicalmente distintos si difieren en edad, sexo, diagnóstico, condiciones crónicas, utilización previa, región, red de atención o severidad clínica.
 
@@ -314,8 +316,7 @@ El ajuste de riesgo puede mejorar el expected loss o expected PMPM en Bornhuette
 Una formulación posible:
 
 $$
-\widehat{U}_t =
-E_t^* \times \text{PMPM esperado ajustado}
+\widehat{U}_t = E_t^* \times \text{PMPM esperado ajustado}
 $$
 
 donde:
@@ -326,8 +327,7 @@ donde:
 La reserva BF sería:
 
 $$
-R_t =
-\widehat{U}_t \times (1 - \% \text{desarrollado})
+R_t = \widehat{U}_t \times (1 - \% \text{desarrollado})
 $$
 
 Esto evita aplicar el mismo costo esperado a periodos con diferente morbilidad.
@@ -369,12 +369,7 @@ El ajuste de riesgo puede incorporarse como:
 Ejemplo conceptual:
 
 $$
-g(\mu_i) =
-\alpha +
-\beta_1 \log(E_i) +
-\beta_2 r_i +
-f(\text{edad}_i) +
-X_i \gamma
+g(\mu_i) = \alpha + \beta_1 \log(E_i) + \beta_2 r_i + f(\text{edad}_i) + X_i \gamma
 $$
 
 En modelos machine learning, el score de riesgo puede complementar variables clínicas granulares. Debe evitarse doble conteo si el score ya resume diagnósticos usados por el modelo.

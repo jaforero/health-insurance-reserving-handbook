@@ -1,13 +1,15 @@
 ---
-title: "Health Provider Contracts and Payment Models"
-part: "Parte VI · Especificidades de salud"
+title: "Contratos con prestadores y modelos de pago"
+description: "Efecto de los contratos con prestadores y las modalidades de pago sobre el reconocimiento y la estimación de obligaciones de salud."
 chapter: 26
+part: "part-06-health-specific"
 language: "es"
 status: "draft"
+version: "0.1.12"
 last_updated: "2026-07-14"
 ---
 
-# Health Provider Contracts and Payment Models
+# Contratos con prestadores y modelos de pago
 
 Este capítulo desarrolla el efecto de los contratos con prestadores y las modalidades de pago sobre el reserving de salud. En seguros de salud, la obligación financiera no depende únicamente de la prestación médica ocurrida. También depende de cómo se pactó el pago: evento, tarifa, capitación, paquete, pago global prospectivo, riesgo compartido, stop-loss, incentivos de calidad, descuentos, glosas y conciliaciones.
 
@@ -174,11 +176,7 @@ El pago global prospectivo define un monto esperado para cubrir una población, 
 La obligación puede tener componentes:
 
 $$
-\text{Pasivo} =
-\text{devengo base}
-+ \text{ajustes esperados}
-+ \text{incentivos}
-- \text{recuperaciones}
+\text{Pasivo} = \text{devengo base} + \text{ajustes esperados} + \text{incentivos} - \text{recuperaciones}
 $$
 
 El reserving debe evaluar:
