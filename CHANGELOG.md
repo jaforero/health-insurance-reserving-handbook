@@ -4,6 +4,14 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 
 ## [Unreleased]
 
+### Cambiado
+
+- Aplicación de la identidad visual morada de Javier Forero al handbook.
+- Nueva paleta principal `#4e00ff` y acento `#7c4dff`.
+- Rediseño del hero de la página principal.
+- Mejora de botones, navegación activa, búsqueda y modo oscuro.
+- Corrección del renderizado de iconos Material en la portada.
+
 ## [0.2.2] - 2026-07-15
 
 ### Cambiado

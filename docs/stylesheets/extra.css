@@ -1,0 +1,322 @@
+/* =========================================================
+   Health Insurance Reserving Handbook
+   Identidad visual de Javier Forero
+   ========================================================= */
+
+:root {
+  --jf-morado: #4e00ff;
+  --jf-morado-claro: #7c4dff;
+  --jf-morado-oscuro: #3500b8;
+  --jf-morado-profundo: #260080;
+  --jf-morado-suave: #f4f0ff;
+  --jf-morado-borde: rgba(78, 0, 255, 0.18);
+  --jf-blanco: #ffffff;
+}
+
+/* ---------------------------------------------------------
+   Paleta general · modo claro
+   --------------------------------------------------------- */
+
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: var(--jf-morado);
+  --md-primary-fg-color--light: var(--jf-morado-claro);
+  --md-primary-fg-color--dark: var(--jf-morado-oscuro);
+
+  --md-accent-fg-color: var(--jf-morado-claro);
+  --md-typeset-a-color: var(--jf-morado);
+}
+
+/* ---------------------------------------------------------
+   Paleta general · modo oscuro
+   --------------------------------------------------------- */
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #5d23ff;
+  --md-primary-fg-color--light: #8c68ff;
+  --md-primary-fg-color--dark: #3500b8;
+
+  --md-accent-fg-color: #9b7cff;
+  --md-typeset-a-color: #a98fff;
+}
+
+/* ---------------------------------------------------------
+   Barra superior
+   --------------------------------------------------------- */
+
+.md-header {
+  background:
+    linear-gradient(
+      90deg,
+      var(--jf-morado) 0%,
+      var(--jf-morado-claro) 100%
+    );
+  box-shadow:
+    0 0.15rem 0.35rem rgba(32, 0, 105, 0.18);
+}
+
+.md-header__title {
+  font-weight: 700;
+}
+
+/* Caja de búsqueda */
+
+.md-search__form {
+  background-color: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.md-search__form:hover,
+.md-search__form:focus-within {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ---------------------------------------------------------
+   Navegación lateral
+   --------------------------------------------------------- */
+
+.md-nav__link--active {
+  color: var(--jf-morado);
+  font-weight: 700;
+}
+
+.md-nav__link:hover {
+  color: var(--jf-morado-claro);
+}
+
+[data-md-color-scheme="slate"] .md-nav__link--active {
+  color: #a98fff;
+}
+
+/* ---------------------------------------------------------
+   Enlaces y títulos
+   --------------------------------------------------------- */
+
+.md-typeset a {
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.14em;
+}
+
+.md-typeset a:hover {
+  color: var(--jf-morado-claro);
+}
+
+.md-typeset h1 {
+  font-weight: 750;
+  letter-spacing: -0.025em;
+}
+
+.md-typeset h2 {
+  font-weight: 700;
+  letter-spacing: -0.012em;
+}
+
+/* ---------------------------------------------------------
+   Hero de la página principal
+   --------------------------------------------------------- */
+
+.home-hero {
+  margin: 0 0 2rem;
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+
+  background:
+    radial-gradient(
+      circle at 92% 8%,
+      rgba(124, 77, 255, 0.16),
+      transparent 34%
+    ),
+    linear-gradient(
+      135deg,
+      var(--jf-morado-suave) 0%,
+      #ffffff 72%
+    );
+
+  border: 1px solid var(--jf-morado-borde);
+  border-left: 0.35rem solid var(--jf-morado);
+  border-radius: 1rem;
+
+  box-shadow:
+    0 0.55rem 1.6rem rgba(50, 0, 150, 0.08);
+}
+
+.home-hero h1 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+
+  color: var(--jf-morado-profundo);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.08;
+  font-weight: 800;
+}
+
+.home-hero > p {
+  max-width: 54rem;
+  margin-bottom: 1.4rem;
+
+  color: #382e55;
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+/* Botones del hero */
+
+.home-hero .md-button {
+  margin: 0.25rem 0.35rem 0.25rem 0;
+  padding: 0.7rem 1rem;
+
+  border-radius: 999px;
+  border-width: 0.1rem;
+
+  font-weight: 700;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+.home-hero .md-button:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0.4rem 1rem rgba(78, 0, 255, 0.18);
+}
+
+.home-hero .md-button--primary {
+  color: var(--jf-blanco);
+  background:
+    linear-gradient(
+      90deg,
+      var(--jf-morado) 0%,
+      var(--jf-morado-claro) 100%
+    );
+  border-color: var(--jf-morado);
+}
+
+.home-hero .md-button--primary:hover,
+.home-hero .md-button--primary:focus {
+  color: var(--jf-blanco);
+  background:
+    linear-gradient(
+      90deg,
+      var(--jf-morado-oscuro) 0%,
+      var(--jf-morado) 100%
+    );
+}
+
+/* ---------------------------------------------------------
+   Indicadores rápidos del home
+   --------------------------------------------------------- */
+
+.home-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+
+  margin-top: 1.45rem;
+}
+
+.home-stat {
+  padding: 0.8rem 0.9rem;
+
+  background-color: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(78, 0, 255, 0.13);
+  border-radius: 0.7rem;
+
+  color: #40355d;
+  font-size: 0.78rem;
+  line-height: 1.25;
+}
+
+.home-stat strong {
+  display: block;
+  margin-bottom: 0.15rem;
+
+  color: var(--jf-morado);
+  font-size: 1.18rem;
+  font-weight: 800;
+}
+
+/* ---------------------------------------------------------
+   Admonitions
+   --------------------------------------------------------- */
+
+.md-typeset .admonition,
+.md-typeset details {
+  border-radius: 0.55rem;
+}
+
+/* ---------------------------------------------------------
+   Foco accesible
+   --------------------------------------------------------- */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--jf-morado-claro);
+  outline-offset: 3px;
+}
+
+/* ---------------------------------------------------------
+   Modo oscuro del hero
+   --------------------------------------------------------- */
+
+[data-md-color-scheme="slate"] .home-hero {
+  background:
+    radial-gradient(
+      circle at 92% 8%,
+      rgba(124, 77, 255, 0.22),
+      transparent 38%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(48, 18, 105, 0.82) 0%,
+      rgba(25, 25, 32, 0.96) 72%
+    );
+
+  border-color: rgba(155, 124, 255, 0.32);
+  border-left-color: #9b7cff;
+}
+
+[data-md-color-scheme="slate"] .home-hero h1 {
+  color: #ffffff;
+}
+
+[data-md-color-scheme="slate"] .home-hero > p {
+  color: #e5def8;
+}
+
+[data-md-color-scheme="slate"] .home-stat {
+  color: #ddd4f5;
+  background-color: rgba(255, 255, 255, 0.055);
+  border-color: rgba(155, 124, 255, 0.25);
+}
+
+[data-md-color-scheme="slate"] .home-stat strong {
+  color: #b7a1ff;
+}
+
+/* ---------------------------------------------------------
+   Responsive
+   --------------------------------------------------------- */
+
+@media screen and (max-width: 900px) {
+  .home-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .home-hero {
+    padding: 1.2rem;
+    border-left-width: 0.25rem;
+  }
+
+  .home-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .home-hero .md-button {
+    display: block;
+    width: 100%;
+    margin-right: 0;
+    text-align: center;
+  }
+}
