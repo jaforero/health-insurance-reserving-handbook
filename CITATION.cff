@@ -6,7 +6,7 @@ authors:
   - family-names: "Forero"
     given-names: "Javier"
 repository-code: "https://github.com/jaforero/health-insurance-reserving-handbook"
-url: "https://jaforero.github.io/health-insurance-reserving-handbook/"
+url: "https://actuaria.javierforero.co/"
 abstract: "Manual técnico y reproducible sobre IBNR, reservas actuariales y desarrollo de reclamaciones en seguros de salud, con aplicaciones al sistema colombiano."
 keywords:
   - IBNR
@@ -16,5 +16,5 @@ keywords:
   - ciencia actuarial
   - Colombia
 license: MIT
-version: "0.2.1"
+version: "0.2.2"
 date-released: "2026-07-15"
