@@ -58,7 +58,7 @@ E[Y_i]=\mu_i
 $$
 
 $$
-\operatorname{Var}(Y_i)=\phi V(\mu_i)
+\mathrm{Var}(Y_i)=\phi V(\mu_i)
 $$
 
 donde:

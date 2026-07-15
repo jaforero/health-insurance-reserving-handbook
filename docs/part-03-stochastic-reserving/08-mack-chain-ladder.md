@@ -72,7 +72,7 @@ En promedio, el acumulado siguiente es proporcional al acumulado actual. Este es
 En la formulación clásica de Mack:
 
 $$
-\operatorname{Var}(C_{i,j+1}\mid C_{i,j})
+\mathrm{Var}(C_{i,j+1}\mid C_{i,j})
 = \sigma_j^2 C_{i,j}
 $$
 
@@ -81,7 +81,7 @@ El parámetro \(\sigma_j^2\) representa la variabilidad del paso de desarrollo (
 Una generalización frecuente utiliza:
 
 $$
-\operatorname{Var}(C_{i,j+1}\mid C_{i,j})
+\mathrm{Var}(C_{i,j+1}\mid C_{i,j})
 = \sigma_j^2 C_{i,j}^{\alpha}
 $$
 
@@ -163,7 +163,7 @@ Surge porque los factores y las varianzas se estiman con una muestra histórica 
 Para una reserva estimada \(\widehat R\), el error cuadrático medio de predicción se interpreta como:
 
 $$
-\operatorname{MSEP}(\widehat R)
+\mathrm{MSEP}(\widehat R)
 =
 \text{varianza de proceso}
 +
@@ -174,7 +174,7 @@ El error estándar de predicción es:
 
 $$
 SE(\widehat R)=
-\sqrt{\operatorname{MSEP}(\widehat R)}
+\sqrt{\mathrm{MSEP}(\widehat R)}
 $$
 
 El MSEP puede calcularse por periodo de origen y para la reserva total. El total no debe obtenerse sumando errores estándar; se agregan varianzas y covarianzas según las fórmulas del modelo y luego se toma la raíz cuadrada.

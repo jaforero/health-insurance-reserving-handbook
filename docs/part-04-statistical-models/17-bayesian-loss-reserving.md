@@ -126,7 +126,7 @@ Para un incremental positivo (Y_{i,j}):
 
 $$
 Y_{i,j}\sim
-\operatorname{Gamma}(\mu_{i,j},\phi)
+\mathrm{Gamma}(\mu_{i,j},\phi)
 $$
 
 con:

@@ -88,7 +88,7 @@ E[X_{i,j}] = \mu_{i,j}
 $$
 
 $$
-\operatorname{Var}(X_{i,j}) = \phi\mu_{i,j}
+\mathrm{Var}(X_{i,j}) = \phi\mu_{i,j}
 $$
 
 donde \(\phi\) es el parámetro de dispersión.
@@ -218,7 +218,7 @@ Una elección frecuente para incrementales positivos es:
 $$
 X_{i,j}^{proc}
 \sim
-\operatorname{Gamma}
+\mathrm{Gamma}
 \left(
 \text{forma}=\frac{\widehat\mu_{i,j}}{\widehat\phi},
 \text{escala}=\widehat\phi
@@ -232,7 +232,7 @@ E[X_{i,j}^{proc}]=\widehat\mu_{i,j}
 $$
 
 $$
-\operatorname{Var}(X_{i,j}^{proc})
+\mathrm{Var}(X_{i,j}^{proc})
 =
 \widehat\phi\widehat\mu_{i,j}
 $$
@@ -256,7 +256,7 @@ La distribución de proceso no es una decisión puramente técnica. Debe ser coh
 La media simulada estima el valor esperado bajo el procedimiento. La mediana puede diferir cuando la distribución es asimétrica.
 
 $$
-\widehat{SE}_{boot}=\operatorname{sd}(R^{(1)},\ldots,R^{(B)})
+\widehat{SE}_{boot}=\mathrm{sd}(R^{(1)},\ldots,R^{(B)})
 $$
 
 ### Percentil o VaR
@@ -264,7 +264,7 @@ $$
 El percentil (q) se estima como:
 
 $$
-\operatorname{VaR}_q(R)=Q_q(R)
+\mathrm{VaR}_q(R)=Q_q(R)
 $$
 
 ### TVaR
@@ -272,7 +272,7 @@ $$
 El promedio de los resultados que exceden el percentil es:
 
 $$
-\operatorname{TVaR}_q(R)
+\mathrm{TVaR}_q(R)
 =
 E[R\mid R\ge Q_q(R)]
 $$
