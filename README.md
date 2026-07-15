@@ -3,7 +3,7 @@
 > Manual técnico, reproducible y orientado a la práctica sobre IBNR, reservas actuariales y desarrollo de reclamaciones en seguros de salud, con aplicaciones al sistema colombiano.
 
 [![Documentation](https://github.com/jaforero/health-insurance-reserving-handbook/actions/workflows/docs.yml/badge.svg)](https://github.com/jaforero/health-insurance-reserving-handbook/actions/workflows/docs.yml)
-[![Release](https://img.shields.io/badge/release-v0.1.3-2f855a)](https://github.com/jaforero/health-insurance-reserving-handbook/releases/tag/v0.1.3)
+[![Release](https://img.shields.io/badge/release-v0.2.0-2f855a)](https://github.com/jaforero/health-insurance-reserving-handbook/releases/tag/v0.2.0)
 [![Language](https://img.shields.io/badge/contenido-español-526cfe)](#contenido)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
@@ -32,7 +32,7 @@ El repositorio puede utilizarse como:
 
 ## Estado actual
 
-La versión pública más reciente es **v0.1.3**. La rama `main` contiene mejoras posteriores todavía no agrupadas en un nuevo release.
+La versión pública más reciente es **v0.2.0**, primera consolidación integral en español del handbook y sus demos reproducibles.
 
 El repositorio incluye actualmente:
 

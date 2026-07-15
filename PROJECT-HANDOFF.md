@@ -5,7 +5,7 @@ chapter: "project-handoff"
 part: "repository"
 language: "es"
 status: "active"
-version: "0.1.13"
+version: "0.2.0"
 last_updated: "2026-07-14"
 ---
 
@@ -18,8 +18,8 @@ Este documento permite continuar el proyecto sin depender de inventarios o decis
 - Repositorio: <https://github.com/jaforero/health-insurance-reserving-handbook>
 - Sitio: <https://jaforero.github.io/health-insurance-reserving-handbook/>
 - Rama principal: `main`
-- Última versión pública: `v0.1.3`
-- Estado de cambios posteriores: `Unreleased`
+- Última versión pública: `v0.2.0`
+- Estado del release: consolidación integral publicada
 - Idioma principal: español
 - Demos: español e inglés
 
@@ -94,13 +94,13 @@ El workflow `.github/workflows/docs.yml` ejecuta la validación y despliega GitH
 
 ## 7. Próximo hito
 
-El objetivo recomendado es `v0.2.0`, con este orden:
+El objetivo recomendado es `v0.3.0`, con este orden:
 
-1. consolidación editorial v0.1.13;
-2. auditoría matemática automática en CI;
-3. pruebas de reproducibilidad de demos;
-4. Demo 3: Chain Ladder vs. Bornhuetter-Ferguson vs. Benktander vs. Cape Cod;
-5. changelog, citación, tag y release notes de v0.2.0.
+1. auditoría matemática automática en CI;
+2. pruebas de reproducibilidad de demos;
+3. Demo 3: Chain Ladder vs. Bornhuetter-Ferguson vs. Benktander vs. Cape Cod;
+4. documentación de esquemas y diccionarios de datos sintéticos;
+5. changelog, citación, tag y release notes de v0.3.0.
 
 ## 8. Criterio de continuidad
 

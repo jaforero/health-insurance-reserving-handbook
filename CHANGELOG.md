@@ -4,6 +4,10 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 
 ## [Unreleased]
 
+No hay cambios registrados después de v0.2.0.
+
+## [0.2.0] - 2026-07-14
+
 ### Agregado
 
 - Demo bilingüe de triángulos pagados vs. incurridos con datos sintéticos, reserva caso, comparación Chain Ladder y visualizaciones SVG.
@@ -16,7 +20,7 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 - Traducción y normalización en español de las Partes 1–7.
 - Unificación de títulos, H1, front matter y navegación.
 - Actualización de `README.md`, portada, roadmap, documento de transferencia y metadata de citación para reflejar 40 capítulos, siete partes y dos demos.
-- Presentación de las mejoras posteriores a v0.1.3 como trabajo no liberado.
+- Consolidación de las mejoras posteriores a v0.1.3 en una nueva versión pública.
 
 ### Corregido
 
@@ -69,7 +73,8 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
   - plantillas de issues y pull requests;
   - workflow de GitHub Pages.
 
-[Unreleased]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.1.3...HEAD
+[Unreleased]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.1.3...v0.2.0
 [0.1.3]: https://github.com/jaforero/health-insurance-reserving-handbook/releases/tag/v0.1.3
 [0.1.2]: https://github.com/jaforero/health-insurance-reserving-handbook/releases/tag/v0.1.2
 [0.1.1]: https://github.com/jaforero/health-insurance-reserving-handbook/releases/tag/v0.1.1

@@ -5,7 +5,7 @@ chapter: "index"
 part: "repository"
 language: "es"
 status: "draft"
-version: "0.1.13"
+version: "0.2.0"
 last_updated: "2026-07-14"
 ---
 
@@ -28,7 +28,7 @@ El proyecto contiene actualmente:
 - visualizaciones SVG de triángulos actuariales;
 - auditoría estructural, preflight y construcción estricta con MkDocs.
 
-La versión pública más reciente es `v0.1.3`. La rama `main` puede contener mejoras posteriores registradas en el changelog como `Unreleased`.
+La versión pública más reciente es `v0.2.0`, primera consolidación integral en español del handbook y sus demos reproducibles.
 
 !!! warning "Uso profesional"
     El handbook es una referencia educativa y técnica. Una aplicación profesional requiere validar datos, obligaciones, contratos, supuestos, regulación vigente y propósito de la estimación.

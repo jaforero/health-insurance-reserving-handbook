@@ -1,11 +1,11 @@
 ---
 title: "Roadmap del Health Insurance Reserving Handbook"
-description: "Estado vigente, próximos hitos, criterios de salida y riesgos para desarrollar el handbook desde v0.1.3 hacia v1.0.0."
+description: "Estado vigente, próximos hitos, criterios de salida y riesgos para desarrollar el handbook desde v0.2.0 hacia v1.0.0."
 chapter: "roadmap"
 part: "repository"
 language: "es"
 status: "draft"
-version: "0.1.13"
+version: "0.2.0"
 last_updated: "2026-07-14"
 ---
 
@@ -27,7 +27,7 @@ El objetivo es consolidar una referencia profesional, abierta y reproducible sob
 
 ## 2. Línea base actual
 
-La versión pública más reciente es `v0.1.3`. La rama `main` contiene mejoras posteriores que se agruparán en un release futuro.
+La versión pública más reciente es `v0.2.0`, consolidación integral en español del handbook y sus demos reproducibles.
 
 | Componente | Estado actual |
 |---|---|
@@ -53,7 +53,7 @@ La versión pública más reciente es `v0.1.3`. La rama `main` contiene mejoras 
 | 7 | Colombia | 12 |
 |  | **Total** | **40** |
 
-## 3. Trabajo completado después de v0.1.3
+## 3. Alcance cerrado en v0.2.0
 
 - incorporación del demo pagado vs. incurrido;
 - traducción y normalización de las Partes 1–7;
@@ -61,11 +61,11 @@ La versión pública más reciente es `v0.1.3`. La rama `main` contiene mejoras 
 - consolidación de front matter, H1 y navegación;
 - actualización editorial de portada, roadmap, changelog y citación.
 
-Estas mejoras permanecen bajo `Unreleased` hasta que se cree un nuevo tag público.
+Estas mejoras constituyen la línea base pública para los desarrollos posteriores.
 
-## 4. Próximo hito: v0.2.0
+## 4. Próximo hito: v0.3.0
 
-`v0.2.0` debe representar una mejora funcional verificable, no solo una acumulación de correcciones editoriales.
+`v0.3.0` debe profundizar la reproducibilidad y la comparación práctica de metodologías.
 
 ### 4.1 Auditoría matemática preventiva
 
@@ -113,7 +113,7 @@ El demo debe incluir exposición, expectativa previa defendible, ultimate, IBNR,
 - explicación clara de por qué los métodos divergen;
 - referencias cruzadas con los capítulos 6 y 11–14.
 
-### 4.4 Cierre de v0.2.0
+### 4.4 Cierre de v0.3.0
 
 - auditoría documental limpia;
 - build estricto exitoso;
@@ -122,7 +122,7 @@ El demo debe incluir exposición, expectativa previa defendible, ultimate, IBNR,
 - release notes con alcance, limitaciones y comandos de reproducción;
 - verificación del sitio publicado.
 
-## 5. Hito posterior: v0.3.0
+## 5. Hito posterior: v0.4.0
 
 El foco propuesto es incertidumbre y distribución predictiva:
 
@@ -176,11 +176,11 @@ La existencia de un archivo o su inclusión en la navegación solo indica dispon
 
 ## 9. Orden recomendado de ejecución
 
-1. consolidación editorial v0.1.13;
+1. publicación y verificación de v0.2.0;
 2. auditoría matemática automatizada;
 3. pruebas de reproducibilidad de los demos;
 4. Demo 3 de métodos clásicos;
-5. cierre y publicación de v0.2.0;
-6. Demo 4 de incertidumbre para v0.3.0.
+5. cierre y publicación de v0.3.0;
+6. Demo 4 de incertidumbre para v0.4.0.
 
 No se asignan fechas hasta conocer capacidad de revisión y profundidad requerida. Cada hito debe cerrarse por evidencia.
