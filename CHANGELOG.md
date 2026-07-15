@@ -4,6 +4,8 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 
 ## [Unreleased]
 
+## [0.2.4] - 2026-07-15
+
 ### Agregado
 
 - Tipografía corporativa IgraSans autoalojada.
@@ -13,16 +15,15 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 
 ### Cambiado
 
-- Títulos HTML específicos para el handbook y sus páginas internas.
-- Metadata de autor y color del navegador.
-
-### Cambiado
-
 - Aplicación de la identidad visual morada de Javier Forero al handbook.
 - Nueva paleta principal `#4e00ff` y acento `#7c4dff`.
 - Rediseño del hero de la página principal.
 - Mejora de botones, navegación activa, búsqueda y modo oscuro.
-- Corrección del renderizado de iconos Material en la portada.
+- Corrección del renderizado de iconos Material.
+- Títulos HTML específicos para el handbook y sus páginas internas.
+- Metadata de autor y color del navegador.
+- Incorporación de IgraSans como tipografía principal.
+- Incorporación de identidad corporativa en encabezado y footer.
 
 ## [0.2.2] - 2026-07-15
 
@@ -121,7 +122,8 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
   - plantillas de issues y pull requests;
   - workflow de GitHub Pages.
 
-[Unreleased]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.2...HEAD
+[Unreleased]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.4...HEAD
+[0.2.4]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.2...v0.2.4
 [0.2.2]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.1.3...v0.2.0

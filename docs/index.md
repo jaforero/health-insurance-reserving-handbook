@@ -5,7 +5,7 @@ chapter: "index"
 part: "repository"
 language: "es"
 status: "draft"
-version: "0.2.2"
+version: "0.2.4"
 last_updated: "2026-07-15"
 ---
 
@@ -39,7 +39,7 @@ El proyecto contiene actualmente:
 - visualizaciones SVG de triángulos actuariales;
 - auditoría estructural, preflight y construcción estricta con MkDocs.
 
-La versión pública más reciente es `v0.2.2`, que establece `actuaria.javierforero.co` como dominio público oficial del handbook.
+La versión pública más reciente es `v0.2.4`, que incorpora la identidad corporativa, IgraSans, el logo, el favicon, el footer y la analítica de uso.
 
 !!! warning "Uso profesional"
     El handbook es una referencia educativa y técnica. Una aplicación profesional requiere validar datos, obligaciones, contratos, supuestos, regulación vigente y propósito de la estimación.

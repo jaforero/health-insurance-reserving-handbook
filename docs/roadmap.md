@@ -1,6 +1,6 @@
 ---
 title: "Roadmap del Health Insurance Reserving Handbook"
-description: "Estado vigente, próximos hitos, criterios de salida y riesgos para desarrollar el handbook desde v0.2.2 hacia v1.0.0."
+description: "Estado vigente, próximos hitos, criterios de salida y riesgos para desarrollar el handbook desde v0.2.4 hacia v1.0.0."
 chapter: "roadmap"
 part: "repository"
 language: "es"
@@ -27,7 +27,7 @@ El objetivo es consolidar una referencia profesional, abierta y reproducible sob
 
 ## 2. Línea base actual
 
-La versión pública más reciente es `v0.2.2`, que incorpora el dominio actuarial propio y actualiza las URLs canónicas del proyecto.
+La versión pública más reciente es `v0.2.4`, que incorpora el dominio actuarial propio y actualiza las URLs canónicas del proyecto.
 
 | Componente | Estado actual |
 |---|---|
