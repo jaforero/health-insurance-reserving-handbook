@@ -131,4 +131,5 @@ nav:
       - 39 · Colombia Scenario Planning and Reform Roadmap: part-07-colombia/39-colombia-scenario-planning-and-reform-roadmap.md
       - 40 · Colombia Implementation Playbook and Templates: part-07-colombia/40-colombia-implementation-playbook-and-templates.md
   - Demos prácticos:
-      - 01 · Triángulos simulados de reclamaciones de salud: examples/01-simulated-health-triangles-demo.md
+      - 01 · Triángulos simulados de reclamaciones de salud: examples/01-demo-triangulos-simulados-salud.md
+      - 01 · Simulated health claims triangles (EN): examples/01-simulated-health-triangles-demo.md

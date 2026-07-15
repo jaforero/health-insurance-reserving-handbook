@@ -1,0 +1,18 @@
+Resumen de ejecución del demo de triángulos
+============================================
+
+Semilla: 20260714
+Años de origen: 2016-2025
+Año de valuación: 2025
+Edad máxima de desarrollo: 9
+Celdas observadas: 55
+
+Pagado acumulado observado total: 197,418,518,993.82
+Ultimate pagado Chain Ladder total: 259,115,535,297.32
+IBNR Chain Ladder total: 61,697,016,303.50
+
+Interpretación:
+- Los datos son sintéticos y reproducibles.
+- Los montos son unidades monetarias nominales simuladas.
+- El resultado es una demostración determinística de Chain Ladder, no un modelo productivo de reservas.
+- Extensiones futuras pueden incorporar triángulos incurridos, bootstrap, GLM, efectos calendario, glosas, auditoría y estados administrativos.

@@ -15,4 +15,4 @@ Interpretation:
 - The data are synthetic and reproducible.
 - Amounts are nominal simulated currency units.
 - The result is a deterministic Chain Ladder demonstration, not a production reserving model.
-- Future extensions can add incurred triangles, bootstrap uncertainty, GLMs, calendar effects, and health-specific claim adjudication states.
+- Future extensions can add incurred triangles, bootstrap uncertainty, GLMs, calendar effects, claim audit, disputes, and administrative states.

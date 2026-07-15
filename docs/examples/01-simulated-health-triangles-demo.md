@@ -1,43 +1,61 @@
 ---
-title: Demo práctico de triángulos simulados de reclamaciones de salud
-description: Ejemplo reproducible en Python para construir triángulos pagados, factores age-to-age y una estimación Chain Ladder de IBNR con datos simulados.
+title: Practical demo of simulated health claims triangles
+description: Reproducible Python example to build paid triangles, age-to-age factors, and a Chain Ladder IBNR estimate with simulated data.
 status: draft
-version: "0.1.1"
-chapter: "example-01"
+version: "0.1.2"
+chapter: "example-01-en"
 part: "examples"
-language: "es"
+language: "en"
 last_updated: "2026-07-14"
 ---
 
-# Demo práctico de triángulos simulados de reclamaciones de salud
+# Practical demo of simulated health claims triangles
 
-Este demo convierte la teoría de triángulos de desarrollo en un ejercicio reproducible. El objetivo es que el repositorio no sea solo un handbook conceptual, sino también una base práctica para ejecutar modelos, validar supuestos y demostrar resultados.
+This demo turns development triangle theory into a reproducible exercise. The goal is for the repository to work not only as a conceptual handbook, but also as a practical base for running models, validating assumptions, and showing results.
 
-El ejemplo genera datos sintéticos de reclamaciones pagadas de salud, construye triángulos incrementales y acumulados, selecciona factores de desarrollo age-to-age y calcula una estimación determinística de IBNR usando Chain Ladder.
+The Spanish output is the primary version for the Colombian context. This English version is included for bilingual use, documentation, teaching, and collaboration.
 
-## Alcance del demo
+## What the demo generates
 
-El script genera:
+The script generates:
 
-- datos observados en formato largo por año de origen y edad de desarrollo;
-- triángulo pagado incremental;
-- triángulo pagado acumulado;
-- factores age-to-age ponderados por volumen;
-- estimación de ultimate e IBNR por año de origen;
-- resumen agregado de ejecución.
+- observed long-format paid claims by origin year and development age;
+- paid incremental triangle;
+- paid cumulative triangle;
+- volume-weighted age-to-age factors;
+- ultimate and IBNR estimates by origin year;
+- execution summary.
 
-Los datos son simulados. No representan experiencia real de una EPS, aseguradora, IPS, administrador de beneficios ni portafolio específico.
+The data are synthetic and do not represent real experience from any insurer, EPS, provider, benefit administrator, or specific portfolio.
 
-## Estructura de archivos
+## Recommended execution
 
-El demo usa estos archivos:
+From the repository root:
 
-```text
-scripts/generate_demo_triangles.py
-data/demo_triangles/
+```bash
+python scripts/generate_demo_triangles.py
 ```
 
-Al ejecutar el script se generan:
+By default, two outputs are generated:
+
+```text
+data/demo_triangulos/   # Spanish version
+data/demo_triangles/    # English version
+```
+
+To generate only Spanish:
+
+```bash
+python scripts/generate_demo_triangles.py --language es
+```
+
+To generate only English:
+
+```bash
+python scripts/generate_demo_triangles.py --language en
+```
+
+## English output files
 
 ```text
 data/demo_triangles/demo_health_paid_claims_long.csv
@@ -48,57 +66,41 @@ data/demo_triangles/chain_ladder_results.csv
 data/demo_triangles/run_summary.txt
 ```
 
-## Ejecución
+## Actuarial logic
 
-Desde la raíz del repositorio:
+The demo follows this flow:
 
-```bash
-python scripts/generate_demo_triangles.py
-```
+1. Simulate origin years.
+2. Assign exposure in member-months.
+3. Simulate frequency, severity, medical trend, and morbidity mix.
+4. Apply a cumulative paid emergence pattern.
+5. Generate observed payments up to the valuation year.
+6. Build incremental and cumulative triangles.
+7. Calculate volume-weighted age-to-age factors.
+8. Project ultimate using Chain Ladder.
+9. Calculate IBNR as ultimate minus observed cumulative paid.
 
-Para cambiar semilla o carpeta de salida:
+## Core formulas
 
-```bash
-python scripts/generate_demo_triangles.py --seed 20260714 --output-dir data/demo_triangles
-```
-
-El script no requiere dependencias externas como pandas o numpy. Usa únicamente la librería estándar de Python.
-
-## Lógica actuarial implementada
-
-El demo sigue este flujo:
-
-1. Simula años de origen.
-2. Asigna exposición en meses-miembro.
-3. Simula frecuencia, severidad, tendencia médica y mezcla de morbilidad.
-4. Aplica un patrón acumulado de emergencia de pagos.
-5. Genera pagos observados hasta el año de valuación.
-6. Construye triángulos incremental y acumulado.
-7. Calcula factores age-to-age con ponderación por volumen.
-8. Proyecta ultimate con Chain Ladder.
-9. Calcula IBNR como diferencia entre ultimate y pagado acumulado observado.
-
-## Fórmula base
-
-Para un año de origen \(i\) y edad de desarrollo \(j\), el factor age-to-age seleccionado se calcula como:
+For origin year \(i\) and development age \(j\), the selected age-to-age factor is:
 
 $$
 f_j =
 \frac{\sum_i C_{i,j+1}}{\sum_i C_{i,j}}
 $$
 
-donde:
+where:
 
-- \(C_{i,j}\) es el pago acumulado para el año de origen \(i\) a edad de desarrollo \(j\);
-- la suma usa únicamente años de origen con observación disponible en \(j\) y \(j+1\).
+- \(C_{i,j}\) is cumulative paid for origin year \(i\) at development age \(j\);
+- the sum uses only origin years with available observations at both \(j\) and \(j+1\).
 
-El factor acumulado hacia ultimate para un año con última edad observada \(k\) es:
+The cumulative development factor to ultimate for an origin year with latest observed age \(k\) is:
 
 $$
 CDF_k = \prod_{j=k}^{J-1} f_j
 $$
 
-La estimación de ultimate y de IBNR se calcula como:
+Ultimate and IBNR are estimated as:
 
 $$
 Ultimate_i = C_{i,k} \cdot CDF_k
@@ -108,36 +110,26 @@ $$
 IBNR_i = Ultimate_i - C_{i,k}
 $$
 
-## Interpretación esperada
+## Expected interpretation
 
-Los años de origen más antiguos estarán casi completamente desarrollados. Los años más recientes tendrán mayor proporción no desarrollada y, por tanto, mayor IBNR estimado.
+Older origin years should be almost fully developed. More recent origin years should have a larger undeveloped share and, therefore, larger estimated IBNR.
 
-Este patrón permite demostrar tres conceptos clave:
+This pattern demonstrates three core ideas:
 
-- la diagonal observada limita la información disponible;
-- los factores de desarrollo trasladan experiencia histórica a años inmaduros;
-- el IBNR aumenta cuando el año de origen tiene menor madurez observada.
+- the observed diagonal limits available information;
+- development factors transfer historical emergence into immature origin years;
+- IBNR increases when an origin year has lower observed maturity.
 
-## Limitaciones
+## Limitations
 
-Este demo es deliberadamente simple:
+This demo is intentionally simple:
 
-- no estima incertidumbre;
-- no calcula intervalos de confianza;
-- no incorpora bootstrap;
-- no modela glosas, auditoría, recobros ni estados administrativos;
-- no separa pagado e incurrido;
-- no ajusta explícitamente por cambios de mezcla, contrato, red o regulación.
+- it does not estimate uncertainty;
+- it does not calculate confidence intervals;
+- it does not include bootstrap;
+- it does not model denials, audit, recoveries, or administrative states;
+- it does not separate paid and incurred triangles;
+- it does not explicitly adjust for mix, contract, network, or regulatory changes.
 
-Estas extensiones quedan abiertas para futuros demos del repositorio.
-
-## Siguiente extensión recomendada
-
-El siguiente paso práctico natural es crear un segundo demo con:
-
-- triángulo incurrido;
-- comparación pagado vs. incurrido;
-- sensibilidad por selección de factores;
-- gráfico de runoff;
-- salida en tabla ejecutiva para comité de reservas.
+These extensions remain open for future demos.
 
