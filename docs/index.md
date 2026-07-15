@@ -1,12 +1,12 @@
 ---
 title: "Health Insurance Reserving Handbook"
-description: "Portada, rutas de aprendizaje y acceso a 40 capítulos y demos reproducibles sobre reservas actuariales en seguros de salud."
+description: "Portada, rutas de aprendizaje y acceso a 40 capítulos y cuatro demos reproducibles sobre reservas actuariales en seguros de salud."
 chapter: "index"
 part: "repository"
 language: "es"
 status: "draft"
-version: "0.2.0"
-last_updated: "2026-07-14"
+version: "0.2.1"
+last_updated: "2026-07-15"
 ---
 
 # Health Insurance Reserving Handbook
@@ -23,12 +23,12 @@ El proyecto contiene actualmente:
 
 - **40 capítulos** técnicos en español;
 - **7 partes** temáticas;
-- **3 demos prácticos bilingües** con datos sintéticos;
+- **4 demos prácticos**, tres bilingües y uno publicado inicialmente en español;
 - generadores reproducibles en Python;
 - visualizaciones SVG de triángulos actuariales;
 - auditoría estructural, preflight y construcción estricta con MkDocs.
 
-La versión pública más reciente es `v0.2.0`, primera consolidación integral en español del handbook y sus demos reproducibles.
+La versión pública más reciente es `v0.2.1`, que incorpora el marco de preparación de datos, el diccionario canónico y el Demo 4 de elegibilidad metodológica.
 
 !!! warning "Uso profesional"
     El handbook es una referencia educativa y técnica. Una aplicación profesional requiere validar datos, obligaciones, contratos, supuestos, regulación vigente y propósito de la estimación.
@@ -67,6 +67,15 @@ Utiliza 60 meses de origen y desarrollo 0–24, con una visualización actuarial
 
 - [Abrir demo en español](examples/03-demo-triangulos-mensuales-salud.md)
 - [Open English demo](examples/03-monthly-health-triangles-demo.md)
+
+### 4. Preparación de datos para metodologías de reserving
+
+Evalúa la semántica, integridad, historia, exposición, priors, snapshots y gobierno del dataset antes de aplicar o comparar metodologías.
+
+- [Abrir demo en español](examples/04-demo-preparacion-datos.md)
+- [Marco conceptual — Parte 1](marco-preparacion-datos-metodologias-parte-1.md)
+- [Gates y benchmark — Parte 2](marco-preparacion-datos-metodologias-parte-2.md)
+- [Matriz de preparación por método](matriz-preparacion-datos-metodologias.md)
 
 ## Rutas de aprendizaje
 
