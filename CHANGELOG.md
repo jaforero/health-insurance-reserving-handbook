@@ -4,6 +4,14 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-07-15
+
+### Cambiado
+
+- Migración del sitio público a `https://actuaria.javierforero.co/`.
+- Actualización de la URL canónica, enlaces de publicación y metadata de citación.
+- Configuración del subdominio actuarial como URL pública oficial del handbook.
+
 ## [0.2.1] - 2026-07-15
 
 ### Agregado
@@ -93,7 +101,8 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
   - plantillas de issues y pull requests;
   - workflow de GitHub Pages.
 
-[Unreleased]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.2...HEAD
+[0.2.2]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.1.3...v0.2.0
 [0.1.3]: https://github.com/jaforero/health-insurance-reserving-handbook/releases/tag/v0.1.3

@@ -3,13 +3,13 @@
 > Manual técnico, reproducible y orientado a la práctica sobre IBNR, reservas actuariales y desarrollo de reclamaciones en seguros de salud, con aplicaciones al sistema colombiano.
 
 [![Documentation](https://github.com/jaforero/health-insurance-reserving-handbook/actions/workflows/docs.yml/badge.svg)](https://github.com/jaforero/health-insurance-reserving-handbook/actions/workflows/docs.yml)
-[![Release](https://img.shields.io/badge/release-v0.2.1-2f855a)](https://github.com/jaforero/health-insurance-reserving-handbook/releases/tag/v0.2.1)
+[![Release](https://img.shields.io/badge/release-v0.2.2-2f855a)](https://github.com/jaforero/health-insurance-reserving-handbook/releases/tag/v0.2.2)
 [![Language](https://img.shields.io/badge/contenido-español-526cfe)](#contenido)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 ## Accesos rápidos
 
-- [Sitio publicado](https://jaforero.github.io/health-insurance-reserving-handbook/)
+- [Sitio publicado](https://actuaria.javierforero.co/)
 - [Portada y rutas de aprendizaje](docs/index.md)
 - [Guía de selección de metodologías](docs/methodology-selection-guide.md)
 - [Marco de preparación de datos — Parte 1](docs/marco-preparacion-datos-metodologias-parte-1.md)
@@ -35,7 +35,7 @@ El repositorio puede utilizarse como:
 
 ## Estado actual
 
-La versión pública más reciente es **v0.2.1**, que incorpora el marco de preparación de datos para reserving, un diccionario canónico en español y un demo reproducible de elegibilidad metodológica.
+La versión pública más reciente es **v0.2.2**, que establece `actuaria.javierforero.co` como dominio público oficial del handbook.
 
 El repositorio incluye actualmente:
 
