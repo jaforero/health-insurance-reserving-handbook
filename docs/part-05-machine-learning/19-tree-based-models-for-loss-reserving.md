@@ -29,10 +29,10 @@ Al finalizar este capítulo, el lector podrá:
 
 ## 1. Árboles de regresión
 
-Sea un conjunto de entrenamiento con observaciones $(x_i,y_i)$. Un árbol selecciona una variable $j$ y un punto de corte $s$ para dividir los datos en dos regiones:
+Sea un conjunto de entrenamiento con observaciones $(x_i,y_i)$. Un árbol selecciona una variable $j$ y un punto de corte $s$. Las dos regiones quedan definidas por las condiciones:
 
 $$
-R_1(j,s)=\{x:x_j<s\}, \qquad R_2(j,s)=\{x:x_j\ge s\}
+R_1(j,s): x_j < s, \qquad R_2(j,s): x_j \geq s
 $$
 
 Para una pérdida cuadrática, la división busca minimizar:
