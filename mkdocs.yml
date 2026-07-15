@@ -81,6 +81,10 @@ nav:
   - Gobierno del repositorio:
       - Roadmap: roadmap.md
       - Guía de selección de metodologías: methodology-selection-guide.md
+      - Marco de preparación de datos:
+          - Parte 1 · Fundamentos y taxonomía: marco-preparacion-datos-metodologias-parte-1.md
+          - Parte 2 · Gates, benchmark e implementación: marco-preparacion-datos-metodologias-parte-2.md
+      - Matriz de preparación y requisitos por método: matriz-preparacion-datos-metodologias.md
       - Glosario: glossary.md
       - Bibliografía y evidencia: bibliography.md
   - Parte 1 · Fundamentos:
@@ -137,3 +141,4 @@ nav:
       - 02 · Paid vs. incurred health triangles (EN): examples/02-paid-vs-incurred-health-demo.md
       - 03 · Triángulos mensuales de reclamaciones de salud: examples/03-demo-triangulos-mensuales-salud.md
       - 03 · Monthly health claims triangles (EN): examples/03-monthly-health-triangles-demo.md
+      - 04 · Preparación de datos para reserving: examples/04-demo-preparacion-datos.md

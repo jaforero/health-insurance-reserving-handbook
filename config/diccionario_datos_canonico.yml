@@ -1,0 +1,1696 @@
+metadatos:
+  nombre: Diccionario canónico de datos para reserving en seguros de salud
+  archivo: config/diccionario_datos_canonico.yml
+  version: 0.1.0
+  estado: borrador_editorial
+  idioma_principal: es
+  ultima_actualizacion: '2026-07-15'
+  proposito: Definir nombres, semántica, tipos, reglas y alias interoperables para datasets de reserving.
+  fuente_normativa_interna:
+  - docs/repository-governance/marco-preparacion-datos-metodologias-parte-1.md
+  - docs/repository-governance/marco-preparacion-datos-metodologias-parte-2.md
+convenciones:
+  nombres_canonicos: snake_case en español, sin tildes ni caracteres especiales
+  alias_ingles: Opcionales; se usan solo para interoperabilidad y claridad
+  fechas: 'ISO 8601: YYYY-MM-DD'
+  fechas_hora: ISO 8601 con zona horaria
+  periodos_mensuales: 'Primer día del mes: YYYY-MM-01'
+  moneda: Código ISO 4217
+  porcentajes: Decimal entre 0 y 1, salvo que se indique otra cosa
+  importes: Valores monetarios en moneda nominal de la fila, salvo ajuste explícito
+  campos_derivados: Deben conservar trazabilidad hacia los campos fuente
+  valores_nulos: Representan dato desconocido o no aplicable; no equivalen automáticamente a cero
+tipos_dato:
+  cadena: Texto UTF-8
+  entero: Número entero
+  decimal: Número decimal
+  decimal_no_negativo: Número decimal mayor o igual a cero
+  booleano: true o false
+  fecha: Fecha ISO 8601
+  fecha_hora: Fecha y hora ISO 8601
+  categoria: Valor perteneciente a un catálogo
+catalogos:
+  estado_preparacion:
+  - LISTO
+  - LISTO_CON_LIMITACIONES
+  - EXPLORATORIO
+  - BLOQUEADO
+  - NO_PERTINENTE
+  base_bruta_neta:
+  - BRUTA
+  - NETA
+  tipo_movimiento:
+  - PAGO
+  - RESERVA_CASO
+  - AJUSTE
+  - REVERSO
+  - RECUPERACION
+  - REASEGURO
+  - GLOSA
+  - COPAGO
+  - DEDUCIBLE
+  - OTRO
+  tipo_obligacion:
+  - FEE_FOR_SERVICE
+  - FARMACIA
+  - CAPITACION
+  - PAGO_GLOBAL_PROSPECTIVO
+  - EPISODIO
+  - GLOSA
+  - RECUPERACION
+  - REASEGURO
+  - ALTO_COSTO
+  - OTRA
+  estado_reclamacion:
+  - RADICADA
+  - EN_REVISION
+  - ADJUDICADA
+  - PAGADA_PARCIAL
+  - PAGADA_TOTAL
+  - GLOSADA
+  - EN_CONTROVERSIA
+  - CERRADA
+  - REABIERTA
+  - ANULADA
+  periodicidad:
+  - DIARIA
+  - SEMANAL
+  - MENSUAL
+  - TRIMESTRAL
+  - ANUAL
+  moneda:
+  - COP
+  - USD
+  - EUR
+  - GBP
+  - CAD
+  - AUD
+  - JPY
+  metodo_reserving:
+  - CHAIN_LADDER_PAGADO
+  - CHAIN_LADDER_INCURRIDO
+  - BORNHUETTER_FERGUSON
+  - BENKTANDER
+  - CAPE_COD
+  - PMPM
+  - MACK
+  - BOOTSTRAP
+  - GLM
+  - GAM
+  - BAYES
+  - SUPERVIVENCIA
+  - MULTIESTADO
+  - FRECUENCIA_SEVERIDAD
+  - MACHINE_LEARNING
+  - DEVENGO_CONTRACTUAL
+dominios:
+  D1: Alcance y obligación
+  D2: Fechas y estructura temporal
+  D3: Medidas económicas
+  D4: Identificadores y granularidad
+  D5: Historia y madurez
+  D6: Exposición
+  D7: Priors y expectativas
+  D8: Segmentación y homogeneidad
+  D9: Operación y contratos
+  D10: Validación y gobierno
+  DX: Campos derivados para modelación
+campos:
+  id_evaluacion:
+    dominio: D1
+    descripcion: Identificador único del ejercicio de preparación o benchmark.
+    tipo_dato: cadena
+    granularidad: evaluacion
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - assessment_id
+    validaciones:
+    - no_vacio
+    - unico
+  fecha_valoracion:
+    dominio: D1
+    descripcion: Fecha as-of a la cual se estima la obligación.
+    tipo_dato: fecha
+    granularidad: evaluacion
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - valuation_date
+    - as_of_date
+    obligatorio_para:
+    - TODOS_LOS_METODOS
+    validaciones:
+    - no_futura_respecto_a_ejecucion
+    - formato_iso_8601
+  proposito:
+    dominio: D1
+    descripcion: 'Finalidad del cálculo: reporte, gestión, pricing, solvencia, auditoría u otra.'
+    tipo_dato: cadena
+    granularidad: evaluacion
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - purpose
+  usuario_previsto:
+    dominio: D1
+    descripcion: Usuario o comité que utilizará el resultado.
+    tipo_dato: cadena
+    granularidad: evaluacion
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - intended_user
+  tipo_obligacion:
+    dominio: D1
+    descripcion: Naturaleza económica de la obligación.
+    tipo_dato: categoria
+    granularidad: evaluacion
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - obligation_type
+    obligatorio_para:
+    - TODOS_LOS_METODOS
+    valores_permitidos:
+    - FEE_FOR_SERVICE
+    - FARMACIA
+    - CAPITACION
+    - PAGO_GLOBAL_PROSPECTIVO
+    - EPISODIO
+    - GLOSA
+    - RECUPERACION
+    - REASEGURO
+    - ALTO_COSTO
+    - OTRA
+  descripcion_obligacion:
+    dominio: D1
+    descripcion: Descripción precisa del pasivo u obligación que se desea estimar.
+    tipo_dato: cadena
+    granularidad: evaluacion
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - obligation_description
+  medida_objetivo:
+    dominio: D1
+    descripcion: 'Medida económica objetivo: pagado, incurrido, permitido, contractual u otra.'
+    tipo_dato: categoria
+    granularidad: evaluacion
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - target_measure
+    valores_permitidos:
+    - PAGADO
+    - INCURRIDO
+    - PERMITIDO
+    - RECONOCIDO
+    - CONTRACTUAL
+    - OTRA
+  base_bruta_neta:
+    dominio: D1
+    descripcion: Indica si la estimación se realiza antes o después de recuperaciones y reaseguro.
+    tipo_dato: categoria
+    granularidad: evaluacion
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - gross_net_basis
+    valores_permitidos:
+    - BRUTA
+    - NETA
+  moneda:
+    dominio: D1
+    descripcion: Moneda funcional de los importes.
+    tipo_dato: categoria
+    granularidad: evaluacion
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - currency
+    valores_permitidos:
+    - COP
+    - USD
+    - EUR
+    - GBP
+    - CAD
+    - AUD
+    - JPY
+  nivel_materialidad:
+    dominio: D1
+    descripcion: Umbral cuantitativo o cualitativo usado para evaluar diferencias.
+    tipo_dato: decimal_no_negativo
+    granularidad: evaluacion
+    unidad: moneda_o_porcentaje
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - materiality_level
+  segmento_objetivo:
+    dominio: D1
+    descripcion: Población, producto, contrato o portafolio cubierto por la evaluación.
+    tipo_dato: cadena
+    granularidad: evaluacion
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - target_segment
+  fecha_servicio:
+    dominio: D2
+    descripcion: Fecha de prestación del servicio de salud.
+    tipo_dato: fecha
+    granularidad: reclamacion_o_linea
+    permite_nulos: false
+    dato_sensible: true
+    alias_ingles:
+    - service_date
+    - incurred_date
+    - occurrence_date
+    obligatorio_para:
+    - CHAIN_LADDER_PAGADO
+    - CHAIN_LADDER_INCURRIDO
+    - GLM
+    - GAM
+    validaciones:
+    - menor_o_igual_a_fecha_valoracion
+    - formato_iso_8601
+  fecha_ocurrencia:
+    dominio: D2
+    descripcion: Fecha del evento asegurado cuando difiere de la fecha de servicio.
+    tipo_dato: fecha
+    granularidad: reclamacion
+    permite_nulos: true
+    dato_sensible: true
+    alias_ingles:
+    - occurrence_date
+    - loss_date
+  fecha_admision:
+    dominio: D2
+    descripcion: Fecha de ingreso hospitalario.
+    tipo_dato: fecha
+    granularidad: reclamacion
+    permite_nulos: true
+    dato_sensible: true
+    alias_ingles:
+    - admission_date
+  fecha_alta:
+    dominio: D2
+    descripcion: Fecha de egreso hospitalario.
+    tipo_dato: fecha
+    granularidad: reclamacion
+    permite_nulos: true
+    dato_sensible: true
+    alias_ingles:
+    - discharge_date
+    validaciones:
+    - mayor_o_igual_a_fecha_admision
+  fecha_radicacion:
+    dominio: D2
+    descripcion: Fecha de recepción o radicación de la cuenta.
+    tipo_dato: fecha
+    granularidad: reclamacion
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - submission_date
+    - received_date
+  fecha_reporte:
+    dominio: D2
+    descripcion: Fecha de primer conocimiento de la reclamación.
+    tipo_dato: fecha
+    granularidad: reclamacion
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - report_date
+    - notification_date
+  fecha_adjudicacion:
+    dominio: D2
+    descripcion: Fecha de reconocimiento, liquidación o decisión sobre la reclamación.
+    tipo_dato: fecha
+    granularidad: reclamacion
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - adjudication_date
+  fecha_pago:
+    dominio: D2
+    descripcion: Fecha del desembolso asociado a una transacción.
+    tipo_dato: fecha
+    granularidad: transaccion
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - payment_date
+    - paid_date
+    obligatorio_para:
+    - CHAIN_LADDER_PAGADO
+    - MACK
+    - BOOTSTRAP
+    validaciones:
+    - mayor_o_igual_a_fecha_servicio
+    - menor_o_igual_a_fecha_valoracion
+  fecha_contabilizacion:
+    dominio: D2
+    descripcion: Fecha de reconocimiento en el sistema contable.
+    tipo_dato: fecha
+    granularidad: transaccion
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - accounting_date
+    - posting_date
+  fecha_movimiento:
+    dominio: D2
+    descripcion: Fecha efectiva de un movimiento económico o de estado.
+    tipo_dato: fecha
+    granularidad: transaccion
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - transaction_date
+    - movement_date
+  fecha_snapshot:
+    dominio: D2
+    descripcion: Fecha de corte histórico en que se observó el registro.
+    tipo_dato: fecha
+    granularidad: snapshot
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - snapshot_date
+    - extract_date
+    obligatorio_para:
+    - MACHINE_LEARNING
+    recomendado_para:
+    - TODOS_LOS_METODOS
+  periodo_origen:
+    dominio: D2
+    descripcion: Periodo agregado de origen derivado de la fecha de servicio u ocurrencia.
+    tipo_dato: fecha
+    granularidad: celda_triangular
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - origin_period
+    - accident_period
+    derivacion: truncar fecha_origen según periodicidad
+  periodo_calendario:
+    dominio: D2
+    descripcion: Periodo calendario asociado a pago, reconocimiento o movimiento.
+    tipo_dato: fecha
+    granularidad: celda_triangular
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - calendar_period
+    derivacion: truncar fecha_calendario según periodicidad
+  edad_desarrollo:
+    dominio: D2
+    descripcion: Número de periodos entre origen y calendario.
+    tipo_dato: entero
+    granularidad: celda_triangular
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - development_age
+    - development_lag
+    validaciones:
+    - mayor_o_igual_a_cero
+    derivacion: diferencia_periodos(periodo_calendario, periodo_origen)
+  periodicidad:
+    dominio: D2
+    descripcion: Unidad temporal del triángulo o análisis.
+    tipo_dato: categoria
+    granularidad: evaluacion
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - periodicity
+    - frequency
+    valores_permitidos:
+    - DIARIA
+    - SEMANAL
+    - MENSUAL
+    - TRIMESTRAL
+    - ANUAL
+  valor_facturado:
+    dominio: D3
+    descripcion: Importe presentado por el prestador.
+    tipo_dato: decimal
+    granularidad: linea_o_transaccion
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - billed_amount
+    - charge_amount
+  valor_permitido:
+    dominio: D3
+    descripcion: Importe permitido según contrato o reglas de cobertura.
+    tipo_dato: decimal
+    granularidad: linea_o_transaccion
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - allowed_amount
+  valor_reconocido:
+    dominio: D3
+    descripcion: Importe aceptado para pago o devengo.
+    tipo_dato: decimal
+    granularidad: linea_o_transaccion
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - approved_amount
+    - recognized_amount
+  costo_pagado:
+    dominio: D3
+    descripcion: Importe incremental efectivamente pagado.
+    tipo_dato: decimal
+    granularidad: transaccion
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - paid_amount
+    - payment_amount
+    obligatorio_para:
+    - CHAIN_LADDER_PAGADO
+    - MACK
+    - BOOTSTRAP
+  reserva_caso:
+    dominio: D3
+    descripcion: Reserva de caso vigente a la fecha de snapshot.
+    tipo_dato: decimal
+    granularidad: reclamacion_snapshot
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - case_reserve
+    - case_outstanding
+    obligatorio_para:
+    - CHAIN_LADDER_INCURRIDO
+  costo_incurrido:
+    dominio: D3
+    descripcion: Medida incurrida, normalmente costo pagado más reserva de caso.
+    tipo_dato: decimal
+    granularidad: reclamacion_snapshot
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - incurred_amount
+    obligatorio_para:
+    - CHAIN_LADDER_INCURRIDO
+    derivacion: costo_pagado_acumulado + reserva_caso
+  valor_recuperacion:
+    dominio: D3
+    descripcion: Recuperación distinta de reaseguro.
+    tipo_dato: decimal
+    granularidad: transaccion
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - recovery_amount
+    - subrogation_amount
+  valor_reaseguro:
+    dominio: D3
+    descripcion: Importe cedido o recuperable de reaseguro.
+    tipo_dato: decimal
+    granularidad: transaccion_o_reclamacion
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - reinsurance_amount
+  valor_glosa:
+    dominio: D3
+    descripcion: Importe objetado o glosado.
+    tipo_dato: decimal
+    granularidad: transaccion_o_reclamacion
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - denied_amount
+    - disputed_amount
+  valor_reverso:
+    dominio: D3
+    descripcion: Importe de reversión de una transacción previa.
+    tipo_dato: decimal
+    granularidad: transaccion
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - reversal_amount
+  valor_copago:
+    dominio: D3
+    descripcion: Importe a cargo del afiliado por copago.
+    tipo_dato: decimal
+    granularidad: linea_o_reclamacion
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - copay_amount
+  valor_deducible:
+    dominio: D3
+    descripcion: Importe a cargo del afiliado por deducible.
+    tipo_dato: decimal
+    granularidad: linea_o_reclamacion
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - deductible_amount
+  costo_bruto:
+    dominio: D3
+    descripcion: Costo antes de recuperaciones y reaseguro.
+    tipo_dato: decimal
+    granularidad: reclamacion_o_periodo
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - gross_cost
+    - gross_loss
+  costo_neto:
+    dominio: D3
+    descripcion: Costo después de recuperaciones y reaseguro conforme a la definición del análisis.
+    tipo_dato: decimal
+    granularidad: reclamacion_o_periodo
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - net_cost
+    - net_loss
+    derivacion: costo_bruto - valor_recuperacion - valor_reaseguro
+  importe_incremental:
+    dominio: D3
+    descripcion: Importe observado durante una celda de origen y desarrollo.
+    tipo_dato: decimal
+    granularidad: celda_triangular
+    unidad: moneda
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - incremental_amount
+    - incremental_loss
+    obligatorio_para:
+    - BOOTSTRAP
+    - GLM
+    - GAM
+  importe_acumulado:
+    dominio: D3
+    descripcion: Importe acumulado hasta una edad de desarrollo.
+    tipo_dato: decimal
+    granularidad: celda_triangular
+    unidad: moneda
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - cumulative_amount
+    - cumulative_loss
+    obligatorio_para:
+    - CHAIN_LADDER_PAGADO
+    - CHAIN_LADDER_INCURRIDO
+    - MACK
+  conteo_reclamaciones:
+    dominio: D3
+    descripcion: Número de reclamaciones o eventos según definición.
+    tipo_dato: entero
+    granularidad: celda_o_periodo
+    unidad: reclamaciones
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - claim_count
+    - frequency
+  conteo_servicios:
+    dominio: D3
+    descripcion: Número de servicios o líneas de atención.
+    tipo_dato: entero
+    granularidad: celda_o_periodo
+    unidad: servicios
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - service_count
+  id_reclamacion:
+    dominio: D4
+    descripcion: Identificador único de la reclamación.
+    tipo_dato: cadena
+    granularidad: reclamacion
+    permite_nulos: false
+    dato_sensible: true
+    alias_ingles:
+    - claim_id
+    obligatorio_para:
+    - SUPERVIVENCIA
+    - MULTIESTADO
+    - FRECUENCIA_SEVERIDAD
+    - MACHINE_LEARNING
+    validaciones:
+    - no_vacio
+  id_transaccion:
+    dominio: D4
+    descripcion: Identificador único del movimiento económico.
+    tipo_dato: cadena
+    granularidad: transaccion
+    permite_nulos: false
+    dato_sensible: true
+    alias_ingles:
+    - transaction_id
+    recomendado_para:
+    - TODOS_LOS_METODOS
+    validaciones:
+    - unico_dentro_de_fuente
+  id_factura:
+    dominio: D4
+    descripcion: Identificador de la factura o cuenta médica.
+    tipo_dato: cadena
+    granularidad: factura
+    permite_nulos: true
+    dato_sensible: true
+    alias_ingles:
+    - invoice_id
+    - bill_id
+  id_folio:
+    dominio: D4
+    descripcion: Identificador de subregistro, línea o folio.
+    tipo_dato: cadena
+    granularidad: linea
+    permite_nulos: true
+    dato_sensible: true
+    alias_ingles:
+    - line_id
+    - folio_id
+  id_miembro:
+    dominio: D4
+    descripcion: Identificador seudonimizado del afiliado o miembro.
+    tipo_dato: cadena
+    granularidad: miembro
+    permite_nulos: true
+    dato_sensible: true
+    alias_ingles:
+    - member_id
+    - patient_id
+  id_prestador:
+    dominio: D4
+    descripcion: Identificador del prestador.
+    tipo_dato: cadena
+    granularidad: prestador
+    permite_nulos: true
+    dato_sensible: true
+    alias_ingles:
+    - provider_id
+  id_contrato:
+    dominio: D4
+    descripcion: Identificador del contrato.
+    tipo_dato: cadena
+    granularidad: contrato
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - contract_id
+  id_producto:
+    dominio: D4
+    descripcion: Identificador del producto, plan o cobertura.
+    tipo_dato: cadena
+    granularidad: producto
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - product_id
+    - plan_id
+  id_snapshot:
+    dominio: D4
+    descripcion: Identificador único del corte histórico.
+    tipo_dato: cadena
+    granularidad: snapshot
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - snapshot_id
+    recomendado_para:
+    - TODOS_LOS_METODOS
+  archivo_fuente:
+    dominio: D4
+    descripcion: Nombre o ruta lógica del archivo de origen.
+    tipo_dato: cadena
+    granularidad: registro
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - source_file
+  sistema_fuente:
+    dominio: D4
+    descripcion: Sistema transaccional o repositorio del cual proviene el registro.
+    tipo_dato: cadena
+    granularidad: registro
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - source_system
+  tipo_movimiento:
+    dominio: D4
+    descripcion: Clasificación económica y operativa del movimiento.
+    tipo_dato: categoria
+    granularidad: transaccion
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - transaction_type
+    - movement_type
+    valores_permitidos:
+    - PAGO
+    - RESERVA_CASO
+    - AJUSTE
+    - REVERSO
+    - RECUPERACION
+    - REASEGURO
+    - GLOSA
+    - COPAGO
+    - DEDUCIBLE
+    - OTRO
+  version_registro:
+    dominio: D4
+    descripcion: Número o etiqueta de versión del registro.
+    tipo_dato: entero
+    granularidad: registro
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - record_version
+  indicador_duplicado:
+    dominio: D4
+    descripcion: Marca si el registro fue identificado como duplicado técnico o económico.
+    tipo_dato: booleano
+    granularidad: registro
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - duplicate_flag
+  numero_periodos_origen:
+    dominio: D5
+    descripcion: Cantidad de periodos de origen disponibles.
+    tipo_dato: entero
+    granularidad: evaluacion
+    unidad: periodos
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - origin_period_count
+    validaciones:
+    - mayor_o_igual_a_cero
+  horizonte_desarrollo:
+    dominio: D5
+    descripcion: Máxima edad de desarrollo observada.
+    tipo_dato: entero
+    granularidad: evaluacion_o_segmento
+    unidad: periodos
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - development_horizon
+  numero_pares_factor:
+    dominio: D5
+    descripcion: Cantidad de pares observados para estimar un factor edad-a-edad.
+    tipo_dato: entero
+    granularidad: factor_desarrollo
+    unidad: pares
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - link_ratio_pair_count
+  proporcion_desarrollada:
+    dominio: D5
+    descripcion: Porcentaje estimado del ultimate observado a una edad de desarrollo.
+    tipo_dato: decimal
+    granularidad: periodo_origen
+    unidad: proporcion
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - percent_developed
+    - reported_percentage
+    obligatorio_para:
+    - BORNHUETTER_FERGUSON
+    - BENKTANDER
+    - CAPE_COD
+    validaciones:
+    - entre_cero_y_uno
+  factor_desarrollo_acumulado:
+    dominio: D5
+    descripcion: Factor acumulado desde una edad de desarrollo hasta ultimate.
+    tipo_dato: decimal_no_negativo
+    granularidad: edad_desarrollo
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - cumulative_development_factor
+    - cdf
+  factor_edad_a_edad:
+    dominio: D5
+    descripcion: Factor de desarrollo entre edades consecutivas.
+    tipo_dato: decimal_no_negativo
+    granularidad: edad_desarrollo
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - age_to_age_factor
+    - link_ratio
+  factor_cola:
+    dominio: D5
+    descripcion: Factor aplicado más allá del desarrollo observado.
+    tipo_dato: decimal_no_negativo
+    granularidad: evaluacion_o_segmento
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - tail_factor
+  indicador_cohorte_madura:
+    dominio: D5
+    descripcion: Marca si la cohorte se considera suficientemente desarrollada para validación.
+    tipo_dato: booleano
+    granularidad: periodo_origen
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - mature_cohort_flag
+  era_operativa:
+    dominio: D5
+    descripcion: Etiqueta que agrupa periodos con procesos operativos comparables.
+    tipo_dato: cadena
+    granularidad: periodo_calendario
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - operational_era
+  miembros_mes:
+    dominio: D6
+    descripcion: Suma de miembros cubiertos por mes.
+    tipo_dato: decimal_no_negativo
+    granularidad: periodo_segmento
+    unidad: miembros_mes
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - member_months
+    obligatorio_para:
+    - CAPE_COD
+    - PMPM
+    recomendado_para:
+    - GLM
+    - GAM
+    - FRECUENCIA_SEVERIDAD
+  vidas_expuestas:
+    dominio: D6
+    descripcion: Número de vidas expuestas durante el periodo.
+    tipo_dato: decimal_no_negativo
+    granularidad: periodo_segmento
+    unidad: vidas
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - exposed_lives
+  dias_cobertura:
+    dominio: D6
+    descripcion: Número acumulado de días de cobertura.
+    tipo_dato: decimal_no_negativo
+    granularidad: periodo_segmento
+    unidad: dias
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - covered_days
+  prima_devengada:
+    dominio: D6
+    descripcion: Prima correspondiente al riesgo transcurrido en el periodo.
+    tipo_dato: decimal_no_negativo
+    granularidad: periodo_segmento
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - earned_premium
+    recomendado_para:
+    - BORNHUETTER_FERGUSON
+    - CAPE_COD
+  contratos_activos:
+    dominio: D6
+    descripcion: Cantidad de contratos vigentes en el periodo.
+    tipo_dato: decimal_no_negativo
+    granularidad: periodo_segmento
+    unidad: contratos
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - active_contracts
+  unidades_capitadas:
+    dominio: D6
+    descripcion: Unidades de exposición sujetas a capitación.
+    tipo_dato: decimal_no_negativo
+    granularidad: periodo_segmento
+    unidad: unidades
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - capitated_units
+  exposicion_ajustada_riesgo:
+    dominio: D6
+    descripcion: Exposición ponderada por un índice de riesgo o morbilidad.
+    tipo_dato: decimal_no_negativo
+    granularidad: periodo_segmento
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - risk_adjusted_exposure
+  indice_morbilidad:
+    dominio: D6
+    descripcion: Factor relativo de riesgo de la población.
+    tipo_dato: decimal_no_negativo
+    granularidad: periodo_segmento
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - morbidity_index
+    - risk_score
+  ultimate_esperado:
+    dominio: D7
+    descripcion: Ultimate esperado ex ante para la cohorte.
+    tipo_dato: decimal_no_negativo
+    granularidad: periodo_origen_segmento
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - expected_ultimate
+    obligatorio_para:
+    - BORNHUETTER_FERGUSON
+    - BENKTANDER
+  tasa_siniestralidad_esperada:
+    dominio: D7
+    descripcion: Tasa de siniestralidad esperada ex ante.
+    tipo_dato: decimal_no_negativo
+    granularidad: periodo_segmento
+    unidad: proporcion
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - expected_loss_ratio
+    - elr
+  pmpm_esperado:
+    dominio: D7
+    descripcion: Costo por miembro-mes esperado ex ante.
+    tipo_dato: decimal_no_negativo
+    granularidad: periodo_segmento
+    unidad: moneda_por_miembro_mes
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - expected_pmpm
+  valor_prior:
+    dominio: D7
+    descripcion: Valor numérico del prior según la medida definida.
+    tipo_dato: decimal
+    granularidad: periodo_segmento
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - prior_value
+  fecha_prior:
+    dominio: D7
+    descripcion: Fecha en la que el prior estaba disponible.
+    tipo_dato: fecha
+    granularidad: prior
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - prior_date
+    obligatorio_para:
+    - BORNHUETTER_FERGUSON
+    - BENKTANDER
+    - BAYES
+    validaciones:
+    - menor_o_igual_a_fecha_valoracion
+  metodo_prior:
+    dominio: D7
+    descripcion: Método o proceso que produjo el prior.
+    tipo_dato: cadena
+    granularidad: prior
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - prior_method
+  fuente_prior:
+    dominio: D7
+    descripcion: Sistema, presupuesto, pricing o documento de origen del prior.
+    tipo_dato: cadena
+    granularidad: prior
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - prior_source
+  tendencia_prior:
+    dominio: D7
+    descripcion: Ajuste de tendencia aplicado al prior.
+    tipo_dato: decimal
+    granularidad: prior
+    unidad: proporcion
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - prior_trend
+  segmento:
+    dominio: D8
+    descripcion: Segmento actuarial utilizado para modelación.
+    tipo_dato: cadena
+    granularidad: registro_o_periodo
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - segment
+  producto:
+    dominio: D8
+    descripcion: Producto o plan de salud.
+    tipo_dato: cadena
+    granularidad: registro
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - product
+    - plan
+  cobertura:
+    dominio: D8
+    descripcion: Cobertura o beneficio asegurado.
+    tipo_dato: cadena
+    granularidad: registro
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - coverage
+    - benefit
+  region:
+    dominio: D8
+    descripcion: Región geográfica.
+    tipo_dato: cadena
+    granularidad: registro
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - region
+  ciudad:
+    dominio: D8
+    descripcion: Ciudad o municipio.
+    tipo_dato: cadena
+    granularidad: registro
+    permite_nulos: true
+    dato_sensible: true
+    alias_ingles:
+    - city
+  ambito_atencion:
+    dominio: D8
+    descripcion: 'Ámbito de atención: ambulatorio, hospitalario, urgencias u otro.'
+    tipo_dato: categoria
+    granularidad: registro
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - care_setting
+    valores_permitidos:
+    - AMBULATORIO
+    - HOSPITALARIO
+    - URGENCIAS
+    - DOMICILIARIO
+    - FARMACIA
+    - OTRO
+  tipo_servicio:
+    dominio: D8
+    descripcion: Categoría clínica o administrativa del servicio.
+    tipo_dato: cadena
+    granularidad: linea_o_reclamacion
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - service_type
+  grupo_edad:
+    dominio: D8
+    descripcion: Grupo etario agregado.
+    tipo_dato: cadena
+    granularidad: miembro_o_reclamacion
+    permite_nulos: true
+    dato_sensible: true
+    alias_ingles:
+    - age_group
+  sexo:
+    dominio: D8
+    descripcion: Sexo o categoría demográfica según fuente y regulación aplicable.
+    tipo_dato: categoria
+    granularidad: miembro
+    permite_nulos: true
+    dato_sensible: true
+    alias_ingles:
+    - sex
+  diagnostico_principal:
+    dominio: D8
+    descripcion: Código o agrupación del diagnóstico principal.
+    tipo_dato: cadena
+    granularidad: reclamacion
+    permite_nulos: true
+    dato_sensible: true
+    alias_ingles:
+    - primary_diagnosis
+  indicador_alto_costo:
+    dominio: D8
+    descripcion: Marca de reclamación o persona clasificada como alto costo.
+    tipo_dato: booleano
+    granularidad: reclamacion_o_miembro
+    permite_nulos: true
+    dato_sensible: true
+    alias_ingles:
+    - high_cost_flag
+    - large_claim_flag
+  modelo_pago:
+    dominio: D8
+    descripcion: Mecanismo contractual de pago.
+    tipo_dato: categoria
+    granularidad: contrato_o_reclamacion
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - payment_model
+    valores_permitidos:
+    - FEE_FOR_SERVICE
+    - CAPITACION
+    - PGP
+    - EPISODIO
+    - OTRO
+  estado_reclamacion:
+    dominio: D9
+    descripcion: Estado operativo de la reclamación.
+    tipo_dato: categoria
+    granularidad: reclamacion_snapshot
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - claim_status
+    obligatorio_para:
+    - SUPERVIVENCIA
+    - MULTIESTADO
+    valores_permitidos:
+    - RADICADA
+    - EN_REVISION
+    - ADJUDICADA
+    - PAGADA_PARCIAL
+    - PAGADA_TOTAL
+    - GLOSADA
+    - EN_CONTROVERSIA
+    - CERRADA
+    - REABIERTA
+    - ANULADA
+  estado_origen:
+    dominio: D9
+    descripcion: Estado previo en una transición.
+    tipo_dato: categoria
+    granularidad: transicion
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - origin_state
+    - from_state
+    obligatorio_para:
+    - MULTIESTADO
+  estado_destino:
+    dominio: D9
+    descripcion: Estado posterior en una transición.
+    tipo_dato: categoria
+    granularidad: transicion
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - destination_state
+    - to_state
+    obligatorio_para:
+    - MULTIESTADO
+  fecha_transicion:
+    dominio: D9
+    descripcion: Fecha en que ocurre el cambio de estado.
+    tipo_dato: fecha
+    granularidad: transicion
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - transition_date
+    obligatorio_para:
+    - MULTIESTADO
+  indicador_censura:
+    dominio: D9
+    descripcion: Marca si el evento final no se observó antes del corte.
+    tipo_dato: booleano
+    granularidad: reclamacion_snapshot
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - censoring_flag
+    - censored
+    obligatorio_para:
+    - SUPERVIVENCIA
+  inventario_pendiente:
+    dominio: D9
+    descripcion: Cantidad o valor de reclamaciones pendientes.
+    tipo_dato: decimal_no_negativo
+    granularidad: periodo_segmento
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - pending_inventory
+    - backlog
+  dias_radicacion:
+    dominio: D9
+    descripcion: Días entre servicio y radicación.
+    tipo_dato: entero
+    granularidad: reclamacion
+    unidad: dias
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - submission_lag_days
+    derivacion: fecha_radicacion - fecha_servicio
+  dias_adjudicacion:
+    dominio: D9
+    descripcion: Días entre radicación y adjudicación.
+    tipo_dato: entero
+    granularidad: reclamacion
+    unidad: dias
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - adjudication_lag_days
+    derivacion: fecha_adjudicacion - fecha_radicacion
+  dias_pago:
+    dominio: D9
+    descripcion: Días entre adjudicación y pago.
+    tipo_dato: entero
+    granularidad: reclamacion_o_transaccion
+    unidad: dias
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - payment_lag_days
+    derivacion: fecha_pago - fecha_adjudicacion
+  cambio_sistema:
+    dominio: D9
+    descripcion: Marca un periodo afectado por migración o cambio de sistema.
+    tipo_dato: booleano
+    granularidad: periodo_calendario
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - system_change_flag
+  cambio_tpa:
+    dominio: D9
+    descripcion: Marca un periodo afectado por cambio de administrador o TPA.
+    tipo_dato: booleano
+    granularidad: periodo_calendario
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - tpa_change_flag
+  limite_stop_loss:
+    dominio: D9
+    descripcion: Umbral contractual de stop-loss.
+    tipo_dato: decimal_no_negativo
+    granularidad: contrato
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - stop_loss_limit
+  porcentaje_cesion:
+    dominio: D9
+    descripcion: Porcentaje de cesión aplicable.
+    tipo_dato: decimal_no_negativo
+    granularidad: contrato
+    unidad: proporcion
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - cession_percentage
+    validaciones:
+    - entre_cero_y_uno
+  version_datos:
+    dominio: D10
+    descripcion: Versión lógica del dataset.
+    tipo_dato: cadena
+    granularidad: ejecucion
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - data_version
+  hash_datos:
+    dominio: D10
+    descripcion: Hash reproducible del dataset o manifiesto.
+    tipo_dato: cadena
+    granularidad: ejecucion
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - data_hash
+  version_codigo:
+    dominio: D10
+    descripcion: Commit, tag o versión del código.
+    tipo_dato: cadena
+    granularidad: ejecucion
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - code_version
+  fecha_ejecucion:
+    dominio: D10
+    descripcion: Fecha y hora de ejecución.
+    tipo_dato: fecha_hora
+    granularidad: ejecucion
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - run_timestamp
+  usuario_ejecucion:
+    dominio: D10
+    descripcion: Usuario, proceso o servicio que ejecutó el análisis.
+    tipo_dato: cadena
+    granularidad: ejecucion
+    permite_nulos: false
+    dato_sensible: true
+    alias_ingles:
+    - run_user
+  semilla_aleatoria:
+    dominio: D10
+    descripcion: Semilla usada por procedimientos estocásticos.
+    tipo_dato: entero
+    granularidad: ejecucion
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - random_seed
+    obligatorio_para:
+    - BOOTSTRAP
+    - BAYES
+    - MACHINE_LEARNING
+  metodo_reserving:
+    dominio: D10
+    descripcion: Método evaluado o ejecutado.
+    tipo_dato: categoria
+    granularidad: resultado
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - reserving_method
+    valores_permitidos:
+    - CHAIN_LADDER_PAGADO
+    - CHAIN_LADDER_INCURRIDO
+    - BORNHUETTER_FERGUSON
+    - BENKTANDER
+    - CAPE_COD
+    - PMPM
+    - MACK
+    - BOOTSTRAP
+    - GLM
+    - GAM
+    - BAYES
+    - SUPERVIVENCIA
+    - MULTIESTADO
+    - FRECUENCIA_SEVERIDAD
+    - MACHINE_LEARNING
+    - DEVENGO_CONTRACTUAL
+  estado_preparacion:
+    dominio: D10
+    descripcion: Estado resultante del assessment.
+    tipo_dato: categoria
+    granularidad: resultado
+    permite_nulos: false
+    dato_sensible: false
+    alias_ingles:
+    - readiness_status
+    valores_permitidos:
+    - LISTO
+    - LISTO_CON_LIMITACIONES
+    - EXPLORATORIO
+    - BLOQUEADO
+    - NO_PERTINENTE
+  score_preparacion:
+    dominio: D10
+    descripcion: Puntaje no compensatorio complementario a los gates.
+    tipo_dato: decimal_no_negativo
+    granularidad: resultado
+    unidad: puntos_0_100
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - readiness_score
+    validaciones:
+    - entre_cero_y_cien
+  gates_fallidos:
+    dominio: D10
+    descripcion: Lista de gates críticos no superados.
+    tipo_dato: cadena
+    granularidad: resultado
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - failed_gates
+  campos_faltantes:
+    dominio: D10
+    descripcion: Lista de campos obligatorios ausentes o no mapeados.
+    tipo_dato: cadena
+    granularidad: resultado
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - missing_fields
+  limitaciones:
+    dominio: D10
+    descripcion: Limitaciones materiales identificadas.
+    tipo_dato: cadena
+    granularidad: resultado
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - limitations
+  recomendaciones:
+    dominio: D10
+    descripcion: Acciones sugeridas para remediación o uso prudente.
+    tipo_dato: cadena
+    granularidad: resultado
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - recommendations
+  responsable_modelo:
+    dominio: D10
+    descripcion: Propietario funcional del método o proceso.
+    tipo_dato: cadena
+    granularidad: gobierno
+    permite_nulos: false
+    dato_sensible: true
+    alias_ingles:
+    - model_owner
+  aprobador_modelo:
+    dominio: D10
+    descripcion: Responsable de aprobación o validación.
+    tipo_dato: cadena
+    granularidad: gobierno
+    permite_nulos: true
+    dato_sensible: true
+    alias_ingles:
+    - model_approver
+  lag_reporte_dias:
+    dominio: DX
+    descripcion: Días entre servicio y reporte.
+    tipo_dato: entero
+    granularidad: reclamacion
+    unidad: dias
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - reporting_lag_days
+    derivacion: fecha_reporte - fecha_servicio
+  lag_pago_dias:
+    dominio: DX
+    descripcion: Días entre servicio y pago.
+    tipo_dato: entero
+    granularidad: transaccion
+    unidad: dias
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - payment_lag_days
+    derivacion: fecha_pago - fecha_servicio
+  pmpm_observado:
+    dominio: DX
+    descripcion: Costo observado por miembro-mes.
+    tipo_dato: decimal
+    granularidad: periodo_segmento
+    unidad: moneda_por_miembro_mes
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - observed_pmpm
+    derivacion: costo / miembros_mes
+  frecuencia_observada:
+    dominio: DX
+    descripcion: Reclamaciones por unidad de exposición.
+    tipo_dato: decimal_no_negativo
+    granularidad: periodo_segmento
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - observed_frequency
+    derivacion: conteo_reclamaciones / exposicion
+  severidad_observada:
+    dominio: DX
+    descripcion: Costo promedio por reclamación.
+    tipo_dato: decimal
+    granularidad: periodo_segmento
+    unidad: moneda_por_reclamacion
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - observed_severity
+    derivacion: costo / conteo_reclamaciones
+  reserva_estimada:
+    dominio: DX
+    descripcion: Reserva estimada por un método.
+    tipo_dato: decimal
+    granularidad: resultado_metodo
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - estimated_reserve
+  ultimate_estimado:
+    dominio: DX
+    descripcion: Costo ultimate estimado.
+    tipo_dato: decimal
+    granularidad: resultado_metodo
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - estimated_ultimate
+  error_runoff:
+    dominio: DX
+    descripcion: Diferencia entre estimación histórica y resultado posterior.
+    tipo_dato: decimal
+    granularidad: resultado_backtest
+    unidad: moneda
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - runoff_error
+    derivacion: estimacion_historica - resultado_maduro
+  error_porcentual_absoluto:
+    dominio: DX
+    descripcion: Error absoluto como proporción del resultado maduro.
+    tipo_dato: decimal_no_negativo
+    granularidad: resultado_backtest
+    unidad: proporcion
+    permite_nulos: true
+    dato_sensible: false
+    alias_ingles:
+    - absolute_percentage_error
+    derivacion: abs(estimacion - resultado_maduro) / resultado_maduro
+reglas_globales:
+  fechas:
+  - fecha_origen <= fecha_calendario
+  - fecha_calendario <= fecha_valoracion
+  - fecha_prior <= fecha_valoracion
+  - fecha_snapshot <= fecha_valoracion para evaluaciones históricas
+  importes:
+  - Los valores negativos deben clasificarse mediante tipo_movimiento.
+  - Los importes nulos no deben reemplazarse por cero sin una regla explícita.
+  - La moneda debe ser consistente o convertirse mediante una tabla trazable.
+  identificadores:
+  - id_transaccion debe ser único dentro de sistema_fuente y version_registro.
+  - Los identificadores personales deben seudonimizarse antes de análisis.
+  - La deduplicación debe diferenciar copias técnicas de movimientos económicos legítimos.
+  as_of:
+  - Ninguna variable usada para predecir puede tener fecha posterior a fecha_valoracion.
+  - Los priors utilizados en backtesting deben ser ex ante.
+  - Los snapshots deben conservarse de forma inmutable o versionada.
+  exposicion:
+  - La exposición debe cubrir el mismo perímetro que los costos.
+  - No se deben sumar exposiciones replicadas por joins uno-a-muchos.
+mapeo_minimo_por_metodo:
+  CHAIN_LADDER_PAGADO:
+  - fecha_servicio
+  - fecha_pago
+  - costo_pagado
+  - fecha_valoracion
+  CHAIN_LADDER_INCURRIDO:
+  - fecha_servicio
+  - costo_pagado
+  - reserva_caso
+  - costo_incurrido
+  - fecha_valoracion
+  BORNHUETTER_FERGUSON:
+  - periodo_origen
+  - importe_acumulado
+  - proporcion_desarrollada
+  - ultimate_esperado
+  - fecha_prior
+  - fecha_valoracion
+  BENKTANDER:
+  - periodo_origen
+  - importe_acumulado
+  - proporcion_desarrollada
+  - ultimate_esperado
+  - fecha_prior
+  - fecha_valoracion
+  CAPE_COD:
+  - periodo_origen
+  - importe_acumulado
+  - proporcion_desarrollada
+  - miembros_mes
+  - fecha_valoracion
+  MACK:
+  - periodo_origen
+  - edad_desarrollo
+  - importe_acumulado
+  - fecha_valoracion
+  BOOTSTRAP:
+  - periodo_origen
+  - edad_desarrollo
+  - importe_incremental
+  - fecha_valoracion
+  - semilla_aleatoria
+  GLM:
+  - periodo_origen
+  - edad_desarrollo
+  - periodo_calendario
+  - importe_incremental
+  SUPERVIVENCIA:
+  - id_reclamacion
+  - fecha_servicio
+  - fecha_movimiento
+  - indicador_censura
+  - estado_reclamacion
+  MULTIESTADO:
+  - id_reclamacion
+  - estado_origen
+  - estado_destino
+  - fecha_transicion
+  MACHINE_LEARNING:
+  - id_reclamacion
+  - fecha_snapshot
+  - fecha_valoracion
+  - version_datos
+  - hash_datos
