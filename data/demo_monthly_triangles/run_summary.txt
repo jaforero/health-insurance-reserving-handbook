@@ -1,0 +1,10 @@
+=== Monthly simulated health paid-triangle demo ===
+Valuation month: 2025-12
+Origin months: 60
+Development months: 0-24
+Observed cells: 1200
+Complete origins: 36
+Minimum observations per factor: 36
+Total Chain Ladder IBNR: 77,957,625,915.76
+Seed: 20260714
+Note: 60/24 is a defensible teaching design, not a universal minimum.

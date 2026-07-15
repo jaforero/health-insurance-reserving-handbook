@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 500" role="img">
+<rect width="920" height="500" fill="#ffffff"/>
+<style>
+text { font-family: Inter, Arial, sans-serif; fill: #1f2937; }
+.title { font-size: 24px; font-weight: 700; }
+.subtitle { font-size: 13px; fill: #52606d; }
+.label { font-size: 10px; }
+.value { font-size: 8px; font-family: Menlo, Consolas, monospace; }
+</style>
+<text x="28" y="38" class="title">Observaciones disponibles por factor mensual</text>
+<text x="28" y="62" class="subtitle">La muestra cae con el desarrollo · línea punteada = heurística didáctica de 24 observaciones</text>
+<line x1="85" y1="430.0" x2="885" y2="430.0" stroke="#e5e7eb"/>
+<text x="73" y="434.0" class="label" text-anchor="end">0</text>
+<line x1="85" y1="379.21875" x2="885" y2="379.21875" stroke="#e5e7eb"/>
+<text x="73" y="383.21875" class="label" text-anchor="end">10</text>
+<line x1="85" y1="328.4375" x2="885" y2="328.4375" stroke="#e5e7eb"/>
+<text x="73" y="332.4375" class="label" text-anchor="end">20</text>
+<line x1="85" y1="277.65625" x2="885" y2="277.65625" stroke="#e5e7eb"/>
+<text x="73" y="281.65625" class="label" text-anchor="end">30</text>
+<line x1="85" y1="226.875" x2="885" y2="226.875" stroke="#e5e7eb"/>
+<text x="73" y="230.875" class="label" text-anchor="end">40</text>
+<line x1="85" y1="176.09375" x2="885" y2="176.09375" stroke="#e5e7eb"/>
+<text x="73" y="180.09375" class="label" text-anchor="end">50</text>
+<line x1="85" y1="125.3125" x2="885" y2="125.3125" stroke="#e5e7eb"/>
+<text x="73" y="129.3125" class="label" text-anchor="end">60</text>
+<line x1="85" y1="308.125" x2="885" y2="308.125" stroke="#a66f00" stroke-width="2" stroke-dasharray="6 5"/>
+<rect x="88.0" y="130.4" width="27.3" height="299.6" fill="#3659a7" stroke="#27447f"/>
+<text x="101.7" y="453" class="label" text-anchor="middle">0→1</text>
+<text x="101.7" y="124.4" class="label" text-anchor="middle">59</text>
+<rect x="121.3" y="135.5" width="27.3" height="294.5" fill="#3659a7" stroke="#27447f"/>
+<rect x="154.7" y="140.5" width="27.3" height="289.5" fill="#3659a7" stroke="#27447f"/>
+<rect x="188.0" y="145.6" width="27.3" height="284.4" fill="#3659a7" stroke="#27447f"/>
+<text x="201.7" y="453" class="label" text-anchor="middle">3→4</text>
+<text x="201.7" y="139.6" class="label" text-anchor="middle">56</text>
+<rect x="221.3" y="150.7" width="27.3" height="279.3" fill="#3659a7" stroke="#27447f"/>
+<rect x="254.7" y="155.8" width="27.3" height="274.2" fill="#3659a7" stroke="#27447f"/>
+<rect x="288.0" y="160.9" width="27.3" height="269.1" fill="#3659a7" stroke="#27447f"/>
+<text x="301.7" y="453" class="label" text-anchor="middle">6→7</text>
+<text x="301.7" y="154.9" class="label" text-anchor="middle">53</text>
+<rect x="321.3" y="165.9" width="27.3" height="264.1" fill="#3659a7" stroke="#27447f"/>
+<rect x="354.7" y="171.0" width="27.3" height="259.0" fill="#3659a7" stroke="#27447f"/>
+<rect x="388.0" y="176.1" width="27.3" height="253.9" fill="#3659a7" stroke="#27447f"/>
+<text x="401.7" y="453" class="label" text-anchor="middle">9→10</text>
+<text x="401.7" y="170.1" class="label" text-anchor="middle">50</text>
+<rect x="421.3" y="181.2" width="27.3" height="248.8" fill="#3659a7" stroke="#27447f"/>
+<rect x="454.7" y="186.2" width="27.3" height="243.8" fill="#3659a7" stroke="#27447f"/>
+<rect x="488.0" y="191.3" width="27.3" height="238.7" fill="#3659a7" stroke="#27447f"/>
+<text x="501.7" y="453" class="label" text-anchor="middle">12→13</text>
+<text x="501.7" y="185.3" class="label" text-anchor="middle">47</text>
+<rect x="521.3" y="196.4" width="27.3" height="233.6" fill="#3659a7" stroke="#27447f"/>
+<rect x="554.7" y="201.5" width="27.3" height="228.5" fill="#3659a7" stroke="#27447f"/>
+<rect x="588.0" y="206.6" width="27.3" height="223.4" fill="#3659a7" stroke="#27447f"/>
+<text x="601.7" y="453" class="label" text-anchor="middle">15→16</text>
+<text x="601.7" y="200.6" class="label" text-anchor="middle">44</text>
+<rect x="621.3" y="211.6" width="27.3" height="218.4" fill="#3659a7" stroke="#27447f"/>
+<rect x="654.7" y="216.7" width="27.3" height="213.3" fill="#3659a7" stroke="#27447f"/>
+<rect x="688.0" y="221.8" width="27.3" height="208.2" fill="#3659a7" stroke="#27447f"/>
+<text x="701.7" y="453" class="label" text-anchor="middle">18→19</text>
+<text x="701.7" y="215.8" class="label" text-anchor="middle">41</text>
+<rect x="721.3" y="226.9" width="27.3" height="203.1" fill="#3659a7" stroke="#27447f"/>
+<rect x="754.7" y="232.0" width="27.3" height="198.0" fill="#3659a7" stroke="#27447f"/>
+<rect x="788.0" y="237.0" width="27.3" height="193.0" fill="#3659a7" stroke="#27447f"/>
+<text x="801.7" y="453" class="label" text-anchor="middle">21→22</text>
+<text x="801.7" y="231.0" class="label" text-anchor="middle">38</text>
+<rect x="821.3" y="242.1" width="27.3" height="187.9" fill="#3659a7" stroke="#27447f"/>
+<rect x="854.7" y="247.2" width="27.3" height="182.8" fill="#3659a7" stroke="#27447f"/>
+<text x="868.3" y="453" class="label" text-anchor="middle">23→24</text>
+<text x="868.3" y="241.2" class="label" text-anchor="middle">36</text>
+<text x="485.0" y="482" class="subtitle" text-anchor="middle">Factor de desarrollo</text>
+</svg>

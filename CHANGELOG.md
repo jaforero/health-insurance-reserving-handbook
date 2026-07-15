@@ -4,7 +4,16 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 
 ## [Unreleased]
 
-No hay cambios registrados después de v0.2.0.
+### Agregado
+
+- Demo bilingüe de triángulos mensuales pagados con 60 meses de origen y desarrollo 0–24.
+- Controles de suficiencia por factor, comparación con ultimate simulado y validaciones de reconciliación.
+- Visualizaciones SVG del triángulo tradicional, curva de maduración y observaciones por factor.
+
+### Cambiado
+
+- Portada, navegación, roadmap y documento de continuidad para reflejar tres demos prácticos.
+- Normalización de archivos CSV con terminaciones de línea LF.
 
 ## [0.2.0] - 2026-07-14
 

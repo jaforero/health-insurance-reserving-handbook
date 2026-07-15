@@ -38,7 +38,7 @@ El repositorio incluye actualmente:
 
 - **40 capítulos** técnicos en español;
 - **7 partes** temáticas;
-- **2 demos prácticos bilingües**;
+- **3 demos prácticos bilingües**;
 - datos sintéticos reproducibles;
 - visualizaciones SVG de triángulos actuariales;
 - construcción y despliegue automático con MkDocs y GitHub Pages;
@@ -147,6 +147,19 @@ Compara triángulos pagados e incurridos, reserva caso, factores de desarrollo y
 
 ```bash
 python scripts/generate_demo_paid_incurred.py
+```
+
+### Demo 3 · Triángulos mensuales pagados
+
+Construye 60 meses de origen y edades mensuales 0–24, con controles de madurez, número de observaciones por factor, ultimate e IBNR.
+
+- [Documentación en español](docs/examples/03-demo-triangulos-mensuales-salud.md)
+- [English documentation](docs/examples/03-monthly-health-triangles-demo.md)
+- [Datos en español](data/demo_triangulos_mensuales/README.md)
+- [English data](data/demo_monthly_triangles/README.md)
+
+```bash
+python scripts/generate_demo_monthly_triangles.py
 ```
 
 Todos los datos de los demos son sintéticos y se generan con semillas reproducibles.

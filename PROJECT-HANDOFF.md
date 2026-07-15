@@ -57,6 +57,14 @@ python scripts/generate_demo_paid_incurred.py
 
 Genera bases pagada e incurrida, reserva caso, factores, comparación Chain Ladder y SVG.
 
+### Demo 3 · Triángulos mensuales pagados
+
+```bash
+python scripts/generate_demo_monthly_triangles.py
+```
+
+Genera 60 meses de origen, desarrollo mensual 0–24, factores, ultimate, IBNR, controles de suficiencia y tres visualizaciones por idioma.
+
 Todos los datos son sintéticos y no representan experiencia real de una entidad.
 
 ## 4. Validación obligatoria
@@ -98,9 +106,10 @@ El objetivo recomendado es `v0.3.0`, con este orden:
 
 1. auditoría matemática automática en CI;
 2. pruebas de reproducibilidad de demos;
-3. Demo 3: Chain Ladder vs. Bornhuetter-Ferguson vs. Benktander vs. Cape Cod;
-4. documentación de esquemas y diccionarios de datos sintéticos;
-5. changelog, citación, tag y release notes de v0.3.0.
+3. consolidar pruebas del Demo 3 mensual;
+4. Demo 4: Chain Ladder vs. Bornhuetter-Ferguson vs. Benktander vs. Cape Cod;
+5. documentación de esquemas y diccionarios de datos sintéticos;
+6. changelog, citación, tag y release notes de v0.3.0.
 
 ## 8. Criterio de continuidad
 

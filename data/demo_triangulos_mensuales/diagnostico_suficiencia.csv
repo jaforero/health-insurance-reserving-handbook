@@ -1,0 +1,5 @@
+indicador,valor,lectura
+meses_origen,60,Cinco años; permite observar estacionalidad anual repetida.
+horizonte_desarrollo,24,Punto de partida para reclamaciones de salud de maduración rápida o media.
+origenes_completos,36,Meses con observación completa hasta el desarrollo 24.
+min_observaciones_factor,36,Supera el umbral didáctico de 24; no es un mínimo actuarial universal.

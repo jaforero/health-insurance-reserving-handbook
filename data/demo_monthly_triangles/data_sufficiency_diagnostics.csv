@@ -1,0 +1,5 @@
+metric,value,interpretation
+origin_months,60,Five years; supports repeated annual-seasonality review.
+development_horizon,24,Starting point for fast- or medium-maturing health claims.
+complete_origins,36,Origin months fully observed through development 24.
+minimum_factor_observations,36,Above the 24-observation teaching threshold; not a universal actuarial minimum.

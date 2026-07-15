@@ -33,7 +33,7 @@ La versión pública más reciente es `v0.2.0`, consolidación integral en espa�
 |---|---|
 | Capítulos | 40 capítulos en español |
 | Partes | 7 partes temáticas |
-| Demos | 2 demos bilingües reproducibles |
+| Demos | 3 demos bilingües reproducibles |
 | Datos | Conjuntos sintéticos pagados e incurridos |
 | Visualizaciones | Triángulos actuariales y comparaciones en SVG |
 | Publicación | MkDocs Material y GitHub Pages |
@@ -78,7 +78,7 @@ Estas mejoras constituyen la línea base pública para los desarrollos posterior
 
 **Criterio de salida**
 
-- cero problemas en los 49 documentos bajo `docs/`;
+- cero problemas en los 51 documentos bajo `docs/`;
 - resultado reproducible localmente y en CI.
 
 ### 4.2 Pruebas para demos reproducibles
@@ -96,7 +96,18 @@ Estas mejoras constituyen la línea base pública para los desarrollos posterior
 - todos los generadores terminan correctamente en una instalación limpia;
 - las pruebas se ejecutan en CI.
 
-### 4.3 Demo 3 · Comparación de métodos clásicos
+### 4.3 Demo 3 · Triángulos mensuales de salud
+
+Incorpora 60 meses de origen, edades de desarrollo 0–24, controles de suficiencia por factor, comparación con la verdad simulada y visualizaciones bilingües. La configuración 60/24 se documenta como punto de partida práctico y no como mínimo actuarial universal.
+
+**Criterio de salida**
+
+- 1.200 celdas observadas conciliadas;
+- al menos 36 observaciones en cada factor bajo la configuración predeterminada;
+- curva de maduración, triángulo tradicional y diagnóstico reproducibles;
+- documentación explícita de cuándo ampliar el horizonte.
+
+### 4.4 Demo 4 · Comparación de métodos clásicos
 
 Comparará:
 
@@ -113,7 +124,7 @@ El demo debe incluir exposición, expectativa previa defendible, ultimate, IBNR,
 - explicación clara de por qué los métodos divergen;
 - referencias cruzadas con los capítulos 6 y 11–14.
 
-### 4.4 Cierre de v0.3.0
+### 4.5 Cierre de v0.3.0
 
 - auditoría documental limpia;
 - build estricto exitoso;
@@ -179,8 +190,9 @@ La existencia de un archivo o su inclusión en la navegación solo indica dispon
 1. publicación y verificación de v0.2.0;
 2. auditoría matemática automatizada;
 3. pruebas de reproducibilidad de los demos;
-4. Demo 3 de métodos clásicos;
-5. cierre y publicación de v0.3.0;
-6. Demo 4 de incertidumbre para v0.4.0.
+4. Demo 3 de triángulos mensuales;
+5. Demo 4 de métodos clásicos;
+6. cierre y publicación de v0.3.0;
+7. Demo 5 de incertidumbre para v0.4.0.
 
 No se asignan fechas hasta conocer capacidad de revisión y profundidad requerida. Cada hito debe cerrarse por evidencia.
