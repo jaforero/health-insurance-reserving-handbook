@@ -1,0 +1,12 @@
+@font-face {
+  font-family: "IgraSans";
+  src: url("../assets/fonts/IgraSans.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root {
+  --md-text-font: "IgraSans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --md-code-font: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}

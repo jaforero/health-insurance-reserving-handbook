@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block htmltitle %}
+  {% if page and page.is_homepage %}
+    <title>Health Insurance Reserving Handbook · Javier Forero</title>
+  {% elif page and page.title %}
+    <title>{{ page.title }} · Health Insurance Reserving Handbook</title>
+  {% else %}
+    <title>Health Insurance Reserving Handbook · Javier Forero</title>
+  {% endif %}
+{% endblock %}
+
+{% block extrahead %}
+  {{ super() }}
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  <meta name="author" content="Javier Forero">
+  <meta name="theme-color" content="#4e00ff">
+{% endblock %}
+
+{% block footer %}
+  {{ super() }}
+
+  <div class="jf-corporate-footer" role="contentinfo">
+    <div class="jf-corporate-footer__inner">
+      <div class="jf-corporate-footer__brand">
+        <img
+          class="jf-corporate-footer__logo"
+          src="{{ 'assets/brand/logo-actuaria.svg' | url }}"
+          alt=""
+          width="52"
+          height="52"
+          loading="lazy"
+        >
+        <div>
+          <strong>Javier Forero</strong>
+          <span>Actuaría · IA · Datos · Analítica</span>
+        </div>
+      </div>
+
+      <nav class="jf-corporate-footer__links" aria-label="Enlaces corporativos">
+        <a href="https://javierforero.co/" target="_blank" rel="noopener">Sitio principal</a>
+        <a href="https://cv.javierforero.co/" target="_blank" rel="noopener">CV</a>
+        <a href="https://github.com/jaforero/health-insurance-reserving-handbook" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/jforero/" target="_blank" rel="noopener">LinkedIn</a>
+      </nav>
+
+      <div class="jf-corporate-footer__legal">
+        <span>© 2026 Javier Forero.</span>
+        <a
+          href="https://github.com/jaforero/health-insurance-reserving-handbook/blob/main/LICENSE"
+          target="_blank"
+          rel="noopener"
+        >Licencia MIT</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

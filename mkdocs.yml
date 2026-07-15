@@ -1,6 +1,6 @@
 site_name: Health Insurance Reserving Handbook
 site_description: Manual técnico de IBNR, reserving y modelación actuarial para seguros de salud, con aplicaciones al sistema de salud colombiano.
-site_author: Health Insurance Reserving Handbook
+site_author: Javier Forero
 site_url: "https://actuaria.javierforero.co/"
 
 docs_dir: docs
@@ -8,6 +8,10 @@ site_dir: site
 
 theme:
   name: material
+  custom_dir: overrides
+  logo: assets/brand/logo-actuaria.svg
+  favicon: assets/brand/favicon.svg
+  font: false
   language: es
   features:
     - navigation.sections
@@ -74,6 +78,8 @@ markdown_extensions:
 
 extra_css:
   - stylesheets/extra.css
+  - stylesheets/igrasans.css
+  - stylesheets/corporate.css
 
 extra_javascript:
   - https://unpkg.com/mermaid@10/dist/mermaid.min.js
@@ -81,6 +87,9 @@ extra_javascript:
 
 extra:
   generator: false
+  analytics:
+    provider: google
+    property: G-MQ3K8EVKV0
 
 nav:
   - Inicio: index.md
