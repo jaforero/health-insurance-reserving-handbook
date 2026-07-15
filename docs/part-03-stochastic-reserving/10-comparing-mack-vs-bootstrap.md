@@ -1,728 +1,336 @@
 ---
-title: "Comparing Mack vs. Bootstrap"
-part: "Parte III · Reserving estocástico"
-chapter: 10
+title: Comparación entre Mack y Bootstrap
+description: Comparación actuarial de los supuestos, resultados, fortalezas y usos de Mack y Bootstrap para cuantificar la incertidumbre de reservas.
+status: draft
+version: "0.1.7"
+chapter: "10"
+part: "part-03-stochastic-reserving"
 language: "es"
-status: "draft"
 last_updated: "2026-07-14"
 ---
 
-10–Comparing-Mack-vs-Bootstrap
----
-title: Comparing Mack vs Bootstrap Chain Ladder
-subtitle: Analytical versus Simulation-Based Estimation of Reserve Uncertainty
-author: Health Insurance Reserving Handbook
-version: 1.0
-chapter: 10
-status: Draft
-last_updated: 2026-07-13
----
+# Comparación entre Mack y Bootstrap
 
-# Comparing Mack vs Bootstrap Chain Ladder
+Mack y Bootstrap parten de Chain Ladder y buscan cuantificar la incertidumbre de la reserva. Mack lo hace mediante fórmulas analíticas basadas en medias y varianzas condicionales. Bootstrap lo hace generando múltiples historias y desarrollos futuros simulados.
 
-> *"Mack estimates uncertainty analytically. Bootstrap estimates uncertainty empirically through simulation. Both answer the same actuarial question from different statistical perspectives."*
+No son métodos rivales. En una práctica actuarial sólida funcionan como controles complementarios.
 
----
+## Objetivos
 
-## Learning Objectives
+Al finalizar este capítulo, el lector podrá:
 
-After completing this chapter, the reader should be able to:
+- explicar las diferencias conceptuales entre Mack y Bootstrap;
+- comparar sus supuestos y resultados;
+- reconocer qué fuentes de incertidumbre representa cada método;
+- interpretar diferencias entre errores estándar y percentiles;
+- seleccionar un enfoque según el uso del análisis;
+- construir una reconciliación defendible para gestión, auditoría y gobierno.
 
-- Understand the conceptual differences between Mack and Bootstrap.
-- Select the appropriate method for a reserving exercise.
-- Compare assumptions.
-- Compare outputs.
-- Compare computational complexity.
-- Explain differences to management and auditors.
+## Punto de partida común
 
----
+Ambos métodos requieren que Chain Ladder sea una representación razonable del desarrollo esperado.
 
-## Table of Contents
+Comparten, entre otros, estos riesgos:
 
-1. Introduction
-2. Why Compare Mack and Bootstrap?
-3. Conceptual Differences
-4. Mathematical Differences
-5. Statistical Assumptions
-6. Sources of Uncertainty
-7. Prediction Intervals
-8. Computational Complexity
-9. Advantages
-10. Limitations
-11. Practical Example
-12. Health Insurance Applications
-13. Decision Framework
-14. Best Practices
-15. Summary
+- factores históricos no representativos;
+- efectos de calendario;
+- cambios de mezcla o beneficios;
+- segmentación insuficiente;
+- cola no observada;
+- datos incompletos o inconsistentes.
 
----
+La simulación no corrige una mala especificación. Un Bootstrap con muchas iteraciones puede reproducir con gran precisión la incertidumbre de un modelo equivocado.
 
-## 1. Introduction
+## Diferencia conceptual
 
-Both Mack Chain Ladder and Bootstrap Chain Ladder attempt to answer the same actuarial question:
+### Mack
 
-> **How uncertain is our reserve estimate?**
+Mack responde:
 
-The difference lies in *how* they estimate uncertainty.
+> ¿Qué error de predicción implican las medias y varianzas condicionales del modelo Chain Ladder?
 
----
+Su resultado central es el MSEP y su raíz cuadrada, el error estándar.
 
-## 2. Deterministic Chain Ladder
+### Bootstrap
 
-Chain Ladder produces
+Bootstrap responde:
 
-```
-One Reserve
-```
+> ¿Qué resultados produciría el modelo si la experiencia observada y el proceso futuro variaran de acuerdo con el mecanismo de remuestreo y simulación?
 
-Example
+Su resultado central es una muestra de la distribución predictiva.
 
-Reserve
+## Comparación resumida
 
-```
-150 M
-```
+| Característica | Mack | Bootstrap |
+| --- | --- | --- |
+| Estimación central | Chain Ladder | Cercana a Chain Ladder |
+| Cálculo de incertidumbre | Analítico | Simulación |
+| Distribución completa | No, requiere aproximación adicional | Sí, bajo el esquema simulado |
+| Error estándar | Directo | Empírico |
+| Intervalo asimétrico | Requiere supuesto distributivo | Se obtiene de percentiles simulados |
+| Riesgo de parámetros | Sí | Sí, mediante remuestreo y reajuste |
+| Riesgo de proceso | Sí | Sí, si se simula explícitamente |
+| Costo computacional | Bajo | Medio o alto |
+| Reproducibilidad | Determinística | Requiere semilla y control Monte Carlo |
+| Decisiones de implementación | Relativamente pocas | Varias |
+| Riesgo de modelo | No completo | No completo |
 
-No information is provided about
+## Supuestos estadísticos
 
-- variability
-- confidence intervals
-- downside risk
+### Mack
 
----
+Requiere:
 
-## 3. Mack Chain Ladder
+- media condicional proporcional;
+- estructura de varianza definida;
+- independencia entre periodos de origen;
+- estimación razonable de factores y varianzas.
 
-Mack computes
+Se denomina *distribution-free* porque no especifica una distribución completa. Sin embargo, un intervalo normal o lognormal sí añade una hipótesis distributiva.
 
-```
-Reserve
+### Bootstrap
 
-+
+Requiere:
 
-Standard Error
+- un modelo base correctamente especificado;
+- residuos suficientemente representativos e intercambiables;
+- una regla para corregir y remuestrear residuos;
+- una distribución para el riesgo de proceso, cuando corresponda;
+- decisiones sobre negativos, ceros, cola y dependencia.
 
-+
+El Bootstrap residual suele describirse como semiparamétrico: remuestrea residuos de manera empírica, pero con frecuencia usa una distribución paramétrica para simular el proceso futuro.
 
-Prediction Interval
-```
+## Fuentes de incertidumbre
 
-using analytical formulas.
+| Fuente | Mack | Bootstrap |
+| --- | --- | --- |
+| Proceso | Fórmula analítica | Simulación de celdas futuras |
+| Parámetros | Fórmula analítica | Reestimación en pseudo-triángulos |
+| Forma asimétrica | No directamente | Sí, dentro del diseño de simulación |
+| Dependencia | Limitada por supuestos | Solo si se modela explícitamente |
+| Cola | Requiere extensión | Requiere simulación o escenarios |
+| Cambio estructural | No | No |
+| Error de datos | No | No |
 
-No simulation is required.
+La tabla muestra por qué ambos deben acompañarse de escenarios y juicio actuarial.
 
----
+## Resultados que deben compararse
 
-## 4. Bootstrap Chain Ladder
+Una reconciliación útil incluye:
 
-Bootstrap repeatedly reconstructs
+- ultimate e IBNR esperados;
+- error estándar total;
+- coeficiente de variación;
+- resultados por periodo de origen;
+- intervalos comparables;
+- P75, P90, P95 y P99;
+- contribución de proceso y parámetros;
+- sensibilidad a cola;
+- reserva registrada y probabilidad de insuficiencia.
 
-thousands of triangles
+No debe compararse un intervalo normal de Mack con percentiles Bootstrap sin explicar que provienen de supuestos distintos.
 
-using simulated residuals.
+## Intervalos de predicción
 
-Typical workflow
+### Aproximación con Mack
 
-```
-Observed Triangle
-
-↓
-
-Fit Chain Ladder
-
-↓
-
-Residuals
-
-↓
-
-Resampling
-
-↓
-
-10,000 Simulations
-
-↓
-
-Reserve Distribution
-```
-
-Unlike Mack,
-
-Bootstrap estimates the entire distribution.
-
----
-
-## 5. Philosophical Difference
-
-Mack asks
-
-> "What is the variance implied by this model?"
-
-Bootstrap asks
-
-> "What happens if history had been slightly different?"
-
-One derives uncertainty.
-
-The other simulates it.
-
----
-
-## 6. Mathematical Comparison
-
-## Mack
-
-Uses
+Con reserva \(\widehat R\) y error estándar \(SE\):
 
 $$
-MSEP
-=
-Process
-+
-Parameter
+\widehat R\pm z_{1-\alpha/2}SE
 $$
 
-Variance is derived analytically.
+La aproximación normal es simétrica. Una aproximación lognormal evita reservas negativas y produce asimetría, pero cambia la interpretación y requiere calibración.
 
----
+### Percentiles Bootstrap
 
-## Bootstrap
-
-Approximates
+Si \(R^{(1)},\ldots,R^{(B)}\) son reservas simuladas:
 
 $$
-F(Reserve)
+L=Q_{\alpha/2}(R),
+\qquad
+U=Q_{1-\alpha/2}(R)
 $$
 
-through Monte Carlo simulation.
+Los límites reflejan la forma empírica generada por el modelo. No necesitan ser simétricos alrededor de la media.
 
-No closed-form solution is required.
+## Ejemplo conceptual
 
----
+Supóngase una reserva Chain Ladder de 150.
 
-## 7. Assumptions
+Mack produce:
 
-| Assumption | Mack | Bootstrap |
-|------------|------|-----------|
-| Stable development | ✓ | ✓ |
-| Chain Ladder valid | ✓ | ✓ |
-| Independent accident years | ✓ | Usually |
-| Distribution required | No | No (non-parametric) |
-| Simulation required | No | Yes |
+- error estándar: 18;
+- CV: 12 %;
+- intervalo normal aproximado del 95 %: 114.7 a 185.3.
 
----
+Bootstrap produce:
 
-## 8. Output Comparison
+- media: 151;
+- mediana: 148;
+- desviación estándar: 19;
+- P75: 161;
+- P95: 190;
+- P99: 215.
 
-## Mack
+Las desviaciones estándar son cercanas, pero Bootstrap muestra una cola derecha más larga. La diferencia no implica automáticamente que uno sea correcto y el otro incorrecto; debe investigarse la forma distributiva y el diseño de simulación.
 
-Produces
+## Reconciliación de diferencias
 
-- Reserve
-- Standard Error
-- MSEP
-- CV
-- Prediction Interval
+Cuando los resultados divergen, revisar en este orden:
 
----
+1. triángulo y fecha de valuación;
+2. factores seleccionados;
+3. tail factor;
+4. definición de reserva total;
+5. segmentación;
+6. tratamiento de ceros y negativos;
+7. corrección y centrado de residuos;
+8. parámetro de dispersión;
+9. distribución de proceso;
+10. número de simulaciones;
+11. agregación entre periodos y segmentos;
+12. método distributivo usado con Mack.
 
-## Bootstrap
+Una diferencia grande en la estimación media suele ser más preocupante que una diferencia moderada en percentiles.
 
-Produces
+## Criterios de selección
 
-- Reserve
-- Entire distribution
-- Quantiles
-- VaR
-- TVaR
-- Percentiles
-- Tail probabilities
+### Mack es especialmente útil cuando
 
-Bootstrap therefore supports enterprise risk management.
+- se necesita un cálculo rápido y transparente;
+- el triángulo es estable;
+- el error estándar es el resultado principal;
+- se requiere un benchmark reproducible;
+- la capacidad computacional es limitada;
+- el objetivo es monitoreo periódico.
 
----
+### Bootstrap es especialmente útil cuando
 
-## 9. Prediction Intervals
+- se necesitan percentiles o medidas de cola;
+- la distribución puede ser asimétrica;
+- se evalúa suficiencia de una reserva registrada;
+- se requiere una distribución para capital o estrés;
+- se desea separar y visualizar fuentes de variación;
+- existe capacidad para validar la simulación.
 
-Suppose
+### Usar ambos cuando
 
-Reserve
+- la reserva es material;
+- existe revisión independiente;
+- los resultados alimentan gobierno o solvencia;
+- se necesita distinguir error analítico de forma distributiva;
+- se desea una prueba de razonabilidad cruzada.
 
-100
+## Aplicación en seguros de salud
 
-Standard Error
+| Situación | Lectura recomendada |
+| --- | --- |
+| Portafolio grande y estable | Mack como referencia rápida; Bootstrap como contraste |
+| Grandes reclamaciones | Bootstrap puede representar mejor asimetría si se segmenta correctamente |
+| Cambio de sistema de radicación | Ninguno sin ajuste y escenario estructural |
+| Glosas o conciliaciones masivas | Revisar dependencia y efectos calendario antes de aplicar ambos |
+| Base incurrida con reservas caso consistentes | Comparar Mack y Bootstrap sobre incurrido |
+| Base pagada con rezago operativo | Analizar sensibilidad de edades tempranas y cola |
+| Reforma regulatoria o cambio de beneficios | Complementar con métodos a priori y escenarios |
 
-8
+En Colombia deben considerarse cambios en RIPS, facturación electrónica, glosas, acuerdos de pago y modelos de contratación. Si afectan varias filas simultáneamente, la independencia histórica deja de ser razonable.
 
----
+## Flujo recomendado
 
-## Mack
-
-95%
-
-```
-100
-
-±
-
-1.96 × 8
-```
-
-Produces
-
-```
-84.3
-
-115.7
-```
-
-assuming approximate normality.
-
----
-
-## Bootstrap
-
-95%
-
-Obtained directly
-
-from simulated percentiles.
-
-No symmetry is required.
-
-This is particularly useful for skewed reserve distributions.
-
----
-
-## 10. Process Variance
-
-Both methods estimate
-
-process variance.
-
-Difference
-
+```text
+Validación y reconciliación de datos
+                ↓
+Diagnósticos de Chain Ladder
+                ↓
+Estimación central
+                ↓
 Mack
-
-derives it analytically.
-
+                ↓
 Bootstrap
-
-estimates it empirically.
-
----
-
-## 11. Parameter Risk
-
-Mack estimates
-
-parameter uncertainty
-
-using asymptotic theory.
-
-Bootstrap estimates
-
-parameter uncertainty
-
-through repeated sampling.
-
----
-
-## 12. Distribution Shape
-
-Mack
-
-typically assumes
-
-approximate normality
-
-for interval construction.
-
-Bootstrap
-
-allows
-
-- skewness
-- heavy tails
-- asymmetric distributions
-
-This is a major advantage.
-
----
-
-## 13. Computational Cost
-
-| Method | Complexity |
-|----------|------------|
-| Mack | Very Low |
-| Bootstrap | High |
-
-Typical runtime
-
-Mack
-
-Seconds
-
-Bootstrap
-
-Minutes
-
-depending on simulations.
-
----
-
-## 14. Numerical Example
-
-Observed Reserve
-
-```
-150
+                ↓
+Reconciliación de diferencias
+                ↓
+Escenarios estructurales
+                ↓
+Juicio actuarial y selección final
 ```
 
----
-
-## Mack
-
-Reserve
-
-150
-
-Standard Error
-
-12
-
-CV
-
-8%
-
-95%
-
-126–174
-
----
-
-## Bootstrap
-
-Reserve
-
-151
-
-Median
-
-149
-
-P75
-
-158
-
-P95
-
-181
-
-P99
-
-205
-
-Notice
-
-Bootstrap reveals
-
-distribution asymmetry.
-
----
-
-## 15. Health Insurance Example
-
-Commercial Health
-
-High volume
-
-Low severity
-
-↓
-
-Mack often performs well.
-
----
-
-Medicaid
-
-Operational changes
-
-↓
-
-Bootstrap preferred.
-
----
-
-Medicare Advantage
-
-Risk adjustment changes
-
-↓
-
-Bootstrap frequently provides better uncertainty estimates.
-
----
-
-COVID Period
-
-Large structural shifts
-
-↓
-
-Neither method should be applied without adjustment.
-
----
-
-## 16. Strengths
-
-## Mack
-
-✔ Fast
-
-✔ Transparent
-
-✔ Easy to explain
-
-✔ Widely accepted
-
-✔ No simulation
-
----
-
-## Bootstrap
-
-✔ Flexible
-
-✔ Full reserve distribution
-
-✔ Better tail estimation
-
-✔ Supports capital modeling
-
-✔ Supports ORSA
-
----
-
-## 17. Weaknesses
-
-## Mack
-
-✘ Approximate intervals
-
-✘ Less flexible
-
-✘ Sensitive to assumptions
-
----
-
-## Bootstrap
-
-✘ Computationally intensive
-
-✘ Requires simulation
-
-✘ More implementation choices
-
-✘ Harder to explain
-
----
-
-## 18. Decision Matrix
-
-| Situation | Preferred Method |
-|------------|-----------------|
-| Quarterly reserving | Mack |
-| Fast reserve indication | Mack |
-| Capital modeling | Bootstrap |
-| Solvency analysis | Bootstrap |
-| ORSA | Bootstrap |
-| Risk appetite | Bootstrap |
-| Regulatory review | Both |
-| Board reporting | Both |
-
----
-
-## 19. Recommended Workflow
-
-Modern actuarial practice
-
-should not choose
-
-between Mack
-
-or
-
-Bootstrap.
-
-Instead
-
-use
-
-```
-Triangle
-
-↓
-
-Diagnostics
-
-↓
-
-Chain Ladder
-
-↓
-
-Mack
-
-↓
-
-Bootstrap
-
-↓
-
-Compare
-
-↓
-
-Professional Judgment
-
-↓
-
-Final Reserve
-```
-
-This workflow provides
-
-both
-
-speed
-
-and
-
-robustness.
-
----
-
-## 20. Practical Recommendations
-
-Always compare
-
-- Point estimates
-- CV
-- Prediction intervals
-- Tail risk
-- Distribution shape
-
-Large differences
-
-deserve investigation.
-
----
-
-## 21. Common Mistakes
-
-Using Bootstrap
-
-without validating
-
-Chain Ladder assumptions.
-
-Assuming
-
-Bootstrap
-
-automatically improves
-
-poor data.
-
-Reporting
-
-only
-
-point estimates.
-
-Ignoring
-
-prediction uncertainty.
-
----
-
-## 22. Best Practices
-
-Run
-
-Mack
-
-first.
-
-Run
-
-Bootstrap
-
-second.
-
-Explain
-
-differences.
-
-Document
-
-assumptions.
-
-Retain
-
-both analyses
-
-within
-
-the reserving file.
-
----
-
-## Key Takeaways
-
-Mack and Bootstrap estimate the same underlying reserve uncertainty using different statistical approaches.
-
-Mack is analytical, transparent and computationally efficient.
-
-Bootstrap is simulation-based, flexible and capable of estimating the complete reserve distribution.
-
-Modern actuarial practice benefits from using both methods together rather than treating them as competing alternatives.
-
----
-
-## Comparison Summary
-
-| Feature | Mack | Bootstrap |
-|---------|------|-----------|
-| Point Estimate | ✓ | ✓ |
-| Standard Error | ✓ | ✓ |
-| Reserve Distribution | ✘ | ✓ |
-| VaR | ✘ | ✓ |
-| TVaR | ✘ | ✓ |
-| Computational Speed | Excellent | Moderate |
-| Regulatory Acceptance | Excellent | Excellent |
-| Capital Modeling | Limited | Excellent |
-| Ease of Explanation | Excellent | Moderate |
-
----
-
-## References
-
-- Mack (1993)
-- Mack (1999)
-- England & Verrall (2002)
-- Wüthrich & Merz (2008)
-- Friedland – Estimating Unpaid Claims Using Basic Techniques
-- Taylor – Loss Reserving
-- CAS Monograph on Stochastic Loss Reserving
-- ASOP No. 23 – Data Quality
-- ASOP No. 56 – Modeling
-
----
-
-## Next Chapter
-
-➡️ **11-bornhuetter-ferguson.md**
+## Comunicación a gestión
+
+Un reporte ejecutivo puede mostrar:
+
+| Métrica | Resultado |
+| --- | ---: |
+| Estimación central | 150 |
+| Error estándar Mack | 18 |
+| CV Mack | 12 % |
+| Media Bootstrap | 151 |
+| P75 Bootstrap | 161 |
+| P95 Bootstrap | 190 |
+| Reserva registrada | 170 |
+| Probabilidad simulada de excedencia | 18 % |
+
+El mensaje debe separar claramente:
+
+- mejor estimación;
+- margen o nivel de suficiencia;
+- incertidumbre capturada por el modelo;
+- riesgos no modelados;
+- decisiones de gestión.
+
+## Errores frecuentes
+
+- tratar Mack como una distribución completa;
+- omitir el riesgo de proceso en Bootstrap;
+- comparar percentiles con definiciones distintas;
+- asumir que más simulaciones eliminan sesgo;
+- usar residuos no revisados;
+- ignorar dependencia entre segmentos;
+- sumar percentiles individuales para obtener el total;
+- interpretar P95 como peor caso;
+- omitir error Monte Carlo;
+- reportar precisión estadística sin riesgo estructural.
+
+## Controles de gobierno
+
+La documentación debe identificar:
+
+1. propósito del análisis;
+2. triángulos y segmentación;
+3. supuestos compartidos;
+4. parámetros específicos de Mack;
+5. diseño del Bootstrap;
+6. cola y dependencia;
+7. resultados comparables;
+8. reconciliación de diferencias;
+9. validación histórica;
+10. limitaciones;
+11. selección actuarial;
+12. revisión independiente.
+
+## Lista de verificación
+
+- [ ] Los modelos usan el mismo triángulo y fecha de corte.
+- [ ] Los factores centrales están reconciliados.
+- [ ] El tail factor es comparable.
+- [ ] Mack incluye proceso y parámetros.
+- [ ] Bootstrap incluye simulación de proceso.
+- [ ] Los residuos fueron corregidos y revisados.
+- [ ] La simulación es estable.
+- [ ] Los percentiles se agregaron correctamente.
+- [ ] Se revisaron efectos calendario.
+- [ ] Se documentó riesgo de modelo.
+- [ ] Se explicaron las diferencias materiales.
+- [ ] El resultado final incorpora juicio actuarial.
+
+## Conclusión
+
+Mack proporciona una medida analítica, rápida y transparente del error de predicción de Chain Ladder. Bootstrap produce una distribución predictiva flexible que permite analizar asimetría y cola.
+
+Cuando ambos presentan resultados coherentes, aumenta la confianza en la cuantificación de incertidumbre bajo el modelo. Cuando divergen, la diferencia es una señal diagnóstica que debe investigarse, no promediarse automáticamente.
+
+## Capítulos relacionados
+
+Anterior: [Bootstrap Chain Ladder](09-bootstrap-chain-ladder.md).  
+Siguiente: [Bornhuetter-Ferguson](../part-02-classical-reserving/11-bornhuetter-ferguson.md).

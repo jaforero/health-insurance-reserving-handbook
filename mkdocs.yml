@@ -96,10 +96,11 @@ nav:
     - 12 · Método Benktander: part-02-classical-reserving/12-benktander-method.md
     - 13 · Método Cape Cod: part-02-classical-reserving/13-cape-cod-method.md
     - 14 · Comparación de métodos clásicos: part-02-classical-reserving/14-classical-reserving-methods-comparison.md
-  - Parte III · Reserving estocástico:
-      - 08 · Mack Chain Ladder: part-03-stochastic-reserving/08-mack-chain-ladder.md
-      - 09 · Bootstrap Chain Ladder: part-03-stochastic-reserving/09-bootstrap-chain-ladder.md
-      - 10 · Comparing Mack vs. Bootstrap: part-03-stochastic-reserving/10-comparing-mack-vs-bootstrap.md
+- Parte 3 · Reserving estocástico:
+    - 08 · Chain Ladder de Mack: part-03-stochastic-reserving/08-mack-chain-ladder.md
+    - 09 · Bootstrap Chain Ladder: part-03-stochastic-reserving/09-bootstrap-chain-ladder.md
+    - 10 · Comparación entre Mack y Bootstrap: part-03-stochastic-reserving/10-comparing-mack-vs-bootstrap.md
+
   - Parte IV · Modelos estadísticos:
       - 15 · GLM for Loss Reserving: part-04-statistical-models/15-glm-for-loss-reserving.md
       - 16 · GAM for Loss Reserving: part-04-statistical-models/16-gam-for-loss-reserving.md
