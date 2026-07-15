@@ -1,12 +1,12 @@
 ---
 title: "Roadmap del Health Insurance Reserving Handbook"
-description: "Estado vigente, próximos hitos, criterios de salida y riesgos para desarrollar el handbook desde v0.2.0 hacia v1.0.0."
+description: "Estado vigente, próximos hitos, criterios de salida y riesgos para desarrollar el handbook desde v0.2.1 hacia v1.0.0."
 chapter: "roadmap"
 part: "repository"
 language: "es"
 status: "draft"
-version: "0.2.0"
-last_updated: "2026-07-14"
+version: "0.2.1"
+last_updated: "2026-07-15"
 ---
 
 # Roadmap del Health Insurance Reserving Handbook
@@ -27,14 +27,14 @@ El objetivo es consolidar una referencia profesional, abierta y reproducible sob
 
 ## 2. Línea base actual
 
-La versión pública más reciente es `v0.2.0`, consolidación integral en español del handbook y sus demos reproducibles.
+La versión pública más reciente es `v0.2.1`, que incorpora el framework de preparación de datos, el diccionario canónico y el Demo 4.
 
 | Componente | Estado actual |
 |---|---|
 | Capítulos | 40 capítulos en español |
 | Partes | 7 partes temáticas |
-| Demos | 3 demos bilingües reproducibles |
-| Datos | Conjuntos sintéticos pagados e incurridos |
+| Demos | 4 demos reproducibles: tres bilingües y uno en español |
+| Datos | Conjuntos sintéticos y diccionario canónico de reserving |
 | Visualizaciones | Triángulos actuariales y comparaciones en SVG |
 | Publicación | MkDocs Material y GitHub Pages |
 | Calidad documental | Auditoría estructural, preflight y build estricto |
@@ -60,6 +60,10 @@ La versión pública más reciente es `v0.2.0`, consolidación integral en espa�
 - corrección del renderizado matemático en GitHub;
 - consolidación de front matter, H1 y navegación;
 - actualización editorial de portada, roadmap, changelog y citación.
+- marco de preparación de datos publicado en dos partes;
+- matriz de requisitos y elegibilidad por metodología;
+- diccionario canónico con nombres principales en español;
+- Demo 4 de preparación y evaluación de datasets.
 
 Estas mejoras constituyen la línea base pública para los desarrollos posteriores.
 
@@ -78,7 +82,7 @@ Estas mejoras constituyen la línea base pública para los desarrollos posterior
 
 **Criterio de salida**
 
-- cero problemas en los 51 documentos bajo `docs/`;
+- cero problemas en los 55 documentos bajo `docs/`;
 - resultado reproducible localmente y en CI.
 
 ### 4.2 Pruebas para demos reproducibles
@@ -107,7 +111,7 @@ Incorpora 60 meses de origen, edades de desarrollo 0–24, controles de suficien
 - curva de maduración, triángulo tradicional y diagnóstico reproducibles;
 - documentación explícita de cuándo ampliar el horizonte.
 
-### 4.4 Demo 4 · Comparación de métodos clásicos
+### 4.4 Demo 5 · Comparación de métodos clásicos
 
 Comparará:
 
@@ -191,7 +195,7 @@ La existencia de un archivo o su inclusión en la navegación solo indica dispon
 2. auditoría matemática automatizada;
 3. pruebas de reproducibilidad de los demos;
 4. Demo 3 de triángulos mensuales;
-5. Demo 4 de métodos clásicos;
+5. Demo 5 de métodos clásicos;
 6. cierre y publicación de v0.3.0;
 7. Demo 5 de incertidumbre para v0.4.0.
 

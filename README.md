@@ -3,7 +3,7 @@
 > Manual técnico, reproducible y orientado a la práctica sobre IBNR, reservas actuariales y desarrollo de reclamaciones en seguros de salud, con aplicaciones al sistema colombiano.
 
 [![Documentation](https://github.com/jaforero/health-insurance-reserving-handbook/actions/workflows/docs.yml/badge.svg)](https://github.com/jaforero/health-insurance-reserving-handbook/actions/workflows/docs.yml)
-[![Release](https://img.shields.io/badge/release-v0.2.0-2f855a)](https://github.com/jaforero/health-insurance-reserving-handbook/releases/tag/v0.2.0)
+[![Release](https://img.shields.io/badge/release-v0.2.1-2f855a)](https://github.com/jaforero/health-insurance-reserving-handbook/releases/tag/v0.2.1)
 [![Language](https://img.shields.io/badge/contenido-español-526cfe)](#contenido)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
@@ -12,6 +12,9 @@
 - [Sitio publicado](https://jaforero.github.io/health-insurance-reserving-handbook/)
 - [Portada y rutas de aprendizaje](docs/index.md)
 - [Guía de selección de metodologías](docs/methodology-selection-guide.md)
+- [Marco de preparación de datos — Parte 1](docs/marco-preparacion-datos-metodologias-parte-1.md)
+- [Marco de preparación de datos — Parte 2](docs/marco-preparacion-datos-metodologias-parte-2.md)
+- [Matriz de preparación por método](docs/matriz-preparacion-datos-metodologias.md)
 - [Roadmap](docs/roadmap.md)
 - [Glosario](docs/glossary.md)
 - [Bibliografía y evidencia](docs/bibliography.md)
@@ -32,13 +35,13 @@ El repositorio puede utilizarse como:
 
 ## Estado actual
 
-La versión pública más reciente es **v0.2.0**, primera consolidación integral en español del handbook y sus demos reproducibles.
+La versión pública más reciente es **v0.2.1**, que incorpora el marco de preparación de datos para reserving, un diccionario canónico en español y un demo reproducible de elegibilidad metodológica.
 
 El repositorio incluye actualmente:
 
 - **40 capítulos** técnicos en español;
 - **7 partes** temáticas;
-- **3 demos prácticos bilingües**;
+- **4 demos prácticos**, tres bilingües y uno publicado inicialmente en español;
 - datos sintéticos reproducibles;
 - visualizaciones SVG de triángulos actuariales;
 - construcción y despliegue automático con MkDocs y GitHub Pages;
@@ -162,6 +165,13 @@ Construye 60 meses de origen y edades mensuales 0–24, con controles de madurez
 python scripts/generate_demo_monthly_triangles.py
 ```
 
+### Demo 4 · Preparación de datos para reserving
+
+Mapea campos operativos a un contrato canónico en español, ejecuta controles de integridad, evalúa los gates G0–G9 y determina qué metodologías están listas, limitadas, exploratorias o bloqueadas.
+
+- [Documentación en español](docs/examples/04-demo-preparacion-datos.md)
+- [Diccionario canónico](config/diccionario_datos_canonico.yml)
+
 Todos los datos de los demos son sintéticos y se generan con semillas reproducibles.
 
 ## Instalación y documentación local
@@ -193,6 +203,7 @@ El workflow de GitHub Actions ejecuta estos controles y publica el sitio desde `
 ```text
 .
 ├── docs/                         # Capítulos, portada, demos y activos
+├── config/                       # Diccionarios y configuraciones canónicas
 ├── data/                         # Datos sintéticos reproducibles
 ├── scripts/                      # Generadores y auditorías
 ├── bibliography/                 # Reportes de investigación de soporte

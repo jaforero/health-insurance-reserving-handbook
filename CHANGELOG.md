@@ -4,15 +4,24 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-07-15
+
 ### Agregado
 
+- Marco de preparación de datos para seleccionar y comparar metodologías de reserving, publicado en dos partes.
+- Taxonomía de dominios D1–D10 para alcance, fechas, importes, identificadores, historia, exposición, priors, segmentación, operación y gobierno.
+- Gates G0–G9 y estados `LISTO`, `LISTO_CON_LIMITACIONES`, `EXPLORATORIO`, `BLOQUEADO` y `NO_PERTINENTE`.
+- Diccionario canónico con 132 campos principales en español y alias opcionales en inglés.
+- Matriz de preparación, requisitos y datos faltantes por metodología.
+- Demo 4 de mapeo canónico, deduplicación y elegibilidad metodológica.
 - Demo bilingüe de triángulos mensuales pagados con 60 meses de origen y desarrollo 0–24.
-- Controles de suficiencia por factor, comparación con ultimate simulado y validaciones de reconciliación.
-- Visualizaciones SVG del triángulo tradicional, curva de maduración y observaciones por factor.
+- Controles de suficiencia por factor, comparación con ultimate simulado y visualizaciones SVG.
 
 ### Cambiado
 
-- Portada, navegación, roadmap y documento de continuidad para reflejar tres demos prácticos.
+- Navegación de MkDocs para incorporar el marco de preparación de datos, la matriz y el Demo 4.
+- Portada, README y roadmap para reflejar cuatro demos prácticos.
+- Estructura principal del repositorio para incorporar configuraciones canónicas.
 - Normalización de archivos CSV con terminaciones de línea LF.
 
 ## [0.2.0] - 2026-07-14
@@ -82,7 +91,8 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
   - plantillas de issues y pull requests;
   - workflow de GitHub Pages.
 
-[Unreleased]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.1.3...v0.2.0
 [0.1.3]: https://github.com/jaforero/health-insurance-reserving-handbook/releases/tag/v0.1.3
 [0.1.2]: https://github.com/jaforero/health-insurance-reserving-handbook/releases/tag/v0.1.2
