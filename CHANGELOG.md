@@ -23,6 +23,8 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 - Portada, README y roadmap para reflejar cuatro demos prácticos.
 - Estructura principal del repositorio para incorporar configuraciones canónicas.
 - Normalización de archivos CSV con terminaciones de línea LF.
+- Migración del sitio público a `https://actuaria.javierforero.co/`.
+- Actualización de la URL canónica, enlaces de publicación y metadata de citación.
 
 ## [0.2.0] - 2026-07-14
 
