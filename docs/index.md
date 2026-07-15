@@ -9,6 +9,8 @@ version: "0.2.2"
 last_updated: "2026-07-15"
 ---
 
+<div class="home-hero" markdown>
+
 # Health Insurance Reserving Handbook
 
 Manual técnico y reproducible sobre IBNR, reservas actuariales y desarrollo de reclamaciones en seguros de salud, con aplicaciones al sistema colombiano.
@@ -16,6 +18,15 @@ Manual técnico y reproducible sobre IBNR, reservas actuariales y desarrollo de 
 [:material-book-open-page-variant: Comenzar por los fundamentos](part-01-foundations/01-ibnr-and-reserving.md){ .md-button .md-button--primary }
 [:material-chart-box: Explorar los demos](examples/01-demo-triangulos-simulados-salud.md){ .md-button }
 [:material-source-repository: Ver el repositorio](https://github.com/jaforero/health-insurance-reserving-handbook){ .md-button }
+
+<div class="home-stats">
+  <div class="home-stat"><strong>40</strong>capítulos técnicos</div>
+  <div class="home-stat"><strong>7</strong>partes temáticas</div>
+  <div class="home-stat"><strong>4</strong>demos reproducibles</div>
+  <div class="home-stat"><strong>132</strong>campos canónicos</div>
+</div>
+
+</div>
 
 ## Estado del handbook
 
