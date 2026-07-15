@@ -2,7 +2,7 @@
 title: Practical demo of simulated health claims triangles
 description: Reproducible Python example to build paid triangles, age-to-age factors, and a Chain Ladder IBNR estimate with simulated data.
 status: draft
-version: "0.1.2"
+version: "0.1.3"
 chapter: "example-01-en"
 part: "examples"
 language: "en"
@@ -24,7 +24,8 @@ The script generates:
 - paid cumulative triangle;
 - volume-weighted age-to-age factors;
 - ultimate and IBNR estimates by origin year;
-- execution summary.
+- execution summary;
+- SVG visualization of the traditional actuarial triangle.
 
 The data are synthetic and do not represent real experience from any insurer, EPS, provider, benefit administrator, or specific portfolio.
 
@@ -34,6 +35,7 @@ From the repository root:
 
 ```bash
 python scripts/generate_demo_triangles.py
+python scripts/generate_demo_triangle_visuals.py
 ```
 
 By default, two outputs are generated:
@@ -64,7 +66,30 @@ data/demo_triangles/paid_cumulative_triangle.csv
 data/demo_triangles/age_to_age_factors.csv
 data/demo_triangles/chain_ladder_results.csv
 data/demo_triangles/run_summary.txt
+data/demo_triangles/paid_cumulative_triangle_actuarial_format.md
+data/demo_triangles/paid_incremental_triangle_actuarial_format.md
+docs/assets/demo_triangles/paid_cumulative_triangle.svg
+docs/assets/demo_triangles/paid_incremental_triangle.svg
 ```
+
+## Traditional actuarial triangle visualization
+
+In actuarial reserving, the most recognizable format is the triangle with origin years in rows and development ages in columns. Observed cells form a diagonal: older years have more observed development ages and recent years are less mature.
+
+The demo generates this view for the cumulative paid triangle:
+
+![Paid cumulative triangle in actuarial format](../assets/demo_triangles/paid_cumulative_triangle.svg)
+
+It also generates the incremental version:
+
+![Paid incremental triangle in actuarial format](../assets/demo_triangles/paid_incremental_triangle.svg)
+
+The practical reading is direct:
+
+- blue cells are available historical observations;
+- the green diagonal marks the latest available observation for each origin year;
+- gray cells represent unobserved future periods;
+- IBNR exists because the gray area must be estimated using development patterns.
 
 ## Actuarial logic
 
@@ -132,4 +157,3 @@ This demo is intentionally simple:
 - it does not explicitly adjust for mix, contract, network, or regulatory changes.
 
 These extensions remain open for future demos.
-

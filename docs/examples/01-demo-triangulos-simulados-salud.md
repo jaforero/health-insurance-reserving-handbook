@@ -2,7 +2,7 @@
 title: Demo práctico de triángulos simulados de reclamaciones de salud
 description: Ejemplo reproducible en Python para construir triángulos pagados, factores edad-a-edad y una estimación Chain Ladder de IBNR con datos simulados.
 status: draft
-version: "0.1.2"
+version: "0.1.3"
 chapter: "example-01-es"
 part: "examples"
 language: "es"
@@ -24,7 +24,8 @@ El script genera:
 - triángulo pagado acumulado;
 - factores edad-a-edad ponderados por volumen;
 - estimación de ultimate e IBNR por año de origen;
-- resumen agregado de ejecución.
+- resumen agregado de ejecución;
+- visualización SVG del triángulo actuarial tradicional.
 
 Los datos son sintéticos. No representan experiencia real de una EPS, aseguradora, IPS, administrador de beneficios ni portafolio específico.
 
@@ -34,6 +35,7 @@ Desde la raíz del repositorio:
 
 ```bash
 python scripts/generate_demo_triangles.py
+python scripts/generate_demo_triangle_visuals.py
 ```
 
 Por defecto se generan dos salidas:
@@ -64,7 +66,30 @@ data/demo_triangulos/triangulo_pagado_acumulado.csv
 data/demo_triangulos/factores_edad_a_edad.csv
 data/demo_triangulos/resultados_chain_ladder.csv
 data/demo_triangulos/resumen_ejecucion.txt
+data/demo_triangulos/triangulo_pagado_acumulado_formato_actuarial.md
+data/demo_triangulos/triangulo_pagado_incremental_formato_actuarial.md
+docs/assets/demo_triangulos/triangulo_pagado_acumulado.svg
+docs/assets/demo_triangulos/triangulo_pagado_incremental.svg
 ```
+
+## Visualización tradicional del triángulo
+
+En reserving actuarial, el formato más reconocible es el triángulo con años de origen en filas y edades de desarrollo en columnas. Las celdas observadas forman una diagonal: los años antiguos tienen más edades observadas y los años recientes tienen menos madurez.
+
+El demo genera esta vista para el triángulo pagado acumulado:
+
+![Triángulo pagado acumulado en formato actuarial](../assets/demo_triangulos/triangulo_pagado_acumulado.svg)
+
+También genera la versión incremental:
+
+![Triángulo pagado incremental en formato actuarial](../assets/demo_triangulos/triangulo_pagado_incremental.svg)
+
+La lectura práctica es directa:
+
+- las celdas azules son observaciones históricas disponibles;
+- la diagonal verde marca la última observación disponible para cada año de origen;
+- las celdas grises representan periodos futuros no observados;
+- el IBNR surge precisamente porque la zona gris debe estimarse con patrones de desarrollo.
 
 ## Lógica actuarial implementada
 
@@ -142,4 +167,3 @@ El siguiente paso práctico natural es crear un segundo demo con:
 - sensibilidad por selección de factores;
 - gráfico de runoff;
 - salida en tabla ejecutiva para comité de reservas.
-
