@@ -1,562 +1,186 @@
 ---
-title: Development Lags and Triangle Transformations
-subtitle: Mathematical Foundations of Development Time in Actuarial Reserving
-author: Health Insurance Reserving Handbook
-version: 1.0
-chapter: 03
-status: Draft
-last_updated: 2026-07-13
-part: "Parte I · Fundamentos"
+title: Lags de desarrollo y transformaciones de triángulos
+description: Explicación de rezagos de desarrollo, calendarios de observación y transformaciones necesarias para preparar triángulos actuariales consistentes.
+status: draft
+version: "0.1.5"
+chapter: "03"
+part: "part-01-foundations"
 language: "es"
+last_updated: "2026-07-14"
 ---
 
-# Development Lags and Triangle Transformations
+# Lags de desarrollo y transformaciones de triángulos
 
-> *"Development is the actuarial clock that measures how claims mature over time."*
+El desarrollo de reclamaciones no ocurre instantáneamente. Entre la fecha de origen y la observación final pueden existir múltiples rezagos: prestación del servicio, radicación, auditoría, registro, pago, ajuste y cierre. Estos rezagos determinan la forma del triángulo y condicionan la selección del método actuarial.
 
----
+Un lag de desarrollo es la distancia temporal entre el periodo de origen y el periodo en que se observa una medida. En reserving, entender los lags es tan importante como calcular factores.
 
-## Learning Objectives
+## Tipos de lag
 
-After completing this chapter, the reader should be able to:
+En salud, los principales lags incluyen:
 
-- Understand the concept of development time.
-- Calculate development lags correctly.
-- Transform claim-level data into development coordinates.
-- Understand the algebra of incremental and cumulative triangles.
-- Interpret development patterns.
-- Identify calendar effects.
-- Build transformations required by reserving models.
+- `lag de reporte`: tiempo entre servicio y radicación o registro;
+- `lag de adjudicación`: tiempo entre radicación y aceptación o liquidación;
+- `lag de pago`: tiempo entre liquidación y desembolso;
+- `lag de auditoría`: tiempo asociado a revisión médica o administrativa;
+- `lag de glosa`: tiempo hasta objeción, conciliación o reverso;
+- `lag contable`: tiempo hasta reconocimiento en estados financieros.
 
----
+Cada lag afecta una medida distinta. Un triángulo pagado está dominado por el lag de pago; un triángulo incurrido depende también de la oportunidad y suficiencia de reservas caso.
 
-## Table of Contents
+## Calendario de origen, valuación y desarrollo
 
-1. Introduction
-2. The Three Time Axes
-3. Development Lag
-4. Accident–Development–Calendar Relationship
-5. Triangle Coordinate System
-6. Incremental Representation
-7. Cumulative Representation
-8. Transformations
-9. Mathematical Properties
-10. Health Insurance Considerations
-11. Practical Examples
-12. Validation
-13. Best Practices
-14. Summary
+Un registro de reclamación puede tener varias fechas:
 
----
+| Fecha | Uso posible |
+| --- | --- |
+| Fecha de servicio | Aproxima ocurrencia del costo médico |
+| Fecha de admisión | Útil para hospitalizaciones |
+| Fecha de egreso | Útil cuando el costo se cierra al alta |
+| Fecha de radicación | Mide proceso de facturación |
+| Fecha de auditoría | Mide proceso operativo |
+| Fecha de pago | Mide flujo de caja |
+| Fecha contable | Mide reconocimiento financiero |
 
-## 1. Introduction
+La edad de desarrollo se calcula comparando una fecha de observación contra una fecha de origen. Si esas fechas no están definidas de forma estable, el triángulo pierde interpretación.
 
-Every reserving method is built upon one fundamental concept:
+## Triángulo por año calendario
 
-> Claims develop through time.
+La celda de un triángulo puede verse como una combinación de tres dimensiones:
 
-Development time is independent of calendar time.
+$$
+Año\ calendario = Año\ de\ origen + Edad\ de\ desarrollo
+$$
 
-Instead of asking
+Por ejemplo, el pago para origen 2023 y desarrollo 1 ocurre en año calendario 2024 si la medición es anual.
 
-> "How much was paid in March?"
+Esta identidad permite revisar efectos calendario. Un cambio regulatorio, una pandemia, un ajuste contable o un cambio de sistema puede afectar muchas celdas alineadas por año calendario, no por año de origen.
 
-the actuary asks
+## Transformaciones comunes
 
-> "How much was paid during the third month of development?"
+Antes de aplicar métodos, es frecuente transformar triángulos.
 
-This change of perspective is what makes actuarial reserving possible.
+### De incremental a acumulado
 
----
+Si \(X_{i,j}\) es el valor incremental del origen \(i\) en desarrollo \(j\), el acumulado es:
 
-## 2. The Three Time Axes
+$$
+C_{i,j} = \sum_{k=0}^{j} X_{i,k}
+$$
 
-Every claim exists simultaneously in three dimensions.
+Esta transformación se usa porque muchos métodos de desarrollo trabajan sobre acumulados.
 
-```
-                    Calendar Time
+### De acumulado a incremental
 
-                         ▲
-                         │
-                         │
-Development ◄────────────┼────────────► Accident Time
-```
+Si \(C_{i,j}\) es acumulado, el incremental es:
 
-The three dimensions are
+$$
+X_{i,j} = C_{i,j} - C_{i,j-1}
+$$
 
-- Accident Period
-- Development Period
-- Calendar Period
+con:
 
-These dimensions satisfy
+$$
+X_{i,0} = C_{i,0}
+$$
 
-```
-Calendar = Accident + Development
-```
+El incremental ayuda a revisar calendarios, estacionalidad, pagos negativos y cambios operativos.
 
-This identity is one of the most important equations in reserving.
+### Normalización por exposición
 
----
+En salud, el volumen cambia por crecimiento de afiliados, mezcla de riesgo o cambios de cobertura. Por eso puede ser útil analizar tasas:
 
-## 3. Accident Period
+$$
+Costo\ por\ exposición_{i,j} =
+\frac{Monto_{i,j}}{Meses\ miembro_i}
+$$
 
-The accident period represents when the insured event occurred.
+La normalización no reemplaza el triángulo monetario, pero ayuda a distinguir crecimiento real de crecimiento por volumen.
 
-Examples
+### Ajuste por tendencia
 
-- Accident Month
-- Accident Quarter
-- Accident Year
+Si hay inflación médica o tendencia de severidad, los periodos antiguos pueden no ser comparables con los recientes. Un ajuste simple puede llevar montos a nivel de costo actual:
 
-Notation
+$$
+Monto\ ajustado_{i,j} = Monto_{i,j} \times (1 + t)^{n}
+$$
 
-```
-i
-```
+donde \(t\) es una tasa de tendencia y \(n\) es el número de periodos de actualización.
 
----
+Este ajuste debe usarse con cuidado: si se aplica tendencia y luego se seleccionan factores sin considerar el ajuste, se puede duplicar o distorsionar el efecto.
 
-## 4. Development Period
+## Diagonales y cortes de información
 
-Development measures elapsed time since the accident.
+La diagonal observada depende de la fecha de corte. Si la fecha de valuación cambia, cambia la diagonal. Un error común es comparar triángulos de distintas valuaciones sin controlar el corte.
 
-Notation
+Para una valuación anual a 2025:
 
-```
-j
-```
+| Año origen | Última edad observada |
+| --- | ---: |
+| 2021 | 4 |
+| 2022 | 3 |
+| 2023 | 2 |
+| 2024 | 1 |
+| 2025 | 0 |
 
-Typical values
+Los periodos recientes tienen menor madurez. Por eso su estimación depende más del patrón de desarrollo seleccionado.
 
-| Development | Meaning |
-|-------------|----------|
-|0|same month|
-|1|one month later|
-|2|two months later|
+## Efectos calendario
 
----
+Un efecto calendario ocurre cuando varios años de origen se ven afectados en el mismo año de observación. Ejemplos:
 
-## 5. Calendar Period
+- cambio de sistema de pagos;
+- nueva política de auditoría;
+- reforma regulatoria;
+- choque de utilización;
+- acumulación o limpieza de cuentas pendientes;
+- migración de red;
+- cambios en codificación o facturación.
 
-Calendar time is the actual reporting period.
+En el triángulo, estos efectos aparecen en diagonales o bandas calendario. Si se ignoran, pueden contaminar los factores de desarrollo.
 
-Notation
+## Diagnóstico visual
 
-```
-k
-```
+Antes de modelar, conviene revisar:
 
-The relationship is
+- incrementales por año calendario;
+- acumulados por año de origen;
+- factores implícitos por edad;
+- heatmaps de celdas atípicas;
+- comparación pagado vs incurrido;
+- desarrollo por segmento.
 
-```
-k=i+j
-```
+El objetivo no es producir gráficos decorativos. El objetivo es detectar si el triángulo cumple los supuestos básicos del método.
 
-This creates the familiar triangle.
+## Ejemplo conceptual
 
----
+Si un cambio operativo acelera pagos en 2024, las celdas observadas durante 2024 pueden verse más altas. Si esas celdas se usan sin ajuste, los factores pueden sugerir falsamente que el desarrollo futuro será más rápido para todos los años.
 
-## Example
+El actuario debe decidir si:
 
-| Accident | Development | Calendar |
-|-----------|-------------|-----------|
-|Jan|0|Jan|
-|Jan|1|Feb|
-|Jan|2|Mar|
-|Feb|0|Feb|
-|Feb|1|Mar|
+- excluye celdas atípicas;
+- ajusta los montos;
+- segmenta el periodo;
+- selecciona factores manualmente;
+- usa un método alternativo.
 
-Notice
+La transformación correcta depende de la causa del patrón observado.
 
-Calendar = Accident + Development
+## Buenas prácticas
 
-always.
+Una transformación debe documentarse con:
 
----
+- motivo;
+- fórmula;
+- datos afectados;
+- impacto esperado;
+- sensibilidad del resultado;
+- versión reproducible del código o cálculo.
 
-## 6. Development Lag
+No debe transformarse un triángulo solo para que “se vea mejor”. La transformación debe mejorar la comparabilidad o la interpretación actuarial.
 
-Development lag is computed as
+## Capítulos relacionados
 
-```
-Lag = Payment Date − Accident Date
-```
+Anterior: [Construcción de triángulos](02-triangle-construction.md).  
+Siguiente: [Triángulos incrementales vs. acumulados](04-incremental-vs-cumulative-triangles.md).
 
-expressed in months.
-
-Example
-
-| Accident | Payment | Lag |
-|-----------|----------|-----|
-|Jan|Jan|0|
-|Jan|Feb|1|
-|Jan|Mar|2|
-|Jan|Apr|3|
-
----
-
-## Health Insurance Example
-
-Suppose
-
-Service Date
-
-2025-01-12
-
-Payment Date
-
-2025-04-18
-
-Development
-
-3 months
-
----
-
-## 7. Continuous Development
-
-Development is often represented discretely.
-
-However,
-
-continuous development also exists.
-
-```
-Development =
-
-(Payment Date − Accident Date)
-
-/
-
-365.25
-```
-
-Useful for
-
-- Survival models
-- GLM
-- Bayesian reserving
-
----
-
-## 8. Triangle Coordinates
-
-Each payment becomes
-
-```
-(i,j)
-```
-
-Example
-
-| Claim | Accident | Dev |
-|-------|----------|-----|
-|1|Jan|0|
-|2|Jan|1|
-|3|Jan|2|
-|4|Feb|0|
-
----
-
-The triangle is therefore
-
-```
-T={(i,j)}
-```
-
-subject to
-
-```
-i+j≤n
-```
-
-where
-
-n
-
-is the valuation period.
-
----
-
-## 9. Incremental Representation
-
-Define
-
-```
-X(i,j)
-```
-
-as incremental payment.
-
-Properties
-
-```
-X(i,j)≥0
-```
-
-Each payment belongs to exactly one cell.
-
----
-
-## Example
-
-| Accident |0|1|2|
-|-----------|--|--|--|
-|Jan|100|40|10|
-|Feb|90|20| |
-
----
-
-## 10. Cumulative Representation
-
-Define
-
-```
-C(i,j)
-```
-
-as
-
-```
-C(i,j)=ΣX(i,k)
-```
-
-where
-
-k≤j
-
----
-
-Example
-
-Incremental
-
-| Accident |0|1|2|
-|-----------|--|--|--|
-|Jan|100|40|10|
-
-Cumulative
-
-| Accident |0|1|2|
-|-----------|--|--|--|
-|Jan|100|140|150|
-
----
-
-## 11. Inverse Transformation
-
-Incremental values are recovered as
-
-```
-X(i,j)
-
-=
-
-C(i,j)
-
-−
-
-C(i,j−1)
-```
-
-This transformation is exact.
-
-No information is lost.
-
----
-
-## 12. Triangle Algebra
-
-Incremental
-
-↓
-
-Cumulative
-
-↓
-
-Development Factors
-
-↓
-
-CDF
-
-↓
-
-Ultimate
-
-↓
-
-IBNR
-
-Each reserving method builds upon this sequence.
-
----
-
-## 13. Calendar Effects
-
-Suppose
-
-Inflation increases
-
-during 2025.
-
-Claims paid in
-
-2025
-
-will appear larger
-
-across several accident years.
-
-This is
-
-not
-
-an accident effect.
-
-It is
-
-a calendar effect.
-
-Understanding this distinction is essential for modern reserving.
-
----
-
-## 14. Health Insurance Considerations
-
-Development may be affected by
-
-- provider billing delays
-- coordination of benefits
-- retro eligibility
-- encounter claims
-- pharmacy reversals
-- payment corrections
-- claim reopening
-
-Development is therefore operational as well as actuarial.
-
----
-
-## 15. Practical Example
-
-Claim-Level Data
-
-|Claim|Accident|Payment|Paid|
-|------|---------|-------|----|
-|1|Jan|Jan|100|
-|2|Jan|Feb|40|
-|3|Jan|Apr|20|
-|4|Feb|Feb|80|
-
-Development
-
-|Claim|Lag|
-|------|---|
-|1|0|
-|2|1|
-|3|3|
-|4|0|
-
-Incremental Triangle
-
-|Accident|0|1|2|3|
-|---------|--|--|--|--|
-|Jan|100|40|0|20|
-|Feb|80|0|0| |
-
-Cumulative Triangle
-
-|Accident|0|1|2|3|
-|---------|--|--|--|--|
-|Jan|100|140|140|160|
-|Feb|80|80|80| |
-
----
-
-## 16. Validation Rules
-
-A valid triangle satisfies
-
-✓ non-negative lags
-
-✓ continuous development
-
-✓ ordered accident periods
-
-✓ cumulative monotonicity
-
-✓ balanced totals
-
-✓ no duplicated payments
-
-✓ no future development
-
----
-
-## 17. Common Errors
-
-Using report date instead of accident date.
-
-Mixing service and accident dates.
-
-Negative development.
-
-Incomplete calendar periods.
-
-Missing payment months.
-
-Incorrect cumulative calculations.
-
----
-
-## 18. Best Practices
-
-Always retain both
-
-- incremental
-- cumulative
-
-triangles.
-
-Incremental preserves information.
-
-Cumulative simplifies modeling.
-
-Both are required.
-
----
-
-## 19. Key Takeaways
-
-Development is an independent actuarial time scale.
-
-Every claim is represented by
-
-(Accident, Development).
-
-Calendar time emerges naturally as
-
-Accident + Development.
-
-Incremental and cumulative triangles contain identical information expressed differently.
-
-Every reserving methodology starts from these transformations.
-
----
-
-## References
-
-- Mack (1993)
-- England & Verrall (2002)
-- Wüthrich & Merz (2008)
-- Friedland – Estimating Unpaid Claims
-- ASOP 23
-- ASOP 56
-
----
-
-## Next Chapter
-
-➡️ **04-incremental-vs-cumulative-triangles.md**

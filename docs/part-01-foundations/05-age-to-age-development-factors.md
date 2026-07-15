@@ -1,652 +1,231 @@
 ---
-title: "Age-to-Age Development Factors"
-part: "Parte I · Fundamentos"
-chapter: 5
+title: Factores edad-a-edad
+description: Introducción a los factores de desarrollo edad-a-edad, su cálculo, selección, diagnóstico y uso en métodos Chain Ladder para reservas de salud.
+status: draft
+version: "0.1.5"
+chapter: "05"
+part: "part-01-foundations"
 language: "es"
-status: "draft"
 last_updated: "2026-07-14"
 ---
 
-05-age-to-age-development-factors.md
----
-title: Age-to-Age Development Factors
-subtitle: Theory, Estimation, Selection and Interpretation of Loss Development Factors
-author: Health Insurance Reserving Handbook
-version: 1.0
-chapter: 05
-status: Draft
-last_updated: 2026-07-13
----
+# Factores edad-a-edad
 
-# Age-to-Age Development Factors
+Los factores edad-a-edad miden cómo crece una medida acumulada entre una edad de desarrollo y la siguiente. Son la base de muchos métodos determinísticos de reserving, especialmente Chain Ladder.
 
-> *"Loss Development Factors are empirical estimators of how claims mature over time."*
+Un factor edad-a-edad responde una pregunta concreta: dado lo observado a cierta edad, ¿cuánto esperamos observar en la edad siguiente?
 
----
+## Definición
 
-## Learning Objectives
-
-After completing this chapter, the reader should be able to:
-
-- Understand why development factors exist.
-- Compute age-to-age factors correctly.
-- Derive volume-weighted estimators.
-- Compare arithmetic, geometric and weighted averages.
-- Detect unstable factors.
-- Select appropriate LDFs.
-- Understand the relationship between LDFs and Ultimate Losses.
-
----
-
-## Table of Contents
-
-1. Introduction
-2. Motivation
-3. Definition
-4. Individual Link Ratios
-5. Aggregate Age-to-Age Factors
-6. Estimation Methods
-7. Selection of Factors
-8. Tail Factors
-9. Health Insurance Applications
-10. Practical Example
-11. Validation
-12. Best Practices
-13. Summary
-
----
-
-## 1. Introduction
-
-Claims rarely settle immediately.
-
-Instead,
-
-they develop progressively through time.
-
-If we know how historical claims have developed,
-
-we can estimate
-
-how current claims are expected to develop.
-
-Loss Development Factors (LDFs)
-
-quantify that evolution.
-
----
-
-## 2. Motivation
-
-Suppose an accident year has accumulated
-
-\$10 million
-
-after twelve months.
-
-Historical experience suggests
-
-that after twenty-four months
-
-similar accident years reached
-
-\$12 million.
-
-Development factor
-
-```
-12 / 10 = 1.20
-```
-
-Interpretation
-
-Current claims are expected to grow
-
-20%
-
-before reaching ultimate.
-
----
-
-## 3. Definition
-
-For cumulative triangles,
-
-the individual age-to-age factor is
+Sea \(C_{i,j}\) el valor acumulado para el periodo de origen \(i\) a edad de desarrollo \(j\). El factor observado entre \(j\) y \(j+1\) es:
 
 $$
-f_{ij}
-
-=
-
-\frac{C_{i,j+1}}
-
-{C_{ij}}
+f_{i,j} = \frac{C_{i,j+1}}{C_{i,j}}
 $$
 
-where
+Si \(C_{i,j}\) es cero o no está observado, el factor no debe calcularse sin análisis adicional.
 
-- \(C_{ij}\) = cumulative loss
-- \(i\) = accident period
-- \(j\) = development period
+Ejemplo:
 
----
+| Año origen | dev_0 | dev_1 | Factor 0-1 |
+| --- | ---: | ---: | ---: |
+| 2022 | 100 | 150 | 1.500 |
+| 2023 | 120 | 168 | 1.400 |
+| 2024 | 130 |  |  |
 
-## Example
+El año 2024 no tiene factor 0-1 porque falta la observación en `dev_1`.
 
-| Accident |12|24|
-|-----------|---|---|
-|2022|100|120|
+## Factor ponderado por volumen
 
-Then
-
-$$
-f
-
-=
-
-120/100
-
-=
-
-1.20
-$$
-
----
-
-## Interpretation
-
-A factor of
-
-```
-1.20
-```
-
-means
-
-Claims have increased
-
-20%
-
-between development
-
-12
-
-and
-
-24
-
-months.
-
----
-
-## 4. Individual Link Ratios
-
-Example
-
-| Accident |12|24|Factor|
-|-----------|---|---|------|
-|2020|100|120|1.20|
-|2021|200|250|1.25|
-|2022|300|345|1.15|
-
-Each row produces
-
-one observation.
-
----
-
-## 5. Aggregate Development Factor
-
-Multiple observations
-
-must be combined.
-
-This produces the selected LDF.
-
-Several estimators exist.
-
----
-
-## 6. Arithmetic Mean
-
-The simplest estimator is
+Una forma común de seleccionar el factor para una edad es usar el promedio ponderado por volumen:
 
 $$
-\hat f
-
-=
-
-\frac1n
-
-\sum f_i
+f_j =
+\frac{\sum_i C_{i,j+1}}{\sum_i C_{i,j}}
 $$
 
-Advantages
+Este enfoque da más peso a años de origen con mayor volumen. Es frecuente en Chain Ladder porque evita que años pequeños dominen la selección.
 
-Simple.
+## Promedio simple
 
-Disadvantages
-
-Sensitive to outliers.
-
----
-
-Example
-
-Factors
-
-```
-1.20
-
-1.25
-
-1.15
-```
-
-Arithmetic Mean
-
-```
-1.20
-```
-
----
-
-## 7. Volume-Weighted Average
-
-This is the standard actuarial estimator.
+Otra opción es el promedio simple de factores individuales:
 
 $$
-\hat f
-
-=
-
-\frac
-
-{\sum C_{i,j+1}}
-
-{\sum C_{ij}}
+f_j =
+\frac{1}{n}\sum_i f_{i,j}
 $$
 
-This estimator gives greater weight
+Este enfoque da el mismo peso a cada año de origen. Puede ser útil cuando los años tienen volúmenes comparables, pero puede ser inestable si hay años pequeños con factores extremos.
 
-to larger accident years.
+## Mediana y selecciones robustas
 
----
-
-Example
-
-| Accident |12|24|
-|-----------|---|---|
-|2020|100|120|
-|2021|200|250|
-|2022|300|345|
-
-Totals
-
-```
-715 / 600
-
-=
-
-1.1917
-```
-
----
-
-## Why Volume Weighting?
-
-Large accident years
-
-contain more information.
-
-Therefore,
-
-they receive greater statistical weight.
-
-This is one reason why
-
-volume-weighted averages dominate actuarial practice.
-
----
-
-## 8. Geometric Mean
-
-Sometimes
-
-growth is multiplicative.
-
-Estimator
+La mediana reduce sensibilidad a valores atípicos:
 
 $$
-\hat f
-
-=
-
-\left(
-
-\prod f_i
-
-\right)^{1/n}
+f_j = Mediana(f_{i,j})
 $$
 
-Useful
+También pueden usarse promedios recortados, exclusión de años atípicos o selecciones por juicio actuarial. La selección debe documentarse, especialmente si se excluyen observaciones.
 
-when factors vary substantially.
+## Factor acumulado hacia ultimate
 
----
+Los factores edad-a-edad se combinan para proyectar desde una edad observada hasta ultimate.
 
-## 9. Median
-
-Robust against outliers.
-
-Useful
-
-for unstable portfolios.
-
----
-
-## 10. Trimmed Mean
-
-Extreme observations
-
-are removed.
-
-Example
-
-```
-1.10
-
-1.15
-
-1.18
-
-1.20
-
-2.30
-```
-
-Remove
-
-2.30
-
-Average remaining values.
-
----
-
-## 11. Selecting Development Factors
-
-Actuarial judgment
-
-is required.
-
-Selection considers
-
-- credibility
-- volatility
-- portfolio changes
-- inflation
-- operational changes
-- COVID
-- provider contracts
-
-No automatic rule exists.
-
----
-
-## 12. Tail Factors
-
-Observed development eventually ends.
-
-However,
-
-claims may continue developing.
-
-Tail factors estimate
-
-development beyond the observed triangle.
-
-Example
-
-```
-120→Ultimate
-
-1.03
-```
-
-Ultimate
-
-```
-120 × 1.03
-
-=
-
-123.6
-```
-
----
-
-## 13. Health Insurance Considerations
-
-Development factors are influenced by
-
-- payment cycles
-- provider contracts
-- retroactive eligibility
-- pharmacy reversals
-- payment corrections
-- encounter processing
-- coordination of benefits
-
-Health Insurance
-
-often exhibits
-
-shorter tails
-
-than Property & Casualty.
-
----
-
-## 14. Practical Example
-
-Cumulative Triangle
-
-| Accident |12|24|36|
-|-----------|---|---|---|
-|2020|100|120|125|
-|2021|200|250|260|
-|2022|300|345| |
-
-Individual Factors
-
-12→24
-
-```
-1.20
-
-1.25
-
-1.15
-```
-
-24→36
-
-```
-1.0417
-
-1.0400
-```
-
-Selected
-
-12→24
-
-Volume Weighted
-
-```
-715
-
-/
-
-600
-
-=
-
-1.1917
-```
-
-Selected
-
-24→36
-
-```
-385
-
-/
-
-370
-
-=
-
-1.0405
-```
-
----
-
-## 15. Cumulative Development Factors (CDF)
-
-Age-to-age factors
-
-are multiplied.
+Si un año de origen tiene última edad observada \(k\), el factor acumulado hacia ultimate es:
 
 $$
-CDF_j
-
-=
-
-\prod_{k=j}^{n}
-
-f_k
+CDF_k = \prod_{j=k}^{J-1} f_j
 $$
 
-Example
+La estimación de ultimate es:
 
+$$
+Ultimate_i = C_{i,k} \times CDF_k
+$$
+
+Y el IBNR sobre esa base es:
+
+$$
+IBNR_i = Ultimate_i - C_{i,k}
+$$
+
+## Ejemplo numérico
+
+Supongamos estos factores seleccionados:
+
+| Edad | Factor |
+| --- | ---: |
+| 0-1 | 1.50 |
+| 1-2 | 1.20 |
+| 2-3 | 1.05 |
+
+Si un año de origen tiene observado 100 en edad 1, su CDF hacia ultimate es:
+
+$$
+CDF_1 = 1.20 \times 1.05 = 1.26
+$$
+
+Entonces:
+
+$$
+Ultimate = 100 \times 1.26 = 126
+$$
+
+$$
+IBNR = 126 - 100 = 26
+$$
+
+## Diagnóstico de factores
+
+Antes de seleccionar factores, conviene revisar:
+
+- tendencia por año de origen;
+- volatilidad por edad;
+- factores menores que 1;
+- años de origen con volumen pequeño;
+- celdas afectadas por cambios calendario;
+- diferencias entre pagado e incurrido;
+- cambios de mezcla de riesgo;
+- impactos de alto costo.
+
+Un factor no es solo un número. Es una síntesis de comportamiento histórico bajo supuestos de estabilidad.
+
+## Factores menores que 1
+
+Un factor menor que 1 indica que el acumulado disminuyó entre edades. Esto puede ocurrir por:
+
+- recuperaciones;
+- reversos;
+- glosas;
+- reclasificaciones;
+- ajustes contables;
+- datos netos de recuperaciones.
+
+No debe descartarse automáticamente, pero debe entenderse. En muchos contextos de pagos brutos, un acumulado decreciente puede indicar problema de datos o definición.
+
+## Selección por base pagada e incurrida
+
+Los factores sobre base pagada e incurrida suelen ser diferentes.
+
+La base pagada puede tener factores más altos en edades tempranas porque los pagos emergen lentamente. La base incurrida puede tener factores más cercanos a 1 porque la reserva caso anticipa parte del costo.
+
+Esto no significa que la base incurrida siempre sea superior. Si la reserva caso es inconsistente, sus factores pueden ser engañosos.
+
+## Sensibilidad
+
+Pequeños cambios en factores tempranos pueden producir impactos grandes en años inmaduros. Por eso la selección debe evaluarse con sensibilidad.
+
+Una práctica útil es comparar:
+
+- promedio ponderado por volumen;
+- promedio simple;
+- últimos tres años;
+- exclusión de años atípicos;
+- selección manual documentada.
+
+La diferencia entre escenarios muestra cuánto juicio hay en la estimación.
+
+## Relación con Chain Ladder
+
+Chain Ladder asume que el patrón histórico de desarrollo es razonablemente aplicable a los años de origen inmaduros. Los factores edad-a-edad son la forma práctica de trasladar ese patrón.
+
+El método es potente por su simplicidad, pero sus supuestos deben revisarse:
+
+- estabilidad de mezcla;
+- estabilidad operativa;
+- datos completos;
+- exposición comparable;
+- ausencia de efectos calendario dominantes;
+- desarrollo suficientemente maduro en años históricos.
+
+Si estos supuestos no se sostienen, puede ser necesario ajustar los datos, segmentar o usar métodos alternativos.
+
+## Ejemplo mínimo en Python
+
+Una forma directa de calcular factores ponderados por volumen es:
+
+```python
+factors = {}
+
+for age in development_ages[:-1]:
+    current = cumulative_triangle[age]
+    next_age = cumulative_triangle[age + 1]
+
+    valid = current.notna() & next_age.notna() & (current > 0)
+
+    factors[age] = next_age[valid].sum() / current[valid].sum()
 ```
-12→24
 
-1.1917
+El cálculo debe ir acompañado de validaciones. No basta con producir el diccionario de factores.
 
-24→36
+## Buenas prácticas
 
-1.0405
-```
+Para documentar una selección de factores:
 
-CDF
+- indicar base usada: pagada, incurrida u otra;
+- describir periodo histórico;
+- mostrar factores observados;
+- explicar exclusiones;
+- justificar selección final;
+- cuantificar sensibilidad;
+- reconciliar impacto en ultimate e IBNR;
+- registrar limitaciones.
 
-```
-1.2399
-```
+Una selección de factores defendible debe poder ser revisada por otra persona y reproducida con los mismos datos.
 
-Interpretation
+## Cierre de la Parte 1
 
-Claims currently at
+Con estos conceptos, la base de reserving queda definida:
 
-12 months
+- qué es IBNR;
+- cómo se construye un triángulo;
+- qué representan los lags;
+- cómo se relacionan incrementales y acumulados;
+- cómo se calculan factores de desarrollo.
 
-are expected to increase
+Los siguientes capítulos usan esta base para introducir métodos clásicos, estocásticos, estadísticos y modelos aplicados a salud.
 
-23.99%
+## Capítulo relacionado
 
-before ultimate.
+Anterior: [Triángulos incrementales vs. acumulados](04-incremental-vs-cumulative-triangles.md).
 
----
-
-## 16. Validation
-
-Review
-
-✓ negative factors
-
-✓ factors below one
-
-✓ calendar effects
-
-✓ structural changes
-
-✓ mergers
-
-✓ operational changes
-
-✓ claim reopening
-
----
-
-## 17. Common Errors
-
-Using incremental triangles.
-
-Using immature accident years.
-
-Ignoring inflation.
-
-Ignoring operational changes.
-
-Blindly averaging factors.
-
-Using factors from another product.
-
----
-
-## 18. Best Practices
-
-Always inspect
-
-individual link ratios.
-
-Do not rely solely
-
-on automatic averages.
-
-Document
-
-why
-
-each selected factor
-
-was chosen.
-
-Maintain an audit trail.
-
----
-
-## Key Takeaways
-
-Loss Development Factors summarize historical claim emergence.
-
-Volume-weighted averages are the actuarial standard.
-
-Different estimators answer different statistical questions.
-
-Professional judgment remains essential.
-
-LDF selection is one of the most important actuarial decisions in reserving.
-
----
-
-## References
-
-- Mack (1993)
-- England & Verrall (2002)
-- Friedland – Estimating Unpaid Claims
-- Wüthrich & Merz (2008)
-- Taylor – Loss Reserving
-- CAS Study Notes
-- ASOP 23
-- ASOP 56
-
----
-
-## Next Chapter
-
-➡️ **06-chain-ladder-method.md**

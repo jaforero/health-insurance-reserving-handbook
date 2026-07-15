@@ -83,12 +83,12 @@ nav:
       - Guía de selección de metodologías: methodology-selection-guide.md
       - Glosario: glossary.md
       - Bibliografía y evidencia: bibliography.md
-  - Parte I · Fundamentos:
-      - 01 · IBNR and Reserving: part-01-foundations/01-ibnr-and-reserving.md
-      - 02 · Triangle Construction: part-01-foundations/02-triangle-construction.md
-      - 03 · Development Lags and Triangle Transformations: part-01-foundations/03-development-lags-and-triangle-transformations.md
-      - 04 · Incremental vs. Cumulative Triangles: part-01-foundations/04-incremental-vs-cumulative-triangles.md
-      - 05 · Age-to-Age Development Factors: part-01-foundations/05-age-to-age-development-factors.md
+  - Parte 1 · Fundamentos:
+    - 01 · IBNR y reservas: part-01-foundations/01-ibnr-and-reserving.md
+    - 02 · Construcción de triángulos: part-01-foundations/02-triangle-construction.md
+    - 03 · Lags de desarrollo y transformaciones: part-01-foundations/03-development-lags-and-triangle-transformations.md
+    - 04 · Triángulos incrementales vs. acumulados: part-01-foundations/04-incremental-vs-cumulative-triangles.md
+    - 05 · Factores edad-a-edad: part-01-foundations/05-age-to-age-development-factors.md
   - Parte II · Métodos clásicos:
       - 06 · Chain Ladder Method: part-02-classical-reserving/06-chain-ladder-method.md
       - 07 · Chain Ladder Diagnostics: part-02-classical-reserving/07-chain-ladder-diagnostics.md

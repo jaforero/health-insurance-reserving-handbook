@@ -1,379 +1,163 @@
 ---
-title: IBNR and Health Insurance Reserving
-subtitle: Foundations, Methodologies and Practical Implementation
-author: Health Reserving Handbook Project
-version: 1.0
-status: Draft
-last_updated: 2026-07-13
-part: "Parte I · Fundamentos"
-chapter: 1
+title: IBNR y reservas
+description: Introducción práctica al IBNR, las reservas de siniestros y la lógica actuarial que conecta pagos, incurridos, ultimate y suficiencia técnica.
+status: draft
+version: "0.1.5"
+chapter: "01"
+part: "part-01-foundations"
 language: "es"
+last_updated: "2026-07-14"
 ---
 
-# IBNR and Health Insurance Reserving
+# IBNR y reservas
 
-> "All reserving methods are approximations of an unknown stochastic process.
-The purpose of actuarial reserving is not to predict the future perfectly, but
-to quantify uncertainty using the best available information."
+El reserving actuarial busca estimar el costo último de eventos ya ocurridos, aun cuando parte de la información todavía no se haya observado en pagos, facturación, auditoría, conciliación o registro contable. En salud, este problema es especialmente relevante porque el ciclo de una reclamación puede incluir prestación del servicio, radicación, validación, autorización, glosa, conciliación, pago y ajustes posteriores.
 
----
+IBNR significa *incurred but not reported*: siniestros o reclamaciones ocurridas pero aún no reportadas o no suficientemente reconocidas en la información disponible. En la práctica, muchas organizaciones usan IBNR como una etiqueta amplia para el pasivo no observado o no completamente registrado. Conviene separar conceptos, porque no todos los faltantes tienen la misma naturaleza.
 
-## Table of Contents
+## Qué se está estimando
 
-1. Introduction
-2. What is Reserving?
-3. What is IBNR?
-4. Components of Total Reserves
-5. Reserving Process
-6. Mathematical Framework
-7. Data Requirements
-8. Development Triangles
-9. Classical Methods
-10. Stochastic Methods
-11. Modern Reserving
-12. Validation
-13. Model Governance
-14. Practical Recommendations
-15. References
-
----
-
-## 1 Introduction
-
-Loss reserving is one of the core actuarial functions in every insurance company.
-
-Its objective is to estimate the future financial obligation arising from insured events that have already occurred but whose ultimate cost is not yet fully known.
-
-Unlike pricing, reserving concerns **past exposure** rather than future exposure.
-
-The reserving process combines:
-
-- actuarial science
-- probability theory
-- statistics
-- financial reporting
-- business judgment
-
----
-
-## 2 What is IBNR?
-
-IBNR stands for
-
-**Incurred But Not Reported**
-
-IBNR represents the expected cost associated with claims that have already occurred but have not yet been reported or completely recognized by the insurer.
-
-Mathematically,
+Para un periodo de ocurrencia o año de origen, el objetivo central es estimar:
 
 $$
-IBNR = Ultimate - Reported
+Ultimate = Pagado\ acumulado + No\ pagado
 $$
 
-where
-
-- Ultimate = expected ultimate claim cost
-- Reported = observed claims
-
----
-
-## 3 Components of Total Reserves
-
-The actuarial reserve can be decomposed as
+El componente no pagado puede descomponerse así:
 
 $$
-Reserve =
-RBNS
-+
-IBNR
-+
-IBNER
-+
-ALAE
-+
-ULAE
+No\ pagado = Reserva\ caso + IBNR + IBNER
 $$
 
-where
+donde:
 
-| Component | Description |
-|------------|-------------|
-| RBNS | Reported but Not Settled |
-| IBNR | Incurred but Not Reported |
-| IBNER | Incurred But Not Enough Reported |
-| ALAE | Allocated Loss Adjustment Expenses |
-| ULAE | Unallocated Loss Adjustment Expenses |
+- `Reserva caso` es el monto reconocido para reclamaciones ya reportadas, pero no completamente pagadas.
+- `IBNR` representa reclamaciones ocurridas que aún no han sido reportadas o registradas.
+- `IBNER` significa *incurred but not enough reported*: reclamaciones reportadas, pero con monto insuficientemente estimado.
 
----
+En salud, la frontera entre estos componentes puede no ser limpia. Una reclamación puede estar radicada pero no auditada, parcialmente glosada, pendiente de soporte, en conciliación o con pago parcial. Por eso el actuario debe entender la operación y no limitarse a aplicar un método mecánico.
 
-## 4 Reserving Process
+## Pagado, incurrido y ultimate
 
-```mermaid
-flowchart LR
+La base pagada observa desembolsos reales. Tiene una ventaja: suele ser objetiva. Su debilidad es que puede rezagarse frente a la ocurrencia del servicio.
 
-A[Raw Claims]
+La base incurrida combina pagos más reservas caso. Tiene una ventaja: puede reconocer antes parte del costo esperado. Su debilidad es que depende de prácticas de estimación, reglas operativas, suficiencia de reservas caso y consistencia del proceso.
 
-B[Data Validation]
-
-C[Triangle Construction]
-
-D[Development Factors]
-
-E[Ultimate Estimation]
-
-F[Reserve Estimation]
-
-G[Financial Reporting]
-
-A --> B
-
-B --> C
-
-C --> D
-
-D --> E
-
-E --> F
-
-F --> G
-```
-
----
-
-## 5 Mathematical Framework
-
-Let
+La relación básica es:
 
 $$
-C_{ij}
+Incurrido = Pagado + Reserva\ caso
 $$
 
-be the cumulative paid amount
-
-where
-
-- i = accident period
-
-- j = development period
-
-The observed triangle is
+El ultimate es el costo final esperado de todas las reclamaciones de un periodo de origen:
 
 $$
-\mathcal T =
-\{
-C_{ij}
-:
-i+j\le n
-\}
+Ultimate = Incurrido\ observado + Desarrollo\ futuro\ del\ incurrido
 $$
 
-The prediction target is
+o, desde la base pagada:
 
 $$
-C_{i,n}
+Ultimate = Pagado\ observado + Desarrollo\ futuro\ del\ pagado
 $$
 
-for every incomplete accident period.
+Ambas bases pueden ser útiles. La pregunta no es cuál es universalmente mejor, sino cuál responde mejor al patrón de desarrollo, calidad de datos y objetivo de la estimación.
 
----
+## Por qué existe el IBNR
 
-## 6 Incremental versus Cumulative Triangles
+El IBNR existe porque el proceso de observación tiene rezagos. En salud, los rezagos pueden venir de:
 
-Incremental
+- demora entre fecha de servicio y fecha de radicación;
+- auditoría médica o administrativa;
+- glosas, devoluciones y conciliaciones;
+- pagos parciales;
+- contratos por capitación, evento, paquete o presupuestos globales;
+- cambios regulatorios o de codificación;
+- ajustes contables posteriores;
+- diferencias entre fecha de prestación, fecha de factura, fecha de registro y fecha de pago.
 
-$$
-X_{ij}
-$$
+La reserva no se estima para explicar el pasado ya cerrado. Se estima porque, en la fecha de valuación, la información observada es incompleta.
 
-Cumulative
+## Año de origen y fecha de valuación
 
-$$
-C_{ij}
-=
-\sum_{k=0}^{j}
-X_{ik}
-$$
+Un análisis de reservas necesita definir al menos dos ejes:
 
-The transformation is invertible.
+- `Año de origen`: periodo al que pertenece la reclamación. Puede definirse por fecha de ocurrencia, fecha de servicio, fecha de admisión, fecha de egreso o fecha de radicación, según el objetivo.
+- `Fecha de valuación`: fecha hasta la cual se considera observada la información.
 
----
-
-## 7 Sources of Uncertainty
-
-Two independent sources exist.
-
-## Process Risk
-
-Random claim emergence.
-
-## Parameter Risk
-
-Estimated development factors.
-
-Modern reserving quantifies both.
-
----
-
-## 8 Data Required
-
-Typical variables include
-
-| Variable | Required |
-|-----------|----------|
-| Claim ID | ✓ |
-| Accident Date | ✓ |
-| Service Date | ✓ |
-| Report Date | ✓ |
-| Paid Date | ✓ |
-| Payment Amount | ✓ |
-| Case Reserve | ✓ |
-| Product | ✓ |
-| State | Optional |
-| Provider | Optional |
-| Diagnosis | Optional |
-
----
-
-## 9 Triangle Construction
-
-The development lag is
+La diferencia entre estas dos dimensiones produce la edad de desarrollo:
 
 $$
-Lag =
-PaymentDate
--
-AccidentDate
+Edad\ de\ desarrollo = Fecha\ de\ valuación - Periodo\ de\ origen
 $$
 
-expressed in months.
+Los años de origen antiguos tienen más desarrollo observado. Los años recientes tienen menos desarrollo y, por tanto, más incertidumbre.
 
-Incremental payments are aggregated by
+## Reserving como proceso, no solo como fórmula
 
-- Accident Month
-- Development Month
+Un método actuarial produce una estimación, pero la suficiencia de reservas depende de un proceso más amplio:
 
----
+1. Definir el objetivo de la estimación.
+2. Entender la operación de reclamaciones.
+3. Seleccionar la base de datos adecuada.
+4. Construir triángulos consistentes.
+5. Revisar calidad, completitud y cambios de proceso.
+6. Seleccionar métodos apropiados.
+7. Evaluar sensibilidad e incertidumbre.
+8. Documentar supuestos, limitaciones y juicio profesional.
+9. Comunicar resultados de forma trazable.
 
-## 10 Classical Reserving Methods
+La estimación final debe ser defendible. No basta con que el modelo corra; debe ser claro qué representa, qué excluye y qué tan confiable es.
 
-The classical actuarial methods include
+## Ejemplo conceptual
 
-- Chain Ladder
-- Bornhuetter-Ferguson
-- Cape Cod
-- Benktander
-- Munich Chain Ladder
-- Berquist Sherman
+Supongamos que para el año de origen 2025, a la fecha de valuación se han pagado 100 y se han registrado reservas caso por 40. El incurrido observado es:
 
-Each method will be covered in subsequent chapters.
+$$
+Incurrido = 100 + 40 = 140
+$$
 
----
+Si el análisis actuarial estima que el ultimate esperado es 170, entonces:
 
-## 11 Stochastic Methods
+$$
+No\ pagado = 170 - 100 = 70
+$$
 
-Modern actuarial reserving extends deterministic methods by introducing probability distributions.
+Ese no pagado se puede descomponer como:
 
-Examples include
+$$
+No\ pagado = Reserva\ caso\ 40 + IBNR/IBNER\ 30
+$$
 
-- Mack
-- Bootstrap
-- Bayesian Reserving
-- GLM
-- GAM
+La lectura es importante: el IBNR no es necesariamente todo lo no pagado. Si existe reserva caso, una parte del pasivo ya está reconocida en el incurrido.
 
----
+## Buenas prácticas iniciales
 
-## 12 Health Insurance Considerations
+Antes de aplicar métodos de desarrollo, conviene responder:
 
-Health insurance differs from P&C because of
+- ¿La fecha de origen representa ocurrencia, servicio, radicación o pago?
+- ¿Los datos están netos o brutos de recuperaciones?
+- ¿Hay cambios de codificación, red, contrato o mezcla de riesgo?
+- ¿La reserva caso es consistente en el tiempo?
+- ¿Existen pagos negativos, reversos, glosas o ajustes masivos?
+- ¿Se están mezclando líneas de negocio con patrones distintos?
+- ¿El periodo más reciente tiene suficiente madurez para extrapolar?
 
-- short development tails
-- provider contracts
-- seasonality
-- medical inflation
-- completion factors
-- benefit changes
-- coding effects
+Estas preguntas evitan errores comunes: estimar sobre una base inconsistente, mezclar procesos distintos o interpretar como tendencia lo que en realidad es un cambio operativo.
 
-Traditional Chain Ladder frequently requires adjustments.
+## Relación con los siguientes capítulos
 
----
+Este capítulo define el problema. Los siguientes capítulos explican cómo estructurar la información para estimarlo:
 
-## 13 Validation
+- construcción de triángulos;
+- lags de desarrollo;
+- triángulos incrementales y acumulados;
+- factores edad-a-edad;
+- métodos determinísticos, estocásticos y modelos estadísticos.
 
-Every reserving exercise should include
+El punto de partida es simple: una reserva actuarial es una estimación del costo último pendiente de observar. La calidad de esa estimación depende de la calidad de la estructura de datos, del método seleccionado y del juicio aplicado.
 
-- Backtesting
-- Residual analysis
-- Calendar effect analysis
-- Sensitivity testing
-- Scenario testing
+## Siguiente capítulo
 
----
+Continúa con [Construcción de triángulos](02-triangle-construction.md).
 
-## 14 Model Governance
-
-A production reserving model should include
-
-- version control
-- peer review
-- documentation
-- reproducibility
-- automated testing
-
----
-
-## 15 Relationship with Other Chapters
-
-This chapter provides the conceptual framework for
-
-- Triangle Construction
-- Chain Ladder
-- Mack
-- Bootstrap
-- GLM
-- Bayesian Reserving
-- Health Insurance Applications
-
----
-
-## Key Takeaways
-
-- Reserving is fundamentally a stochastic estimation problem.
-- IBNR is only one component of total reserves.
-- Development triangles summarize historical claim emergence.
-- Modern actuarial practice combines deterministic methods with stochastic validation.
-- Professional judgment remains essential.
-
----
-
-## Suggested Reading
-
-- Mack (1993)
-- England & Verrall (2002)
-- Wüthrich & Merz (2008)
-- Friedland (CAS)
-- ASOP 5
-- ASOP 23
-- ASOP 41
-- ASOP 56
-
----
-
-## Exercises
-
-1. Construct a paid triangle from claim-level data.
-
-2. Convert incremental to cumulative.
-
-3. Compute age-to-age factors.
-
-4. Estimate ultimate losses.
-
-5. Compute IBNR.
-
----
-
-## Next Chapter
-
-➡️ 02-triangle-construction.md
