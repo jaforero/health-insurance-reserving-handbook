@@ -214,6 +214,44 @@ a:hover {{
   font-weight: 800;
 }}
 
+.jf-kpi-grid {{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 0.8rem;
+  margin: 0.65rem 0 1.35rem;
+}}
+
+.jf-kpi-card {{
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 6.5rem;
+  padding: 0.9rem 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(78, 0, 255, 0.18);
+  border-radius: 0.9rem;
+  box-shadow: 0 0.35rem 1rem rgba(50, 0, 150, 0.055);
+}}
+
+.jf-kpi-card__label {{
+  display: block;
+  margin-bottom: 0.45rem;
+  color: var(--jf-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.25;
+}}
+
+.jf-kpi-card__value {{
+  display: block;
+  color: var(--jf-purple);
+  font-size: clamp(1.05rem, 1.35vw, 1.65rem);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+  white-space: nowrap;
+}}
+
 [data-testid="stButton"] button,
 [data-testid="stDownloadButton"] button {{
   min-height: 2.7rem;
@@ -482,6 +520,27 @@ def render_sidebar_brand() -> None:
     """Render the compact sidebar brand."""
 
     st.markdown(sidebar_brand_html(), unsafe_allow_html=True)
+
+
+def kpi_grid_html(metrics: Iterable[tuple[str, str]]) -> str:
+    """Build compact, escaped KPI cards without numeric truncation."""
+
+    cards = "".join(
+        (
+            '<section class="jf-kpi-card">'
+            f'<span class="jf-kpi-card__label">{html.escape(label)}</span>'
+            f'<strong class="jf-kpi-card__value">{html.escape(value)}</strong>'
+            "</section>"
+        )
+        for label, value in metrics
+    )
+    return f'<div class="jf-kpi-grid" aria-label="Indicadores principales">{cards}</div>'
+
+
+def render_kpi_grid(metrics: Iterable[tuple[str, str]]) -> None:
+    """Render compact corporate KPI cards."""
+
+    st.markdown(kpi_grid_html(metrics), unsafe_allow_html=True)
 
 
 def footer_html(note: str) -> str:

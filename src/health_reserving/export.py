@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 
 import pandas as pd
 
+from .chain_ladder import ChainLadderConfig, ChainLadderResult
 from .config import TriangleConfig
 from .triangles import TriangleResult
 from .validation import PreparedClaims
@@ -88,4 +89,85 @@ misma el uso de Chain Ladder ni constituye una estimación actuarial profesional
         )
         if include_detail:
             archive.writestr("10_datos_canonicos_detalle.csv", _csv_bytes(result.canonical_detail))
+    return buffer.getvalue()
+
+
+def build_chain_ladder_zip(
+    result: ChainLadderResult,
+    config: ChainLadderConfig,
+    *,
+    source_metadata: dict[str, object] | None = None,
+) -> bytes:
+    """Build a non-record-level Chain Ladder result package in memory."""
+
+    observed_bytes = _csv_bytes(result.observed_cumulative, include_index=True)
+    manifest = {
+        "demo": "Demo 6 — Chain Ladder con datos propios",
+        "version_motor": "0.2.0",
+        "fecha_ejecucion_utc": datetime.now(timezone.utc).isoformat(),
+        "hash_triangulo_observado_sha256": hashlib.sha256(observed_bytes).hexdigest(),
+        "configuracion": config.to_dict(),
+        "fuente_agregada": source_metadata or {},
+    }
+    readme = """DEMO 6 — RESULTADOS CHAIN LADDER
+
+Este paquete fue generado localmente a partir de un triángulo acumulado.
+No contiene el archivo fuente original ni movimientos fila a fila.
+
+Archivos:
+- 01_triangulo_acumulado_observado.csv: valores utilizados para estimar factores.
+- 02_mascara_observada.csv: 1 observado; 0 futuro no observado.
+- 03_factores_individuales.csv: ratios por origen y enlace.
+- 04_seleccion_factores.csv: candidatos, selección, suficiencia y alertas.
+- 05_cdf_a_ultimate.csv: factores acumulados desde cada edad.
+- 06_triangulo_acumulado_proyectado.csv: celdas futuras completadas.
+- 07_triangulo_incremental_proyectado.csv: incrementos observados y proyectados.
+- 08_resultados_por_origen.csv: madurez, ultimate e IBNR.
+- 09_totales.csv: resumen agregado.
+- 10_diagnosticos.csv: alertas automáticas que requieren interpretación.
+- 11_configuracion.json: selección, cola y parámetros.
+- 12_manifiesto.json: versión, hash y trazabilidad.
+
+Chain Ladder es una estimación determinística y no cuantifica por sí solo la
+incertidumbre. Los factores, la cola y la representatividad histórica requieren
+juicio actuarial documentado y validación independiente.
+"""
+
+    cdf_frame = result.cdf_to_ultimate.rename_axis("edad_desarrollo").reset_index()
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr("LEEME.txt", readme)
+        archive.writestr("01_triangulo_acumulado_observado.csv", observed_bytes)
+        archive.writestr(
+            "02_mascara_observada.csv",
+            _csv_bytes(result.observed_mask.astype(int), include_index=True),
+        )
+        archive.writestr(
+            "03_factores_individuales.csv",
+            _csv_bytes(result.individual_factors, include_index=True),
+        )
+        archive.writestr("04_seleccion_factores.csv", _csv_bytes(result.factor_summary))
+        archive.writestr("05_cdf_a_ultimate.csv", _csv_bytes(cdf_frame))
+        archive.writestr(
+            "06_triangulo_acumulado_proyectado.csv",
+            _csv_bytes(result.projected_cumulative, include_index=True),
+        )
+        archive.writestr(
+            "07_triangulo_incremental_proyectado.csv",
+            _csv_bytes(result.projected_incremental, include_index=True),
+        )
+        archive.writestr(
+            "08_resultados_por_origen.csv",
+            _csv_bytes(result.origin_summary, include_index=True),
+        )
+        archive.writestr("09_totales.csv", _csv_bytes(result.totals))
+        archive.writestr("10_diagnosticos.csv", _csv_bytes(result.diagnostics))
+        archive.writestr(
+            "11_configuracion.json",
+            json.dumps(config.to_dict(), ensure_ascii=False, indent=2).encode("utf-8"),
+        )
+        archive.writestr(
+            "12_manifiesto.json",
+            json.dumps(manifest, ensure_ascii=False, indent=2).encode("utf-8"),
+        )
     return buffer.getvalue()

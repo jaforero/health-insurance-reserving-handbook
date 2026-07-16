@@ -35,15 +35,15 @@ El repositorio puede utilizarse como:
 
 ## Estado actual
 
-La versión pública más reciente es **v0.3.0**, que incorpora Demo 5: una aplicación local para
-transformar archivos CSV, TXT delimitado, Excel o Parquet del usuario en triángulos actuariales
-validados y reproducibles.
+La versión pública más reciente es **v0.3.0**, que incorpora Demo 5. La rama de desarrollo añade
+Demo 6 para transformar triángulos acumulados reconciliados en estimaciones determinísticas de
+ultimate e IBNR mediante Chain Ladder.
 
 El repositorio incluye actualmente:
 
 - **40 capítulos** técnicos en español;
 - **7 partes** temáticas;
-- **5 demos prácticos**, tres bilingües y dos publicados inicialmente en español;
+- **6 demos prácticos**, tres bilingües y tres publicados inicialmente en español;
 - datos sintéticos reproducibles;
 - visualizaciones SVG de triángulos actuariales;
 - construcción y despliegue automático con MkDocs y GitHub Pages;
@@ -191,8 +191,22 @@ conda activate reserving-handbook
 python scripts/iniciar_asistente_triangulos.py
 ```
 
+### Demo 6 · Chain Ladder con datos propios
+
+Aplicación local en Streamlit para leer el paquete agregado de Demo 5, comparar reglas de
+selección de factores, documentar una selección manual y un factor de cola, completar el triángulo
+acumulado y estimar ultimate e IBNR por periodo de origen.
+
+- [Documentación en español](docs/examples/06-demo-chain-ladder-datos-propios.md)
+
+```bash
+conda activate reserving-handbook
+python scripts/iniciar_chain_ladder.py
+```
+
 Los datos incluidos en el repositorio son sintéticos y se generan con semillas reproducibles. El
-Demo 5 también puede procesar archivos locales del usuario sin incorporarlos al repositorio.
+Demo 5 puede procesar archivos locales del usuario y Demo 6 utiliza solamente sus salidas
+agregadas, sin incorporar esos archivos al repositorio.
 
 ## Instalación y documentación local
 

@@ -28,13 +28,14 @@ El objetivo es consolidar una referencia profesional, abierta y reproducible sob
 ## 2. Línea base actual
 
 La versión pública más reciente es `v0.3.0`, que incorpora el flujo local de datos propios a
-triángulos actuariales mediante Demo 5.
+triángulos actuariales mediante Demo 5. La rama de desarrollo añade Chain Ladder determinístico
+como primer incremento de Demo 6.
 
 | Componente | Estado actual |
 |---|---|
 | Capítulos | 40 capítulos en español |
 | Partes | 7 partes temáticas |
-| Demos | 5 demos reproducibles: tres bilingües y dos en español |
+| Demos | 6 demos reproducibles: tres bilingües y tres en español |
 | Datos | Conjuntos sintéticos y diccionario canónico de reserving |
 | Visualizaciones | Triángulos actuariales y comparaciones en SVG |
 | Publicación | MkDocs Material y GitHub Pages |
@@ -116,9 +117,15 @@ Incorpora 60 meses de origen, edades de desarrollo 0–24, controles de suficien
 
 ### 4.4 Demo 6 · Comparación de métodos clásicos
 
-Comparará:
+El primer incremento implementa Chain Ladder determinístico con:
 
-- Chain Ladder;
+- consumo verificado de paquetes agregados de Demo 5;
+- factores ponderados, simples, medianos, recientes y manuales;
+- cola explícita, CDF, ultimate e IBNR;
+- sensibilidad, diagnósticos y exportación reproducible.
+
+Los incrementos siguientes compararán:
+
 - Bornhuetter-Ferguson;
 - Benktander;
 - Cape Cod.
