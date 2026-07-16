@@ -5,8 +5,8 @@ chapter: "index"
 part: "repository"
 language: "es"
 status: "draft"
-version: "0.3.0"
-last_updated: "2026-07-15"
+version: "0.4.0"
+last_updated: "2026-07-16"
 ---
 
 <div class="home-hero" markdown>
@@ -39,9 +39,9 @@ El proyecto contiene actualmente:
 - visualizaciones SVG de triángulos actuariales;
 - auditoría estructural, preflight y construcción estricta con MkDocs.
 
-La versión pública más reciente es `v0.3.0`, que incorpora Demo 5 para cargar datos propios en
-CSV, TXT delimitado, Excel o Parquet y construir triángulos actuariales localmente.
-La rama de desarrollo incorpora Demo 6 para estimar ultimate e IBNR con Chain Ladder determinístico.
+La versión pública más reciente es `v0.4.0`. Incorpora Demo 5 para cargar datos propios en CSV,
+TXT delimitado, Excel o Parquet y construir triángulos actuariales localmente, además de Demo 6
+para estimar ultimate e IBNR con Chain Ladder determinístico.
 
 !!! warning "Uso profesional"
     El handbook es una referencia educativa y técnica. Una aplicación profesional requiere validar datos, obligaciones, contratos, supuestos, regulación vigente y propósito de la estimación.

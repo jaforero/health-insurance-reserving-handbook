@@ -5,8 +5,8 @@ chapter: "project-handoff"
 part: "repository"
 language: "es"
 status: "active"
-version: "0.3.0"
-last_updated: "2026-07-15"
+version: "0.4.0"
+last_updated: "2026-07-16"
 ---
 
 # Health Insurance Reserving Handbook — Estado y continuidad
@@ -18,8 +18,8 @@ Este documento permite continuar el proyecto sin depender de inventarios o decis
 - Repositorio: <https://github.com/jaforero/health-insurance-reserving-handbook>
 - Sitio: <https://actuaria.javierforero.co/>
 - Rama principal: `main`
-- Última versión pública: `v0.3.0`
-- Estado del release: Demo 5 publicado; Chain Ladder de Demo 6 en desarrollo y validado localmente
+- Última versión pública: `v0.4.0`
+- Estado del release: Demo 5 y el primer incremento Chain Ladder de Demo 6 publicados
 - Idioma principal: español
 - Demos: español e inglés
 
@@ -78,7 +78,7 @@ python scripts/iniciar_asistente_triangulos.py
 ```
 
 Abre una interfaz local en Streamlit para leer CSV, TXT delimitado, XLSX o Parquet, validar,
-construir triángulos y exportar resultados. Este demo está en preparación para el siguiente release.
+construir triángulos y exportar resultados.
 
 Los datos incluidos en el repositorio son sintéticos. El Demo 5 también puede procesar archivos
 locales del usuario, que no deben incorporarse al control de versiones.
@@ -129,15 +129,15 @@ El workflow `.github/workflows/docs.yml` ejecuta la validación y despliega GitH
 
 ## 7. Próximo hito
 
-El objetivo recomendado es `v0.3.0`, con este orden:
+El objetivo recomendado es `v0.5.0`, con este orden:
 
-1. auditoría matemática automática en CI;
-2. pruebas de reproducibilidad de demos;
-3. consolidar pruebas del Demo 3 mensual;
-4. estabilizar y revisar el Demo 5 local con datos propios;
-5. ampliar Demo 6 desde Chain Ladder hacia Bornhuetter-Ferguson, Benktander y Cape Cod;
-6. documentación de esquemas y diccionarios de datos sintéticos;
-7. changelog, citación, tag y release notes de v0.3.0.
+1. ejecutar pruebas de aceptación de Demo 5 con datos anonimizados;
+2. ampliar los diagnósticos y el backtesting de Demo 6;
+3. incorporar Bornhuetter-Ferguson con exposición y expectativa previa explícitas;
+4. incorporar Benktander y Cape Cod;
+5. comparar métodos clásicos con reconciliación y sensibilidad por periodo de origen;
+6. ampliar la documentación y las salidas bilingües;
+7. actualizar changelog, citación, tag y release notes de `v0.5.0`.
 
 ## 8. Criterio de continuidad
 

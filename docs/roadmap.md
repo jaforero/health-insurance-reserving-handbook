@@ -1,12 +1,12 @@
 ---
 title: "Roadmap del Health Insurance Reserving Handbook"
-description: "Estado vigente, próximos hitos, criterios de salida y riesgos para desarrollar el handbook desde v0.3.0 hacia v1.0.0."
+description: "Estado vigente, próximos hitos, criterios de salida y riesgos para desarrollar el handbook desde v0.4.0 hacia v1.0.0."
 chapter: "roadmap"
 part: "repository"
 language: "es"
 status: "draft"
-version: "0.3.0"
-last_updated: "2026-07-15"
+version: "0.4.0"
+last_updated: "2026-07-16"
 ---
 
 # Roadmap del Health Insurance Reserving Handbook
@@ -27,9 +27,8 @@ El objetivo es consolidar una referencia profesional, abierta y reproducible sob
 
 ## 2. Línea base actual
 
-La versión pública más reciente es `v0.3.0`, que incorpora el flujo local de datos propios a
-triángulos actuariales mediante Demo 5. La rama de desarrollo añade Chain Ladder determinístico
-como primer incremento de Demo 6.
+La versión pública más reciente es `v0.4.0`. Incorpora el flujo local de datos propios a triángulos
+actuariales mediante Demo 5 y Chain Ladder determinístico como primer incremento de Demo 6.
 
 | Componente | Estado actual |
 |---|---|
@@ -55,7 +54,7 @@ como primer incremento de Demo 6.
 | 7 | Colombia | 12 |
 |  | **Total** | **40** |
 
-## 3. Alcance cerrado en v0.2.0
+## 3. Alcance cerrado hasta v0.4.0
 
 - incorporación del demo pagado vs. incurrido;
 - traducción y normalización de las Partes 1–7;
@@ -66,79 +65,53 @@ como primer incremento de Demo 6.
 - matriz de requisitos y elegibilidad por metodología;
 - diccionario canónico con nombres principales en español;
 - Demo 4 de preparación y evaluación de datasets.
-- Demo 5 local para construir triángulos con datos propios mediante Streamlit.
+- Demo 5 local para construir triángulos con datos propios mediante Streamlit;
+- Demo 6 local para seleccionar factores, proyectar el triángulo y estimar ultimate e IBNR;
+- sistema visual corporativo compartido con IgraSans local y componentes responsivos;
+- 32 pruebas automatizadas para preparación, Chain Ladder, exportación e interfaces.
 
-Las mejoras hasta el Demo 4 constituyen la línea base pública. El Demo 5 forma parte del incremento
-en preparación para el siguiente release.
+## 4. Próximo hito: v0.5.0
 
-## 4. Próximo hito: v0.3.0
+`v0.5.0` ampliará Demo 6 para comparar métodos clásicos bajo supuestos y fuentes de información
+explícitos.
 
-`v0.3.0` debe profundizar la reproducibilidad y la comparación práctica de metodologías.
-
-### 4.1 Auditoría matemática preventiva
-
-**Entregables**
-
-- script que detecte delimitadores incompatibles con GitHub;
-- validación de bloques matemáticos balanceados;
-- detección de signos aislados o fórmulas interpretables como encabezados Markdown;
-- ejecución automática en GitHub Actions.
-
-**Criterio de salida**
-
-- cero problemas en los 56 documentos bajo `docs/`;
-- resultado reproducible localmente y en CI.
-
-### 4.2 Pruebas para demos reproducibles
+### 4.1 Exposición y expectativa previa
 
 **Entregables**
 
-- pruebas de reconciliación entre datos largos y triángulos;
-- validación incremental-acumulado;
-- comprobación de factores, ultimate e IBNR;
-- ejecución determinística por semilla;
-- verificación de que regenerar salidas no produce diferencias no explicadas.
+- carga y validación de exposición por periodo de origen;
+- selección documentada de una razón de pérdida o frecuencia-severidad esperada;
+- reconciliación entre exposición, prima, expectativa previa y triángulo observado.
 
-**Criterio de salida**
+### 4.2 Bornhuetter-Ferguson
 
-- todos los generadores terminan correctamente en una instalación limpia;
-- las pruebas se ejecutan en CI.
+**Entregables**
 
-### 4.3 Demo 3 · Triángulos mensuales de salud
+- ultimate e IBNR por periodo de origen;
+- sensibilidad a la expectativa previa y a los patrones de desarrollo;
+- comparación directa con Chain Ladder.
 
-Incorpora 60 meses de origen, edades de desarrollo 0–24, controles de suficiencia por factor, comparación con la verdad simulada y visualizaciones bilingües. La configuración 60/24 se documenta como punto de partida práctico y no como mínimo actuarial universal.
+### 4.3 Benktander y Cape Cod
 
-**Criterio de salida**
+**Entregables**
 
-- 1.200 celdas observadas conciliadas;
-- al menos 36 observaciones en cada factor bajo la configuración predeterminada;
-- curva de maduración, triángulo tradicional y diagnóstico reproducibles;
-- documentación explícita de cuándo ampliar el horizonte.
+- iteraciones Benktander configurables;
+- estimación Cape Cod con exposición;
+- supuestos, diagnósticos y exportación reproducible.
 
-### 4.4 Demo 6 · Comparación de métodos clásicos
+### 4.4 Comparación de métodos clásicos
 
-El primer incremento implementa Chain Ladder determinístico con:
-
-- consumo verificado de paquetes agregados de Demo 5;
-- factores ponderados, simples, medianos, recientes y manuales;
-- cola explícita, CDF, ultimate e IBNR;
-- sensibilidad, diagnósticos y exportación reproducible.
-
-Los incrementos siguientes compararán:
-
-- Bornhuetter-Ferguson;
-- Benktander;
-- Cape Cod.
-
-El demo debe incluir exposición, expectativa previa defendible, ultimate, IBNR, sensibilidad y visualizaciones por año de origen. Tendrá documentación y salidas en español e inglés.
+El demo deberá explicar por qué los métodos divergen, mostrar sensibilidad por periodo de origen y
+mantener referencias cruzadas con los capítulos 6 y 11–14.
 
 **Criterio de salida**
 
 - resultados conciliados y reproducibles;
-- explicación clara de por qué los métodos divergen;
-- referencias cruzadas con los capítulos 6 y 11–14.
+- priors y exposición trazables;
+- comparación visual y tabular de ultimate e IBNR;
+- salidas y documentación en español, con expansión bilingüe planificada.
 
-### 4.5 Cierre de v0.3.0
+### 4.5 Cierre de v0.5.0
 
 - auditoría documental limpia;
 - build estricto exitoso;
@@ -147,7 +120,7 @@ El demo debe incluir exposición, expectativa previa defendible, ultimate, IBNR,
 - release notes con alcance, limitaciones y comandos de reproducción;
 - verificación del sitio publicado.
 
-## 5. Hito posterior: v0.4.0
+## 5. Hito posterior: v0.6.0
 
 El foco propuesto es incertidumbre y distribución predictiva:
 
@@ -201,12 +174,12 @@ La existencia de un archivo o su inclusión en la navegación solo indica dispon
 
 ## 9. Orden recomendado de ejecución
 
-1. publicación y verificación de v0.3.0;
+1. publicación y verificación de `v0.4.0`;
 2. prueba de aceptación de Demo 5 con datos anonimizados;
-3. auditoría matemática automatizada;
-4. pruebas de reproducibilidad de los demos;
-5. Demo 6 de métodos clásicos;
-6. cierre y publicación de v0.4.0;
-7. Demo 7 de incertidumbre para v0.5.0.
+3. ampliación de Demo 6 con Bornhuetter-Ferguson;
+4. incorporación de Benktander y Cape Cod;
+5. comparación reproducible de métodos clásicos;
+6. cierre y publicación de `v0.5.0`;
+7. Demo 7 de incertidumbre para `v0.6.0`.
 
 No se asignan fechas hasta conocer capacidad de revisión y profundidad requerida. Cada hito debe cerrarse por evidencia.
