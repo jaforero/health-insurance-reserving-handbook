@@ -4,6 +4,14 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 
 ## [Unreleased]
 
+### Cambiado
+
+- Sistema visual corporativo reutilizable para aplicaciones Streamlit, con IgraSans autoalojada y
+  registrada nativamente mediante `theme.fontFaces`, paleta oficial, hero, sidebar, indicadores,
+  botones y footer responsivo contenido dentro de la columna principal.
+- Demo 5 adopta la misma identidad visual del sitio principal sin enviar fuentes ni activos a
+  servicios externos.
+
 ## [0.3.0] - 2026-07-15
 
 ### Agregado

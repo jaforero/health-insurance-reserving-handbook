@@ -6,7 +6,7 @@ part: "examples"
 language: "es"
 status: "draft"
 version: "0.1.1"
-last_updated: "2026-07-15"
+last_updated: "2026-07-16"
 tags:
   - demo
   - streamlit
@@ -78,12 +78,16 @@ La interfaz y el cálculo están separados:
 apps/triangle_workshop.py
     Interfaz, selección de archivo y explicaciones.
 
+apps/static/
+    IgraSans.woff2  Copia local servida por Streamlit.
+
 src/health_reserving/
     config.py       Configuración reproducible.
     ingestion.py    Lectura local de texto delimitado, XLSX y Parquet.
     validation.py   Mapeo y controles no compensatorios.
     triangles.py    Construcción, máscara y reconciliación.
     export.py       Paquete ZIP generado en memoria.
+    ui_theme.py     Componentes visuales corporativos reutilizables.
 
 scripts/iniciar_asistente_triangulos.py
     Lanzador local para principiantes.
@@ -91,6 +95,23 @@ scripts/iniciar_asistente_triangulos.py
 
 Esta separación permite reutilizar el mismo motor desde Streamlit, un notebook, un proceso por
 lotes o una prueba automatizada.
+
+### 2.1 Identidad visual compartida
+
+La fuente oficial se conserva en `docs/assets/fonts/IgraSans.woff2` y su copia para la aplicación
+se sirve desde `apps/static/IgraSans.woff2`. Streamlit la registra nativamente mediante
+`theme.fontFaces` en `.streamlit/config.toml`, tanto para el texto general como para los
+encabezados. El navegador no consulta Google Fonts ni otro servicio externo.
+
+La aplicación reutiliza además el favicon, la paleta morada, el hero, las tarjetas, los botones y
+el footer del handbook. El footer permanece dentro del ancho disponible de la columna principal y
+reorganiza sus bloques automáticamente cuando el sidebar reduce el espacio. Los cambios en
+`theme.fontFaces` requieren detener y volver a iniciar el servidor de Streamlit; actualizar
+solamente la pestaña del navegador no recarga la configuración.
+
+El módulo `ui_theme.py` mantiene esta presentación separada del cálculo actuarial y permite que
+Demo 6 use la misma plantilla sin duplicar estilos. Los contenidos dinámicos del hero y del footer
+se escapan antes de insertarlos como HTML.
 
 ## 3. Requisitos del archivo de entrada
 

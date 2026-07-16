@@ -180,6 +180,9 @@ Aplicación local en Streamlit para seleccionar un CSV, TXT delimitado, Excel o 
 campos, validar fechas, importes y duplicados, construir triángulos incrementales y acumulados y
 exportar resultados sin incorporar el archivo fuente al repositorio.
 
+La interfaz reutiliza localmente IgraSans, el logo actuarial y la identidad visual corporativa del
+sitio principal.
+
 - [Documentación en español](docs/examples/05-demo-datos-propios-triangulos-actuariales.md)
 
 ```bash
