@@ -1,11 +1,11 @@
 ---
 title: "Demo 5 · De datos propios a triángulos actuariales"
-description: "Asistente local en Streamlit para mapear, validar y transformar archivos CSV o Excel del usuario en triángulos incrementales y acumulados reproducibles."
+description: "Asistente local en Streamlit para mapear, validar y transformar archivos CSV, TXT delimitado, Excel o Parquet del usuario en triángulos incrementales y acumulados reproducibles."
 chapter: "demo-datos-propios-triangulos"
 part: "examples"
 language: "es"
 status: "draft"
-version: "0.1.0"
+version: "0.1.1"
 last_updated: "2026-07-15"
 tags:
   - demo
@@ -30,8 +30,9 @@ related_chapters:
 ## Resumen
 
 Este demo convierte el contenido conceptual de los demos 3 y 4 en un asistente local para
-principiantes. El usuario selecciona un archivo CSV o Excel, mapea sus columnas, confirma las
-definiciones de negocio y construye triángulos incrementales y acumulados sin modificar código.
+principiantes. El usuario selecciona un archivo CSV, TXT delimitado, Excel o Parquet, mapea sus
+columnas, confirma las definiciones de negocio y construye triángulos incrementales y acumulados
+sin modificar código.
 
 El flujo se ejecuta en el ambiente de Anaconda y abre una interfaz de Streamlit en
 `http://localhost:8501`. El archivo fuente no se envía a GitHub ni se guarda automáticamente
@@ -64,7 +65,7 @@ Al finalizar el ejercicio, el usuario podrá:
 
 ```mermaid
 flowchart TD
-    A["Archivo CSV o XLSX"] --> B["Interfaz local Streamlit"]
+    A["CSV, TXT, XLSX o Parquet"] --> B["Interfaz local Streamlit"]
     B --> C["Mapeo y validación"]
     C --> D["Núcleo health_reserving"]
     D --> E["Triángulos y gates"]
@@ -79,7 +80,7 @@ apps/triangle_workshop.py
 
 src/health_reserving/
     config.py       Configuración reproducible.
-    ingestion.py    Lectura local de CSV y XLSX.
+    ingestion.py    Lectura local de texto delimitado, XLSX y Parquet.
     validation.py   Mapeo y controles no compensatorios.
     triangles.py    Construcción, máscara y reconciliación.
     export.py       Paquete ZIP generado en memoria.
@@ -112,6 +113,18 @@ lotes o una prueba automatizada.
 Los importes deben ser incrementales. Si cada fila contiene un saldo acumulado, el archivo debe
 transformarse antes de utilizar el asistente.
 
+### 3.3 Formatos admitidos
+
+| Formato | Extensiones | Opciones de lectura |
+|---|---|---|
+| texto delimitado | `.csv`, `.txt` | coma, punto y coma, tabulación, `|` o detección automática; decimal, miles y codificación |
+| Excel | `.xlsx` | selección de hoja |
+| Apache Parquet | `.parquet`, `.pq` | conserva los tipos almacenados; no usa separador ni codificación |
+
+Los archivos TXT deben ser **delimitados**. Esta versión no interpreta archivos de ancho fijo ni
+documentos de texto libre. Parquet suele ocupar menos espacio en disco, pero al abrirse se carga
+como un `DataFrame` de pandas y puede requerir más memoria que el tamaño del archivo comprimido.
+
 ## 4. Instalación con Anaconda
 
 Desde Anaconda Prompt en Windows o Terminal en macOS:
@@ -123,8 +136,8 @@ conda env create -f environment.yml
 conda activate reserving-handbook
 ```
 
-El archivo `environment.yml` instala Python, pandas, OpenPyXL, PyYAML, Streamlit y el paquete local
-`health_reserving`.
+El archivo `environment.yml` instala Python, pandas, OpenPyXL, PyArrow, PyYAML, Streamlit y el
+paquete local `health_reserving`.
 
 Si el ambiente ya existe y cambió la configuración:
 
@@ -156,10 +169,10 @@ Para detenerlo, regrese a la terminal y presione `Ctrl+C`.
 Existen dos rutas:
 
 - utilizar el dataset sintético mensual incluido;
-- seleccionar un CSV o XLSX local.
+- seleccionar un CSV, TXT delimitado, XLSX o Parquet local.
 
-Para CSV pueden configurarse separador, decimal, miles y codificación. Para Excel puede elegirse
-la hoja de trabajo.
+Para CSV y TXT pueden configurarse separador, decimal, miles y codificación. Para Excel puede
+elegirse la hoja de trabajo. Parquet conserva su esquema y no necesita opciones de texto ni hoja.
 
 La vista preliminar muestra como máximo diez filas y veinte columnas. Los campos cuyo nombre
 sugiere información personal se ocultan visualmente.
@@ -337,7 +350,7 @@ del repositorio. Aun así, el usuario es responsable de:
 La primera versión:
 
 - procesa un archivo por ejecución;
-- soporta CSV y XLSX;
+- soporta CSV, TXT delimitado, XLSX y Parquet;
 - utiliza pandas y mantiene el archivo cargado en memoria;
 - permite un filtro de segmento por ejecución;
 - asume que la medida mapeada es incremental;
@@ -346,8 +359,9 @@ La primera versión:
 - no estima ultimate ni IBNR;
 - no sustituye conciliación contable independiente.
 
-El cargador visual está configurado para un máximo de 200 MB. Archivos mayores o procesos con
-millones de filas pueden requerir una futura implementación con DuckDB, Polars o lectura por lotes.
+El cargador visual está configurado para un máximo de 200 MB. El tamaño comprimido de un Parquet
+no representa su consumo final en memoria. Archivos mayores o procesos con millones de filas
+pueden requerir una futura implementación con DuckDB, Polars o lectura por lotes.
 
 ## 10. Pruebas reproducibles
 
@@ -366,7 +380,8 @@ Las pruebas del MVP verifican:
 - bloqueo de duplicados;
 - confirmaciones semánticas no compensatorias;
 - segmentación;
-- lectura en memoria;
+- lectura en memoria de CSV y TXT delimitado;
+- conservación de tipos al leer Parquet;
 - privacidad del paquete exportado;
 - compatibilidad con las regresiones del Demo 3.
 

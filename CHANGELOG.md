@@ -6,7 +6,8 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 
 ### Agregado
 
-- Demo 5 local para construir triángulos actuariales con archivos CSV o XLSX del usuario.
+- Demo 5 local para construir triángulos actuariales con archivos CSV, TXT delimitado, XLSX o
+  Parquet del usuario.
 - Interfaz Streamlit ejecutada exclusivamente en `localhost`.
 - Núcleo modular `health_reserving` para ingestión, mapeo, validación, triángulos y exportación.
 - Distinción explícita entre ceros observados y celdas futuras mediante máscara de observación.
@@ -15,6 +16,7 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 - Ambiente reproducible de Anaconda y lanzador para principiantes.
 - Paquete ZIP local con validaciones, triángulos, máscara, diagnóstico, configuración y manifiesto.
 - Pruebas para fechas, negativos, duplicados, segmentación, reconciliación y privacidad del export.
+- Pruebas de ingestión para TXT delimitado y conservación de tipos al leer Parquet.
 
 ### Seguridad
 

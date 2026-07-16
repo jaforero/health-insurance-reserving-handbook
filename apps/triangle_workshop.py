@@ -245,7 +245,7 @@ with st.sidebar:
     st.header("Alcance del MVP")
     st.markdown(
         """
-        - CSV y XLSX
+        - CSV, TXT delimitado, XLSX y Parquet
         - Pagos o medidas incrementales
         - Frecuencia mensual, trimestral o anual
         - Un segmento por ejecución
@@ -270,9 +270,12 @@ source_mode = st.radio(
 uploaded = None
 if source_mode == "Usar mi archivo local":
     uploaded = st.file_uploader(
-        "Selecciona un CSV o XLSX",
-        type=["csv", "xlsx"],
-        help="Para este MVP utiliza archivos de hasta 200 MB.",
+        "Selecciona un CSV, TXT delimitado, XLSX o Parquet",
+        type=["csv", "txt", "xlsx", "parquet", "pq"],
+        help=(
+            "Para este MVP utiliza archivos de hasta 200 MB. Un Parquet puede "
+            "ocupar más memoria después de descomprimirse."
+        ),
     )
     if uploaded is None:
         st.stop()
@@ -299,27 +302,34 @@ encoding = "utf-8"
 sheet_name: str | int = 0
 
 with st.expander("Opciones de lectura", expanded=False):
-    if suffix == ".csv":
+    if suffix in {".csv", ".txt"}:
         separator_label = st.selectbox(
-            "Separador de columnas", ["Coma (,) ", "Punto y coma (;)", "Tabulación", "Detectar"]
+            "Separador de columnas",
+            ["Coma (,) ", "Punto y coma (;)", "Tabulación", "Barra vertical (|)", "Detectar"],
         )
         separator = {
             "Coma (,) ": ",",
             "Punto y coma (;)": ";",
             "Tabulación": "\t",
+            "Barra vertical (|)": "|",
             "Detectar": "auto",
         }[separator_label]
         decimal = st.selectbox("Separador decimal", [".", ","])
         thousands_label = st.selectbox("Separador de miles", ["Ninguno", ",", ".", "Espacio"])
         thousands = {"Ninguno": None, ",": ",", ".": ".", "Espacio": " "}[thousands_label]
         encoding = st.selectbox("Codificación", ["utf-8", "utf-8-sig", "latin-1"])
-    else:
+    elif suffix == ".xlsx":
         try:
             sheets = excel_sheet_names(source)
             sheet_name = st.selectbox("Hoja de Excel", sheets)
         except Exception as exc:
             st.error(f"No fue posible inspeccionar el archivo Excel: {exc}")
             st.stop()
+    else:
+        st.caption(
+            "Parquet conserva sus tipos de datos y no requiere separador, "
+            "codificación ni selección de hoja."
+        )
 
 try:
     data = read_tabular_file(

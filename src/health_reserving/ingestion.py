@@ -40,12 +40,12 @@ def read_tabular_file(
     thousands: str | None = None,
     encoding: str = "utf-8",
 ) -> pd.DataFrame:
-    """Read CSV or XLSX data from a local path or an in-memory upload."""
+    """Read delimited text, XLSX or Parquet from a path or in-memory upload."""
 
     suffix = _extension(filename)
     _rewind(source)
 
-    if suffix == ".csv":
+    if suffix in {".csv", ".txt"}:
         sep = None if separator == "auto" else separator
         engine = "python" if sep is None else "c"
         options = {
@@ -64,8 +64,12 @@ def read_tabular_file(
             sheet_name=sheet_name,
             engine="openpyxl",
         )
+    elif suffix in {".parquet", ".pq"}:
+        frame = pd.read_parquet(source, engine="pyarrow")
     else:
-        raise ValueError("Formato no soportado. Utilice un archivo CSV o XLSX.")
+        raise ValueError(
+            "Formato no soportado. Utilice CSV, TXT delimitado, XLSX o Parquet."
+        )
 
     _rewind(source)
     if frame.empty:
