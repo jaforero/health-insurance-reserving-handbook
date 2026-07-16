@@ -5,7 +5,7 @@ chapter: "project-handoff"
 part: "repository"
 language: "es"
 status: "active"
-version: "0.2.4"
+version: "0.3.0"
 last_updated: "2026-07-15"
 ---
 
@@ -18,8 +18,8 @@ Este documento permite continuar el proyecto sin depender de inventarios o decis
 - Repositorio: <https://github.com/jaforero/health-insurance-reserving-handbook>
 - Sitio: <https://actuaria.javierforero.co/>
 - Rama principal: `main`
-- Última versión pública: `v0.2.4`
-- Estado del release: consolidación integral publicada
+- Última versión pública: `v0.3.0`
+- Estado del release: Demo 5 local publicado y validado
 - Idioma principal: español
 - Demos: español e inglés
 

@@ -1,11 +1,11 @@
 ---
 title: "Roadmap del Health Insurance Reserving Handbook"
-description: "Estado vigente, próximos hitos, criterios de salida y riesgos para desarrollar el handbook desde v0.2.4 hacia v1.0.0."
+description: "Estado vigente, próximos hitos, criterios de salida y riesgos para desarrollar el handbook desde v0.3.0 hacia v1.0.0."
 chapter: "roadmap"
 part: "repository"
 language: "es"
 status: "draft"
-version: "0.2.2"
+version: "0.3.0"
 last_updated: "2026-07-15"
 ---
 
@@ -27,7 +27,8 @@ El objetivo es consolidar una referencia profesional, abierta y reproducible sob
 
 ## 2. Línea base actual
 
-La versión pública más reciente es `v0.2.4`, que incorpora el dominio actuarial propio y actualiza las URLs canónicas del proyecto.
+La versión pública más reciente es `v0.3.0`, que incorpora el flujo local de datos propios a
+triángulos actuariales mediante Demo 5.
 
 | Componente | Estado actual |
 |---|---|
@@ -193,13 +194,12 @@ La existencia de un archivo o su inclusión en la navegación solo indica dispon
 
 ## 9. Orden recomendado de ejecución
 
-1. publicación y verificación de v0.2.4;
-2. auditoría matemática automatizada;
-3. pruebas de reproducibilidad de los demos;
-4. Demo 3 de triángulos mensuales;
-5. estabilización y revisión independiente del Demo 5;
-6. Demo 6 de métodos clásicos;
-7. cierre y publicación de v0.3.0;
-8. Demo 7 de incertidumbre para v0.4.0.
+1. publicación y verificación de v0.3.0;
+2. prueba de aceptación de Demo 5 con datos anonimizados;
+3. auditoría matemática automatizada;
+4. pruebas de reproducibilidad de los demos;
+5. Demo 6 de métodos clásicos;
+6. cierre y publicación de v0.4.0;
+7. Demo 7 de incertidumbre para v0.5.0.
 
 No se asignan fechas hasta conocer capacidad de revisión y profundidad requerida. Cada hito debe cerrarse por evidencia.
