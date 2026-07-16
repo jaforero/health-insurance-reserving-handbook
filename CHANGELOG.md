@@ -4,6 +4,8 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-15
+
 ### Agregado
 
 - Demo 5 local para construir triángulos actuariales con archivos CSV, TXT delimitado, XLSX o
@@ -142,7 +144,8 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
   - plantillas de issues y pull requests;
   - workflow de GitHub Pages.
 
-[Unreleased]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.4...HEAD
+[Unreleased]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.4...v0.3.0
 [0.2.4]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.2...v0.2.4
 [0.2.2]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.0...v0.2.1

@@ -3,7 +3,7 @@
 > Manual técnico, reproducible y orientado a la práctica sobre IBNR, reservas actuariales y desarrollo de reclamaciones en seguros de salud, con aplicaciones al sistema colombiano.
 
 [![Documentation](https://github.com/jaforero/health-insurance-reserving-handbook/actions/workflows/docs.yml/badge.svg)](https://github.com/jaforero/health-insurance-reserving-handbook/actions/workflows/docs.yml)
-[![Release](https://img.shields.io/badge/release-v0.2.4-2f855a)](https://github.com/jaforero/health-insurance-reserving-handbook/releases/tag/v0.2.4)
+[![Release](https://img.shields.io/badge/release-v0.3.0-2f855a)](https://github.com/jaforero/health-insurance-reserving-handbook/releases/tag/v0.3.0)
 [![Language](https://img.shields.io/badge/contenido-español-526cfe)](#contenido)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
@@ -35,7 +35,9 @@ El repositorio puede utilizarse como:
 
 ## Estado actual
 
-La versión pública más reciente es **v0.2.4**, que incorpora la identidad corporativa, la tipografía IgraSans, el logo, el favicon, el footer y la analítica de uso.
+La versión pública más reciente es **v0.3.0**, que incorpora Demo 5: una aplicación local para
+transformar archivos CSV, TXT delimitado, Excel o Parquet del usuario en triángulos actuariales
+validados y reproducibles.
 
 El repositorio incluye actualmente:
 
