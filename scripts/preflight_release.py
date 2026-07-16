@@ -34,7 +34,9 @@ REQUIRED_FILES = [
     "CITATION.cff",
     "LICENSE",
     "requirements.txt",
+    "requirements-app.txt",
     "requirements-dev.txt",
+    "environment.yml",
     "pyproject.toml",
     "Makefile",
     ".gitignore",
@@ -46,6 +48,8 @@ REQUIRED_FILES = [
     ".github/ISSUE_TEMPLATE/content_improvement.md",
     "scripts/audit_docs.py",
     "scripts/preflight_release.py",
+    "scripts/iniciar_asistente_triangulos.py",
+    "apps/triangle_workshop.py",
 ]
 
 SHOULD_NOT_TRACK = [
@@ -252,4 +256,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-

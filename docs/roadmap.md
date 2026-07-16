@@ -33,7 +33,7 @@ La versión pública más reciente es `v0.2.4`, que incorpora el dominio actuari
 |---|---|
 | Capítulos | 40 capítulos en español |
 | Partes | 7 partes temáticas |
-| Demos | 4 demos reproducibles: tres bilingües y uno en español |
+| Demos | 5 demos reproducibles: tres bilingües y dos en español |
 | Datos | Conjuntos sintéticos y diccionario canónico de reserving |
 | Visualizaciones | Triángulos actuariales y comparaciones en SVG |
 | Publicación | MkDocs Material y GitHub Pages |
@@ -64,8 +64,10 @@ La versión pública más reciente es `v0.2.4`, que incorpora el dominio actuari
 - matriz de requisitos y elegibilidad por metodología;
 - diccionario canónico con nombres principales en español;
 - Demo 4 de preparación y evaluación de datasets.
+- Demo 5 local para construir triángulos con datos propios mediante Streamlit.
 
-Estas mejoras constituyen la línea base pública para los desarrollos posteriores.
+Las mejoras hasta el Demo 4 constituyen la línea base pública. El Demo 5 forma parte del incremento
+en preparación para el siguiente release.
 
 ## 4. Próximo hito: v0.3.0
 
@@ -82,7 +84,7 @@ Estas mejoras constituyen la línea base pública para los desarrollos posterior
 
 **Criterio de salida**
 
-- cero problemas en los 55 documentos bajo `docs/`;
+- cero problemas en los 56 documentos bajo `docs/`;
 - resultado reproducible localmente y en CI.
 
 ### 4.2 Pruebas para demos reproducibles
@@ -111,7 +113,7 @@ Incorpora 60 meses de origen, edades de desarrollo 0–24, controles de suficien
 - curva de maduración, triángulo tradicional y diagnóstico reproducibles;
 - documentación explícita de cuándo ampliar el horizonte.
 
-### 4.4 Demo 5 · Comparación de métodos clásicos
+### 4.4 Demo 6 · Comparación de métodos clásicos
 
 Comparará:
 
@@ -191,12 +193,13 @@ La existencia de un archivo o su inclusión en la navegación solo indica dispon
 
 ## 9. Orden recomendado de ejecución
 
-1. publicación y verificación de v0.2.0;
+1. publicación y verificación de v0.2.4;
 2. auditoría matemática automatizada;
 3. pruebas de reproducibilidad de los demos;
 4. Demo 3 de triángulos mensuales;
-5. Demo 5 de métodos clásicos;
-6. cierre y publicación de v0.3.0;
-7. Demo 5 de incertidumbre para v0.4.0.
+5. estabilización y revisión independiente del Demo 5;
+6. Demo 6 de métodos clásicos;
+7. cierre y publicación de v0.3.0;
+8. Demo 7 de incertidumbre para v0.4.0.
 
 No se asignan fechas hasta conocer capacidad de revisión y profundidad requerida. Cada hito debe cerrarse por evidencia.

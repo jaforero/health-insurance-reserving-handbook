@@ -1,0 +1,20 @@
+[server]
+address = "localhost"
+maxUploadSize = 200
+enableCORS = true
+enableXsrfProtection = true
+showEmailPrompt = false
+
+[client]
+showErrorDetails = "type"
+toolbarMode = "minimal"
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+base = "light"
+primaryColor = "#4e00ff"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f4f1ff"
+textColor = "#1f2430"

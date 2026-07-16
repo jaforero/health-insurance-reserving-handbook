@@ -1,6 +1,6 @@
 ---
 title: "Health Insurance Reserving Handbook"
-description: "Portada, rutas de aprendizaje y acceso a 40 capítulos y cuatro demos reproducibles sobre reservas actuariales en seguros de salud."
+description: "Portada, rutas de aprendizaje y acceso a 40 capítulos y cinco demos reproducibles sobre reservas actuariales en seguros de salud."
 chapter: "index"
 part: "repository"
 language: "es"
@@ -22,7 +22,7 @@ Manual técnico y reproducible sobre IBNR, reservas actuariales y desarrollo de 
 <div class="home-stats">
   <div class="home-stat"><strong>40</strong>capítulos técnicos</div>
   <div class="home-stat"><strong>7</strong>partes temáticas</div>
-  <div class="home-stat"><strong>4</strong>demos reproducibles</div>
+  <div class="home-stat"><strong>5</strong>demos reproducibles</div>
   <div class="home-stat"><strong>132</strong>campos canónicos</div>
 </div>
 
@@ -34,7 +34,7 @@ El proyecto contiene actualmente:
 
 - **40 capítulos** técnicos en español;
 - **7 partes** temáticas;
-- **4 demos prácticos**, tres bilingües y uno publicado inicialmente en español;
+- **5 demos prácticos**, tres bilingües y dos publicados inicialmente en español;
 - generadores reproducibles en Python;
 - visualizaciones SVG de triángulos actuariales;
 - auditoría estructural, preflight y construcción estricta con MkDocs.
@@ -87,6 +87,13 @@ Evalúa la semántica, integridad, historia, exposición, priors, snapshots y go
 - [Marco conceptual — Parte 1](marco-preparacion-datos-metodologias-parte-1.md)
 - [Gates y benchmark — Parte 2](marco-preparacion-datos-metodologias-parte-2.md)
 - [Matriz de preparación por método](matriz-preparacion-datos-metodologias.md)
+
+### 5. De datos propios a triángulos actuariales
+
+Asistente local en Streamlit para seleccionar un CSV o Excel, mapear columnas, ejecutar controles,
+construir triángulos incrementales y acumulados y descargar resultados reproducibles.
+
+- [Abrir Demo 5](examples/05-demo-datos-propios-triangulos-actuariales.md)
 
 ## Rutas de aprendizaje
 

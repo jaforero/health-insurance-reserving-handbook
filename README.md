@@ -41,7 +41,7 @@ El repositorio incluye actualmente:
 
 - **40 capítulos** técnicos en español;
 - **7 partes** temáticas;
-- **4 demos prácticos**, tres bilingües y uno publicado inicialmente en español;
+- **5 demos prácticos**, tres bilingües y dos publicados inicialmente en español;
 - datos sintéticos reproducibles;
 - visualizaciones SVG de triángulos actuariales;
 - construcción y despliegue automático con MkDocs y GitHub Pages;
@@ -172,7 +172,22 @@ Mapea campos operativos a un contrato canónico en español, ejecuta controles d
 - [Documentación en español](docs/examples/04-demo-preparacion-datos.md)
 - [Diccionario canónico](config/diccionario_datos_canonico.yml)
 
-Todos los datos de los demos son sintéticos y se generan con semillas reproducibles.
+### Demo 5 · De datos propios a triángulos actuariales
+
+Aplicación local en Streamlit para seleccionar un CSV o Excel, mapear campos, validar fechas,
+importes y duplicados, construir triángulos incrementales y acumulados y exportar resultados sin
+incorporar el archivo fuente al repositorio.
+
+- [Documentación en español](docs/examples/05-demo-datos-propios-triangulos-actuariales.md)
+
+```bash
+conda env create -f environment.yml
+conda activate reserving-handbook
+python scripts/iniciar_asistente_triangulos.py
+```
+
+Los datos incluidos en el repositorio son sintéticos y se generan con semillas reproducibles. El
+Demo 5 también puede procesar archivos locales del usuario sin incorporarlos al repositorio.
 
 ## Instalación y documentación local
 
@@ -193,6 +208,7 @@ La documentación local estará disponible normalmente en `http://127.0.0.1:8000
 rm -rf site
 python scripts/audit_docs.py
 python scripts/preflight_release.py
+python -m unittest discover -s tests -p "test_*.py"
 python -m mkdocs build --strict
 ```
 
@@ -203,9 +219,12 @@ El workflow de GitHub Actions ejecuta estos controles y publica el sitio desde `
 ```text
 .
 ├── docs/                         # Capítulos, portada, demos y activos
+├── apps/                         # Interfaces educativas locales
+├── src/health_reserving/         # Núcleo Python reutilizable
 ├── config/                       # Diccionarios y configuraciones canónicas
 ├── data/                         # Datos sintéticos reproducibles
 ├── scripts/                      # Generadores y auditorías
+├── tests/                        # Pruebas de regresión y del núcleo actuarial
 ├── bibliography/                 # Reportes de investigación de soporte
 ├── AAA/                          # Fuentes actuariales de referencia
 ├── .github/workflows/docs.yml    # Validación y GitHub Pages

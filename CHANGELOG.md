@@ -4,6 +4,24 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 
 ## [Unreleased]
 
+### Agregado
+
+- Demo 5 local para construir triángulos actuariales con archivos CSV o XLSX del usuario.
+- Interfaz Streamlit ejecutada exclusivamente en `localhost`.
+- Núcleo modular `health_reserving` para ingestión, mapeo, validación, triángulos y exportación.
+- Distinción explícita entre ceros observados y celdas futuras mediante máscara de observación.
+- Reconciliación automática entre datos canónicos y triángulo incremental.
+- Gates G0, G1, G2, G3, G4, G7 y G9 aplicados al flujo de construcción.
+- Ambiente reproducible de Anaconda y lanzador para principiantes.
+- Paquete ZIP local con validaciones, triángulos, máscara, diagnóstico, configuración y manifiesto.
+- Pruebas para fechas, negativos, duplicados, segmentación, reconciliación y privacidad del export.
+
+### Seguridad
+
+- Exclusión de carpetas locales de datos y resultados mediante `.gitignore`.
+- Detalle canónico fila a fila excluido por defecto del paquete descargable.
+- Configuración local con CORS y XSRF habilitados y estadísticas de Streamlit desactivadas.
+
 ## [0.2.4] - 2026-07-15
 
 ### Agregado

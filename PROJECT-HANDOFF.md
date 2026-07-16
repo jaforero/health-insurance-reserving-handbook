@@ -5,8 +5,8 @@ chapter: "project-handoff"
 part: "repository"
 language: "es"
 status: "active"
-version: "0.2.0"
-last_updated: "2026-07-14"
+version: "0.2.4"
+last_updated: "2026-07-15"
 ---
 
 # Health Insurance Reserving Handbook — Estado y continuidad
@@ -16,9 +16,9 @@ Este documento permite continuar el proyecto sin depender de inventarios o decis
 ## 1. Repositorio y publicación
 
 - Repositorio: <https://github.com/jaforero/health-insurance-reserving-handbook>
-- Sitio: <https://jaforero.github.io/health-insurance-reserving-handbook/>
+- Sitio: <https://actuaria.javierforero.co/>
 - Rama principal: `main`
-- Última versión pública: `v0.2.0`
+- Última versión pública: `v0.2.4`
 - Estado del release: consolidación integral publicada
 - Idioma principal: español
 - Demos: español e inglés
@@ -65,7 +65,23 @@ python scripts/generate_demo_monthly_triangles.py
 
 Genera 60 meses de origen, desarrollo mensual 0–24, factores, ultimate, IBNR, controles de suficiencia y tres visualizaciones por idioma.
 
-Todos los datos son sintéticos y no representan experiencia real de una entidad.
+### Demo 4 · Preparación de datos
+
+Mapea campos a nombres canónicos, ejecuta controles y evalúa gates de preparación metodológica.
+
+### Demo 5 · De datos propios a triángulos actuariales
+
+```bash
+conda env create -f environment.yml
+conda activate reserving-handbook
+python scripts/iniciar_asistente_triangulos.py
+```
+
+Abre una interfaz local en Streamlit para leer CSV o XLSX, validar, construir triángulos y exportar
+resultados. Este demo está en preparación para el siguiente release.
+
+Los datos incluidos en el repositorio son sintéticos. El Demo 5 también puede procesar archivos
+locales del usuario, que no deben incorporarse al control de versiones.
 
 ## 4. Validación obligatoria
 
@@ -75,6 +91,7 @@ Antes de integrar cambios:
 rm -rf site
 python scripts/audit_docs.py
 python scripts/preflight_release.py
+python -m unittest discover -s tests -p "test_*.py"
 python -m mkdocs build --strict
 ```
 
@@ -107,9 +124,10 @@ El objetivo recomendado es `v0.3.0`, con este orden:
 1. auditoría matemática automática en CI;
 2. pruebas de reproducibilidad de demos;
 3. consolidar pruebas del Demo 3 mensual;
-4. Demo 4: Chain Ladder vs. Bornhuetter-Ferguson vs. Benktander vs. Cape Cod;
-5. documentación de esquemas y diccionarios de datos sintéticos;
-6. changelog, citación, tag y release notes de v0.3.0.
+4. estabilizar y revisar el Demo 5 local con datos propios;
+5. Demo 6: Chain Ladder vs. Bornhuetter-Ferguson vs. Benktander vs. Cape Cod;
+6. documentación de esquemas y diccionarios de datos sintéticos;
+7. changelog, citación, tag y release notes de v0.3.0.
 
 ## 8. Criterio de continuidad
 

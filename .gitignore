@@ -9,6 +9,7 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
+*.egg-info/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
@@ -20,6 +21,7 @@ htmlcov/
 .venv*/
 venv/
 env/
+.deps/
 
 # MkDocs
 site/
@@ -38,3 +40,9 @@ _audit/
 # Local environment
 .env
 .env.*
+
+# Demo 5: private local inputs and outputs
+user_data/
+outputs/
+resultados_usuario/
+.streamlit/secrets.toml
