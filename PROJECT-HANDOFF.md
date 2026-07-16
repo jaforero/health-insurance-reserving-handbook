@@ -19,7 +19,7 @@ Este documento permite continuar el proyecto sin depender de inventarios o decis
 - Sitio: <https://actuaria.javierforero.co/>
 - Rama principal: `main`
 - Última versión pública: `v0.3.0`
-- Estado del release: Demo 5 local publicado y validado
+- Estado del release: Demo 5 publicado; Chain Ladder de Demo 6 en desarrollo y validado localmente
 - Idioma principal: español
 - Demos: español e inglés
 
@@ -83,6 +83,16 @@ construir triángulos y exportar resultados. Este demo está en preparación par
 Los datos incluidos en el repositorio son sintéticos. El Demo 5 también puede procesar archivos
 locales del usuario, que no deben incorporarse al control de versiones.
 
+### Demo 6 · Chain Ladder con datos propios
+
+```bash
+conda activate reserving-handbook
+python scripts/iniciar_chain_ladder.py
+```
+
+Consume el ZIP agregado de Demo 5 o el ejemplo mensual, compara factores, permite selección
+manual y cola explícita, y estima ultimate e IBNR sin persistir datos del usuario.
+
 ## 4. Validación obligatoria
 
 Antes de integrar cambios:
@@ -125,7 +135,7 @@ El objetivo recomendado es `v0.3.0`, con este orden:
 2. pruebas de reproducibilidad de demos;
 3. consolidar pruebas del Demo 3 mensual;
 4. estabilizar y revisar el Demo 5 local con datos propios;
-5. Demo 6: Chain Ladder vs. Bornhuetter-Ferguson vs. Benktander vs. Cape Cod;
+5. ampliar Demo 6 desde Chain Ladder hacia Bornhuetter-Ferguson, Benktander y Cape Cod;
 6. documentación de esquemas y diccionarios de datos sintéticos;
 7. changelog, citación, tag y release notes de v0.3.0.
 

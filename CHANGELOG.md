@@ -4,6 +4,15 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 
 ## [Unreleased]
 
+### Agregado
+
+- Demo 6 local para estimar ultimate e IBNR mediante Chain Ladder determinístico a partir del
+  ejemplo mensual o de paquetes agregados y reconciliados de Demo 5.
+- Motor modular con ratios individuales, cuatro selecciones automáticas, selección manual, factor
+  de cola, CDF, proyección del triángulo, sensibilidad y diagnósticos.
+- Exportación ZIP en memoria y pruebas numéricas, de seguridad del paquete y de la interfaz.
+- Tarjetas KPI compactas y responsivas que muestran completos los importes de Demo 6.
+
 ### Cambiado
 
 - Sistema visual corporativo reutilizable para aplicaciones Streamlit, con IgraSans autoalojada y

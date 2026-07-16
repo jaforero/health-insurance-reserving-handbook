@@ -15,6 +15,7 @@ from health_reserving.ui_theme import (
     corporate_css,
     footer_html,
     hero_html,
+    kpi_grid_html,
     sidebar_brand_html,
 )
 
@@ -87,6 +88,13 @@ class CorporateThemeTest(unittest.TestCase):
         self.assertIn("overflow-wrap: anywhere", css)
         self.assertNotIn("calc(50% - 50vw)", css)
         self.assertNotIn("calc((100vw - 80rem) / 2)", css)
+
+    def test_kpi_grid_keeps_complete_values_and_escapes_content(self) -> None:
+        block = kpi_grid_html((("Ultimate <estimado>", "COP 1.234.567.890.123"), ("IBNR", "5,8%")))
+        self.assertIn("jf-kpi-grid", block)
+        self.assertIn("COP 1.234.567.890.123", block)
+        self.assertIn("Ultimate &lt;estimado&gt;", block)
+        self.assertNotIn("Ultimate <estimado>", block)
 
 
 if __name__ == "__main__":

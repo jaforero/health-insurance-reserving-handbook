@@ -1,6 +1,6 @@
 ---
 title: "Health Insurance Reserving Handbook"
-description: "Portada, rutas de aprendizaje y acceso a 40 capítulos y cinco demos reproducibles sobre reservas actuariales en seguros de salud."
+description: "Portada, rutas de aprendizaje y acceso a 40 capítulos y seis demos reproducibles sobre reservas actuariales en seguros de salud."
 chapter: "index"
 part: "repository"
 language: "es"
@@ -22,7 +22,7 @@ Manual técnico y reproducible sobre IBNR, reservas actuariales y desarrollo de 
 <div class="home-stats">
   <div class="home-stat"><strong>40</strong>capítulos técnicos</div>
   <div class="home-stat"><strong>7</strong>partes temáticas</div>
-  <div class="home-stat"><strong>5</strong>demos reproducibles</div>
+  <div class="home-stat"><strong>6</strong>demos reproducibles</div>
   <div class="home-stat"><strong>132</strong>campos canónicos</div>
 </div>
 
@@ -34,13 +34,14 @@ El proyecto contiene actualmente:
 
 - **40 capítulos** técnicos en español;
 - **7 partes** temáticas;
-- **5 demos prácticos**, tres bilingües y dos publicados inicialmente en español;
+- **6 demos prácticos**, tres bilingües y tres publicados inicialmente en español;
 - generadores reproducibles en Python;
 - visualizaciones SVG de triángulos actuariales;
 - auditoría estructural, preflight y construcción estricta con MkDocs.
 
 La versión pública más reciente es `v0.3.0`, que incorpora Demo 5 para cargar datos propios en
 CSV, TXT delimitado, Excel o Parquet y construir triángulos actuariales localmente.
+La rama de desarrollo incorpora Demo 6 para estimar ultimate e IBNR con Chain Ladder determinístico.
 
 !!! warning "Uso profesional"
     El handbook es una referencia educativa y técnica. Una aplicación profesional requiere validar datos, obligaciones, contratos, supuestos, regulación vigente y propósito de la estimación.
@@ -97,6 +98,13 @@ resultados reproducibles.
 
 - [Abrir Demo 5](examples/05-demo-datos-propios-triangulos-actuariales.md)
 
+### 6. Chain Ladder con datos propios
+
+Recibe un paquete agregado y reconciliado de Demo 5, compara factores ponderados, simples,
+medianos y recientes, permite selección manual y cola explícita, y proyecta ultimate e IBNR.
+
+- [Abrir Demo 6](examples/06-demo-chain-ladder-datos-propios.md)
+
 ## Rutas de aprendizaje
 
 ### Ruta A · Construir una primera estimación de IBNR
@@ -108,6 +116,7 @@ resultados reproducibles.
 5. [Método Chain Ladder](part-02-classical-reserving/06-chain-ladder-method.md)
 6. [Demo de triángulos simulados](examples/01-demo-triangulos-simulados-salud.md)
 7. [Demo de triángulos mensuales](examples/03-demo-triangulos-mensuales-salud.md)
+8. [Demo 6 con datos propios](examples/06-demo-chain-ladder-datos-propios.md)
 
 ### Ruta B · Comparar métodos y dependencia del prior
 
