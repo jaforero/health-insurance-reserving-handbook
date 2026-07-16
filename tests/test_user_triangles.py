@@ -140,6 +140,25 @@ class UserTriangleTest(unittest.TestCase):
         frame = read_tabular_file(source, "datos.csv", separator="auto")
         self.assertEqual(list(frame.columns), ["origen", "movimiento", "importe"])
 
+    def test_txt_reader_accepts_pipe_delimiter(self) -> None:
+        source = io.BytesIO(b"origen|movimiento|importe\n2024-01-01|2024-01-02|100\n")
+        frame = read_tabular_file(source, "datos.txt", separator="|")
+        self.assertEqual(frame.to_dict("records")[0]["importe"], 100)
+
+    def test_parquet_reader_preserves_types(self) -> None:
+        expected = pd.DataFrame(
+            {
+                "origen": pd.to_datetime(["2024-01-01"]),
+                "movimiento": pd.to_datetime(["2024-01-02"]),
+                "importe": [100.5],
+            }
+        )
+        source = io.BytesIO()
+        expected.to_parquet(source, index=False, engine="pyarrow")
+        source.seek(0)
+        actual = read_tabular_file(source, "datos.parquet")
+        pd.testing.assert_frame_equal(actual, expected)
+
 
 if __name__ == "__main__":
     unittest.main()

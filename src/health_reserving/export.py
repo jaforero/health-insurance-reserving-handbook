@@ -32,7 +32,7 @@ def build_results_zip(
     digest = hashlib.sha256(aggregated_bytes).hexdigest()
     manifest = {
         "demo": "Demo 5 — De datos propios a triángulos actuariales",
-        "version_motor": "0.1.0",
+        "version_motor": "0.1.1",
         "fecha_ejecucion_utc": datetime.now(timezone.utc).isoformat(),
         "hash_datos_agregados_sha256": digest,
         "incluye_detalle_canonico": include_detail,

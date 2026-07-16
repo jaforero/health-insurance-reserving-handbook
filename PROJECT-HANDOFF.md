@@ -77,8 +77,8 @@ conda activate reserving-handbook
 python scripts/iniciar_asistente_triangulos.py
 ```
 
-Abre una interfaz local en Streamlit para leer CSV o XLSX, validar, construir triángulos y exportar
-resultados. Este demo está en preparación para el siguiente release.
+Abre una interfaz local en Streamlit para leer CSV, TXT delimitado, XLSX o Parquet, validar,
+construir triángulos y exportar resultados. Este demo está en preparación para el siguiente release.
 
 Los datos incluidos en el repositorio son sintéticos. El Demo 5 también puede procesar archivos
 locales del usuario, que no deben incorporarse al control de versiones.

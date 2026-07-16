@@ -90,8 +90,9 @@ Evalúa la semántica, integridad, historia, exposición, priors, snapshots y go
 
 ### 5. De datos propios a triángulos actuariales
 
-Asistente local en Streamlit para seleccionar un CSV o Excel, mapear columnas, ejecutar controles,
-construir triángulos incrementales y acumulados y descargar resultados reproducibles.
+Asistente local en Streamlit para seleccionar un CSV, TXT delimitado, Excel o Parquet, mapear
+columnas, ejecutar controles, construir triángulos incrementales y acumulados y descargar
+resultados reproducibles.
 
 - [Abrir Demo 5](examples/05-demo-datos-propios-triangulos-actuariales.md)
 

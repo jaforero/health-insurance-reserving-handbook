@@ -174,9 +174,9 @@ Mapea campos operativos a un contrato canónico en español, ejecuta controles d
 
 ### Demo 5 · De datos propios a triángulos actuariales
 
-Aplicación local en Streamlit para seleccionar un CSV o Excel, mapear campos, validar fechas,
-importes y duplicados, construir triángulos incrementales y acumulados y exportar resultados sin
-incorporar el archivo fuente al repositorio.
+Aplicación local en Streamlit para seleccionar un CSV, TXT delimitado, Excel o Parquet, mapear
+campos, validar fechas, importes y duplicados, construir triángulos incrementales y acumulados y
+exportar resultados sin incorporar el archivo fuente al repositorio.
 
 - [Documentación en español](docs/examples/05-demo-datos-propios-triangulos-actuariales.md)
 
