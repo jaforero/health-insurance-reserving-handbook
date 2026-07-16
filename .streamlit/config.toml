@@ -3,6 +3,7 @@ address = "localhost"
 maxUploadSize = 200
 enableCORS = true
 enableXsrfProtection = true
+enableStaticServing = true
 showEmailPrompt = false
 
 [client]
@@ -18,3 +19,11 @@ primaryColor = "#4e00ff"
 backgroundColor = "#ffffff"
 secondaryBackgroundColor = "#f4f1ff"
 textColor = "#1f2430"
+font = "IgraSans, sans-serif"
+headingFont = "IgraSans, sans-serif"
+
+[[theme.fontFaces]]
+family = "IgraSans"
+url = "app/static/IgraSans.woff2"
+weight = 400
+style = "normal"

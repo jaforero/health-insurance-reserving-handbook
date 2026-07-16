@@ -16,6 +16,11 @@ APP = ROOT / "apps" / "triangle_workshop.py"
 class TriangleAppTest(unittest.TestCase):
     def test_example_can_build_and_offer_download(self) -> None:
         app = AppTest.from_file(str(APP), default_timeout=30).run()
+        markdown = "\n".join(element.value for element in app.markdown)
+        self.assertIn("IgraSans", markdown)
+        self.assertIn("jf-hero", markdown)
+        self.assertIn("HEALTH INSURANCE", markdown)
+
         confirmations = {
             "La obligación y la medida objetivo están definidas",
             "Confirmo la semántica de la fecha de origen",

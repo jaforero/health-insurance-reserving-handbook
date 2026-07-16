@@ -29,6 +29,13 @@ from health_reserving import (  # noqa: E402
     prepare_and_validate_claims,
     read_tabular_file,
 )
+from health_reserving.ui_theme import (  # noqa: E402
+    configure_page,
+    inject_corporate_theme,
+    render_brand_hero,
+    render_corporate_footer,
+    render_sidebar_brand,
+)
 
 
 NONE = "— No seleccionado —"
@@ -225,16 +232,16 @@ triangulo_acumulado = triangulo_incremental.cumsum(axis=1)
     )
 
 
-st.set_page_config(
-    page_title="Demo 5 · Triángulos actuariales",
-    page_icon="📐",
-    layout="wide",
-)
-
-st.title("Demo 5 · De datos propios a triángulos actuariales")
-st.write(
-    "Asistente educativo local para mapear, validar y transformar movimientos de reclamaciones "
-    "en triángulos incrementales y acumulados."
+configure_page("Demo 5 · Triángulos actuariales")
+inject_corporate_theme()
+render_brand_hero(
+    "Demo 5",
+    "De datos propios a triángulos actuariales",
+    (
+        "Asistente educativo local para mapear, validar y transformar movimientos de "
+        "reclamaciones en triángulos incrementales y acumulados."
+    ),
+    tags=("Procesamiento local", "Datos propios", "Triángulos reproducibles"),
 )
 st.info(
     "Privacidad: el archivo se procesa en esta sesión local. No se envía a GitHub ni se guarda "
@@ -242,6 +249,7 @@ st.info(
 )
 
 with st.sidebar:
+    render_sidebar_brand()
     st.header("Alcance del MVP")
     st.markdown(
         """
@@ -521,8 +529,7 @@ elif st.session_state.get("demo5_signature"):
         "La configuración cambió. Ejecuta nuevamente la validación para actualizar los resultados."
     )
 
-st.divider()
-st.caption(
+render_corporate_footer(
     "Uso educativo. La construcción de un triángulo no sustituye validación actuarial, "
     "reconciliación contable, gobierno del modelo ni revisión regulatoria."
 )
