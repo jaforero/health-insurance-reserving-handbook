@@ -14,6 +14,7 @@ python scripts/generate_demo_monthly_triangles.py --language es
 - `triangulo_pagado_mensual_incremental.csv` y `triangulo_pagado_mensual_acumulado.csv`: triángulos tradicionales.
 - `factores_mensuales_edad_a_edad.csv`: factores mensuales y número de observaciones.
 - `resultados_chain_ladder_mensual.csv`: ultimate, IBNR y comparación con la verdad simulada.
+- `prior_bornhuetter_ferguson_mensual.csv`: exposición y costo esperado sintéticos para Bornhuetter-Ferguson.
 - `diagnostico_suficiencia.csv`: controles de suficiencia del diseño.
 
 Los datos no representan experiencia de una entidad ni una metodología prescrita.

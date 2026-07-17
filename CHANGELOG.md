@@ -14,6 +14,19 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
   del prior y diagnósticos de CDF, priors e IBNR negativos.
 - Pruebas numéricas de la fórmula del handbook, modos de prior, validaciones, sensibilidad y
   preservación de los datos de entrada.
+- Sprint 2 de Demo 6: carga local de priors en CSV, TXT delimitado, XLSX o Parquet, mapeo de
+  columnas y ejecución Bornhuetter-Ferguson posterior a una estimación Chain Ladder válida.
+- Prior sintético reproducible por miembros-mes y costo esperado, construido de forma
+  independiente del patrón observado de pagos.
+- Comparación visual por periodo y total de ultimate e IBNR, sensibilidad configurable del prior,
+  diagnósticos y seis KPI compactos.
+- Exportación conjunta y auditable de Chain Ladder y Bornhuetter-Ferguson sin incluir los archivos
+  fuente originales del triángulo ni del prior.
+- Comparación visual balanceada con Chain Ladder y BF lado a lado, líneas no apiladas sobre una
+  escala común y gráfico firmado `BF − CL` con referencia cero para evitar interpretaciones
+  aditivas incorrectas.
+- Eliminación completa de `st.bar_chart` en Demo 6 e identificador visible de la versión de la
+  interfaz para detectar procesos locales que estén sirviendo una copia anterior.
 
 ## [0.4.0] - 2026-07-16
 

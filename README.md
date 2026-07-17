@@ -191,11 +191,13 @@ conda activate reserving-handbook
 python scripts/iniciar_asistente_triangulos.py
 ```
 
-### Demo 6 · Chain Ladder con datos propios
+### Demo 6 · Chain Ladder y Bornhuetter-Ferguson
 
 Aplicación local en Streamlit para leer el paquete agregado de Demo 5, comparar reglas de
 selección de factores, documentar una selección manual y un factor de cola, completar el triángulo
-acumulado y estimar ultimate e IBNR por periodo de origen.
+acumulado y estimar ultimate e IBNR por periodo de origen. Después permite cargar una expectativa
+previa en CSV, TXT delimitado, Excel o Parquet y comparar Chain Ladder con
+Bornhuetter-Ferguson mediante prior directo o exposición por tasa esperada.
 
 - [Documentación en español](docs/examples/06-demo-chain-ladder-datos-propios.md)
 
@@ -205,8 +207,9 @@ python scripts/iniciar_chain_ladder.py
 ```
 
 Los datos incluidos en el repositorio son sintéticos y se generan con semillas reproducibles. El
-Demo 5 puede procesar archivos locales del usuario y Demo 6 utiliza solamente sus salidas
-agregadas, sin incorporar esos archivos al repositorio.
+Demo 5 puede procesar archivos locales del usuario y Demo 6 utiliza sus salidas agregadas y priors
+por periodo de origen. Los archivos seleccionados se procesan en memoria y no se incorporan al
+repositorio ni a los paquetes de resultados.
 
 ## Instalación y documentación local
 

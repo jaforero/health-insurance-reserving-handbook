@@ -252,6 +252,118 @@ a:hover {{
   white-space: nowrap;
 }}
 
+.jf-method-comparison {{
+  margin: 0.65rem 0 1.35rem;
+}}
+
+.jf-method-baseline,
+.jf-method-delta {{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 1rem;
+  align-items: baseline;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 0.75rem 1rem;
+  background: #f8f7fb;
+  border: 1px solid rgba(95, 88, 114, 0.16);
+  border-radius: 0.8rem;
+}}
+
+.jf-method-baseline__label,
+.jf-method-delta__label {{
+  color: var(--jf-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}}
+
+.jf-method-baseline__value,
+.jf-method-delta__value {{
+  color: var(--jf-text);
+  font-size: clamp(1rem, 1.25vw, 1.45rem);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}}
+
+.jf-method-grid {{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin: 0.8rem 0;
+}}
+
+.jf-method-card {{
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 1rem 1.1rem;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(78, 0, 255, 0.18);
+  border-top: 0.24rem solid var(--jf-purple-deep);
+  border-radius: 0.9rem;
+  box-shadow: 0 0.35rem 1rem rgba(50, 0, 150, 0.055);
+}}
+
+.jf-method-card:nth-child(2) {{
+  border-top-color: #526cfe;
+}}
+
+.jf-method-card__eyebrow {{
+  display: block;
+  color: var(--jf-muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}}
+
+.jf-method-card h3 {{
+  margin: 0.2rem 0 0.75rem;
+  color: var(--jf-text);
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}}
+
+.jf-method-card__metric {{
+  display: grid;
+  grid-template-columns: minmax(5rem, 0.4fr) minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.48rem 0;
+  border-top: 1px solid rgba(95, 88, 114, 0.12);
+}}
+
+.jf-method-card__metric span {{
+  color: var(--jf-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}}
+
+.jf-method-card__metric strong {{
+  min-width: 0;
+  color: var(--jf-purple);
+  font-size: clamp(0.95rem, 1.2vw, 1.32rem);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  text-align: right;
+  overflow-wrap: anywhere;
+}}
+
+.jf-method-delta {{
+  background: var(--jf-purple-soft);
+  border-color: var(--jf-purple-border);
+}}
+
+.jf-method-delta__detail {{
+  flex-basis: 100%;
+  color: var(--jf-muted);
+  font-size: 0.72rem;
+  text-align: right;
+}}
+
 [data-testid="stButton"] button,
 [data-testid="stDownloadButton"] button {{
   min-height: 2.7rem;
@@ -430,6 +542,20 @@ textarea:focus-visible {{
   .jf-footer__note {{
     grid-column: auto;
   }}
+
+  .jf-method-grid {{
+    grid-template-columns: 1fr;
+  }}
+
+  .jf-method-card__metric {{
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }}
+
+  .jf-method-card__metric strong,
+  .jf-method-delta__detail {{
+    text-align: left;
+  }}
 }}
 """
 
@@ -541,6 +667,63 @@ def render_kpi_grid(metrics: Iterable[tuple[str, str]]) -> None:
     """Render compact corporate KPI cards."""
 
     st.markdown(kpi_grid_html(metrics), unsafe_allow_html=True)
+
+
+def method_comparison_html(
+    baseline: tuple[str, str],
+    methods: Iterable[tuple[str, Iterable[tuple[str, str]]]],
+    difference: tuple[str, str, str],
+) -> str:
+    """Build a balanced, escaped side-by-side comparison of two methods."""
+
+    method_cards = []
+    for position, (method_name, metrics) in enumerate(methods, start=1):
+        metric_rows = "".join(
+            (
+                '<div class="jf-method-card__metric">'
+                f"<span>{html.escape(label)}</span>"
+                f"<strong>{html.escape(value)}</strong>"
+                "</div>"
+            )
+            for label, value in metrics
+        )
+        method_cards.append(
+            '<section class="jf-method-card">'
+            f'<span class="jf-method-card__eyebrow">Método {position}</span>'
+            f"<h3>{html.escape(method_name)}</h3>"
+            f"{metric_rows}"
+            "</section>"
+        )
+
+    baseline_label, baseline_value = baseline
+    difference_label, difference_value, difference_detail = difference
+    return f"""
+<div class="jf-method-comparison" aria-label="Comparación de métodos actuariales">
+  <section class="jf-method-baseline">
+    <span class="jf-method-baseline__label">{html.escape(baseline_label)}</span>
+    <strong class="jf-method-baseline__value">{html.escape(baseline_value)}</strong>
+  </section>
+  <div class="jf-method-grid">{"".join(method_cards)}</div>
+  <section class="jf-method-delta">
+    <span class="jf-method-delta__label">{html.escape(difference_label)}</span>
+    <strong class="jf-method-delta__value">{html.escape(difference_value)}</strong>
+    <span class="jf-method-delta__detail">{html.escape(difference_detail)}</span>
+  </section>
+</div>
+"""
+
+
+def render_method_comparison(
+    baseline: tuple[str, str],
+    methods: Iterable[tuple[str, Iterable[tuple[str, str]]]],
+    difference: tuple[str, str, str],
+) -> None:
+    """Render a balanced corporate comparison for two actuarial methods."""
+
+    st.markdown(
+        method_comparison_html(baseline, methods, difference),
+        unsafe_allow_html=True,
+    )
 
 
 def footer_html(note: str) -> str:

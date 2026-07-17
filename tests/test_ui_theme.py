@@ -16,6 +16,7 @@ from health_reserving.ui_theme import (
     footer_html,
     hero_html,
     kpi_grid_html,
+    method_comparison_html,
     sidebar_brand_html,
 )
 
@@ -95,6 +96,22 @@ class CorporateThemeTest(unittest.TestCase):
         self.assertIn("COP 1.234.567.890.123", block)
         self.assertIn("Ultimate &lt;estimado&gt;", block)
         self.assertNotIn("Ultimate <estimado>", block)
+
+    def test_method_comparison_balances_methods_and_keeps_signed_delta(self) -> None:
+        block = method_comparison_html(
+            ("Base <común>", "COP 1.274.316.196.198"),
+            (
+                ("Chain Ladder", (("Ultimate", "COP 1.352.273.822.114"),)),
+                ("Bornhuetter-Ferguson", (("Ultimate", "COP 1.352.017.435.986"),)),
+            ),
+            ("Diferencia BF − CL", "−COP 256.386.128", "−0,33% respecto a CL"),
+        )
+        self.assertIn("jf-method-comparison", block)
+        self.assertEqual(block.count('class="jf-method-card"'), 2)
+        self.assertIn("Chain Ladder", block)
+        self.assertIn("Bornhuetter-Ferguson", block)
+        self.assertIn("−COP 256.386.128", block)
+        self.assertIn("Base &lt;común&gt;", block)
 
 
 if __name__ == "__main__":

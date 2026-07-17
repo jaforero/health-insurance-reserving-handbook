@@ -68,7 +68,8 @@ actuariales mediante Demo 5 y Chain Ladder determinístico como primer increment
 - Demo 5 local para construir triángulos con datos propios mediante Streamlit;
 - Demo 6 local para seleccionar factores, proyectar el triángulo y estimar ultimate e IBNR;
 - sistema visual corporativo compartido con IgraSans local y componentes responsivos;
-- 32 pruebas automatizadas para preparación, Chain Ladder, exportación e interfaces.
+- suite automatizada para preparación, Chain Ladder, Bornhuetter-Ferguson, exportación e
+  interfaces.
 
 ## 4. Próximo hito: v0.5.0
 
@@ -91,15 +92,21 @@ explícitos.
 - sensibilidad a la expectativa previa y a los patrones de desarrollo;
 - comparación directa con Chain Ladder.
 
-**Sprint 1 del núcleo — implementado y validado para integración**
+**Sprint 1 del núcleo — implementado**
 
 - motor Python independiente de Streamlit;
 - prior directo o reconciliado como exposición por tasa esperada;
 - sensibilidad configurable del prior y diagnósticos por periodo;
 - pruebas numéricas antes de integrar carga de archivos, interfaz y exportación.
 
-La integración visual en Demo 6 se reserva para el Sprint 2, una vez aprobado este contrato de
-cálculo.
+**Sprint 2 de integración — implementado y pendiente de aceptación final**
+
+- carga local de priors en CSV, TXT delimitado, XLSX o Parquet;
+- mapeo de periodo de origen y prior directo o exposición por tasa;
+- prior sintético reproducible, independiente del desarrollo observado;
+- comparación visual Chain Ladder vs. BF por origen y total;
+- sensibilidad configurable, diagnósticos y exportación conjunta auditable;
+- pruebas del recorrido completo en Streamlit y de privacidad de la exportación.
 
 ### 4.3 Benktander y Cape Cod
 
@@ -186,7 +193,7 @@ La existencia de un archivo o su inclusión en la navegación solo indica dispon
 
 1. publicación y verificación de `v0.4.0`;
 2. prueba de aceptación de Demo 5 con datos anonimizados;
-3. ampliación de Demo 6 con Bornhuetter-Ferguson;
+3. aceptación del Sprint 2 de Bornhuetter-Ferguson con priors controlados;
 4. incorporación de Benktander y Cape Cod;
 5. comparación reproducible de métodos clásicos;
 6. cierre y publicación de `v0.5.0`;

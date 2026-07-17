@@ -98,10 +98,12 @@ resultados reproducibles.
 
 - [Abrir Demo 5](examples/05-demo-datos-propios-triangulos-actuariales.md)
 
-### 6. Chain Ladder con datos propios
+### 6. Chain Ladder y Bornhuetter-Ferguson
 
 Recibe un paquete agregado y reconciliado de Demo 5, compara factores ponderados, simples,
 medianos y recientes, permite selección manual y cola explícita, y proyecta ultimate e IBNR.
+Luego incorpora un prior directo o una exposición por tasa esperada para comparar Chain Ladder y
+Bornhuetter-Ferguson, incluyendo sensibilidad, diagnósticos y exportación conjunta.
 
 - [Abrir Demo 6](examples/06-demo-chain-ladder-datos-propios.md)
 

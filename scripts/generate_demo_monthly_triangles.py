@@ -25,11 +25,31 @@ DEMO_FACTOR_THRESHOLD = 24
 
 # Illustrative cumulative paid emergence through development month 24.
 BASE_CUMULATIVE_PATTERN = (
-    0.2800, 0.4550, 0.5850, 0.6850, 0.7650,
-    0.8270, 0.8750, 0.9110, 0.9380, 0.9580,
-    0.9720, 0.9815, 0.9880, 0.9922, 0.9950,
-    0.9968, 0.9980, 0.9988, 0.99925, 0.99955,
-    0.99972, 0.99984, 0.99991, 0.99996, 1.0000,
+    0.2800,
+    0.4550,
+    0.5850,
+    0.6850,
+    0.7650,
+    0.8270,
+    0.8750,
+    0.9110,
+    0.9380,
+    0.9580,
+    0.9720,
+    0.9815,
+    0.9880,
+    0.9922,
+    0.9950,
+    0.9968,
+    0.9980,
+    0.9988,
+    0.99925,
+    0.99955,
+    0.99972,
+    0.99984,
+    0.99991,
+    0.99996,
+    1.0000,
 )
 
 
@@ -65,6 +85,7 @@ LABELS = {
         "cumulative": "triangulo_pagado_mensual_acumulado.csv",
         "factors": "factores_mensuales_edad_a_edad.csv",
         "results": "resultados_chain_ladder_mensual.csv",
+        "bf_prior": "prior_bornhuetter_ferguson_mensual.csv",
         "diagnostics": "diagnostico_suficiencia.csv",
         "summary": "resumen_ejecucion.txt",
         "triangle_svg": "triangulo_pagado_mensual_acumulado.svg",
@@ -79,6 +100,7 @@ LABELS = {
         "cumulative": "monthly_paid_cumulative_triangle.csv",
         "factors": "monthly_age_to_age_factors.csv",
         "results": "monthly_chain_ladder_results.csv",
+        "bf_prior": "monthly_bornhuetter_ferguson_prior.csv",
         "diagnostics": "data_sufficiency_diagnostics.csv",
         "summary": "run_summary.txt",
         "triangle_svg": "monthly_paid_cumulative_triangle.svg",
@@ -141,8 +163,8 @@ def simulate_origins(
         _, zero_based_month = divmod(origin_index, 12)
         angle = 2.0 * math.pi * zero_based_month / 12.0
         seasonal_index = 1.0 + 0.085 * math.cos(angle) + 0.025 * math.sin(angle)
-        member_months = round(82_000 * (1.0022 ** position) * rng.uniform(0.985, 1.015))
-        monthly_trend = 1.0060 ** position
+        member_months = round(82_000 * (1.0022**position) * rng.uniform(0.985, 1.015))
+        monthly_trend = 1.0060**position
         morbidity = rng.lognormvariate(0.0, 0.025)
         cost_per_member = 215_000 * monthly_trend * seasonal_index * morbidity
         ultimate = member_months * cost_per_member
@@ -287,7 +309,9 @@ def build_demo(
 
 
 def validate_result(result: DemoResult, origin_months: int, development_months: int) -> None:
-    expected_cells = sum(min(development_months, age) + 1 for age in range(origin_months - 1, -1, -1))
+    expected_cells = sum(
+        min(development_months, age) + 1 for age in range(origin_months - 1, -1, -1)
+    )
     if len(result.origins) != origin_months:
         raise RuntimeError("Origin-month count does not reconcile")
     if result.observed_cells != expected_cells:
@@ -319,7 +343,12 @@ def triangle_rows(
     rows: list[dict[str, object]] = []
     for origin, values in triangle.items():
         row: dict[str, object] = {origin_key: origin}
-        row.update({f"dev_{dev}": round(values[dev], 2) if dev in values else "" for dev in range(development_months + 1)})
+        row.update(
+            {
+                f"dev_{dev}": round(values[dev], 2) if dev in values else ""
+                for dev in range(development_months + 1)
+            }
+        )
         rows.append(row)
     return rows
 
@@ -413,7 +442,10 @@ def write_language_data(
                 "observations": row["observations"],
                 "individual_ratio_cv": f"{float(row['ratio_cv']):.8f}",
                 "cdf_to_24": f"{float(row['cdf_to_24']):.8f}",
-                "demo_heuristic_status": str(row["status"]).replace("adecuado", "adequate").replace("precaucion", "caution").replace("insuficiente", "insufficient"),
+                "demo_heuristic_status": str(row["status"])
+                .replace("adecuado", "adequate")
+                .replace("precaucion", "caution")
+                .replace("insuficiente", "insufficient"),
             }
             for row in result.factors
         ]
@@ -434,6 +466,26 @@ def write_language_data(
     write_csv(data_dir / labels["factors"], list(factor_rows[0]), factor_rows)
     write_csv(data_dir / labels["results"], list(estimate_rows[0]), estimate_rows)
 
+    prior_rows: list[dict[str, object]] = []
+    for position, record in enumerate(result.origins):
+        expected_cost = 215_000 * (1.0060**position) * record.seasonal_index
+        if language == "es":
+            prior_row = {
+                "mes_origen": record.origin_month,
+                "miembros_mes": record.member_months,
+                "costo_esperado_por_miembro": f"{expected_cost:.6f}",
+                "ultimate_esperado": f"{record.member_months * expected_cost:.2f}",
+            }
+        else:
+            prior_row = {
+                "origin_month": record.origin_month,
+                "member_months": record.member_months,
+                "expected_cost_per_member": f"{expected_cost:.6f}",
+                "expected_ultimate": f"{record.member_months * expected_cost:.2f}",
+            }
+        prior_rows.append(prior_row)
+    write_csv(data_dir / labels["bf_prior"], list(prior_rows[0]), prior_rows)
+
     minimum_observations = min(int(row["observations"]) for row in result.factors)
     diagnostic_rows = [
         {
@@ -445,22 +497,30 @@ def write_language_data(
             (
                 "meses_origen" if language == "es" else "origin_months",
                 len(result.origins),
-                "Cinco años; permite observar estacionalidad anual repetida." if language == "es" else "Five years; supports repeated annual-seasonality review.",
+                "Cinco años; permite observar estacionalidad anual repetida."
+                if language == "es"
+                else "Five years; supports repeated annual-seasonality review.",
             ),
             (
                 "horizonte_desarrollo" if language == "es" else "development_horizon",
                 development_months,
-                "Punto de partida para reclamaciones de salud de maduración rápida o media." if language == "es" else "Starting point for fast- or medium-maturing health claims.",
+                "Punto de partida para reclamaciones de salud de maduración rápida o media."
+                if language == "es"
+                else "Starting point for fast- or medium-maturing health claims.",
             ),
             (
                 "origenes_completos" if language == "es" else "complete_origins",
                 result.complete_origins,
-                "Meses con observación completa hasta el desarrollo 24." if language == "es" else "Origin months fully observed through development 24.",
+                "Meses con observación completa hasta el desarrollo 24."
+                if language == "es"
+                else "Origin months fully observed through development 24.",
             ),
             (
                 "min_observaciones_factor" if language == "es" else "minimum_factor_observations",
                 minimum_observations,
-                "Supera el umbral didáctico de 24; no es un mínimo actuarial universal." if language == "es" else "Above the 24-observation teaching threshold; not a universal actuarial minimum.",
+                "Supera el umbral didáctico de 24; no es un mínimo actuarial universal."
+                if language == "es"
+                else "Above the 24-observation teaching threshold; not a universal actuarial minimum.",
             ),
         )
     ]
@@ -480,7 +540,7 @@ def write_language_data(
             f"Semilla: {seed}\n"
             "Nota: 60/24 es una configuración didáctica defendible, no un mínimo universal.\n"
         )
-        readme = f"""# Datos del demo de triángulos mensuales\n\nDatos enteramente sintéticos para {len(result.origins)} meses de origen y edades de desarrollo 0–{development_months}.\n\n## Reproducción\n\n```bash\npython scripts/generate_demo_monthly_triangles.py --language es\n```\n\n## Archivos\n\n- `{labels['long']}`: datos observados en formato largo.\n- `{labels['incremental']}` y `{labels['cumulative']}`: triángulos tradicionales.\n- `{labels['factors']}`: factores mensuales y número de observaciones.\n- `{labels['results']}`: ultimate, IBNR y comparación con la verdad simulada.\n- `{labels['diagnostics']}`: controles de suficiencia del diseño.\n\nLos datos no representan experiencia de una entidad ni una metodología prescrita.\n"""
+        readme = f"""# Datos del demo de triángulos mensuales\n\nDatos enteramente sintéticos para {len(result.origins)} meses de origen y edades de desarrollo 0–{development_months}.\n\n## Reproducción\n\n```bash\npython scripts/generate_demo_monthly_triangles.py --language es\n```\n\n## Archivos\n\n- `{labels["long"]}`: datos observados en formato largo.\n- `{labels["incremental"]}` y `{labels["cumulative"]}`: triángulos tradicionales.\n- `{labels["factors"]}`: factores mensuales y número de observaciones.\n- `{labels["results"]}`: ultimate, IBNR y comparación con la verdad simulada.\n- `{labels["diagnostics"]}`: controles de suficiencia del diseño.\n\nLos datos no representan experiencia de una entidad ni una metodología prescrita.\n"""
     else:
         summary = (
             "=== Monthly simulated health paid-triangle demo ===\n"
@@ -494,7 +554,20 @@ def write_language_data(
             f"Seed: {seed}\n"
             "Note: 60/24 is a defensible teaching design, not a universal minimum.\n"
         )
-        readme = f"""# Monthly triangle demo data\n\nEntirely synthetic data for {len(result.origins)} origin months and development ages 0–{development_months}.\n\n## Reproduction\n\n```bash\npython scripts/generate_demo_monthly_triangles.py --language en\n```\n\n## Files\n\n- `{labels['long']}`: observed long-format data.\n- `{labels['incremental']}` and `{labels['cumulative']}`: traditional triangles.\n- `{labels['factors']}`: monthly factors and observation counts.\n- `{labels['results']}`: ultimate, IBNR and comparison with simulated truth.\n- `{labels['diagnostics']}`: design-sufficiency controls.\n\nThe data do not represent any entity's experience or a prescribed method.\n"""
+        readme = f"""# Monthly triangle demo data\n\nEntirely synthetic data for {len(result.origins)} origin months and development ages 0–{development_months}.\n\n## Reproduction\n\n```bash\npython scripts/generate_demo_monthly_triangles.py --language en\n```\n\n## Files\n\n- `{labels["long"]}`: observed long-format data.\n- `{labels["incremental"]}` and `{labels["cumulative"]}`: traditional triangles.\n- `{labels["factors"]}`: monthly factors and observation counts.\n- `{labels["results"]}`: ultimate, IBNR and comparison with simulated truth.\n- `{labels["diagnostics"]}`: design-sufficiency controls.\n\nThe data do not represent any entity's experience or a prescribed method.\n"""
+    diagnostics_line = (
+        f"- `{labels['diagnostics']}`: controles de suficiencia del diseño."
+        if language == "es"
+        else f"- `{labels['diagnostics']}`: design-sufficiency controls."
+    )
+    prior_line = (
+        f"- `{labels['bf_prior']}`: exposición y costo esperado sintéticos para "
+        "Bornhuetter-Ferguson."
+        if language == "es"
+        else f"- `{labels['bf_prior']}`: synthetic exposure and expected cost for "
+        "Bornhuetter-Ferguson."
+    )
+    readme = readme.replace(diagnostics_line, f"{prior_line}\n{diagnostics_line}")
     (data_dir / labels["summary"]).write_text(summary, encoding="utf-8", newline="\n")
     (data_dir / "README.md").write_text(readme, encoding="utf-8", newline="\n")
 
@@ -520,12 +593,18 @@ text {{ font-family: Inter, Arial, sans-serif; fill: #1f2937; }}
     path.write_text(svg, encoding="utf-8", newline="\n")
 
 
-def write_triangle_svg(result: DemoResult, path: Path, language: str, development_months: int) -> None:
+def write_triangle_svg(
+    result: DemoResult, path: Path, language: str, development_months: int
+) -> None:
     cell_w, cell_h = 50, 17
     left, top = 100, 105
     width = left + (development_months + 1) * cell_w + 35
     height = top + len(result.origins) * cell_h + 55
-    title = "Triángulo mensual pagado acumulado" if language == "es" else "Monthly cumulative paid triangle"
+    title = (
+        "Triángulo mensual pagado acumulado"
+        if language == "es"
+        else "Monthly cumulative paid triangle"
+    )
     subtitle = (
         "COP millones · 60 meses de origen · desarrollo 0–24 · diagonal en amarillo"
         if language == "es"
@@ -541,7 +620,9 @@ def write_triangle_svg(result: DemoResult, path: Path, language: str, developmen
         parts.append(f'<text x="{x}" y="88" class="label" text-anchor="middle">{dev}</text>')
     for row_index, record in enumerate(result.origins):
         y = top + row_index * cell_h
-        parts.append(f'<text x="88" y="{y + 12}" class="label" text-anchor="end">{record.origin_month}</text>')
+        parts.append(
+            f'<text x="88" y="{y + 12}" class="label" text-anchor="end">{record.origin_month}</text>'
+        )
         values = result.cumulative[record.origin_month]
         latest = max(values)
         for dev in range(development_months + 1):
@@ -552,15 +633,22 @@ def write_triangle_svg(result: DemoResult, path: Path, language: str, developmen
                 text_value = f"{values[dev] / 1_000_000:,.0f}"
             else:
                 fill, stroke, text_value = "#fafafa", "#e5e7eb", ""
-            parts.append(f'<rect x="{x}" y="{y}" width="{cell_w}" height="{cell_h}" fill="{fill}" stroke="{stroke}" stroke-width="0.7"/>')
+            parts.append(
+                f'<rect x="{x}" y="{y}" width="{cell_w}" height="{cell_h}" fill="{fill}" stroke="{stroke}" stroke-width="0.7"/>'
+            )
             if text_value:
-                parts.append(f'<text x="{x + cell_w - 3}" y="{y + 11.5}" class="value" text-anchor="end">{svg_escape(text_value)}</text>')
+                parts.append(
+                    f'<text x="{x + cell_w - 3}" y="{y + 11.5}" class="value" text-anchor="end">{svg_escape(text_value)}</text>'
+                )
     write_svg(path, width, height, "\n".join(parts))
 
 
 def empirical_maturity(result: DemoResult, development_months: int) -> list[float]:
     complete = [values for values in result.cumulative.values() if development_months in values]
-    return [statistics.mean(values[dev] / values[development_months] for values in complete) for dev in range(development_months + 1)]
+    return [
+        statistics.mean(values[dev] / values[development_months] for values in complete)
+        for dev in range(development_months + 1)
+    ]
 
 
 def write_curve_svg(result: DemoResult, path: Path, language: str, development_months: int) -> None:
@@ -573,7 +661,9 @@ def write_curve_svg(result: DemoResult, path: Path, language: str, development_m
         x = left + dev / development_months * plot_w
         y = top + (1.0 - value) * plot_h
         points.append(f"{x:.1f},{y:.1f}")
-    title = "Curva de maduración mensual pagada" if language == "es" else "Monthly paid maturity curve"
+    title = (
+        "Curva de maduración mensual pagada" if language == "es" else "Monthly paid maturity curve"
+    )
     subtitle = (
         f"Promedio empírico de {result.complete_origins} meses completos · porcentaje acumulado del ultimate a 24 meses"
         if language == "es"
@@ -585,21 +675,35 @@ def write_curve_svg(result: DemoResult, path: Path, language: str, development_m
     ]
     for pct in (0.2, 0.4, 0.6, 0.8, 1.0):
         y = top + (1.0 - pct) * plot_h
-        parts.append(f'<line x1="{left}" y1="{y}" x2="{width-right}" y2="{y}" stroke="#e5e7eb"/>')
-        parts.append(f'<text x="{left-12}" y="{y+4}" class="label" text-anchor="end">{pct:.0%}</text>')
-    parts.append(f'<line x1="{left}" y1="{top}" x2="{left}" y2="{top+plot_h}" stroke="#374151"/>')
-    parts.append(f'<line x1="{left}" y1="{top+plot_h}" x2="{width-right}" y2="{top+plot_h}" stroke="#374151"/>')
+        parts.append(f'<line x1="{left}" y1="{y}" x2="{width - right}" y2="{y}" stroke="#e5e7eb"/>')
+        parts.append(
+            f'<text x="{left - 12}" y="{y + 4}" class="label" text-anchor="end">{pct:.0%}</text>'
+        )
+    parts.append(f'<line x1="{left}" y1="{top}" x2="{left}" y2="{top + plot_h}" stroke="#374151"/>')
+    parts.append(
+        f'<line x1="{left}" y1="{top + plot_h}" x2="{width - right}" y2="{top + plot_h}" stroke="#374151"/>'
+    )
     for dev in range(0, development_months + 1, 3):
         x = left + dev / development_months * plot_w
-        parts.append(f'<text x="{x}" y="{top+plot_h+25}" class="label" text-anchor="middle">{dev}</text>')
-    parts.append(f'<polyline points="{" ".join(points)}" fill="none" stroke="#3659a7" stroke-width="3"/>')
+        parts.append(
+            f'<text x="{x}" y="{top + plot_h + 25}" class="label" text-anchor="middle">{dev}</text>'
+        )
+    parts.append(
+        f'<polyline points="{" ".join(points)}" fill="none" stroke="#3659a7" stroke-width="3"/>'
+    )
     for dev in (0, 3, 6, 12, 18, 24):
         x = left + dev / development_months * plot_w
         y = top + (1.0 - values[dev]) * plot_h
-        parts.append(f'<circle cx="{x}" cy="{y}" r="4" fill="#ffffff" stroke="#3659a7" stroke-width="2"/>')
-        parts.append(f'<text x="{x}" y="{y-10}" class="label" text-anchor="middle">{values[dev]:.1%}</text>')
+        parts.append(
+            f'<circle cx="{x}" cy="{y}" r="4" fill="#ffffff" stroke="#3659a7" stroke-width="2"/>'
+        )
+        parts.append(
+            f'<text x="{x}" y="{y - 10}" class="label" text-anchor="middle">{values[dev]:.1%}</text>'
+        )
     axis = "Mes de desarrollo" if language == "es" else "Development month"
-    parts.append(f'<text x="{left+plot_w/2}" y="{height-18}" class="subtitle" text-anchor="middle">{axis}</text>')
+    parts.append(
+        f'<text x="{left + plot_w / 2}" y="{height - 18}" class="subtitle" text-anchor="middle">{axis}</text>'
+    )
     write_svg(path, width, height, "\n".join(parts))
 
 
@@ -610,7 +714,11 @@ def write_observations_svg(result: DemoResult, path: Path, language: str) -> Non
     counts = [int(row["observations"]) for row in result.factors]
     max_y = max(counts) + 5
     bar_space = plot_w / len(counts)
-    title = "Observaciones disponibles por factor mensual" if language == "es" else "Available observations per monthly factor"
+    title = (
+        "Observaciones disponibles por factor mensual"
+        if language == "es"
+        else "Available observations per monthly factor"
+    )
     subtitle = (
         "La muestra cae con el desarrollo · línea punteada = heurística didáctica de 24 observaciones"
         if language == "es"
@@ -622,25 +730,39 @@ def write_observations_svg(result: DemoResult, path: Path, language: str) -> Non
     ]
     for tick in range(0, max_y + 1, 10):
         y = top + (1.0 - tick / max_y) * plot_h
-        parts.append(f'<line x1="{left}" y1="{y}" x2="{width-right}" y2="{y}" stroke="#e5e7eb"/>')
-        parts.append(f'<text x="{left-12}" y="{y+4}" class="label" text-anchor="end">{tick}</text>')
+        parts.append(f'<line x1="{left}" y1="{y}" x2="{width - right}" y2="{y}" stroke="#e5e7eb"/>')
+        parts.append(
+            f'<text x="{left - 12}" y="{y + 4}" class="label" text-anchor="end">{tick}</text>'
+        )
     threshold_y = top + (1.0 - DEMO_FACTOR_THRESHOLD / max_y) * plot_h
-    parts.append(f'<line x1="{left}" y1="{threshold_y}" x2="{width-right}" y2="{threshold_y}" stroke="#a66f00" stroke-width="2" stroke-dasharray="6 5"/>')
+    parts.append(
+        f'<line x1="{left}" y1="{threshold_y}" x2="{width - right}" y2="{threshold_y}" stroke="#a66f00" stroke-width="2" stroke-dasharray="6 5"/>'
+    )
     for dev, count in enumerate(counts):
         bar_h = count / max_y * plot_h
         x = left + dev * bar_space + 3
         y = top + plot_h - bar_h
         fill = "#3659a7" if count >= DEMO_FACTOR_THRESHOLD else "#d97706"
-        parts.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{bar_space-6:.1f}" height="{bar_h:.1f}" fill="{fill}" stroke="#27447f"/>')
+        parts.append(
+            f'<rect x="{x:.1f}" y="{y:.1f}" width="{bar_space - 6:.1f}" height="{bar_h:.1f}" fill="{fill}" stroke="#27447f"/>'
+        )
         if dev % 3 == 0 or dev == len(counts) - 1:
-            parts.append(f'<text x="{x+(bar_space-6)/2:.1f}" y="{top+plot_h+23}" class="label" text-anchor="middle">{dev}→{dev+1}</text>')
-            parts.append(f'<text x="{x+(bar_space-6)/2:.1f}" y="{y-6:.1f}" class="label" text-anchor="middle">{count}</text>')
+            parts.append(
+                f'<text x="{x + (bar_space - 6) / 2:.1f}" y="{top + plot_h + 23}" class="label" text-anchor="middle">{dev}→{dev + 1}</text>'
+            )
+            parts.append(
+                f'<text x="{x + (bar_space - 6) / 2:.1f}" y="{y - 6:.1f}" class="label" text-anchor="middle">{count}</text>'
+            )
     axis = "Factor de desarrollo" if language == "es" else "Development factor"
-    parts.append(f'<text x="{left+plot_w/2}" y="{height-18}" class="subtitle" text-anchor="middle">{axis}</text>')
+    parts.append(
+        f'<text x="{left + plot_w / 2}" y="{height - 18}" class="subtitle" text-anchor="middle">{axis}</text>'
+    )
     write_svg(path, width, height, "\n".join(parts))
 
 
-def write_language_assets(result: DemoResult, repo_root: Path, language: str, development_months: int) -> None:
+def write_language_assets(
+    result: DemoResult, repo_root: Path, language: str, development_months: int
+) -> None:
     labels = LABELS[language]
     asset_dir = repo_root / "docs" / "assets" / labels["asset_dir"]
     write_triangle_svg(result, asset_dir / labels["triangle_svg"], language, development_months)
