@@ -1,205 +1,250 @@
 ---
-title: Método Bornhuetter-Ferguson
-description: Explicación del método Bornhuetter-Ferguson, que combina experiencia observada con una expectativa previa de pérdidas para estimar reservas.
-status: draft
-version: "0.1.6"
+title: "Método Bornhuetter-Ferguson"
+description: "Especificación actuarial, datos, fórmulas, sensibilidad y gobierno del método Bornhuetter-Ferguson para reservas de salud."
 chapter: "11"
-part: "part-02-classical-reserving"
+part: "02-classical-reserving"
 language: "es"
-last_updated: "2026-07-14"
+status: "review"
+version: "0.6.0"
+last_updated: "2026-07-17"
+tags:
+  - bornhuetter-ferguson
+  - prior
+  - chain-ladder
+  - ibnr
+  - salud
 ---
 
 # Método Bornhuetter-Ferguson
 
-Bornhuetter-Ferguson, usualmente abreviado BF, es un método clásico que combina dos fuentes de información: la experiencia observada y una expectativa previa de pérdidas. Es especialmente útil cuando los años de origen recientes tienen poca madurez y Chain Ladder puede ser demasiado sensible al desarrollo observado.
+## 1. Propósito
 
-La idea central es no permitir que una observación temprana, posiblemente inestable, determine todo el ultimate. En cambio, BF reconoce lo observado y estima la parte no observada usando una expectativa previa.
+Bornhuetter-Ferguson (BF) combina dos fuentes distintas:
 
-## Intuición
+- el desarrollo observado, usado para estimar qué proporción ya emergió;
+- una expectativa previa de costo último, usada únicamente sobre la proporción pendiente.
 
-Chain Ladder proyecta el observado:
+Por esta razón suele ser útil para periodos recientes, donde Chain Ladder puede reaccionar de forma extrema a un observado todavía pequeño. BF no elimina la necesidad de validar el patrón ni convierte un prior débil en evidencia confiable.
 
-$$
-Ultimate^{CL} = Observado \times CDF
-$$
+## 2. Notación
 
-Bornhuetter-Ferguson proyecta solo la parte no observada de una expectativa previa:
+Para el periodo de origen $i$:
 
-$$
-Ultimate^{BF} =
-Observado + ELR \times Exposición \times (1 - \%Desarrollado)
-$$
+- $C_i$: acumulado observado a la edad actual;
+- $CDF_i$: factor desde la edad actual hasta ultimate;
+- $p_i$: proporción desarrollada;
+- $q_i$: proporción no desarrollada;
+- $U_i^{prior}$: ultimate esperado antes de aplicar la experiencia emergente;
+- $U_i^{BF}$: ultimate BF;
+- $R_i^{BF}$: IBNR BF.
 
-donde:
-
-- `ELR` es la razón esperada de pérdidas o costo esperado;
-- `Exposición` puede ser prima, miembros, meses-miembro u otra base;
-- `%Desarrollado` es la proporción del ultimate que se espera ya observada.
-
-## Fórmula general
-
-Si $A_i$ es el monto observado para el año de origen $i$, $E_i$ es la pérdida esperada a priori y $p_i$ es el porcentaje desarrollado, entonces:
-
-$$
-Ultimate^{BF}_i = A_i + E_i \times (1 - p_i)
-$$
-
-El IBNR es:
-
-$$
-IBNR^{BF}_i = E_i \times (1 - p_i)
-$$
-
-En base pagada, $A_i$ puede ser pagado acumulado. En base incurrida, puede ser incurrido acumulado.
-
-## Porcentaje desarrollado
-
-El porcentaje desarrollado se deriva del factor acumulado hacia ultimate:
+La madurez se obtiene del patrón de desarrollo:
 
 $$
 p_i = \frac{1}{CDF_i}
 $$
 
-Si un año tiene un CDF de 2.0, se interpreta que está aproximadamente 50% desarrollado:
-
 $$
-p_i = \frac{1}{2.0} = 50\%
+q_i = 1 - p_i
 $$
 
-Por tanto, BF asigna la pérdida esperada al porcentaje no desarrollado:
+Cuando el CDF es menor que uno, $q_i$ es negativo. El motor debe mostrarlo y exigir interpretación; no debe corregirlo silenciosamente.
+
+## 3. Construcción del prior
+
+### 3.1 Ultimate directo
+
+El usuario puede suministrar una expectativa última por origen:
 
 $$
-1 - p_i
+U_i^{prior}
 $$
 
-## Pérdida esperada
+La fuente puede ser presupuesto, pricing, forecast, estudio de frecuencia y severidad u otra estimación independiente. Debe documentarse unidad, fecha, alcance, ajustes y responsable.
 
-La pérdida esperada puede estimarse con:
+### 3.2 Exposición por tasa
 
-- prima devengada multiplicada por razón esperada de pérdida;
-- exposición multiplicada por costo esperado por unidad;
-- presupuesto técnico;
-- tarifa esperada;
-- experiencia ajustada por tendencia;
-- benchmark externo;
-- juicio actuarial documentado.
-
-En salud, una base común puede ser:
+Si existe una exposición $E_i$ y una tasa esperada $r_i$:
 
 $$
-E_i = Meses\ miembro_i \times Costo\ esperado\ por\ miembro
+U_i^{prior} = E_i r_i
 $$
 
-El costo esperado debe considerar tendencia médica, mezcla de riesgo, contrato, red y cambios regulatorios relevantes.
+En salud, ejemplos de exposición incluyen miembros-mes o contratos-mes; la tasa debe estar expresada en una unidad compatible. Si la tasa proviene del mismo triángulo sin una separación metodológica clara, la independencia del prior puede ser aparente.
 
-## Ejemplo conceptual
+### 3.3 Ajustes de comparabilidad
 
-Supongamos:
+Antes de usar el prior se revisan:
 
-- pagado observado: 100;
-- CDF: 2.0;
-- pérdida esperada: 180.
+- tendencia y fecha de nivel;
+- cambios de beneficio, red, deducibles y copagos;
+- mezcla de producto, región, prestador y población;
+- grandes reclamaciones, reaseguro, recuperaciones y glosas;
+- moneda, inflación y unidades;
+- consistencia entre periodos de exposición y ocurrencia.
 
-El porcentaje desarrollado es:
+## 4. Fórmulas
+
+BF aplica el prior solo a la porción pendiente:
 
 $$
-p = \frac{1}{2.0} = 0.50
+R_i^{BF} = q_i U_i^{prior}
 $$
 
-La parte no desarrollada es:
+$$
+U_i^{BF} = C_i + R_i^{BF}
+$$
+
+En contraste, Chain Ladder estima:
 
 $$
-1 - p = 0.50
+U_i^{CL} = \frac{C_i}{p_i}
 $$
+
+$$
+R_i^{CL} = U_i^{CL} - C_i
+$$
+
+Una representación equivalente muestra los pesos:
+
+$$
+U_i^{BF} = p_i U_i^{CL} + q_i U_i^{prior}
+$$
+
+Esta igualdad no significa que se promedien dos reservas independientes: ambos términos comparten el patrón que determina $p_i$.
+
+## 5. Ejemplo numérico
+
+Supóngase:
+
+- acumulado observado: $C_i = 72$;
+- CDF: $1.25$;
+- madurez: $p_i = 0.80$;
+- prior de ultimate: $U_i^{prior} = 100$.
 
 Entonces:
 
 $$
-IBNR^{BF} = 180 \times 0.50 = 90
+q_i = 1 - 0.80 = 0.20
 $$
 
 $$
-Ultimate^{BF} = 100 + 90 = 190
+R_i^{BF} = 0.20 \times 100 = 20
 $$
 
-Chain Ladder habría estimado:
-
 $$
-Ultimate^{CL} = 100 \times 2.0 = 200
+U_i^{BF} = 72 + 20 = 92
 $$
 
-BF modera el resultado porque usa la expectativa previa para la parte no observada.
+Para Chain Ladder:
 
-## Cuándo usar BF
+$$
+U_i^{CL} = \frac{72}{0.80} = 90
+$$
 
-BF es útil cuando:
+$$
+R_i^{CL} = 90 - 72 = 18
+$$
 
-- los años recientes tienen baja madurez;
-- los datos observados son volátiles;
-- existe una expectativa previa confiable;
-- Chain Ladder produce resultados excesivamente sensibles;
-- hay cambios de mix o exposición;
-- el análisis necesita incorporar pricing, presupuesto o visión técnica previa.
+BF supera a Chain Ladder en 2 porque el prior de 100 es mayor que el ultimate implícito de 90. Para un origen maduro, $q_i$ sería menor y la diferencia se reduciría.
 
-En salud, BF puede ser apropiado para años recientes con pocos meses de desarrollo o para segmentos con baja credibilidad.
+## 6. Sensibilidad del prior
 
-## Riesgos del método
+Para un shock multiplicativo $s$:
 
-BF depende de la calidad de la pérdida esperada. Si la expectativa previa está mal calibrada, el método puede dar una falsa sensación de estabilidad.
+$$
+U_{i,s}^{prior} = s U_i^{prior}
+$$
 
-Riesgos frecuentes:
+$$
+R_{i,s}^{BF} = q_i s U_i^{prior}
+$$
 
-- usar una ELR desactualizada;
-- no ajustar por tendencia médica;
-- ignorar cambios de morbilidad;
-- aplicar la misma expectativa a segmentos heterogéneos;
-- no reconciliar contra experiencia observada;
-- tratar BF como menos incierto solo porque es más estable.
+La sensibilidad absoluta frente al escenario base es:
 
-La estabilidad no equivale a precisión.
+$$
+Impacto_{i,s} = q_i U_i^{prior}(s-1)
+$$
 
-## Comparación con Chain Ladder
+La sensibilidad es mayor para orígenes inmaduros. Los shocks deben reflejar riesgos plausibles y no elegirse únicamente para producir un rango deseado.
 
-Chain Ladder da más peso a la experiencia observada. BF da más peso a la expectativa previa, especialmente en años inmaduros.
+## 7. Diagnósticos
 
-Para años maduros, ambos métodos tienden a acercarse porque el porcentaje no desarrollado es pequeño. Para años recientes, la diferencia puede ser material.
+### 7.1 Patrón de desarrollo
 
-Esto puede resumirse así:
+BF depende de $p_i$. Deben aplicarse los diagnósticos de suficiencia, estabilidad, calendario y backtesting descritos en [Diagnósticos de Chain Ladder](07-chain-ladder-diagnostics.md).
 
-| Situación | Chain Ladder | Bornhuetter-Ferguson |
-| --- | --- | --- |
-| Alta madurez | Muy útil | Similar a Chain Ladder |
-| Baja madurez | Muy sensible | Más estable |
-| Buena expectativa previa | No la usa directamente | La incorpora |
-| Expectativa previa débil | No depende de ella | Riesgo alto |
+### 7.2 Prior
 
-## Implementación mínima
+Por origen se revisa:
 
-```python
-percent_reported = 1 / cdf
-expected_loss = exposure * expected_cost_per_unit
-bf_ibnr = expected_loss * (1 - percent_reported)
-bf_ultimate = observed + bf_ibnr
-```
+- conciliación exacta de periodos;
+- valores faltantes, duplicados o negativos;
+- fecha y unidad de la tasa;
+- trazabilidad de ajustes;
+- comparación de prior contra experiencia histórica en base comparable;
+- independencia frente al observado;
+- concentración del IBNR en periodos recientes.
 
-El reto no está en la fórmula. Está en definir una expectativa previa defendible y segmentada adecuadamente.
+### 7.3 Comparación con Chain Ladder
 
-## Buenas prácticas
+La diferencia firmada es:
 
-Para documentar BF:
+$$
+Delta_i = U_i^{BF} - U_i^{CL}
+$$
 
-- explicar fuente de pérdida esperada;
-- mostrar exposición usada;
-- justificar tendencia y ajustes;
-- mostrar CDF y porcentaje desarrollado;
-- comparar contra Chain Ladder;
-- evaluar sensibilidad de ELR o costo esperado;
-- documentar juicio profesional.
+Como ambos parten del mismo $C_i$:
 
-Un BF bien usado hace explícita la expectativa previa. Un BF mal usado solo oculta una selección subjetiva.
+$$
+Delta_i = R_i^{BF} - R_i^{CL}
+$$
 
-## Capítulos relacionados
+La explicación debe separar diferencias por prior, madurez, cola, segmentación y selección de factores.
 
-Anterior: [Diagnósticos de Chain Ladder](07-chain-ladder-diagnostics.md).  
-Siguiente: [Método Benktander](12-benktander-method.md).
+## 8. Datos y contrato de implementación
 
+El cálculo reproducible requiere una fila por periodo de origen con:
+
+| Campo | Requisito |
+|---|---|
+| periodo de origen | único y conciliado con el triángulo |
+| acumulado observado | misma medida y moneda del patrón |
+| CDF o madurez | derivado de factores seleccionados documentados |
+| ultimate directo | requerido en modo directo |
+| exposición y tasa | requeridos en modo exposición por tasa |
+| metadatos | fuente, fecha, unidad, versión y ajustes |
+
+El resultado conserva insumos normalizados, configuración, diagnósticos, sensibilidad y hashes. Los archivos fuente del usuario no deben incorporarse al repositorio ni al ZIP de resultados.
+
+## 9. Limitaciones
+
+BF puede ser poco confiable cuando:
+
+- el prior no es comparable o no tiene trazabilidad;
+- la exposición no corresponde al periodo de riesgo;
+- el patrón cambia materialmente;
+- el portafolio es heterogéneo y no está segmentado;
+- el CDF o la cola carecen de soporte;
+- grandes reclamaciones dominan el resultado;
+- el prior se ajusta retrospectivamente para coincidir con la respuesta deseada.
+
+BF determinístico no cuantifica por sí solo incertidumbre de parámetros, proceso ni modelo.
+
+## 10. Relación con Demo 6
+
+Demo 6 implementa el contrato descrito: prior directo o exposición por tasa, conciliación por origen, cálculo BF posterior a Chain Ladder, shocks, comparación firmada y exportación auditable. La documentación del método debe permanecer sincronizada con:
+
+- `src/health_reserving/bornhuetter_ferguson.py`;
+- `tests/test_bornhuetter_ferguson.py`;
+- [Demo 6](../examples/06-demo-chain-ladder-datos-propios.md).
+
+## 11. Referencias y alcance profesional
+
+- [Método Chain Ladder](06-chain-ladder-method.md)
+- [Método Benktander](12-benktander-method.md)
+- [Método Cape Cod](13-cape-cod-method.md)
+- [Comparación de métodos clásicos](14-classical-reserving-methods-comparison.md)
+- [Bibliografía y evidencia](../bibliography.md)
+
+Las referencias principales son `BORN-FERGUSON-1972` y `FRIEDLAND-2010`. Los principios de propósito, calidad de datos, supuestos, pruebas, documentación, sensibilidad y seguimiento se apoyan en `ASB-ASOP01-2013`, `ASB-ASOP28-2024` y `ASB-ASOP56-2019`. Estas fuentes no sustituyen la normativa colombiana ni la política actuarial de la entidad.

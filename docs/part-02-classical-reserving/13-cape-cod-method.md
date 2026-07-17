@@ -1,205 +1,207 @@
 ---
-title: Método Cape Cod
-description: Explicación del método Cape Cod para estimar pérdidas esperadas a partir de exposición y experiencia desarrollada, combinando exposición y desarrollo.
-status: draft
-version: "0.1.6"
+title: "Método Cape Cod"
+description: "Estimación Cape Cod basada en exposición, madurez, tendencia y reconciliación para reservas de seguros de salud."
 chapter: "13"
-part: "part-02-classical-reserving"
+part: "02-classical-reserving"
 language: "es"
-last_updated: "2026-07-14"
+status: "review"
+version: "0.6.0"
+last_updated: "2026-07-17"
+tags:
+  - cape-cod
+  - exposicion
+  - chain-ladder
+  - ibnr
+  - salud
 ---
 
 # Método Cape Cod
 
-El método Cape Cod es un método clásico que estima una pérdida esperada usando la propia experiencia histórica desarrollada y una medida de exposición. Puede verse como una forma de construir una expectativa previa para métodos como Bornhuetter-Ferguson, pero derivada de la experiencia del portafolio.
+## 1. Propósito
 
-En salud, Cape Cod es útil cuando se dispone de exposición razonable, como meses-miembro, vidas aseguradas, primas devengadas, unidades de contrato o población cubierta.
+Cape Cod combina un patrón de desarrollo con exposición. A diferencia de Bornhuetter-Ferguson, la tasa esperada se estima a partir de la experiencia agregada disponible, ajustada por la proporción desarrollada.
 
-## Idea central
+El método puede estabilizar periodos recientes cuando la exposición es relevante, comparable y correctamente nivelada. También puede ocultar heterogeneidad si se agrupan cohortes con tasas de costo estructuralmente diferentes.
 
-Cape Cod estima una tasa esperada de pérdida o costo por exposición. Luego usa esa tasa para calcular la pérdida esperada de cada año de origen.
+## 2. Notación
 
-La lógica es:
+Para cada origen $i$:
 
-$$
-Pérdida\ esperada_i =
-Exposición_i \times Tasa\ esperada
-$$
+- $C_i$: acumulado observado;
+- $E_i$: exposición;
+- $a_i$: factor de ajuste a una base común;
+- $E_i^* = E_i a_i$: exposición ajustada;
+- $p_i$: proporción desarrollada;
+- $q_i = 1-p_i$: proporción no desarrollada;
+- $r$: tasa última esperada estimada por Cape Cod;
+- $U_i^{CC}$: ultimate Cape Cod;
+- $R_i^{CC}$: IBNR Cape Cod.
 
-La tasa esperada se estima a partir de experiencia histórica ajustada por desarrollo:
+La exposición y la tasa deben compartir unidad. Por ejemplo, miembros-mes por costo esperado por miembro-mes produce un importe.
 
-$$
-Tasa\ esperada =
-\frac{\sum_i Observado_i}
-{\sum_i Exposición_i \times p_i}
-$$
+## 3. Preparación de exposición
 
-donde $p_i$ es el porcentaje desarrollado del año de origen $i$.
+El factor $a_i$ lleva cada origen a una base comparable y puede incluir, cuando corresponda:
 
-## Relación con Bornhuetter-Ferguson
+- tendencia médica;
+- nivel tarifario o contractual;
+- cambios de beneficio;
+- mezcla de población, producto, región o red;
+- moneda e inflación;
+- reaseguro, recuperaciones o grandes reclamaciones.
 
-BF requiere una pérdida esperada previa. Cape Cod puede proveer esa expectativa:
+Los componentes deben documentarse por separado. No se recomienda usar un único factor opaco cuyo efecto no pueda reconciliarse.
 
-$$
-E_i = Exposición_i \times Tasa\ Cape\ Cod
-$$
+## 4. Estimación de la tasa
 
-Luego BF calcula:
-
-$$
-Ultimate^{BF}_i =
-Observado_i + E_i \times (1 - p_i)
-$$
-
-Por eso Cape Cod no siempre se presenta como método aislado; muchas veces se usa para calibrar la expectativa previa.
-
-## Componentes del método
-
-Cape Cod necesita:
-
-- observados acumulados;
-- factores de desarrollo o porcentajes desarrollados;
-- exposición por año de origen;
-- selección de años incluidos;
-- ajustes de tendencia o nivel de costo, si aplica.
-
-En salud, la exposición debe elegirse con cuidado. Meses-miembro suele ser más informativo que número de pólizas si la permanencia varía.
-
-## Porcentaje desarrollado
-
-Igual que en BF:
+La exposición desarrollada equivalente es $E_i^* p_i$. La tasa Cape Cod básica es:
 
 $$
-p_i = \frac{1}{CDF_i}
+r = \frac{\sum_i C_i}{\sum_i E_i^* p_i}
 $$
 
-Si un año está 60% desarrollado, su observado representa aproximadamente 60% del ultimate esperado.
+El denominador debe ser positivo y material. La fórmula supone que una tasa común, después de ajustes, representa los orígenes incluidos.
 
-Cape Cod ajusta la exposición por ese porcentaje:
-
-$$
-Exposición\ desarrollada_i =
-Exposición_i \times p_i
-$$
-
-Esto evita comparar un año maduro con uno inmaduro como si tuvieran la misma cantidad de información.
-
-## Ejemplo conceptual
-
-Supongamos:
-
-| Año | Observado | Exposición | % desarrollado |
-| --- | ---: | ---: | ---: |
-| 2022 | 900 | 1,000 | 100% |
-| 2023 | 800 | 1,100 | 80% |
-| 2024 | 500 | 1,200 | 50% |
-
-La exposición desarrollada es:
+El ultimate por origen es:
 
 $$
-1,000 \times 1.00 + 1,100 \times 0.80 + 1,200 \times 0.50
-= 2,480
+U_i^{CC} = C_i + q_i E_i^* r
 $$
 
-El observado total es:
+La reserva es:
 
 $$
-900 + 800 + 500 = 2,200
+R_i^{CC} = q_i E_i^* r
 $$
 
-La tasa Cape Cod es:
+La forma de credibilidad equivalente es:
 
 $$
-\frac{2,200}{2,480} = 0.887
+U_i^{CC} = p_i U_i^{CL} + q_i E_i^* r
 $$
 
-La pérdida esperada para 2024 sería:
+## 5. Ejemplo numérico
+
+Considere tres orígenes ya expresados en una base común:
+
+| Origen | Exposición $E_i^*$ | Madurez $p_i$ | Observado $C_i$ | Exposición desarrollada $E_i^*p_i$ |
+|---|---:|---:|---:|---:|
+| A | 1,000 | 0.90 | 90 | 900 |
+| B | 1,200 | 0.70 | 84 | 840 |
+| C | 1,400 | 0.40 | 56 | 560 |
+| **Total** | **3,600** |  | **230** | **2,300** |
+
+La tasa estimada es:
 
 $$
-1,200 \times 0.887 = 1,064
+r = \frac{230}{2300} = 0.10
 $$
 
-## Ajuste por tendencia
+| Origen | IBNR $q_iE_i^*r$ | Ultimate |
+|---|---:|---:|
+| A | 10 | 100 |
+| B | 36 | 120 |
+| C | 84 | 140 |
+| **Total** | **130** | **360** |
 
-Si los costos médicos crecen con el tiempo, la experiencia histórica debe ajustarse antes de estimar la tasa.
+El ejemplo es sintético y fue construido para facilitar la reconciliación; no es una selección de tasa para uso profesional.
 
-Una forma simple:
+## 6. Ventana de experiencia y ponderación
+
+La selección de orígenes influye en $r$. Deben compararse:
+
+- toda la historia comparable;
+- ventanas recientes;
+- exclusiones justificadas;
+- segmentos homogéneos;
+- escenarios con y sin grandes reclamaciones.
+
+Puede incorporarse un peso $w_i$ definido antes del cálculo:
 
 $$
-Observado\ ajustado_i =
-Observado_i \times (1 + t)^{n_i}
+r_w = \frac{\sum_i w_i C_i}{\sum_i w_i E_i^* p_i}
 $$
 
-También puede ajustarse la exposición o la tasa esperada. La clave es que todos los años queden en una base comparable.
+El peso no debe duplicar ajustes ya incluidos en exposición ni emplearse para forzar una cifra.
 
-Sin ajuste de tendencia, Cape Cod puede subestimar años recientes si los costos médicos aumentan.
+## 7. Diferencia frente a Bornhuetter-Ferguson
 
-## Cuándo usar Cape Cod
+| Elemento | Bornhuetter-Ferguson | Cape Cod |
+|---|---|---|
+| tasa o ultimate esperado | externo o definido previamente | estimado con experiencia del grupo |
+| dependencia del observado | usa el observado para madurez y suma el IBNR | usa el observado también para estimar $r$ |
+| fortaleza | incorpora una expectativa independiente | obtiene una tasa coherente con experiencia agregada |
+| riesgo | prior no comparable o sesgado | circularidad, heterogeneidad y ventana inadecuada |
 
-Cape Cod es útil cuando:
+Cape Cod no reemplaza automáticamente a BF. La elección depende de la calidad de la exposición, la independencia deseada y la homogeneidad del portafolio.
 
-- hay exposición confiable;
-- los años tienen distinta madurez;
-- se quiere una pérdida esperada basada en experiencia propia;
-- los años recientes son inmaduros;
-- se necesita calibrar BF;
-- se quiere estabilizar estimaciones en segmentos pequeños.
+## 8. Diagnósticos
 
-En salud, puede ser útil para comparar costo por miembro, costo por afiliado expuesto o costo por unidad contractual.
+### 8.1 Exposición
 
-## Riesgos
+Se valida:
 
-Riesgos principales:
+- completitud por origen;
+- unidad y periodo de cobertura;
+- conciliación con sistemas de afiliación o pólizas;
+- consistencia de ajustes y tendencia;
+- valores cero, negativos, faltantes o duplicados;
+- cambios de mezcla no capturados.
 
-- exposición mal definida;
-- mezcla de riesgo cambiante;
-- tendencia médica no ajustada;
-- inclusión de años atípicos;
-- cambios de beneficio o cobertura;
-- uso de experiencia inmadura sin ajuste correcto;
-- segmentación insuficiente.
+### 8.2 Patrón
 
-La tasa Cape Cod puede parecer objetiva, pero depende de decisiones de selección y ajuste.
+La madurez procede de Chain Ladder y requiere los diagnósticos del capítulo 7. Un patrón inestable sesga tanto el denominador de $r$ como la porción pendiente.
 
-## Comparación con Chain Ladder
+### 8.3 Tasa
 
-Chain Ladder usa principalmente el patrón de desarrollo del observado. Cape Cod introduce exposición.
+Se compara $r$ por ventana, segmento y escenario. También se evalúan tasas implícitas maduras:
 
-Si la exposición crece rápido, Chain Ladder puede interpretar crecimiento de volumen como crecimiento de siniestralidad. Cape Cod ayuda a separar volumen y costo esperado por unidad.
+$$
+r_i^{implícita} = \frac{C_i}{E_i^*p_i}
+$$
 
-Sin embargo, si la exposición no captura la complejidad del riesgo, el método puede ser insuficiente. En salud, dos portafolios con los mismos meses-miembro pueden tener morbilidad muy distinta.
+La dispersión o tendencia sistemática de estas tasas puede indicar que una tasa común no es apropiada.
 
-## Implementación mínima
+### 8.4 Backtesting
 
-```python
-percent_developed = 1 / cdf
-developed_exposure = exposure * percent_developed
+En cada corte retrospectivo se recalculan patrón, exposición ajustada y tasa usando solo información disponible. El resultado se compara con pagos o ultimate emergente sin fuga de información.
 
-cape_cod_rate = observed.sum() / developed_exposure.sum()
+## 9. Contrato de implementación para v0.6.0
 
-expected_loss = exposure * cape_cod_rate
-bf_ibnr = expected_loss * (1 - percent_developed)
-bf_ultimate = observed + bf_ibnr
-```
+El incremento propuesto para Demo 6 debe:
 
-La implementación debe permitir exclusiones, ajustes de tendencia y segmentación.
+- reutilizar el patrón validado de Chain Ladder;
+- aceptar exposición por origen y factores de ajuste trazables;
+- estimar la tasa con una ventana configurable;
+- bloquear denominadores no positivos o periodos no conciliados;
+- producir tasa, exposición desarrollada, ultimate e IBNR por origen;
+- comparar Cape Cod con Chain Ladder, BF y Benktander;
+- exportar entradas normalizadas, configuración, resultados, sensibilidad y diagnósticos;
+- incluir pruebas numéricas y de reconciliación.
 
-## Buenas prácticas
+Hasta integrar el código y sus pruebas, este capítulo es una especificación técnica, no una funcionalidad declarada del demo.
 
-Para usar Cape Cod:
+## 10. Limitaciones
 
-- definir exposición con precisión;
-- revisar cambios de mix;
-- ajustar tendencia si es material;
-- excluir años atípicos con justificación;
-- comparar contra Chain Ladder y BF externo;
-- documentar sensibilidad de la tasa esperada;
-- reconciliar con indicadores de costo por miembro.
+Cape Cod puede fallar cuando:
 
-Cape Cod es más útil cuando conecta reserving con exposición y pricing técnico.
+- la exposición no mide el riesgo subyacente;
+- la tasa cambia estructuralmente entre orígenes;
+- los ajustes de tendencia o beneficio son incompletos;
+- grandes reclamaciones dominan la experiencia;
+- la misma experiencia se usa para seleccionar múltiples supuestos sin control;
+- el patrón de desarrollo no es estable;
+- la ventana se selecciona después de observar el resultado.
 
-## Capítulos relacionados
+El método determinístico no produce por sí solo una distribución predictiva.
 
-Anterior: [Método Benktander](12-benktander-method.md).  
-Siguiente: [Comparación de métodos clásicos de reserving](14-classical-reserving-methods-comparison.md).
+## 11. Referencias y alcance profesional
 
+- [Diagnósticos de Chain Ladder](07-chain-ladder-diagnostics.md)
+- [Bornhuetter-Ferguson](11-bornhuetter-ferguson.md)
+- [Benktander](12-benktander-method.md)
+- [Comparación de métodos clásicos](14-classical-reserving-methods-comparison.md)
+- [Exposición, utilización y severidad en salud](../part-06-health-specific/23-health-exposure-utilization-and-severity.md)
+- [Bibliografía y evidencia](../bibliography.md)
+
+La especificación se apoya principalmente en `FRIEDLAND-2010` y en los principios de propósito, datos, supuestos, validación y documentación de `ASB-ASOP01-2013`, `ASB-ASOP28-2024` y `ASB-ASOP56-2019`. Debe complementarse con la regulación colombiana y la política interna vigentes a la fecha de valuación.

@@ -1,186 +1,170 @@
 ---
-title: Método Benktander
-description: Explicación del método Benktander como combinación iterativa entre Bornhuetter-Ferguson y Chain Ladder para estimar ultimate e IBNR.
-status: draft
-version: "0.1.6"
+title: "Método Benktander"
+description: "Derivación, forma cerrada, criterios de iteración y especificación reproducible del método Benktander."
 chapter: "12"
-part: "part-02-classical-reserving"
+part: "02-classical-reserving"
 language: "es"
-last_updated: "2026-07-14"
+status: "review"
+version: "0.6.0"
+last_updated: "2026-07-17"
+tags:
+  - benktander
+  - bornhuetter-ferguson
+  - chain-ladder
+  - ibnr
 ---
 
 # Método Benktander
 
-El método Benktander puede entenderse como un puente entre Bornhuetter-Ferguson y Chain Ladder. Usa una expectativa previa, como BF, pero permite que la experiencia observada gane más peso de forma gradual.
+## 1. Propósito
 
-En términos prácticos, Benktander es útil cuando se quiere evitar la sensibilidad completa de Chain Ladder en años inmaduros, pero también se quiere que la experiencia observada influya más que en un BF puro.
+Benktander actualiza iterativamente la expectativa previa de Bornhuetter-Ferguson. Cada iteración usa como nuevo prior el ultimate estimado en la iteración anterior. El resultado se desplaza de forma controlada desde el prior inicial hacia Chain Ladder.
 
-## Intuición
+El método es útil para estudiar cuánto depende la reserva de una expectativa externa y cuánto de la experiencia emergente. El número de iteraciones es un supuesto visible; no debe elegirse para alcanzar una cifra predeterminada.
 
-Bornhuetter-Ferguson estima la parte no desarrollada usando una pérdida esperada previa:
+## 2. Notación
 
-$$
-Ultimate^{BF} =
-Observado + Esperado \times (1 - p)
-$$
+Para un periodo de origen $i$:
 
-Chain Ladder estima ultimate proyectando lo observado:
+- $C_i$: acumulado observado;
+- $p_i$: proporción desarrollada;
+- $q_i = 1-p_i$: proporción no desarrollada;
+- $U_i^{(0)}$: prior inicial;
+- $U_i^{(n)}$: ultimate después de $n$ iteraciones;
+- $U_i^{CL} = C_i/p_i$: ultimate Chain Ladder.
 
-$$
-Ultimate^{CL} =
-\frac{Observado}{p}
-$$
+Se requiere $p_i > 0$. Cuando $p_i = 1$, el periodo está completamente desarrollado y todos los métodos producen $U_i = C_i$.
 
-Benktander combina ambas ideas. Parte de una expectativa previa y la actualiza con el desarrollo observado.
+## 3. Recurrencia
 
-## Fórmula de primer orden
-
-Una forma común de expresar Benktander es:
+La primera iteración corresponde a Bornhuetter-Ferguson:
 
 $$
-Ultimate^{B}_i =
-Observado_i + Ultimate^{BF}_i \times (1 - p_i)
+U_i^{(1)} = C_i + q_i U_i^{(0)}
 $$
 
-donde:
-
-- $Observado_i$ es el monto acumulado observado;
-- $Ultimate^{BF}_i$ es el ultimate estimado por BF;
-- $p_i$ es el porcentaje desarrollado.
-
-Esta expresión genera una estimación entre BF y Chain Ladder, dependiendo de la madurez.
-
-## Interpretación como credibilidad
-
-Benktander puede verse como una forma de dar credibilidad parcial a la experiencia observada. Cuando el año de origen es inmaduro, la expectativa previa conserva peso. Cuando gana madurez, el observado tiene mayor influencia.
-
-En términos conceptuales:
+Las iteraciones siguientes aplican la misma estructura:
 
 $$
-Ultimate^{B} =
-w \times Ultimate^{CL} + (1 - w) \times Ultimate^{BF}
+U_i^{(n)} = C_i + q_i U_i^{(n-1)}
 $$
 
-donde el peso $w$ aumenta con la madurez. La fórmula exacta puede variar según la implementación, pero la intuición es la misma: combinar desarrollo observado y expectativa previa.
-
-## Relación con BF
-
-BF usa la expectativa previa para la parte no observada. Benktander toma el resultado BF y lo vuelve a desarrollar parcialmente. Por eso suele quedar más cerca de Chain Ladder que BF, pero no tan sensible como Chain Ladder puro.
-
-Para años muy inmaduros:
-
-- Chain Ladder puede ser inestable;
-- BF puede ser demasiado dependiente de la expectativa previa;
-- Benktander puede ofrecer una transición intermedia.
-
-## Ejemplo conceptual
-
-Supongamos:
-
-- observado: 100;
-- CDF: 2.0;
-- porcentaje desarrollado: 50%;
-- pérdida esperada: 180.
-
-BF:
+La reserva en cada iteración es:
 
 $$
-Ultimate^{BF} =
-100 + 180 \times 0.50 = 190
+R_i^{(n)} = U_i^{(n)} - C_i
 $$
 
-Benktander:
+## 4. Forma cerrada
+
+Como $C_i = p_i U_i^{CL}$, la recurrencia tiene solución:
 
 $$
-Ultimate^{B} =
-100 + 190 \times 0.50 = 195
+U_i^{(n)} = (1-q_i^n)U_i^{CL} + q_i^n U_i^{(0)}
 $$
 
-Chain Ladder:
+Los pesos suman uno. El peso del prior inicial es $q_i^n$ y el peso de Chain Ladder es $1-q_i^n$.
+
+Si $0 \le q_i < 1$:
 
 $$
-Ultimate^{CL} =
-100 \times 2.0 = 200
+\lim_{n \to \infty} U_i^{(n)} = U_i^{CL}
 $$
 
-En este ejemplo, Benktander queda entre BF y Chain Ladder.
+La convergencia es más rápida en periodos maduros porque $q_i$ es pequeño. En periodos recientes, el prior conserva peso durante más iteraciones.
 
-## Cuándo usar Benktander
+## 5. Ejemplo numérico
 
-Benktander puede ser útil cuando:
+Use el mismo caso del capítulo BF:
 
-- existe expectativa previa razonable;
-- los años recientes tienen baja madurez;
-- Chain Ladder parece demasiado sensible;
-- BF parece demasiado conservador o demasiado rígido;
-- se busca una transición gradual hacia experiencia observada;
-- se quiere comparar varios métodos clásicos.
+- $C_i = 72$;
+- $p_i = 0.80$;
+- $q_i = 0.20$;
+- $U_i^{(0)} = 100$;
+- $U_i^{CL} = 90$.
 
-En salud, puede ser útil para segmentos donde existe presupuesto técnico o costo esperado, pero también se quiere reconocer la experiencia emergente del año.
+| Iteración | Cálculo | Ultimate | IBNR |
+|---:|---|---:|---:|
+| 0 | prior inicial | 100.00 | 28.00 |
+| 1 | $72 + 0.20(100)$ | 92.00 | 20.00 |
+| 2 | $72 + 0.20(92)$ | 90.40 | 18.40 |
+| 3 | $72 + 0.20(90.40)$ | 90.08 | 18.08 |
+| límite | Chain Ladder | 90.00 | 18.00 |
 
-## Riesgos
+La forma cerrada para dos iteraciones confirma:
 
-El método comparte riesgos con BF y Chain Ladder:
+$$
+U_i^{(2)} = (1-0.20^2)(90) + 0.20^2(100) = 90.40
+$$
 
-- si la expectativa previa es débil, el resultado también lo será;
-- si los factores de desarrollo están contaminados, la transición hacia Chain Ladder hereda ese sesgo;
-- si se aplica mecánicamente, puede parecer más sofisticado sin agregar mejor juicio;
-- puede ser difícil de comunicar si no se explica la intuición.
+## 6. Selección del número de iteraciones
 
-Benktander no elimina incertidumbre. Solo cambia el balance entre expectativa previa y experiencia observada.
+El número $n$ debe definirse y revelarse. La decisión puede considerar:
 
-## Comparación de métodos
+- madurez del origen;
+- independencia y credibilidad del prior;
+- estabilidad y backtesting del patrón;
+- materialidad de la diferencia entre prior y Chain Ladder;
+- consistencia con la política metodológica;
+- facilidad de explicación y reproducción.
 
-Una práctica útil es mostrar una tabla por año de origen:
+Una política uniforme de una o dos iteraciones puede ser operativamente sencilla, pero no es universalmente superior. Usar diferentes $n$ por segmento u origen exige una regla previa y trazable.
 
-| Año origen | Chain Ladder | BF | Benktander |
-| --- | ---: | ---: | ---: |
-| 2023 | 210 | 200 | 205 |
-| 2024 | 230 | 215 | 222 |
-| 2025 | 250 | 220 | 235 |
+## 7. Sensibilidad
 
-Si Benktander está sistemáticamente cerca de Chain Ladder, la experiencia observada domina. Si está cerca de BF, la expectativa previa domina.
+La comparación mínima incluye $n=0$, $n=1$, $n=2$, $n=3$ y Chain Ladder. El cambio entre iteraciones es:
 
-## Implementación mínima
+$$
+U_i^{(n)} - U_i^{(n-1)} = p_i q_i^{n-1}(U_i^{CL} - U_i^{(0)})
+$$
 
-```python
-percent_reported = 1 / cdf
+La dirección del cambio depende de si Chain Ladder está por encima o por debajo del prior. También deben evaluarse shocks al prior y al patrón; variar únicamente $n$ subestima la incertidumbre del modelo.
 
-expected_loss = exposure * expected_cost_per_unit
-bf_ultimate = observed + expected_loss * (1 - percent_reported)
+## 8. Diagnósticos
 
-benktander_ultimate = observed + bf_ultimate * (1 - percent_reported)
-benktander_ibnr = benktander_ultimate - observed
-```
+Antes de aplicar Benktander se requiere:
 
-Esta implementación debe acompañarse de sensibilidad en `expected_cost_per_unit` y en factores de desarrollo.
+1. validar el triángulo y el patrón;
+2. conciliar y documentar el prior;
+3. revisar $p_i$ y $q_i$ por origen;
+4. explicar CDF menores que uno o madurez fuera de $[0,1]$;
+5. comparar resultados por origen y total;
+6. comprobar la forma iterativa contra la forma cerrada;
+7. ejecutar sensibilidad y backtesting.
 
-## Uso en reportes
+Una prueba de implementación esencial es que ambas fórmulas produzcan el mismo resultado dentro de la tolerancia numérica definida.
 
-Benktander suele ser útil en reportes comparativos, no necesariamente como único método final. Puede mostrar cómo cambia la estimación al dar más peso a experiencia observada.
+## 9. Contrato de implementación para v0.6.0
 
-Un reporte puede presentar:
+El incremento propuesto para Demo 6 debe:
 
-- Chain Ladder como método basado en experiencia;
-- BF como método basado en expectativa previa;
-- Benktander como método intermedio;
-- selección final como juicio documentado.
+- reutilizar sin modificar el resultado Chain Ladder y el prior BF ya conciliado;
+- aceptar un entero no negativo de iteraciones;
+- calcular resultado iterativo y forma cerrada;
+- mostrar pesos de Chain Ladder y del prior;
+- producir ultimate e IBNR por origen y total;
+- exportar configuración, resultados, sensibilidad y diagnósticos;
+- probar casos maduros, inmaduros, múltiples iteraciones y entradas inválidas.
 
-## Buenas prácticas
+Hasta que ese código y sus pruebas se integren, este capítulo funciona como especificación técnica y no como afirmación de funcionalidad disponible.
 
-Para usar Benktander:
+## 10. Limitaciones
 
-- documentar expectativa previa;
-- mostrar porcentaje desarrollado;
-- comparar contra BF y Chain Ladder;
-- explicar por qué se requiere método intermedio;
-- evaluar sensibilidad;
-- evitar selección automática sin criterio.
+Benktander comparte las limitaciones de Chain Ladder y BF. Además:
 
-El valor del método está en su interpretación, no en su complejidad.
+- la iteración no crea información nueva;
+- un prior sesgado puede seguir influyendo materialmente;
+- un patrón inestable atrae el resultado hacia un benchmark débil;
+- la convergencia a Chain Ladder no demuestra que Chain Ladder sea correcto;
+- el método determinístico no cuantifica incertidumbre de proceso o parámetros.
 
-## Capítulos relacionados
+## 11. Referencias y alcance profesional
 
-Anterior: [Bornhuetter-Ferguson](11-bornhuetter-ferguson.md).  
-Siguiente: [Método Cape Cod](13-cape-cod-method.md).
+- [Diagnósticos de Chain Ladder](07-chain-ladder-diagnostics.md)
+- [Bornhuetter-Ferguson](11-bornhuetter-ferguson.md)
+- [Cape Cod](13-cape-cod-method.md)
+- [Comparación de métodos clásicos](14-classical-reserving-methods-comparison.md)
+- [Demo 6](../examples/06-demo-chain-ladder-datos-propios.md)
+- [Bibliografía y evidencia](../bibliography.md)
 
+La aplicación se apoya en `FRIEDLAND-2010` y en los principios generales de `ASB-ASOP01-2013`, `ASB-ASOP28-2024` y `ASB-ASOP56-2019`. La selección de iteraciones y la aptitud del método son decisiones profesionales dependientes del propósito, los datos y la jurisdicción.

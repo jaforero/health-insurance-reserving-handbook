@@ -5,7 +5,7 @@ chapter: "demo-chain-ladder-datos-propios"
 part: "examples"
 language: "es"
 status: "draft"
-version: "0.2.0"
+version: "0.6.0"
 last_updated: "2026-07-17"
 tags:
   - demo
@@ -22,6 +22,9 @@ prerequisites:
 related_chapters:
   - ../part-02-classical-reserving/07-chain-ladder-diagnostics.md
   - ../part-02-classical-reserving/11-bornhuetter-ferguson.md
+  - ../part-02-classical-reserving/12-benktander-method.md
+  - ../part-02-classical-reserving/13-cape-cod-method.md
+  - ../part-02-classical-reserving/14-classical-reserving-methods-comparison.md
   - ../part-03-stochastic-reserving/08-mack-chain-ladder.md
   - ../part-06-health-specific/22-health-claim-lifecycle-and-operational-lags.md
 ---
@@ -148,6 +151,22 @@ $$
 
 El motor conserva intacto el resultado Chain Ladder que determina la madurez. No utiliza la
 experiencia emergente para recalibrar silenciosamente el prior.
+
+<!-- v0.6.0-sprint1-demo6-status -->
+### 3.2 Estado de la comparación clásica
+
+| Método o control | Estado al preparar v0.6.0 Sprint 1 |
+|---|---|
+| Chain Ladder | implementado y probado |
+| Bornhuetter-Ferguson | implementado y probado |
+| Benktander | especificación técnica lista; implementación pendiente |
+| Cape Cod | especificación técnica lista; implementación pendiente |
+| backtesting ampliado | contrato documental listo; implementación pendiente |
+| comparación reconciliada de cuatro métodos | contrato documental listo; implementación pendiente |
+
+La documentación de Sprint 1 define fórmulas, entradas, diagnósticos, sensibilidad, salidas y
+criterios de aceptación. No debe interpretarse como evidencia de que los componentes pendientes
+ya estén disponibles en la interfaz.
 
 ## 4. Métodos de selección
 
@@ -336,6 +355,15 @@ tests/test_chain_ladder_app.py
 
 ## 10. Limitaciones y siguientes pasos
 
+<!-- v0.6.0-sprint1-demo6-next -->
+!!! info "Hoja de ruta técnica de v0.6.0"
+    La primera fase documental está definida en los capítulos de
+    [diagnósticos y backtesting](../part-02-classical-reserving/07-chain-ladder-diagnostics.md),
+    [Benktander](../part-02-classical-reserving/12-benktander-method.md),
+    [Cape Cod](../part-02-classical-reserving/13-cape-cod-method.md) y
+    [comparación clásica](../part-02-classical-reserving/14-classical-reserving-methods-comparison.md).
+    La implementación debe mantener la base reconciliada y los resultados CL/BF existentes.
+
 Demo 6 implementa Chain Ladder y el primer comparador determinístico con
 Bornhuetter-Ferguson. Los siguientes incrementos incorporarán Benktander y Cape Cod, además de
 ampliar backtesting y diagnósticos.
@@ -357,6 +385,8 @@ Antes de utilizar el resultado profesionalmente se requiere, como mínimo:
 - [Método Chain Ladder](../part-02-classical-reserving/06-chain-ladder-method.md)
 - [Diagnósticos de Chain Ladder](../part-02-classical-reserving/07-chain-ladder-diagnostics.md)
 - [Bornhuetter-Ferguson](../part-02-classical-reserving/11-bornhuetter-ferguson.md)
+- [Método Benktander](../part-02-classical-reserving/12-benktander-method.md)
+- [Método Cape Cod](../part-02-classical-reserving/13-cape-cod-method.md)
 - [Comparación de métodos clásicos](../part-02-classical-reserving/14-classical-reserving-methods-comparison.md)
 - [Chain Ladder de Mack](../part-03-stochastic-reserving/08-mack-chain-ladder.md)
 - [Ciclo de vida y rezagos operativos](../part-06-health-specific/22-health-claim-lifecycle-and-operational-lags.md)
