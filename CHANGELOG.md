@@ -4,6 +4,17 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 
 ## [Unreleased]
 
+<!-- part-02-classical-methods-v0.6.0-sprint1 -->
+### Documentación
+
+- Profundización de diagnósticos y backtesting de Chain Ladder con cortes retrospectivos,
+  métricas reconciliadas, runoff, sensibilidad y evidencia mínima.
+- Especificación técnica de Bornhuetter-Ferguson, Benktander y Cape Cod con fórmulas,
+  ejemplos numéricos, contratos de datos, limitaciones y criterios de prueba.
+- Marco común para comparar métodos clásicos por periodo de origen y total sin confundir la
+  documentación objetivo con funcionalidad ya implementada.
+- Actualización de Demo 6 y del plan v0.6.0 para separar componentes disponibles y pendientes.
+
 ## [0.5.0] - 2026-07-17
 
 ### Agregado

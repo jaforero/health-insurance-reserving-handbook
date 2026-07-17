@@ -1,265 +1,234 @@
 ---
-title: Comparación de métodos clásicos de reserving
-description: Comparación práctica de Chain Ladder, Bornhuetter-Ferguson, Benktander y Cape Cod, con criterios de selección para reservas de salud.
-status: draft
-version: "0.1.6"
+title: "Comparación de métodos clásicos de reservas"
+description: "Marco reconciliado para comparar Chain Ladder, Bornhuetter-Ferguson, Benktander y Cape Cod por origen, total, sensibilidad y backtesting."
 chapter: "14"
-part: "part-02-classical-reserving"
+part: "02-classical-reserving"
 language: "es"
-last_updated: "2026-07-14"
+status: "review"
+version: "0.6.0"
+last_updated: "2026-07-17"
+tags:
+  - chain-ladder
+  - bornhuetter-ferguson
+  - benktander
+  - cape-cod
+  - comparacion
 ---
 
-# Comparación de métodos clásicos de reserving
+# Comparación de métodos clásicos de reservas
 
-Los métodos clásicos de reserving no compiten solo por precisión matemática. Cada uno responde a una pregunta distinta y asigna diferente peso a la experiencia observada, la expectativa previa, la exposición y el juicio actuarial.
+## 1. Propósito
 
-La selección de método debe depender del objetivo, la madurez de los datos, la calidad del triángulo y el contexto operativo. En salud, además, debe considerar rezagos de radicación, auditoría, glosas, pagos parciales, cambios de red y variaciones de morbilidad.
+Comparar métodos no consiste en presentar cuatro totales sin reconciliación. Todos deben partir del mismo corte, alcance, moneda, medida, segmentación y observado. Las diferencias se explican por patrón, prior, exposición, tasa, madurez y reglas de selección.
 
-## Métodos cubiertos
+Este capítulo define un contrato común para Chain Ladder (CL), Bornhuetter-Ferguson (BF), Benktander (BK) y Cape Cod (CC).
 
-Esta parte cubre cuatro enfoques clásicos:
+## 2. Base común
 
-- Chain Ladder;
-- Bornhuetter-Ferguson;
-- Benktander;
-- Cape Cod.
+Para cada origen $i$ se conserva:
 
-Todos pueden ser útiles. Ninguno debe aplicarse sin diagnóstico.
+- $C_i$: acumulado observado;
+- $p_i$: proporción desarrollada;
+- $q_i=1-p_i$: proporción pendiente;
+- $U_i^{prior}$: prior BF y Benktander;
+- $E_i^*$: exposición ajustada Cape Cod;
+- $r$: tasa Cape Cod;
+- $n$: número de iteraciones Benktander.
 
-## Resumen conceptual
-
-| Método | Fuente principal de señal | Mejor uso |
-| --- | --- | --- |
-| Chain Ladder | Experiencia observada | Años con desarrollo creíble y patrón estable |
-| Bornhuetter-Ferguson | Expectativa previa + observado | Años inmaduros con expectativa previa confiable |
-| Benktander | Transición entre BF y Chain Ladder | Casos intermedios con experiencia emergente |
-| Cape Cod | Exposición + experiencia desarrollada | Calibrar costo esperado desde experiencia propia |
-
-La diferencia central es el peso relativo entre observado y esperado.
-
-## Chain Ladder
-
-Chain Ladder proyecta lo observado usando factores de desarrollo:
+Los ultimates son:
 
 $$
-Ultimate^{CL} = Observado \times CDF
+U_i^{CL} = \frac{C_i}{p_i}
 $$
 
-Fortalezas:
-
-- simple;
-- transparente;
-- ampliamente usado;
-- útil con triángulos maduros y estables;
-- fácil de explicar y reproducir.
-
-Debilidades:
-
-- sensible a años recientes inmaduros;
-- hereda sesgos de factores históricos;
-- no incorpora exposición directamente;
-- puede reaccionar demasiado a ruido temprano;
-- requiere estabilidad de patrones.
-
-En salud, Chain Ladder debe revisarse frente a cambios de proceso de pago, glosas y radicación.
-
-## Bornhuetter-Ferguson
-
-BF combina observado con expectativa previa:
-
 $$
-Ultimate^{BF} =
-Observado + Esperado \times (1 - p)
+U_i^{BF} = C_i + q_i U_i^{prior}
 $$
 
-Fortalezas:
-
-- estabiliza años inmaduros;
-- incorpora pricing, presupuesto o expectativa técnica;
-- reduce sensibilidad a observaciones tempranas;
-- útil cuando Chain Ladder es errático.
-
-Debilidades:
-
-- depende de la calidad del esperado;
-- puede ocultar señales emergentes;
-- requiere justificar ELR o costo esperado;
-- puede ser subjetivo si no se documenta.
-
-En salud, BF es útil si existe una expectativa técnica robusta por población, contrato o producto.
-
-## Benktander
-
-Benktander se ubica entre BF y Chain Ladder:
-
 $$
-Ultimate^{B} =
-Observado + Ultimate^{BF} \times (1 - p)
+U_i^{BK(n)} = (1-q_i^n)U_i^{CL} + q_i^n U_i^{prior}
 $$
 
-Fortalezas:
-
-- transición gradual hacia experiencia observada;
-- menos rígido que BF;
-- menos sensible que Chain Ladder puro;
-- útil para comparar escenarios.
-
-Debilidades:
-
-- comparte riesgos de BF y Chain Ladder;
-- puede ser más difícil de comunicar;
-- requiere expectativa previa y factores razonables;
-- no elimina incertidumbre.
-
-Benktander es útil cuando el actuario no quiere depender completamente ni del observado ni del esperado.
-
-## Cape Cod
-
-Cape Cod estima una tasa esperada usando exposición y experiencia desarrollada:
-
 $$
-Tasa =
-\frac{\sum Observado}
-{\sum Exposición \times p}
+U_i^{CC} = C_i + q_i E_i^* r
 $$
 
-Luego:
+Para cualquier método $m$:
 
 $$
-Esperado_i = Exposición_i \times Tasa
+R_i^m = U_i^m - C_i
 $$
 
-Fortalezas:
+## 3. Interpretación de los pesos
 
-- incorpora exposición;
-- útil para calibrar BF;
-- conecta reserving con costo por unidad;
-- ayuda a separar volumen y severidad.
+| Método | Fuente principal para la parte pendiente | Comportamiento |
+|---|---|---|
+| Chain Ladder | experiencia emergente proyectada por el patrón | sensible a orígenes inmaduros y factores |
+| BF | prior externo | reduce dependencia del observado reciente |
+| Benktander | mezcla iterativa de prior y CL | converge a CL al aumentar iteraciones |
+| Cape Cod | tasa estimada con exposición y experiencia agregada | estabiliza usando una tasa común |
 
-Debilidades:
+El método más complejo no es necesariamente el más adecuado. La selección depende de la calidad relativa de cada fuente.
 
-- depende de exposición bien definida;
-- requiere ajuste de tendencia y mix;
-- puede sesgarse por años atípicos;
-- no resuelve problemas de heterogeneidad.
+## 4. Ejemplo reconciliado por origen
 
-En salud, Cape Cod puede ser muy útil si se trabaja con meses-miembro, pero debe considerar morbilidad y cambios de cobertura.
+Supóngase:
 
-## Criterios de selección
+- $C_i=72$;
+- $p_i=0.80$ y $q_i=0.20$;
+- $U_i^{prior}=100$;
+- Benktander con $n=2$;
+- exposición ajustada $E_i^*=1000$;
+- tasa Cape Cod $r=0.095$.
 
-Una selección razonable considera:
+| Método | Ultimate | IBNR | Explicación |
+|---|---:|---:|---|
+| Chain Ladder | 90.00 | 18.00 | $72/0.80$ |
+| BF | 92.00 | 20.00 | $72+0.20(100)$ |
+| Benktander 2 | 90.40 | 18.40 | $0.96(90)+0.04(100)$ |
+| Cape Cod | 91.00 | 19.00 | $72+0.20(1000)(0.095)$ |
 
-- madurez del año de origen;
-- estabilidad de factores;
-- credibilidad de la experiencia observada;
-- disponibilidad de expectativa previa;
-- calidad de exposición;
-- cambios operativos;
-- materialidad de la reserva;
-- objetivo del reporte.
+Como el observado es común, las diferencias de ultimate son exactamente iguales a las diferencias de IBNR.
 
-No es obligatorio seleccionar un único método para todos los años. Es común usar Chain Ladder para años maduros y BF o Benktander para años recientes.
+## 5. Reconciliación por origen y total
 
-## Selección por madurez
+La salida debe incluir una fila por origen y método con:
 
-Una regla conceptual:
+| Campo | Descripción |
+|---|---|
+| origen | periodo reconciliado |
+| edad actual | última edad observada |
+| observado | $C_i$ |
+| CDF y madurez | patrón común |
+| prior | ultimate BF/BK, si aplica |
+| exposición y tasa | Cape Cod, si aplica |
+| iteraciones | Benktander, si aplica |
+| ultimate | estimación del método |
+| IBNR | ultimate menos observado |
+| diferencia contra CL | firmada, no absoluta |
 
-| Madurez | Método preferente |
-| --- | --- |
-| Alta | Chain Ladder |
-| Media | Benktander o combinación |
-| Baja | Bornhuetter-Ferguson |
-| Baja con buena exposición | Cape Cod + BF |
+El total debe reconciliarse:
 
-Esta tabla no reemplaza el juicio. Solo organiza la discusión.
+$$
+U_{total}^m = \sum_i U_i^m
+$$
 
-## Comparación pagado vs incurrido
+$$
+R_{total}^m = \sum_i R_i^m = U_{total}^m - \sum_i C_i
+$$
 
-En salud, la selección de método debe considerar la base:
+Una diferencia firmada respecto de CL es:
 
-- base pagada: más objetiva, pero más rezagada;
-- base incurrida: más temprana, pero depende de reserva caso;
-- comparación entre bases: útil para validar suficiencia.
+$$
+Delta_i^m = R_i^m - R_i^{CL}
+$$
 
-Un método puede ser adecuado en base pagada y no en base incurrida, o viceversa.
+Los métodos son estimaciones alternativas y no deben presentarse en gráficos apilados.
 
-## Uso de múltiples métodos
+## 6. Matriz de selección
 
-Una práctica robusta es presentar varios métodos:
+| Condición | CL | BF | Benktander | Cape Cod |
+|---|---|---|---|---|
+| patrón estable y origen maduro | fuerte candidato | útil como contraste | cercano a CL | útil si exposición es confiable |
+| origen muy reciente | puede ser volátil | útil con prior robusto | controla transición | útil con exposición homogénea |
+| prior independiente fuerte | no lo usa | fuerte candidato | permite credibilidad gradual | puede servir de contraste |
+| exposición confiable, prior externo débil | no la usa | limitado | limitado | fuerte candidato |
+| cambios estructurales no ajustados | débil | débil | débil | débil |
+| patrón inestable | débil | también afecta madurez | también afecta pesos | afecta tasa y madurez |
 
-| Año origen | Chain Ladder | BF | Benktander | Selección |
-| --- | ---: | ---: | ---: | ---: |
-| 2022 | 100 | 101 | 100 | 100 |
-| 2023 | 120 | 118 | 119 | 119 |
-| 2024 | 160 | 145 | 152 | 150 |
+La tabla orienta preguntas; no determina automáticamente el método seleccionado.
 
-La selección final debe explicar por qué se eligió un valor o rango.
+## 7. Comparación diagnóstica
 
-No se debe promediar métodos automáticamente sin justificación. Un promedio puede ocultar problemas en vez de resolverlos.
+### 7.1 Patrón común
 
-## Rango razonable
+Todos los métodos dependen directa o indirectamente de $p_i$. Se revisan suficiencia, estabilidad, calendario, cola y backtesting antes de comparar resultados.
 
-En muchos casos, el resultado final no debería comunicarse como un punto exacto, sino como una selección dentro de un rango razonable.
+### 7.2 Priors y exposición
 
-El rango puede basarse en:
+BF y Benktander requieren un prior trazable. Cape Cod requiere exposición comparable y una tasa estable. Las fuentes deben conciliarse por origen y conservar metadatos.
 
-- métodos alternativos;
-- sensibilidad de factores;
-- sensibilidad de pérdida esperada;
-- escenarios de tendencia;
-- exclusión de años atípicos;
-- juicio sobre operación.
+### 7.3 Madurez
 
-La estimación puntual puede ser necesaria para contabilidad, pero el análisis técnico debe mostrar incertidumbre.
+Las diferencias deben analizarse por banda de madurez. Un total puede ocultar compensaciones entre orígenes recientes y antiguos.
 
-## Documentación requerida
+### 7.4 Segmentación
 
-Una comparación de métodos debe documentar:
+La comparación debe repetirse en segmentos actuarialmente relevantes cuando el volumen lo permita. Agregar poblaciones con patrones o tasas distintas puede crear una aparente estabilidad.
 
-- datos usados;
-- fecha de valuación;
-- definición de origen y desarrollo;
-- base pagada o incurrida;
-- factores seleccionados;
-- exposición y expectativa previa;
-- métodos calculados;
-- selección final;
-- sensibilidad;
-- limitaciones.
+## 8. Backtesting común
 
-Esta documentación permite que el resultado sea auditado y defendido.
+En cada corte retrospectivo se recalculan todos los insumos usando solo información disponible en ese corte:
 
-## Recomendación práctica para salud
+1. patrón y cola;
+2. prior o su versión histórica;
+3. exposición y factores de nivel;
+4. tasa Cape Cod;
+5. número o política de iteraciones.
 
-Para un portafolio de salud, un flujo práctico es:
+Se reportan error firmado, error absoluto, WAPE y runoff bajo la misma convención. Un método no debe recibir información retrospectiva más reciente que otro.
 
-1. Construir triángulos pagados e incurridos.
-2. Revisar incrementales y acumulados.
-3. Calcular Chain Ladder en ambas bases.
-4. Estimar exposición y costo esperado.
-5. Calcular BF o Cape Cod para años recientes.
-6. Comparar resultados por año de origen.
-7. Revisar sensibilidad y cambios operativos.
-8. Seleccionar reservas con juicio documentado.
+## 9. Sensibilidad común
 
-Este flujo evita depender de una sola vista del riesgo.
+La matriz mínima de escenarios incluye:
 
-## Cierre de la Parte 2
+- patrón: reglas alternativas y exclusiones;
+- cola: base, inferior y superior;
+- BF/BK: shocks al prior;
+- BK: iteraciones;
+- CC: ventana, tendencia, exposición y tasa;
+- segmentación: agregado frente a segmentos;
+- medida: pagado frente a incurrido, cuando ambos son confiables.
 
-Los métodos clásicos siguen siendo fundamentales porque son transparentes, auditables y fáciles de comunicar. Su limitación no es la antigüedad, sino el uso mecánico.
+Cada escenario conserva configuración, versión y resultado por origen. El rango no es un intervalo de confianza.
 
-Un buen análisis clásico debe responder:
+## 10. Selección y conclusión
 
-- qué datos se usaron;
-- qué método se aplicó;
-- qué supuestos se hicieron;
-- por qué el resultado es razonable;
-- qué incertidumbre queda.
+Una conclusión profesional debe indicar:
 
-Los capítulos posteriores introducen métodos estocásticos, estadísticos y de machine learning, pero todos se apoyan en esta base.
+- propósito y uso;
+- método central y métodos de contraste;
+- razones de selección;
+- datos y supuestos materiales;
+- resultados por origen y total;
+- sensibilidades y backtests;
+- limitaciones e incertidumbre;
+- reconciliación y aprobación.
 
-## Capítulos relacionados
+No se recomienda promediar métodos mecánicamente sin una justificación de pesos. Si se selecciona un punto dentro de un rango, la regla debe ser reproducible y no depender solo del resultado deseado.
 
-Anterior: [Método Cape Cod](13-cape-cod-method.md).  
-Siguiente: [GLM para reserving de pérdidas](../part-04-statistical-models/15-glm-for-loss-reserving.md).
+## 11. Estado de implementación
 
+| Componente | Estado en Demo 6 al inicio del sprint |
+|---|---|
+| Chain Ladder | implementado y probado |
+| Bornhuetter-Ferguson | implementado y probado |
+| Benktander | especificado en este paquete; implementación pendiente |
+| Cape Cod | especificado en este paquete; implementación pendiente |
+| backtesting ampliado | especificado; implementación pendiente |
+| comparación de cuatro métodos | contrato definido; implementación pendiente |
+
+Esta separación evita confundir documentación objetivo con funcionalidad ya disponible.
+
+## 12. Criterios de aceptación para v0.6.0
+
+La comparación clásica estará completa cuando:
+
+1. los cuatro métodos usen una base reconciliada;
+2. las fórmulas tengan pruebas numéricas;
+3. existan resultados por origen y total;
+4. las diferencias se expliquen mediante insumos visibles;
+5. sensibilidad y backtesting sean reproducibles;
+6. los ZIP no contengan archivos fuente privados;
+7. documentación, pruebas, auditorías y build estricto estén limpios.
+
+## 13. Referencias y alcance profesional
+
+- [Diagnósticos de Chain Ladder](07-chain-ladder-diagnostics.md)
+- [Bornhuetter-Ferguson](11-bornhuetter-ferguson.md)
+- [Benktander](12-benktander-method.md)
+- [Cape Cod](13-cape-cod-method.md)
+- [Demo 6](../examples/06-demo-chain-ladder-datos-propios.md)
+- [Bibliografía y evidencia](../bibliography.md)
+
+Las referencias metodológicas principales son `BORN-FERGUSON-1972` y `FRIEDLAND-2010`. El marco de propósito, materialidad, razonabilidad, pruebas, sensibilidad, documentación y seguimiento se apoya en `ASB-ASOP01-2013`, `ASB-ASOP28-2024`, `ASB-ASOP43-2007` y `ASB-ASOP56-2019`. ASOP 43 se usa únicamente como referencia análoga; ninguna de estas fuentes reemplaza la normativa colombiana aplicable.

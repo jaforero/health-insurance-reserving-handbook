@@ -1,229 +1,260 @@
 ---
-title: Diagnósticos de Chain Ladder
-description: Controles y diagnósticos para evaluar si Chain Ladder es apropiado, detectar factores atípicos, efectos calendario y problemas de datos.
-status: draft
-version: "0.1.6"
+title: "Diagnósticos y backtesting de Chain Ladder"
+description: "Marco práctico para evaluar suficiencia, estabilidad, sesgo, efectos calendario y desempeño fuera de muestra de Chain Ladder."
 chapter: "07"
-part: "part-02-classical-reserving"
+part: "02-classical-reserving"
 language: "es"
-last_updated: "2026-07-14"
+status: "review"
+version: "0.6.0"
+last_updated: "2026-07-17"
+tags:
+  - chain-ladder
+  - diagnosticos
+  - backtesting
+  - validacion
+  - salud
 ---
 
-# Diagnósticos de Chain Ladder
+# Diagnósticos y backtesting de Chain Ladder
 
-Un resultado de Chain Ladder solo es útil si el triángulo y los factores son razonables. Los diagnósticos permiten evaluar si el método está usando información representativa o si está extrapolando ruido, cambios operativos o problemas de datos.
+## 1. Propósito
 
-El objetivo de diagnosticar no es encontrar una excusa para ajustar todo. El objetivo es saber cuándo el método es defendible, cuándo requiere ajuste y cuándo debe complementarse con otro enfoque.
+Chain Ladder convierte un patrón histórico de desarrollo en una proyección. La aritmética puede ser correcta y, aun así, la estimación resultar poco representativa por cambios de operación, mezcla, beneficios, red, precios, glosas, recuperaciones o calendario. Este capítulo organiza la validación en cinco preguntas:
 
-## Qué debe revisar un diagnóstico
+1. ¿Los datos observados son completos, conciliados y comparables?
+2. ¿Los factores tienen volumen y estabilidad suficientes?
+3. ¿Existen patrones sistemáticos por origen, desarrollo o calendario?
+4. ¿La regla seleccionada predice razonablemente datos no usados en el ajuste?
+5. ¿Las decisiones, excepciones y limitaciones quedaron documentadas?
 
-Un diagnóstico mínimo debe cubrir:
+Un diagnóstico no valida por sí solo el método. La conclusión surge del conjunto de evidencia y del juicio actuarial proporcional a la materialidad.
 
-- calidad del triángulo;
-- consistencia de la diagonal;
-- factores observados;
-- factores seleccionados;
-- efectos calendario;
-- estabilidad de mezcla;
-- sensibilidad de ultimate e IBNR;
-- comparación contra otras bases o métodos.
+## 2. Notación y universo observado
 
-En salud, también debe considerar glosas, auditoría, radicación, cambios de red y cambios en contratos con prestadores.
-
-## Revisión del triángulo acumulado
-
-El primer control es visual y aritmético:
-
-- ¿Los acumulados crecen de forma razonable?
-- ¿Hay acumulados que disminuyen?
-- ¿Existen celdas vacías inesperadas?
-- ¿Hay saltos abruptos?
-- ¿La última diagonal corresponde a la fecha de valuación?
-- ¿Los totales coinciden con reportes fuente?
-
-Un acumulado decreciente puede ser válido si los datos están netos de recuperaciones o reversos, pero debe explicarse.
-
-## Revisión de incrementales
-
-Aunque Chain Ladder use acumulados, los incrementales ayudan a identificar problemas:
-
-- pagos negativos;
-- pagos extraordinarios;
-- limpieza de backlog;
-- efectos calendario;
-- cambios en velocidad de pago;
-- interrupciones operativas.
-
-Un incremento anormal en un año calendario puede contaminar varios factores acumulados.
-
-## Factores observados
-
-Los factores individuales son:
+Sea $C_{i,j}$ el valor acumulado del periodo de origen $i$ a la edad de desarrollo $j$. La máscara $M_{i,j}$ distingue celdas observadas de celdas futuras:
 
 $$
-f_{i,j} =
-\frac{C_{i,j+1}}{C_{i,j}}
+M_{i,j} = 1 \text{ si la celda es observada; } 0 \text{ en otro caso}
 $$
 
-La revisión debe comparar factores por edad y por año de origen.
+No debe inferirse que un valor igual a cero es futuro. Un cero observado es información; una celda futura es ausencia estructural de observación. Para cada enlace $j$ a $j+1$, el ratio individual es:
 
-Preguntas clave:
+$$
+r_{i,j} = \frac{C_{i,j+1}}{C_{i,j}}
+$$
 
-- ¿Los factores disminuyen con la edad de desarrollo?
-- ¿Hay factores extremos?
-- ¿Los años recientes se comportan distinto?
-- ¿Los factores en base pagada e incurrida cuentan la misma historia?
-- ¿Los factores altos corresponden a bajo volumen?
+El ratio solo es válido cuando ambas celdas son observadas y el denominador satisface la regla de elegibilidad definida. El factor ponderado por volumen es:
 
-Un factor extremo no siempre debe excluirse. Primero debe entenderse la causa.
+$$
+f_j = \frac{\sum_i C_{i,j+1}}{\sum_i C_{i,j}}
+$$
 
-## Factores seleccionados
+Las sumas deben usar exactamente el mismo conjunto de pares válidos.
 
-Una selección de factores debe ser trazable. Conviene mostrar:
+## 3. Puertas de entrada antes de diagnosticar factores
 
-- promedio ponderado por volumen;
+### 3.1 Reconciliación
+
+Como mínimo, debe verificarse:
+
+- total de la base canónica frente al triángulo incremental;
+- incremental frente a diferencias del acumulado;
+- última diagonal frente al corte de valuación;
+- unidades, moneda, signo y alcance;
+- ausencia de duplicados no explicados;
+- tratamiento explícito de negativos, recuperaciones y reversos.
+
+Si la reconciliación falla, el problema es de datos o definición y no debe tratarse ajustando factores.
+
+### 3.2 Comparabilidad
+
+Documentar si la historia contiene cambios materiales en:
+
+- cobertura, deducibles, copagos o red;
+- mezcla de población, producto, región o prestador;
+- reglas de autorización, radicación, auditoría o pago;
+- tarifas, inflación médica o contratos;
+- glosas, conciliaciones, recobros o recuperaciones;
+- sistemas, migraciones o calidad de captura.
+
+Cuando un cambio no pueda normalizarse, debe evaluarse segmentación, exclusión justificada o un método alternativo.
+
+## 4. Diagnósticos de factores
+
+### 4.1 Suficiencia por enlace
+
+Para cada edad se reportan:
+
+- número de pares válidos;
+- volumen del denominador;
+- concentración por origen;
+- rango, mediana y cuartiles de ratios;
+- cantidad de ratios menores que uno;
+- cantidad de pares excluidos y causa.
+
+No existe un número universal de observaciones que garantice credibilidad. En edades tardías suele haber menos pares; la decisión debe considerar materialidad, estabilidad y evidencia de cola.
+
+### 4.2 Estabilidad frente a reglas alternativas
+
+Conviene comparar, al menos:
+
+- ponderado por volumen;
 - promedio simple;
 - mediana;
-- últimos años;
-- exclusiones;
-- selección final.
+- experiencia reciente;
+- selección manual documentada.
 
-La selección final puede diferir de una fórmula automática, pero debe tener justificación técnica.
-
-## Efectos calendario
-
-Los efectos calendario se manifiestan en diagonales. En salud, pueden aparecer por:
-
-- cambio regulatorio;
-- acumulación de facturas;
-- cambio de sistema;
-- política de auditoría;
-- variación en glosas;
-- reforma de contratos;
-- interrupciones de red;
-- eventos sanitarios extraordinarios.
-
-Si un efecto calendario es material, los factores históricos pueden no representar desarrollo futuro.
-
-## Diagnóstico de madurez
-
-La madurez de un año de origen puede aproximarse como:
+Para una alternativa $a$, la diferencia relativa puede expresarse como:
 
 $$
-Madurez_i =
-\frac{Observado_i}{Ultimate_i}
+d_{j,a} = \frac{f_{j,a} - f_{j,base}}{f_{j,base}}
 $$
 
-Los años con baja madurez concentran la incertidumbre. En un análisis de reservas, es útil mostrar qué porcentaje del IBNR total proviene de los años más recientes.
+Una diferencia grande no invalida automáticamente una regla, pero exige explicar por qué la experiencia que recibe más peso es la más representativa.
 
-Si la mayoría de la reserva depende de uno o dos años inmaduros, la sensibilidad de factores tempranos debe ser explícita.
+### 4.3 Influencia y exclusiones
 
-## Sensibilidad de factores
+Debe medirse cuánto cambia el factor al retirar un origen a la vez. Si $f_j^{(-i)}$ es el factor sin el origen $i$:
 
-Una práctica básica es recalcular ultimate e IBNR bajo varios conjuntos de factores:
+$$
+I_{i,j} = \frac{f_j^{(-i)} - f_j}{f_j}
+$$
 
-- selección base;
-- factores ponderados por volumen;
-- últimos tres años;
-- exclusión de años atípicos;
-- escenario prudente;
-- escenario optimista.
+La exclusión de un dato extremo no se justifica solo porque reduce la reserva o estabiliza una gráfica. Debe existir una causa verificable y documentarse el efecto con y sin la exclusión.
 
-La sensibilidad ayuda a separar precisión aparente de incertidumbre real.
+### 4.4 Monotonicidad y signos
 
-## Comparación pagado vs. incurrido
+En pagos acumulados, valores decrecientes pueden reflejar recuperaciones, reversos o correcciones. En incurridos, también pueden reflejar liberación de reserva caso. Estos movimientos no deben corregirse mecánicamente; se debe confirmar su naturaleza, consistencia contable y efecto sobre los ratios.
 
-Si existen ambas bases, deben compararse:
+## 5. Diagnósticos por dimensión
 
-- ultimate sobre base pagada;
-- ultimate sobre base incurrida;
-- reserva caso observada;
-- IBNR sobre base incurrida;
-- no pagado total.
+### 5.1 Periodo de origen
 
-Una diferencia grande entre bases puede indicar:
+Graficar ratios y errores por origen permite identificar cohortes afectadas por epidemias, cambios de beneficio, mezcla, red o calidad de datos.
 
-- reserva caso insuficiente o excesiva;
-- rezago de pagos;
-- cambios de reporte;
-- variación de mix;
-- problemas de datos.
+### 5.2 Edad de desarrollo
 
-No hay una regla universal: la diferencia debe interpretarse con contexto operativo.
+La dispersión debe revisarse por enlace. Una edad con pocos pares, bajo volumen o factores alternativos muy diferentes puede dominar el CDF de los orígenes recientes.
 
-## Validación contra experiencia externa o expectativa
+### 5.3 Periodo calendario
 
-Los resultados pueden contrastarse con:
+Cada celda pertenece a una diagonal calendario. Patrones sobre diagonales pueden indicar inflación, cambios operativos, cierres masivos, huelgas, migraciones o choques regulatorios. Chain Ladder supone que el patrón de desarrollo estimado es transportable; un efecto calendario persistente cuestiona esa transportabilidad.
 
-- tendencias de costo médico;
-- exposición o afiliados;
-- frecuencia y severidad;
-- presupuesto;
-- reportes contables;
-- experiencia de meses recientes;
-- conocimiento de cambios operativos.
+### 5.4 Residuo descriptivo
 
-Si Chain Ladder produce una reserva incompatible con estos elementos, se debe investigar la razón.
+Para comparar celdas sin presentar el residuo como una medida formal de incertidumbre, puede usarse:
 
-## Señales de alerta
+$$
+e_{i,j} = \frac{C_{i,j+1} - f_j C_{i,j}}{\sqrt{\max(|C_{i,j}|,\epsilon)}}
+$$
 
-Algunas señales requieren revisión:
+donde $\epsilon$ evita dividir por cero. El análisis busca estructura por origen, desarrollo y calendario, no normalidad automática. Para cuantificar error de predicción se requieren métodos como Mack o bootstrap y sus propios supuestos.
 
-- factores muy volátiles en edades tempranas;
-- factores menores que 1 sin explicación;
-- ultimate que disminuye frente a estimaciones anteriores sin causa clara;
-- años recientes con IBNR desproporcionado;
-- gran diferencia entre pagado e incurrido;
-- celdas históricas corregidas sin documentación;
-- cambios de método no documentados.
+## 6. Backtesting fuera de muestra
 
-Estas señales no invalidan automáticamente el método, pero impiden tratar el resultado como mecánico.
+### 6.1 Corte retrospectivo
 
-## Documentación del diagnóstico
+Se elige una fecha histórica $t$. Solo se usan celdas disponibles en $t$ para estimar factores. Las observaciones posteriores se reservan para evaluación. Es indispensable volver a estimar los factores en cada corte; usar factores calculados con datos futuros introduce fuga de información.
 
-Un diagnóstico debe dejar evidencia de:
+### 6.2 Predicción de la siguiente diagonal
 
-- datos usados;
-- fecha de valuación;
-- controles realizados;
-- anomalías encontradas;
-- decisiones tomadas;
-- factores seleccionados;
-- sensibilidad;
-- limitaciones.
+Para una celda retenida con valor real $A_k$ y esperado $E_k$:
 
-La documentación es parte del resultado actuarial. Permite que el análisis sea revisado, auditado y reproducido.
+$$
+Error_k = A_k - E_k
+$$
 
-## Ejemplo de control automático
+$$
+ErrorRelativo_k = \frac{A_k - E_k}{A_k}
+$$
 
-Un control simple de factores extremos:
+El error relativo solo se calcula cuando $A_k$ no es cero. Para un resumen robusto a escalas distintas:
 
-```python
-observed_factors = next_age / current
+$$
+WAPE = \frac{\sum_k |A_k - E_k|}{\sum_k |A_k|}
+$$
 
-flags = observed_factors[
-    (observed_factors < 1.0) |
-    (observed_factors > observed_factors.quantile(0.95))
-]
-```
+También se reportan sesgo agregado, error absoluto, número de celdas y volumen evaluado. WAPE no debe interpretarse cuando el denominador es inmaterial.
 
-Este control no decide por el actuario. Solo identifica celdas que requieren revisión.
+### 6.3 Rolling-origin
 
-## Buenas prácticas
+Repetir el ejercicio en varios cortes crea vintages comparables. Como mínimo, el reporte debe incluir:
 
-Un buen diagnóstico debe ser:
+| Campo | Contenido |
+|---|---|
+| corte | fecha de información disponible |
+| celda o diagonal | observación retenida |
+| real | valor observado posteriormente |
+| esperado | proyección obtenida en el corte |
+| error | real menos esperado |
+| método | regla de selección y cola |
+| versión | código, datos y parámetros |
 
-- sistemático;
-- reproducible;
-- visual cuando aporte claridad;
-- conectado con la operación;
-- documentado;
-- proporcional a la materialidad.
+Un único corte puede coincidir favorablemente por azar. La evidencia debe cubrir diferentes edades y condiciones operativas.
 
-Si el diagnóstico es débil, la estimación también lo es, aunque las fórmulas estén correctas.
+### 6.4 Runoff de reservas
 
-## Capítulos relacionados
+Para un portafolio existente al corte anterior, una convención útil es:
 
-Anterior: [Método Chain Ladder](06-chain-ladder-method.md).  
-Siguiente: [Bornhuetter-Ferguson](11-bornhuetter-ferguson.md).
+$$
+Desarrollo_t = R_{t-1} - P_t - R_t
+$$
 
+donde $R_{t-1}$ es la reserva inicial para ese portafolio, $P_t$ los pagos del periodo y $R_t$ la reserva remanente bajo alcance comparable. El signo debe definirse en el reporte. El análisis separa cambios por experiencia, supuestos, alcance, moneda y metodología.
+
+## 7. Sensibilidad
+
+La sensibilidad mínima compara:
+
+- reglas de selección;
+- inclusión o exclusión de observaciones materiales;
+- ventanas históricas;
+- factor de cola;
+- segmentación;
+- triángulos pagados e incurridos, cuando ambos son confiables.
+
+Para un escenario $s$:
+
+$$
+Impacto_s = IBNR_s - IBNR_{base}
+$$
+
+El rango de escenarios es una medida de sensibilidad, no un intervalo probabilístico.
+
+## 8. Criterios de decisión
+
+Los umbrales deben definirse antes de observar el resultado y calibrarse a materialidad, volatilidad y uso. Son señales de revisión, no reglas universales. Una conclusión debería clasificar cada hallazgo como:
+
+- aceptado sin ajuste;
+- aceptado con limitación;
+- ajustado con justificación;
+- requiere método alternativo;
+- bloquea el uso.
+
+## 9. Evidencia mínima
+
+El expediente reproducible debe conservar:
+
+1. corte, alcance, unidades y reconciliaciones;
+2. máscara de observación y reglas de elegibilidad;
+3. ratios, candidatos y factores seleccionados;
+4. exclusiones con causa e impacto;
+5. cola y sustento;
+6. backtests por corte y métricas;
+7. sensibilidades;
+8. conclusión, limitaciones y aprobación;
+9. versión de datos, código y configuración.
+
+## 10. Relación con Demo 6
+
+Demo 6 ya produce ratios individuales, candidatos, CDF, sensibilidad y alertas determinísticas. El incremento v0.6.0 debe añadir cortes retrospectivos, comparación real frente a esperado y reportes de runoff sin cambiar el resultado base de Chain Ladder.
+
+## 11. Referencias y alcance profesional
+
+- [Método Chain Ladder](06-chain-ladder-method.md)
+- [Bornhuetter-Ferguson](11-bornhuetter-ferguson.md)
+- [Comparación de métodos clásicos](14-classical-reserving-methods-comparison.md)
+- [Demo 6](../examples/06-demo-chain-ladder-datos-propios.md)
+- [Bibliografía y evidencia](../bibliography.md)
+
+Este marco aplica los principios de propósito, datos, supuestos, pruebas, validación de resultados, documentación y seguimiento descritos en `ASB-ASOP01-2013`, `ASB-ASOP28-2024`, `ASB-ASOP43-2007` y `ASB-ASOP56-2019`. ASOP 43 se usa como referencia histórica y análoga de estimación de reclamaciones no pagadas; no sustituye normas de salud ni regulación colombiana. La aplicabilidad profesional debe evaluarse para la jurisdicción, entidad y fecha de valuación.

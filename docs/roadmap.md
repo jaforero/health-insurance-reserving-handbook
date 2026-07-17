@@ -140,6 +140,22 @@ mantener referencias cruzadas con los capítulos 6 y 11–14.
 
 ## 5. Próximo hito: v0.6.0
 
+
+<!-- part-02-classical-methods-v0.6.0-sprint1 -->
+### Sprint 1 · Base técnica documental
+
+Este paquete deja preparada la especificación para:
+
+- diagnósticos y backtesting fuera de muestra de Chain Ladder;
+- contrato y trazabilidad del prior Bornhuetter-Ferguson;
+- recurrencia, forma cerrada y sensibilidad de Benktander;
+- exposición ajustada y estimación de tasa Cape Cod;
+- comparación reconciliada de los cuatro métodos por origen y total.
+
+El cierre documental no equivale al cierre funcional. Benktander, Cape Cod, backtesting ampliado
+y el comparador de cuatro métodos deben implementarse, probarse y conciliarse antes de declarar
+completa la versión v0.6.0.
+
 El foco propuesto es completar la comparación clásica y reforzar la validación:
 
 - iteraciones Benktander configurables;

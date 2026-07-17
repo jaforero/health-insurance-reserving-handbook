@@ -140,6 +140,15 @@ El objetivo recomendado es `v0.6.0`, con este orden:
 5. ampliar la documentación y las salidas bilingües;
 6. actualizar changelog, citación, tag y release notes de `v0.6.0`.
 
+
+<!-- part-02-classical-methods-v0.6.0-sprint1 -->
+### 7.1 Base documental preparada para v0.6.0
+
+Sprint 1 profundiza los capítulos 07 y 11–14 y actualiza Demo 6. Chain Ladder y
+Bornhuetter-Ferguson continúan como componentes implementados. Benktander, Cape Cod, backtesting
+ampliado y la comparación reconciliada de cuatro métodos permanecen pendientes de código y
+pruebas. Las fórmulas y contratos documentales son el criterio de referencia para ese desarrollo.
+
 ## 8. Criterio de continuidad
 
 La siguiente conversación o contribución debe partir del estado de `main`, revisar `CHANGELOG.md` y `docs/roadmap.md`, y confirmar que las validaciones están limpias antes de ampliar el alcance.
