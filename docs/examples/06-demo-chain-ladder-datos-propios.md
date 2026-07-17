@@ -1,16 +1,18 @@
 ---
-title: "Demo 6 · Chain Ladder con datos propios"
-description: "Asistente local en Streamlit para seleccionar factores edad-a-edad, proyectar un triángulo acumulado y estimar ultimate e IBNR de forma reproducible."
+title: "Demo 6 · Chain Ladder y Bornhuetter-Ferguson"
+description: "Asistente local en Streamlit para proyectar un triángulo, incorporar un prior trazable y comparar ultimate e IBNR por Chain Ladder y Bornhuetter-Ferguson."
 chapter: "demo-chain-ladder-datos-propios"
 part: "examples"
 language: "es"
 status: "draft"
-version: "0.1.0"
-last_updated: "2026-07-16"
+version: "0.2.0"
+last_updated: "2026-07-17"
 tags:
   - demo
   - streamlit
   - chain-ladder
+  - bornhuetter-ferguson
+  - prior
   - ibnr
   - reserving
 prerequisites:
@@ -19,24 +21,28 @@ prerequisites:
   - ../part-02-classical-reserving/06-chain-ladder-method.md
 related_chapters:
   - ../part-02-classical-reserving/07-chain-ladder-diagnostics.md
+  - ../part-02-classical-reserving/11-bornhuetter-ferguson.md
   - ../part-03-stochastic-reserving/08-mack-chain-ladder.md
   - ../part-06-health-specific/22-health-claim-lifecycle-and-operational-lags.md
 ---
 
-# Demo 6 · Chain Ladder con datos propios
+# Demo 6 · Chain Ladder y Bornhuetter-Ferguson
 
 ## Resumen
 
 Demo 6 continúa el recorrido iniciado en Demo 5. Recibe un triángulo acumulado reconciliado,
 calcula ratios individuales y factores edad-a-edad, permite seleccionar el patrón de desarrollo y
-estima ultimate e IBNR por periodo de origen.
+estima ultimate e IBNR por periodo de origen. En una segunda etapa incorpora una expectativa
+previa trazable y compara Chain Ladder con Bornhuetter-Ferguson (BF).
 
-La aplicación se ejecuta localmente con Streamlit. Los triángulos cargados no se envían a GitHub
-ni a servicios externos. El paquete descargable contiene únicamente información agregada.
+La aplicación se ejecuta localmente con Streamlit. Los triángulos y priors cargados no se envían a
+GitHub ni a servicios externos. El paquete descargable contiene únicamente información agregada y
+los priors normalizados necesarios para reproducir el cálculo, nunca los archivos fuente.
 
 !!! warning "Alcance determinístico"
     Este demo no calcula error de predicción, intervalos de confianza, Mack ni bootstrap. Un
-    resultado mecánicamente correcto no demuestra que el patrón histórico sea representativo.
+    resultado mecánicamente correcto no demuestra que el patrón histórico o el prior sean
+    representativos.
 
 ## 1. Objetivos de aprendizaje
 
@@ -51,7 +57,10 @@ Al finalizar el ejercicio, el usuario podrá:
 7. completar las celdas futuras del triángulo acumulado;
 8. revisar alertas de suficiencia, dispersión y acumulados decrecientes;
 9. evaluar sensibilidad a diferentes reglas de selección;
-10. exportar una ejecución reproducible sin detalle fila a fila.
+10. cargar y mapear un prior directo o una exposición por tasa esperada;
+11. calcular BF aplicando el prior solo a la proporción no desarrollada;
+12. comparar Chain Ladder y BF y someter el prior a shocks;
+13. exportar una ejecución reproducible sin detalle fila a fila ni archivos fuente.
 
 ## 2. Flujo entre Demo 5 y Demo 6
 
@@ -60,8 +69,11 @@ flowchart TD
     A["Datos propios"] --> B["Demo 5: validar y triangular"]
     B --> C["ZIP agregado y reconciliado"]
     C --> D["Demo 6: seleccionar factores"]
-    D --> E["Ultimate e IBNR"]
-    E --> F["ZIP Chain Ladder"]
+    D --> E["Chain Ladder"]
+    P["Prior directo o exposición × tasa"] --> G["Bornhuetter-Ferguson"]
+    E --> G
+    G --> H["Comparación, sensibilidad y diagnósticos"]
+    H --> F["ZIP conjunto y auditable"]
 ```
 
 Demo 6 verifica que el paquete de Demo 5 contenga:
@@ -72,9 +84,10 @@ Demo 6 verifica que el paquete de Demo 5 contenga:
 - estado de reconciliación;
 - hash SHA-256 de los datos agregados.
 
-El detalle canónico y el archivo fuente original no son necesarios para ejecutar Chain Ladder.
-Sin embargo, deben permanecer disponibles bajo el gobierno de datos de la entidad para
-reconciliación, auditoría e investigación de anomalías.
+El detalle canónico y el archivo fuente original no son necesarios para ejecutar los métodos. El
+prior sí debe tener exactamente un registro por periodo de origen y conciliar con los orígenes del
+triángulo. Las fuentes originales deben permanecer disponibles bajo el gobierno de datos de la
+entidad para reconciliación, auditoría e investigación de anomalías.
 
 ## 3. Método implementado
 
@@ -107,6 +120,34 @@ $$
 La implementación no aplica un piso implícito de cero al IBNR. Un resultado negativo permanece
 visible y requiere interpretación, especialmente cuando existen recuperaciones, reversos o
 factores seleccionados menores que uno.
+
+### 3.1 Bornhuetter-Ferguson
+
+Para cada origen $i$, la proporción no desarrollada se obtiene a partir del CDF de Chain Ladder:
+
+$$
+\text{No desarrollado}_i = 1 - \frac{1}{CDF_i}
+$$
+
+El prior puede suministrarse directamente como ultimate esperado $U_i^{prior}$ o calcularse como
+exposición por tasa esperada:
+
+$$
+U_i^{prior} = E_i \times r_i
+$$
+
+Entonces:
+
+$$
+IBNR_i^{BF} = U_i^{prior} \times \text{No desarrollado}_i
+$$
+
+$$
+Ultimate_i^{BF} = C_{i,k} + IBNR_i^{BF}
+$$
+
+El motor conserva intacto el resultado Chain Ladder que determina la madurez. No utiliza la
+experiencia emergente para recalibrar silenciosamente el prior.
 
 ## 4. Métodos de selección
 
@@ -154,6 +195,17 @@ También alerta, sin decidir por el actuario, sobre:
 - concentración del IBNR en periodos recientes;
 - uso de un factor de cola distinto de uno.
 
+Para BF también bloquea:
+
+- orígenes faltantes, adicionales o duplicados en el prior;
+- columnas reutilizadas para significados incompatibles;
+- exposición, tasa o ultimate esperado no numéricos, no finitos o negativos;
+- shocks del prior inválidos;
+- discrepancias entre la configuración y las columnas suministradas.
+
+Y alerta sobre CDF menores que uno, priors iguales a cero, IBNR BF negativo y diferencias
+materiales frente a Chain Ladder. Las alertas informan; no sustituyen el juicio actuarial.
+
 ## 7. Ejecución local
 
 Desde la raíz del repositorio:
@@ -187,9 +239,41 @@ Selecciona **Aprender con el ejemplo mensual**. La aplicación utiliza el trián
 7. Revisa factores, cola y confirmación actuarial.
 8. Ejecuta **Estimar ultimate e IBNR**.
 
+### 7.3 Incorporar el prior y ejecutar BF
+
+Después de obtener Chain Ladder:
+
+1. selecciona el prior sintético incluido o carga un archivo CSV, TXT, XLSX o Parquet;
+2. identifica la columna de periodo de origen;
+3. elige **ultimate esperado directo** o **exposición × tasa esperada**;
+4. mapea las columnas correspondientes;
+5. define los shocks inferior y superior para la sensibilidad;
+6. confirma que documentaste fuente, fecha, unidad, independencia y ajustes del prior;
+7. ejecuta **Comparar Chain Ladder y Bornhuetter-Ferguson**.
+
+El archivo de prior debe tener una fila por origen. Para el modo exposición por tasa, por ejemplo:
+
+| mes_origen | miembros_mes | costo_esperado_por_miembro |
+|---|---:|---:|
+| 2021-01 | 80942 | 233275 |
+
+Para el modo directo basta con `mes_origen` y `ultimate_esperado`. Los nombres pueden ser
+diferentes porque la interfaz permite mapearlos explícitamente.
+
+### 7.4 Leer la comparación visual
+
+El acumulado observado se presenta como una base común. Chain Ladder y BF aparecen en tarjetas
+paralelas con la misma jerarquía para ultimate, IBNR e IBNR sobre ultimate.
+
+El gráfico principal utiliza dos líneas no apiladas sobre una escala común desde cero, porque son
+estimaciones alternativas de la misma magnitud. Un segundo gráfico muestra la diferencia firmada
+`BF − CL` por origen con una referencia en cero. Valores positivos representan mayor IBNR BF y
+valores negativos, menor IBNR BF. Como ambos métodos parten del mismo observado, la diferencia de
+ultimate coincide exactamente con la diferencia de IBNR.
+
 ## 8. Resultados descargables
 
-El ZIP de Demo 6 incluye:
+El primer botón mantiene el ZIP exclusivo de Chain Ladder e incluye:
 
 | Archivo | Contenido |
 |---|---|
@@ -206,6 +290,22 @@ El ZIP de Demo 6 incluye:
 | `11_configuracion.json` | método, cola y parámetros |
 | `12_manifiesto.json` | versión, hash y trazabilidad |
 
+Después de ejecutar BF, el ZIP conjunto contiene los diez resultados agregados de Chain Ladder y
+añade:
+
+| Archivo | Contenido |
+|---|---|
+| `11_prior_bf_normalizado.csv` | prior conciliado usado por el motor |
+| `12_resultados_bf_por_origen.csv` | madurez, prior, ultimate e IBNR CL/BF |
+| `13_totales_bf.csv` | totales y diferencia BF frente a CL |
+| `14_sensibilidad_prior_bf.csv` | resultado bajo cada shock configurado |
+| `15_diagnosticos_bf.csv` | controles y alertas BF |
+| `16_configuracion_chain_ladder.json` | supuestos de desarrollo |
+| `17_configuracion_bf.json` | modo, columnas, shocks, moneda y medida |
+| `18_manifiesto.json` | versiones, hashes y trazabilidad de ambas entradas agregadas |
+
+El manifiesto declara explícitamente que no se incluyen los archivos fuente originales.
+
 ## 9. Arquitectura
 
 ```text
@@ -215,8 +315,11 @@ apps/chain_ladder_workshop.py
 src/health_reserving/chain_ladder.py
     Validación, factores, CDF, proyección, resultados y sensibilidad.
 
+src/health_reserving/bornhuetter_ferguson.py
+    Contrato del prior, cálculo BF, comparación, sensibilidad y diagnósticos.
+
 src/health_reserving/export.py
-    ZIP agregado generado completamente en memoria.
+    ZIP de Chain Ladder y paquete conjunto generado completamente en memoria.
 
 src/health_reserving/ui_theme.py
     Identidad visual compartida con Demo 5.
@@ -224,15 +327,18 @@ src/health_reserving/ui_theme.py
 tests/test_chain_ladder.py
     Pruebas numéricas, controles y exportación.
 
+tests/test_bornhuetter_ferguson.py
+    Fórmulas BF, contratos del prior, sensibilidad y privacidad del paquete conjunto.
+
 tests/test_chain_ladder_app.py
-    Prueba integral de la interfaz con el ejemplo mensual.
+    Prueba integral de Chain Ladder y BF con el ejemplo mensual.
 ```
 
 ## 10. Limitaciones y siguientes pasos
 
-Demo 6 implementa la primera etapa del comparador de métodos clásicos. Los siguientes incrementos
-incorporarán Bornhuetter-Ferguson, Benktander y Cape Cod cuando se definan exposición y expectativa
-previa defendibles.
+Demo 6 implementa Chain Ladder y el primer comparador determinístico con
+Bornhuetter-Ferguson. Los siguientes incrementos incorporarán Benktander y Cape Cod, además de
+ampliar backtesting y diagnósticos.
 
 Antes de utilizar el resultado profesionalmente se requiere, como mínimo:
 
@@ -241,7 +347,7 @@ Antes de utilizar el resultado profesionalmente se requiere, como mínimo:
 3. diagnóstico de efectos calendario;
 4. justificación de exclusiones, factores y cola;
 5. sensibilidad y backtesting proporcional a la materialidad;
-6. comparación contra métodos que incorporen exposición o priors;
+6. revisión independiente de la fuente, unidad, vigencia y ajustes del prior;
 7. cuantificación de incertidumbre;
 8. revisión y aprobación bajo el gobierno actuarial aplicable.
 
@@ -250,5 +356,7 @@ Antes de utilizar el resultado profesionalmente se requiere, como mínimo:
 - [Factores edad-a-edad](../part-01-foundations/05-age-to-age-development-factors.md)
 - [Método Chain Ladder](../part-02-classical-reserving/06-chain-ladder-method.md)
 - [Diagnósticos de Chain Ladder](../part-02-classical-reserving/07-chain-ladder-diagnostics.md)
+- [Bornhuetter-Ferguson](../part-02-classical-reserving/11-bornhuetter-ferguson.md)
+- [Comparación de métodos clásicos](../part-02-classical-reserving/14-classical-reserving-methods-comparison.md)
 - [Chain Ladder de Mack](../part-03-stochastic-reserving/08-mack-chain-ladder.md)
 - [Ciclo de vida y rezagos operativos](../part-06-health-specific/22-health-claim-lifecycle-and-operational-lags.md)

@@ -17,7 +17,7 @@ from .chain_ladder import (
     load_demo5_triangle_package,
 )
 from .config import TriangleConfig
-from .export import build_chain_ladder_zip, build_results_zip
+from .export import build_chain_ladder_zip, build_classical_methods_zip, build_results_zip
 from .ingestion import excel_sheet_names, read_tabular_file
 from .triangles import TriangleResult, build_triangles, evaluate_readiness_gates
 from .validation import (
@@ -42,6 +42,7 @@ __all__ = [
     "ValidationIssue",
     "build_results_zip",
     "build_chain_ladder_zip",
+    "build_classical_methods_zip",
     "build_triangles",
     "compare_factor_methods",
     "evaluate_readiness_gates",

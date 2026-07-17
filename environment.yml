@@ -11,4 +11,5 @@ dependencies:
   - pyyaml>=6.0,<7.0
   - pip:
       - streamlit>=1.59,<2.0
+      - altair>=5.5,<7.0
       - -e .

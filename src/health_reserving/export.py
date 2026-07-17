@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 
 import pandas as pd
 
+from .bornhuetter_ferguson import BornhuetterFergusonResult
 from .chain_ladder import ChainLadderConfig, ChainLadderResult
 from .config import TriangleConfig
 from .triangles import TriangleResult
@@ -168,6 +169,122 @@ juicio actuarial documentado y validación independiente.
         )
         archive.writestr(
             "12_manifiesto.json",
+            json.dumps(manifest, ensure_ascii=False, indent=2).encode("utf-8"),
+        )
+    return buffer.getvalue()
+
+
+def build_classical_methods_zip(
+    chain_ladder: ChainLadderResult,
+    chain_ladder_config: ChainLadderConfig,
+    bornhuetter_ferguson: BornhuetterFergusonResult,
+    *,
+    source_metadata: dict[str, object] | None = None,
+    prior_metadata: dict[str, object] | None = None,
+) -> bytes:
+    """Build a joint aggregate Chain Ladder and BF package in memory."""
+
+    observed_bytes = _csv_bytes(chain_ladder.observed_cumulative, include_index=True)
+    prior_bytes = _csv_bytes(bornhuetter_ferguson.prior_input, include_index=True)
+    manifest = {
+        "demo": "Demo 6 — Comparación Chain Ladder y Bornhuetter-Ferguson",
+        "version_motor": "0.3.0",
+        "fecha_ejecucion_utc": datetime.now(timezone.utc).isoformat(),
+        "hash_triangulo_observado_sha256": hashlib.sha256(observed_bytes).hexdigest(),
+        "hash_prior_normalizado_sha256": hashlib.sha256(prior_bytes).hexdigest(),
+        "configuracion_chain_ladder": chain_ladder_config.to_dict(),
+        "configuracion_bornhuetter_ferguson": bornhuetter_ferguson.config.to_dict(),
+        "fuente_agregada": source_metadata or {},
+        "fuente_prior": prior_metadata or {},
+        "incluye_archivos_fuente_originales": False,
+    }
+    readme = """DEMO 6 — COMPARACIÓN CHAIN LADDER Y BORNHUETTER-FERGUSON
+
+Este paquete fue generado localmente con información agregada por periodo de origen.
+No contiene los archivos fuente originales ni movimientos fila a fila.
+
+Archivos:
+- 01_triangulo_acumulado_observado.csv: valores utilizados por Chain Ladder.
+- 02_mascara_observada.csv: 1 observado; 0 futuro no observado.
+- 03_factores_individuales.csv: ratios por origen y enlace.
+- 04_seleccion_factores.csv: candidatos, selección, suficiencia y alertas.
+- 05_cdf_a_ultimate.csv: factores acumulados desde cada edad.
+- 06_triangulo_acumulado_proyectado.csv: celdas futuras completadas.
+- 07_triangulo_incremental_proyectado.csv: incrementos observados y proyectados.
+- 08_resultados_chain_ladder_por_origen.csv: ultimate e IBNR Chain Ladder.
+- 09_totales_chain_ladder.csv: resumen Chain Ladder.
+- 10_diagnosticos_chain_ladder.csv: alertas del patrón de desarrollo.
+- 11_prior_bf_normalizado.csv: prior agregado utilizado por BF.
+- 12_resultados_bf_por_origen.csv: madurez, prior, ultimate e IBNR BF y comparación.
+- 13_totales_bf.csv: resumen BF y diferencias contra Chain Ladder.
+- 14_sensibilidad_prior_bf.csv: shocks configurados de la expectativa previa.
+- 15_diagnosticos_bf.csv: alertas de prior, CDF e IBNR BF.
+- 16_configuracion_chain_ladder.json: selección, cola y parámetros.
+- 17_configuracion_bf.json: definición del prior, columnas y shocks.
+- 18_manifiesto.json: versión, hashes y trazabilidad de fuentes agregadas.
+
+Ambos métodos son determinísticos. La fuente del prior, la exposición, los factores,
+la cola y la representatividad histórica requieren juicio actuarial documentado,
+reconciliación independiente y gobierno antes de cualquier uso profesional.
+"""
+
+    cdf_frame = chain_ladder.cdf_to_ultimate.rename_axis("edad_desarrollo").reset_index()
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr("LEEME.txt", readme)
+        archive.writestr("01_triangulo_acumulado_observado.csv", observed_bytes)
+        archive.writestr(
+            "02_mascara_observada.csv",
+            _csv_bytes(chain_ladder.observed_mask.astype(int), include_index=True),
+        )
+        archive.writestr(
+            "03_factores_individuales.csv",
+            _csv_bytes(chain_ladder.individual_factors, include_index=True),
+        )
+        archive.writestr("04_seleccion_factores.csv", _csv_bytes(chain_ladder.factor_summary))
+        archive.writestr("05_cdf_a_ultimate.csv", _csv_bytes(cdf_frame))
+        archive.writestr(
+            "06_triangulo_acumulado_proyectado.csv",
+            _csv_bytes(chain_ladder.projected_cumulative, include_index=True),
+        )
+        archive.writestr(
+            "07_triangulo_incremental_proyectado.csv",
+            _csv_bytes(chain_ladder.projected_incremental, include_index=True),
+        )
+        archive.writestr(
+            "08_resultados_chain_ladder_por_origen.csv",
+            _csv_bytes(chain_ladder.origin_summary, include_index=True),
+        )
+        archive.writestr("09_totales_chain_ladder.csv", _csv_bytes(chain_ladder.totals))
+        archive.writestr("10_diagnosticos_chain_ladder.csv", _csv_bytes(chain_ladder.diagnostics))
+        archive.writestr("11_prior_bf_normalizado.csv", prior_bytes)
+        archive.writestr(
+            "12_resultados_bf_por_origen.csv",
+            _csv_bytes(bornhuetter_ferguson.origin_summary, include_index=True),
+        )
+        archive.writestr("13_totales_bf.csv", _csv_bytes(bornhuetter_ferguson.totals))
+        archive.writestr(
+            "14_sensibilidad_prior_bf.csv",
+            _csv_bytes(bornhuetter_ferguson.sensitivity),
+        )
+        archive.writestr(
+            "15_diagnosticos_bf.csv",
+            _csv_bytes(bornhuetter_ferguson.diagnostics),
+        )
+        archive.writestr(
+            "16_configuracion_chain_ladder.json",
+            json.dumps(chain_ladder_config.to_dict(), ensure_ascii=False, indent=2).encode("utf-8"),
+        )
+        archive.writestr(
+            "17_configuracion_bf.json",
+            json.dumps(
+                bornhuetter_ferguson.config.to_dict(),
+                ensure_ascii=False,
+                indent=2,
+            ).encode("utf-8"),
+        )
+        archive.writestr(
+            "18_manifiesto.json",
             json.dumps(manifest, ensure_ascii=False, indent=2).encode("utf-8"),
         )
     return buffer.getvalue()

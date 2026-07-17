@@ -3,13 +3,18 @@
 
 from __future__ import annotations
 
+import io
+import json
 import unittest
+import zipfile
 
 import numpy as np
 import pandas as pd
 
 from health_reserving import (
     BornhuetterFergusonConfig,
+    ChainLadderConfig,
+    build_classical_methods_zip,
     fit_bornhuetter_ferguson,
     fit_chain_ladder,
 )
@@ -220,6 +225,28 @@ class BornhuetterFergusonTest(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "no se reconcilian"):
             fit_bornhuetter_ferguson(chain_ladder, direct_prior())
+
+    def test_joint_export_contains_auditable_aggregate_outputs(self) -> None:
+        chain_ladder = handbook_example()
+        bf_result = fit_bornhuetter_ferguson(chain_ladder, direct_prior())
+        package = build_classical_methods_zip(
+            chain_ladder,
+            ChainLadderConfig(),
+            bf_result,
+            source_metadata={"tipo": "prueba"},
+            prior_metadata={"tipo": "prior_prueba"},
+        )
+
+        with zipfile.ZipFile(io.BytesIO(package)) as archive:
+            names = set(archive.namelist())
+            manifest = json.loads(archive.read("18_manifiesto.json").decode("utf-8"))
+
+        self.assertIn("11_prior_bf_normalizado.csv", names)
+        self.assertIn("12_resultados_bf_por_origen.csv", names)
+        self.assertIn("14_sensibilidad_prior_bf.csv", names)
+        self.assertIn("17_configuracion_bf.json", names)
+        self.assertFalse(manifest["incluye_archivos_fuente_originales"])
+        self.assertEqual(manifest["fuente_prior"]["tipo"], "prior_prueba")
 
 
 if __name__ == "__main__":

@@ -22,8 +22,8 @@ def main() -> int:
         "--server.address=localhost",
         "--server.maxUploadSize=200",
     ]
-    print("Iniciando Demo 6 Chain Ladder en modo local...")
-    print("Los triángulos seleccionados no se envían a GitHub.")
+    print("Iniciando Demo 6 Chain Ladder + Bornhuetter-Ferguson en modo local...")
+    print("Los triángulos y priors seleccionados no se envían a GitHub.")
     try:
         exit_code = subprocess.call(command, cwd=ROOT)
         return 0 if exit_code < 0 else exit_code

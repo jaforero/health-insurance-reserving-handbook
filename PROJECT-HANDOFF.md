@@ -6,7 +6,7 @@ part: "repository"
 language: "es"
 status: "active"
 version: "0.4.0"
-last_updated: "2026-07-16"
+last_updated: "2026-07-17"
 ---
 
 # Health Insurance Reserving Handbook — Estado y continuidad
@@ -83,7 +83,7 @@ construir triángulos y exportar resultados.
 Los datos incluidos en el repositorio son sintéticos. El Demo 5 también puede procesar archivos
 locales del usuario, que no deben incorporarse al control de versiones.
 
-### Demo 6 · Chain Ladder con datos propios
+### Demo 6 · Chain Ladder y Bornhuetter-Ferguson
 
 ```bash
 conda activate reserving-handbook
@@ -91,7 +91,9 @@ python scripts/iniciar_chain_ladder.py
 ```
 
 Consume el ZIP agregado de Demo 5 o el ejemplo mensual, compara factores, permite selección
-manual y cola explícita, y estima ultimate e IBNR sin persistir datos del usuario.
+manual y cola explícita, y estima ultimate e IBNR. El incremento en desarrollo añade un prior
+directo o exposición por tasa, comparación Bornhuetter-Ferguson, sensibilidad y exportación
+conjunta sin persistir los archivos fuente del usuario.
 
 ## 4. Validación obligatoria
 
@@ -132,8 +134,8 @@ El workflow `.github/workflows/docs.yml` ejecuta la validación y despliega GitH
 El objetivo recomendado es `v0.5.0`, con este orden:
 
 1. ejecutar pruebas de aceptación de Demo 5 con datos anonimizados;
-2. ampliar los diagnósticos y el backtesting de Demo 6;
-3. incorporar Bornhuetter-Ferguson con exposición y expectativa previa explícitas;
+2. validar el Sprint 2 visual de Bornhuetter-Ferguson con priors controlados;
+3. ampliar los diagnósticos y el backtesting de Demo 6;
 4. incorporar Benktander y Cape Cod;
 5. comparar métodos clásicos con reconciliación y sensibilidad por periodo de origen;
 6. ampliar la documentación y las salidas bilingües;
