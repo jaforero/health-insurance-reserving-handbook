@@ -4,6 +4,17 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 
 ## [Unreleased]
 
+### Agregado
+
+- Primer incremento de `v0.5.0`: núcleo modular Bornhuetter-Ferguson que consume la madurez de
+  Chain Ladder sin modificar sus resultados.
+- Contratos explícitos para definir el prior como ultimate esperado directo o como exposición por
+  tasa esperada, con conciliación exacta por periodo de origen.
+- Resultados BF por origen y totales, comparación directa con Chain Ladder, sensibilidad a shocks
+  del prior y diagnósticos de CDF, priors e IBNR negativos.
+- Pruebas numéricas de la fórmula del handbook, modos de prior, validaciones, sensibilidad y
+  preservación de los datos de entrada.
+
 ## [0.4.0] - 2026-07-16
 
 ### Agregado
