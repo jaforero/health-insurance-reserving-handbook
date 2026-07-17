@@ -4,9 +4,11 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-07-17
+
 ### Agregado
 
-- Primer incremento de `v0.5.0`: núcleo modular Bornhuetter-Ferguson que consume la madurez de
+- Núcleo modular Bornhuetter-Ferguson que consume la madurez de
   Chain Ladder sin modificar sus resultados.
 - Contratos explícitos para definir el prior como ultimate esperado directo o como exposición por
   tasa esperada, con conciliación exacta por periodo de origen.
@@ -187,7 +189,8 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
   - plantillas de issues y pull requests;
   - workflow de GitHub Pages.
 
-[Unreleased]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.4...v0.3.0
 [0.2.4]: https://github.com/jaforero/health-insurance-reserving-handbook/compare/v0.2.2...v0.2.4

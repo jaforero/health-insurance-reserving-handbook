@@ -3,7 +3,7 @@
 > Manual técnico, reproducible y orientado a la práctica sobre IBNR, reservas actuariales y desarrollo de reclamaciones en seguros de salud, con aplicaciones al sistema colombiano.
 
 [![Documentation](https://github.com/jaforero/health-insurance-reserving-handbook/actions/workflows/docs.yml/badge.svg)](https://github.com/jaforero/health-insurance-reserving-handbook/actions/workflows/docs.yml)
-[![Release](https://img.shields.io/badge/release-v0.4.0-2f855a)](https://github.com/jaforero/health-insurance-reserving-handbook/releases/tag/v0.4.0)
+[![Release](https://img.shields.io/badge/release-v0.5.0-2f855a)](https://github.com/jaforero/health-insurance-reserving-handbook/releases/tag/v0.5.0)
 [![Language](https://img.shields.io/badge/contenido-español-526cfe)](#contenido)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
@@ -35,9 +35,9 @@ El repositorio puede utilizarse como:
 
 ## Estado actual
 
-La versión pública más reciente es **v0.4.0**. Incorpora Demo 5 para construir triángulos con
-datos propios y Demo 6 para transformar triángulos acumulados reconciliados en estimaciones
-determinísticas de ultimate e IBNR mediante Chain Ladder.
+La versión pública más reciente es **v0.5.0**. Incorpora Demo 5 para construir triángulos con
+datos propios y Demo 6 para comparar estimaciones determinísticas de ultimate e IBNR mediante
+Chain Ladder y Bornhuetter-Ferguson con priors explícitos.
 
 El repositorio incluye actualmente:
 
