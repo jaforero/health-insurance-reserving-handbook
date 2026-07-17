@@ -1,5 +1,12 @@
 """Reusable educational tools for health-insurance reserving."""
 
+from .bornhuetter_ferguson import (
+    PRIOR_MODE_LABELS,
+    BornhuetterFergusonConfig,
+    BornhuetterFergusonResult,
+    PriorMode,
+    fit_bornhuetter_ferguson,
+)
 from .chain_ladder import (
     SELECTION_LABELS,
     ChainLadderConfig,
@@ -21,10 +28,14 @@ from .validation import (
 )
 
 __all__ = [
+    "PRIOR_MODE_LABELS",
     "SELECTION_LABELS",
+    "BornhuetterFergusonConfig",
+    "BornhuetterFergusonResult",
     "ChainLadderConfig",
     "ChainLadderResult",
     "PreparedClaims",
+    "PriorMode",
     "TriangleConfig",
     "TrianglePackage",
     "TriangleResult",
@@ -36,6 +47,7 @@ __all__ = [
     "evaluate_readiness_gates",
     "excel_sheet_names",
     "fit_chain_ladder",
+    "fit_bornhuetter_ferguson",
     "load_demo5_triangle_package",
     "parse_date_series",
     "prepare_and_validate_claims",

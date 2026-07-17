@@ -6,7 +6,7 @@ part: "repository"
 language: "es"
 status: "draft"
 version: "0.4.0"
-last_updated: "2026-07-16"
+last_updated: "2026-07-17"
 ---
 
 # Roadmap del Health Insurance Reserving Handbook
@@ -90,6 +90,16 @@ explícitos.
 - ultimate e IBNR por periodo de origen;
 - sensibilidad a la expectativa previa y a los patrones de desarrollo;
 - comparación directa con Chain Ladder.
+
+**Sprint 1 del núcleo — implementado y validado para integración**
+
+- motor Python independiente de Streamlit;
+- prior directo o reconciliado como exposición por tasa esperada;
+- sensibilidad configurable del prior y diagnósticos por periodo;
+- pruebas numéricas antes de integrar carga de archivos, interfaz y exportación.
+
+La integración visual en Demo 6 se reserva para el Sprint 2, una vez aprobado este contrato de
+cálculo.
 
 ### 4.3 Benktander y Cape Cod
 
