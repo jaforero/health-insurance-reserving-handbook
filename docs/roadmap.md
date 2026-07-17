@@ -1,11 +1,11 @@
 ---
 title: "Roadmap del Health Insurance Reserving Handbook"
-description: "Estado vigente, próximos hitos, criterios de salida y riesgos para desarrollar el handbook desde v0.4.0 hacia v1.0.0."
+description: "Estado vigente, próximos hitos, criterios de salida y riesgos para desarrollar el handbook desde v0.5.0 hacia v1.0.0."
 chapter: "roadmap"
 part: "repository"
 language: "es"
 status: "draft"
-version: "0.4.0"
+version: "0.5.0"
 last_updated: "2026-07-17"
 ---
 
@@ -27,8 +27,9 @@ El objetivo es consolidar una referencia profesional, abierta y reproducible sob
 
 ## 2. Línea base actual
 
-La versión pública más reciente es `v0.4.0`. Incorpora el flujo local de datos propios a triángulos
-actuariales mediante Demo 5 y Chain Ladder determinístico como primer incremento de Demo 6.
+La versión pública más reciente es `v0.5.0`. Incorpora el flujo local de datos propios a triángulos
+actuariales mediante Demo 5 y la comparación determinística Chain Ladder vs.
+Bornhuetter-Ferguson en Demo 6.
 
 | Componente | Estado actual |
 |---|---|
@@ -54,7 +55,7 @@ actuariales mediante Demo 5 y Chain Ladder determinístico como primer increment
 | 7 | Colombia | 12 |
 |  | **Total** | **40** |
 
-## 3. Alcance cerrado hasta v0.4.0
+## 3. Alcance cerrado hasta v0.5.0
 
 - incorporación del demo pagado vs. incurrido;
 - traducción y normalización de las Partes 1–7;
@@ -67,14 +68,17 @@ actuariales mediante Demo 5 y Chain Ladder determinístico como primer increment
 - Demo 4 de preparación y evaluación de datasets.
 - Demo 5 local para construir triángulos con datos propios mediante Streamlit;
 - Demo 6 local para seleccionar factores, proyectar el triángulo y estimar ultimate e IBNR;
+- prior directo o exposición por tasa esperada para Bornhuetter-Ferguson;
+- comparación Chain Ladder vs. Bornhuetter-Ferguson por periodo de origen y total;
+- sensibilidad, diagnósticos y exportación conjunta auditable de ambos métodos;
 - sistema visual corporativo compartido con IgraSans local y componentes responsivos;
 - suite automatizada para preparación, Chain Ladder, Bornhuetter-Ferguson, exportación e
   interfaces.
 
-## 4. Próximo hito: v0.5.0
+## 4. Hito publicado: v0.5.0
 
-`v0.5.0` ampliará Demo 6 para comparar métodos clásicos bajo supuestos y fuentes de información
-explícitos.
+`v0.5.0` amplía Demo 6 para comparar Chain Ladder y Bornhuetter-Ferguson bajo supuestos y
+fuentes de información explícitos.
 
 ### 4.1 Exposición y expectativa previa
 
@@ -99,7 +103,7 @@ explícitos.
 - sensibilidad configurable del prior y diagnósticos por periodo;
 - pruebas numéricas antes de integrar carga de archivos, interfaz y exportación.
 
-**Sprint 2 de integración — implementado y pendiente de aceptación final**
+**Sprint 2 de integración — implementado y aceptado**
 
 - carga local de priors en CSV, TXT delimitado, XLSX o Parquet;
 - mapeo de periodo de origen y prior directo o exposición por tasa;
@@ -108,13 +112,10 @@ explícitos.
 - sensibilidad configurable, diagnósticos y exportación conjunta auditable;
 - pruebas del recorrido completo en Streamlit y de privacidad de la exportación.
 
-### 4.3 Benktander y Cape Cod
+### 4.3 Trabajo diferido
 
-**Entregables**
-
-- iteraciones Benktander configurables;
-- estimación Cape Cod con exposición;
-- supuestos, diagnósticos y exportación reproducible.
+Benktander y Cape Cod quedan fuera del alcance de `v0.5.0` y pasan al siguiente hito para no
+mezclar la publicación validada de Bornhuetter-Ferguson con nuevos métodos aún no probados.
 
 ### 4.4 Comparación de métodos clásicos
 
@@ -137,15 +138,17 @@ mantener referencias cruzadas con los capítulos 6 y 11–14.
 - release notes con alcance, limitaciones y comandos de reproducción;
 - verificación del sitio publicado.
 
-## 5. Hito posterior: v0.6.0
+## 5. Próximo hito: v0.6.0
 
-El foco propuesto es incertidumbre y distribución predictiva:
+El foco propuesto es completar la comparación clásica y reforzar la validación:
 
-- demo comparativo Mack vs. Bootstrap;
-- error de predicción por año de origen y total;
-- intervalos, cuantiles, VaR y TVaR;
-- sensibilidad a residuos, cola y supuestos de proceso;
-- backtesting y calibración.
+- iteraciones Benktander configurables;
+- estimación Cape Cod con exposición;
+- diagnósticos y backtesting ampliados para Demo 6;
+- comparación reconciliada de métodos clásicos;
+- documentación y exportación reproducibles.
+
+La incertidumbre mediante Mack y Bootstrap se mantiene como candidato para `v0.7.0`.
 
 ## 6. Camino hacia v1.0.0
 
@@ -191,12 +194,12 @@ La existencia de un archivo o su inclusión en la navegación solo indica dispon
 
 ## 9. Orden recomendado de ejecución
 
-1. publicación y verificación de `v0.4.0`;
+1. publicación y verificación de `v0.5.0`;
 2. prueba de aceptación de Demo 5 con datos anonimizados;
-3. aceptación del Sprint 2 de Bornhuetter-Ferguson con priors controlados;
+3. ampliación de diagnósticos y backtesting de Demo 6;
 4. incorporación de Benktander y Cape Cod;
 5. comparación reproducible de métodos clásicos;
-6. cierre y publicación de `v0.5.0`;
-7. Demo 7 de incertidumbre para `v0.6.0`.
+6. cierre y publicación de `v0.6.0`;
+7. Demo 7 de incertidumbre para `v0.7.0`.
 
 No se asignan fechas hasta conocer capacidad de revisión y profundidad requerida. Cada hito debe cerrarse por evidencia.

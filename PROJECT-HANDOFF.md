@@ -5,7 +5,7 @@ chapter: "project-handoff"
 part: "repository"
 language: "es"
 status: "active"
-version: "0.4.0"
+version: "0.5.0"
 last_updated: "2026-07-17"
 ---
 
@@ -18,8 +18,8 @@ Este documento permite continuar el proyecto sin depender de inventarios o decis
 - Repositorio: <https://github.com/jaforero/health-insurance-reserving-handbook>
 - Sitio: <https://actuaria.javierforero.co/>
 - Rama principal: `main`
-- Última versión pública: `v0.4.0`
-- Estado del release: Demo 5 y el primer incremento Chain Ladder de Demo 6 publicados
+- Última versión pública: `v0.5.0`
+- Estado del release: Demo 5 y Demo 6 con Chain Ladder y Bornhuetter-Ferguson publicados
 - Idioma principal: español
 - Demos: español e inglés
 
@@ -91,9 +91,9 @@ python scripts/iniciar_chain_ladder.py
 ```
 
 Consume el ZIP agregado de Demo 5 o el ejemplo mensual, compara factores, permite selección
-manual y cola explícita, y estima ultimate e IBNR. El incremento en desarrollo añade un prior
-directo o exposición por tasa, comparación Bornhuetter-Ferguson, sensibilidad y exportación
-conjunta sin persistir los archivos fuente del usuario.
+manual y cola explícita, y estima ultimate e IBNR. También admite un prior directo o exposición
+por tasa, comparación Bornhuetter-Ferguson, sensibilidad y exportación conjunta sin persistir los
+archivos fuente del usuario.
 
 ## 4. Validación obligatoria
 
@@ -131,15 +131,14 @@ El workflow `.github/workflows/docs.yml` ejecuta la validación y despliega GitH
 
 ## 7. Próximo hito
 
-El objetivo recomendado es `v0.5.0`, con este orden:
+El objetivo recomendado es `v0.6.0`, con este orden:
 
 1. ejecutar pruebas de aceptación de Demo 5 con datos anonimizados;
-2. validar el Sprint 2 visual de Bornhuetter-Ferguson con priors controlados;
-3. ampliar los diagnósticos y el backtesting de Demo 6;
-4. incorporar Benktander y Cape Cod;
-5. comparar métodos clásicos con reconciliación y sensibilidad por periodo de origen;
-6. ampliar la documentación y las salidas bilingües;
-7. actualizar changelog, citación, tag y release notes de `v0.5.0`.
+2. ampliar los diagnósticos y el backtesting de Demo 6;
+3. incorporar Benktander y Cape Cod;
+4. comparar métodos clásicos con reconciliación y sensibilidad por periodo de origen;
+5. ampliar la documentación y las salidas bilingües;
+6. actualizar changelog, citación, tag y release notes de `v0.6.0`.
 
 ## 8. Criterio de continuidad
 
