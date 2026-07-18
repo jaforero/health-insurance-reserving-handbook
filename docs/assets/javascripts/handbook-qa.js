@@ -51,6 +51,121 @@
     return pathname;
   }
 
+
+  const ANALYTICS_EVENTS = new Set([
+    "handbook_qa_open",
+    "handbook_qa_suggestion_selected",
+    "handbook_qa_search_submitted",
+    "handbook_qa_result",
+    "handbook_qa_source_opened",
+    "handbook_qa_closed",
+    "handbook_qa_unresolved_report"
+  ]);
+
+  const ANALYTICS_FIELDS = new Set([
+    "page_path",
+    "section_anchor",
+    "answer_id",
+    "coverage_class",
+    "suggestion_position",
+    "interaction_type",
+    "catalog_version"
+  ]);
+
+  function sanitizeAnalyticsToken(value, maximumLength) {
+    return String(value || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9._-]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "")
+      .slice(0, maximumLength || 80);
+  }
+
+  function safeAnalyticsPayload(payload) {
+    const source = payload && typeof payload === "object" ? payload : {};
+    const safe = {};
+    ANALYTICS_FIELDS.forEach((field) => {
+      if (!(field in source) || source[field] === null || source[field] === undefined) return;
+      if (field === "page_path") {
+        safe[field] = normalizePath(source[field]);
+        return;
+      }
+      if (field === "section_anchor") {
+        const anchor = normalizeAnchor(source[field]);
+        if (anchor) safe[field] = anchor;
+        return;
+      }
+      if (field === "suggestion_position") {
+        const position = Number(source[field]);
+        if (Number.isInteger(position) && position >= 1 && position <= 5) {
+          safe[field] = position;
+        }
+        return;
+      }
+      if (field === "coverage_class") {
+        const coverage = sanitizeAnalyticsToken(source[field], 32);
+        if (["verified", "probable", "insufficient", "out_of_scope"].includes(coverage)) {
+          safe[field] = coverage;
+        }
+        return;
+      }
+      const token = sanitizeAnalyticsToken(source[field], field === "catalog_version" ? 40 : 80);
+      if (token) safe[field] = token;
+    });
+    return safe;
+  }
+
+  function emitAnalytics(eventName, payload, analyticsFunction) {
+    if (!ANALYTICS_EVENTS.has(eventName)) return false;
+    const sender = analyticsFunction
+      || (typeof global.gtag === "function" ? global.gtag : null);
+    if (typeof sender !== "function") return false;
+    try {
+      sender("event", eventName, safeAnalyticsPayload(payload));
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function catalogVersion(catalog) {
+    return sanitizeAnalyticsToken(
+      (catalog || {}).schema_version || (catalog || {}).last_updated || "unknown",
+      40
+    ) || "unknown";
+  }
+
+  function buildFeedbackUrl(baseUrl, metadata) {
+    const safe = safeAnalyticsPayload(metadata);
+    const target = new URL(
+      String(baseUrl || "https://github.com/jaforero/health-insurance-reserving-handbook/issues/new"),
+      "https://github.com/"
+    );
+    const body = [
+      "## Brecha de cobertura de Ask the Handbook",
+      "",
+      `- Página: ${safe.page_path || "/"}`,
+      `- Sección: ${safe.section_anchor || "contexto-general"}`,
+      `- Cobertura: ${safe.coverage_class || "insufficient"}`,
+      `- Respuesta candidata: ${safe.answer_id || "ninguna"}`,
+      `- Versión del catálogo: ${safe.catalog_version || "unknown"}`,
+      "",
+      "La pregunta escrita no fue incluida automáticamente para proteger la privacidad.",
+      "Añada manualmente solo el contexto que desee compartir."
+    ].join("\n");
+    target.searchParams.set("title", "[Ask the Handbook] Brecha de cobertura editorial");
+    target.searchParams.set("body", body);
+    return target.toString();
+  }
+
+  function analyticsMetadata(context, catalog, extra) {
+    return Object.assign({
+      page_path: normalizePath((context || {}).path || window.location.pathname),
+      section_anchor: normalizeAnchor((context || {}).anchor || ""),
+      catalog_version: catalogVersion(catalog)
+    }, extra || {});
+  }
+
   function renderedPath(sourcePath) {
     const path = String(sourcePath || "").replace(/^\/+/, "");
     if (!path || /^index\.md$/i.test(path)) return "/";
@@ -480,7 +595,7 @@
     container.appendChild(section);
   }
 
-  function renderSources(container, sources, siteRoot) {
+  function renderSources(container, sources, siteRoot, answerId) {
     const section = createElement("section", "handbook-qa__answer-section");
     section.appendChild(createElement("h3", null, "Fuentes dentro del handbook"));
     const list = createElement("ul", "handbook-qa__sources");
@@ -488,6 +603,8 @@
       const row = createElement("li");
       const link = createElement("a", null, source.label || source.path);
       link.href = sourceHref(source, siteRoot);
+      link.dataset.handbookQaSourceLink = "true";
+      link.dataset.answerId = sanitizeAnalyticsToken(answerId || "", 80);
       row.appendChild(link);
       list.appendChild(row);
     });
@@ -523,6 +640,8 @@
       const row = createElement("li");
       const link = createElement("a", null, entry.section.title);
       link.href = sourceHref(entry.section, siteRoot);
+      link.dataset.handbookQaSourceLink = "true";
+      link.dataset.sourceType = "related-section";
       row.appendChild(link);
       if (entry.section.summary) {
         row.appendChild(createElement("p", null, entry.section.summary));
@@ -533,6 +652,29 @@
     container.appendChild(section);
   }
 
+  function renderFeedback(container, options) {
+    if (!options || !options.feedbackBaseUrl) return;
+    const metadata = safeAnalyticsPayload(options.feedbackMetadata || {});
+    const section = createElement("section", "handbook-qa__feedback");
+    section.appendChild(createElement("h3", null, "¿Falta una respuesta útil?"));
+    section.appendChild(createElement(
+      "p",
+      null,
+      "Puede reportar una brecha editorial. El enlace no incluye automáticamente la pregunta que escribió."
+    ));
+    const link = createElement("a", "handbook-qa__feedback-link", "Reportar brecha del handbook");
+    link.href = buildFeedbackUrl(options.feedbackBaseUrl, metadata);
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.dataset.handbookQaFeedbackLink = "true";
+    link.setAttribute("data-handbook-qa-feedback-link", "true");
+    link.addEventListener("click", () => {
+      if (typeof options.onFeedback === "function") options.onFeedback(metadata);
+    });
+    section.appendChild(link);
+    container.appendChild(section);
+  }
+
   function coverageLabel(status) {
     if (status === "verified") return "Respuesta verificada";
     if (status === "probable") return "Coincidencia probable";
@@ -540,7 +682,7 @@
     return "Cobertura insuficiente";
   }
 
-  function renderResult(result, output, catalog, siteRoot, onQuestion) {
+  function renderResult(result, output, catalog, siteRoot, onQuestion, options) {
     output.replaceChildren();
     const status = createElement(
       "div",
@@ -556,7 +698,7 @@
       appendLabeledSection(output, "Por qué importa actuarialmente", result.item.why_it_matters);
       appendLabeledSection(output, "Ejemplo aplicado", result.item.example);
       appendLabeledSection(output, "Qué puede salir mal", result.item.caution);
-      renderSources(output, result.item.sources, siteRoot);
+      renderSources(output, result.item.sources, siteRoot, result.item.id);
       renderRelatedQuestions(output, result.item, catalog, onQuestion);
       if (result.status === "probable") {
         const note = createElement(
@@ -569,8 +711,11 @@
     } else {
       output.appendChild(createElement("p", "handbook-qa__notice", result.message));
       renderSections(output, result.relatedSections, siteRoot);
+      if (result.status === "insufficient") renderFeedback(output, options);
     }
 
+    output.dataset.coverageClass = result.status;
+    output.dataset.answerId = result.item ? result.item.id : "";
     output.hidden = false;
     output.focus({ preventScroll: true });
   }
@@ -732,11 +877,12 @@
     if (!target) return [];
     target.replaceChildren();
     const suggestions = suggestQuestions(catalog, context, 5);
-    suggestions.forEach((entry) => {
+    suggestions.forEach((entry, index) => {
       const button = createElement("button", "handbook-qa__question-chip", entry.item.question);
       button.type = "button";
       button.dataset.questionId = entry.item.id;
-      button.addEventListener("click", () => onSelect(entry.item.id));
+      button.dataset.suggestionPosition = String(index + 1);
+      button.addEventListener("click", () => onSelect(entry.item.id, index + 1));
       target.appendChild(button);
     });
     return suggestions;
@@ -752,6 +898,7 @@
     const loading = container.querySelector("[data-handbook-qa-loading]");
     const suggestionsTarget = container.querySelector("[data-handbook-qa-suggestions]");
     const siteRoot = container.dataset.siteRoot || "./";
+    const feedbackBaseUrl = container.dataset.feedbackBaseUrl || "";
 
     if (!trigger || !overlay || !dialog || !form || !input || !output) return;
 
@@ -761,11 +908,16 @@
     let catalog = null;
     let sectionIndex = null;
 
-    const closePanel = () => {
+    const closePanel = (reason) => {
       if (overlay.hidden) return;
+      const context = resolveContext(container);
       overlay.hidden = true;
       trigger.setAttribute("aria-expanded", "false");
       setBackgroundScrollLocked(false);
+      emitAnalytics(
+        "handbook_qa_closed",
+        analyticsMetadata(context, catalog, { interaction_type: reason || "control" })
+      );
       if (previouslyFocused && typeof previouslyFocused.focus === "function") {
         previouslyFocused.focus({ preventScroll: true });
       } else {
@@ -773,16 +925,47 @@
       }
     };
 
-    const askQuestion = (question) => {
-      input.value = String(question || "");
-      const result = search(input.value, catalog, sectionIndex, resolveContext(container));
-      renderResult(result, output, catalog, siteRoot, askQuestion);
+    const renderGlobalResult = (result, interactionType, context) => {
+      const metadata = analyticsMetadata(context, catalog, {
+        answer_id: result.item ? result.item.id : "",
+        coverage_class: result.status,
+        interaction_type: interactionType
+      });
+      renderResult(result, output, catalog, siteRoot, askQuestion, {
+        feedbackBaseUrl,
+        feedbackMetadata: metadata,
+        onFeedback: (feedbackMetadata) => emitAnalytics(
+          "handbook_qa_unresolved_report",
+          Object.assign({}, feedbackMetadata, { interaction_type: "feedback" })
+        )
+      });
+      emitAnalytics("handbook_qa_result", metadata);
     };
 
-    const answerSuggestion = (id) => {
+    const askQuestion = (question) => {
+      input.value = String(question || "");
+      const context = resolveContext(container);
+      emitAnalytics(
+        "handbook_qa_search_submitted",
+        analyticsMetadata(context, catalog, { interaction_type: "free-text" })
+      );
+      const result = search(input.value, catalog, sectionIndex, context);
+      renderGlobalResult(result, "free-text", context);
+    };
+
+    const answerSuggestion = (id, position) => {
+      const context = resolveContext(container);
+      emitAnalytics(
+        "handbook_qa_suggestion_selected",
+        analyticsMetadata(context, catalog, {
+          answer_id: id,
+          suggestion_position: position,
+          interaction_type: "suggestion"
+        })
+      );
       const result = answerById(catalog, id);
       if (result.item) input.value = result.item.question;
-      renderResult(result, output, catalog, siteRoot, askQuestion);
+      renderGlobalResult(result, "suggestion", context);
     };
 
     const refreshContext = () => {
@@ -799,10 +982,14 @@
 
     const openPanel = () => {
       previouslyFocused = document.activeElement;
-      refreshContext();
+      const context = refreshContext();
       overlay.hidden = false;
       trigger.setAttribute("aria-expanded", "true");
       setBackgroundScrollLocked(true);
+      emitAnalytics(
+        "handbook_qa_open",
+        analyticsMetadata(context, catalog, { interaction_type: "panel" })
+      );
       const focusInput = () => input.focus({ preventScroll: true });
       if (typeof requestAnimationFrame === "function") requestAnimationFrame(focusInput);
       else focusInput();
@@ -810,7 +997,12 @@
 
     trigger.addEventListener("click", openPanel);
     container.querySelectorAll("[data-handbook-qa-close]").forEach((control) => {
-      control.addEventListener("click", closePanel);
+      control.addEventListener("click", () => {
+        const reason = control.classList.contains("handbook-qa-global__backdrop")
+          ? "backdrop"
+          : "close-button";
+        closePanel(reason);
+      });
     });
     form.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -820,12 +1012,24 @@
       const link = event.target && event.target.closest
         ? event.target.closest("a[href]")
         : null;
-      if (link) closePanel();
+      if (!link) return;
+      const context = resolveContext(container);
+      if (link.matches("[data-handbook-qa-source-link]")) {
+        emitAnalytics(
+          "handbook_qa_source_opened",
+          analyticsMetadata(context, catalog, {
+            answer_id: link.dataset.answerId || output.dataset.answerId || "",
+            coverage_class: output.dataset.coverageClass || "insufficient",
+            interaction_type: link.dataset.sourceType || "source"
+          })
+        );
+        closePanel("source");
+      }
     });
     dialog.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        closePanel();
+        closePanel("escape");
         return;
       }
       if (event.key !== "Tab") return;
@@ -892,7 +1096,11 @@
     sourceHref,
     detectActiveHeading,
     shouldShowGlobalPanel,
-    nextFocusIndex
+    nextFocusIndex,
+    safeAnalyticsPayload,
+    emitAnalytics,
+    catalogVersion,
+    buildFeedbackUrl
   };
 
   global.HandbookQAEngine = api;
