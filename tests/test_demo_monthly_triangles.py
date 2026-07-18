@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import csv
 import hashlib
 import importlib.util
 import sys
@@ -27,26 +26,52 @@ class MonthlyTriangleDemoTest(unittest.TestCase):
         self.valuation = monthly_demo.parse_month(monthly_demo.DEFAULT_VALUATION_MONTH)
         self.result = monthly_demo.build_demo(
             valuation_index=self.valuation,
-            origin_months=60,
-            development_months=24,
+            origin_months=monthly_demo.DEFAULT_ORIGIN_MONTHS,
+            development_months=monthly_demo.DEFAULT_DEVELOPMENT_MONTHS,
             seed=monthly_demo.DEFAULT_SEED,
+            runoff_months=monthly_demo.DEFAULT_RUNOFF_MONTHS,
         )
 
     def test_default_design_counts(self) -> None:
-        self.assertEqual(len(self.result.origins), 60)
-        self.assertEqual(self.result.observed_cells, 1200)
-        self.assertEqual(self.result.complete_origins, 36)
-        self.assertEqual(min(int(row["observations"]) for row in self.result.factors), 36)
+        self.assertEqual(len(self.result.origins), 72)
+        self.assertEqual(self.result.observed_cells, 1962)
+        self.assertEqual(self.result.complete_origins, 37)
+        self.assertEqual(min(int(row["observations"]) for row in self.result.factors), 37)
+        self.assertEqual(self.result.terminal_age, 35)
+        self.assertEqual(self.result.runoff_age, 48)
 
     def test_triangle_reconciliation(self) -> None:
         for record in self.result.origins:
             running = 0.0
             for dev, value in self.result.incremental[record.origin_month].items():
                 running += value
-                self.assertAlmostEqual(
-                    running, self.result.cumulative[record.origin_month][dev], places=2
-                )
+                self.assertAlmostEqual(running, self.result.cumulative[record.origin_month][dev], places=2)
             self.assertAlmostEqual(sum(record.increments), record.ultimate_paid, places=2)
+
+    def test_traditional_view_is_36_by_36(self) -> None:
+        origins = monthly_demo.traditional_view_origins(self.result)
+        rows = monthly_demo.triangle_rows(
+            self.result.cumulative,
+            self.result.terminal_age,
+            "mes_origen",
+            origins,
+        )
+        self.assertEqual(len(rows), 36)
+        self.assertEqual(len(rows[0]), 37)  # origin label plus 36 development columns
+        self.assertEqual(sum(value != "" for value in rows[-1].values()), 2)
+
+    def test_tail_is_explicit_and_residual_is_not_floored(self) -> None:
+        self.assertGreater(self.result.synthetic_tail_factor, 1.0)
+        first = self.result.estimates[0]
+        self.assertIn("estimated_unpaid_claim_liability", first)
+        self.assertIn("estimated_final_cost_with_tail", first)
+        self.assertNotIn("estimated_ibnr", first)
+        self.assertAlmostEqual(
+            float(first["estimated_unpaid_claim_liability"]),
+            float(first["estimated_final_cost_with_tail"])
+            - float(first["latest_cumulative_paid"]),
+            places=2,
+        )
 
     def test_outputs_are_deterministic(self) -> None:
         with tempfile.TemporaryDirectory() as first, tempfile.TemporaryDirectory() as second:
@@ -56,47 +81,29 @@ class MonthlyTriangleDemoTest(unittest.TestCase):
                     self.result,
                     root,
                     "es",
-                    development_months=24,
                     seed=monthly_demo.DEFAULT_SEED,
                 )
-            relative = Path("data/demo_triangulos_mensuales/resultados_chain_ladder_mensual.csv")
+            relative = Path(
+                "data/demo_triangulos_mensuales/resultados_proyeccion_pasivo_no_pagado.csv"
+            )
             digests = [hashlib.sha256((root / relative).read_bytes()).hexdigest() for root in roots]
             self.assertEqual(digests[0], digests[1])
 
-    def test_bf_prior_is_reproducible_and_independent_of_claim_emergence(self) -> None:
+    def test_result_headers_do_not_claim_pure_ibnr(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             monthly_demo.write_language_data(
                 self.result,
                 root,
                 "es",
-                development_months=24,
                 seed=monthly_demo.DEFAULT_SEED,
             )
-            path = (
+            header = (
                 root
-                / "data"
-                / "demo_triangulos_mensuales"
-                / "prior_bornhuetter_ferguson_mensual.csv"
-            )
-            with path.open(encoding="utf-8", newline="") as handle:
-                rows = list(csv.DictReader(handle))
-
-        self.assertEqual(len(rows), 60)
-        first_record = self.result.origins[0]
-        expected_cost = 215_000 * first_record.seasonal_index
-        self.assertEqual(rows[0]["mes_origen"], first_record.origin_month)
-        self.assertEqual(int(rows[0]["miembros_mes"]), first_record.member_months)
-        self.assertAlmostEqual(
-            float(rows[0]["costo_esperado_por_miembro"]),
-            expected_cost,
-            places=6,
-        )
-        self.assertAlmostEqual(
-            float(rows[0]["ultimate_esperado"]),
-            first_record.member_months * expected_cost,
-            places=2,
-        )
+                / "data/demo_triangulos_mensuales/resultados_proyeccion_pasivo_no_pagado.csv"
+            ).read_text(encoding="utf-8").splitlines()[0]
+            self.assertIn("pasivo_no_pagado_estimado", header)
+            self.assertNotIn("ibnr_estimado", header.lower())
 
 
 if __name__ == "__main__":

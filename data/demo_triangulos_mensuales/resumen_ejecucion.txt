@@ -1,10 +1,12 @@
-=== Demo de triángulos mensuales pagados de salud ===
+=== Demo mensual de triángulos pagados de salud r2 ===
 Mes de valuación: 2025-12
-Meses de origen: 60
-Meses de desarrollo: 0-24
-Celdas observadas: 1200
-Orígenes completos: 36
-Mínimo de observaciones por factor: 36
-IBNR total Chain Ladder: 77,957,625,915.76
+Base de estimación: 72 x 36 (orígenes x edades 0-35)
+Vista actuarial tradicional: 36 x 36
+Celdas observadas: 1962
+Orígenes completos a edad 35: 37
+Mínimo de observaciones por factor: 37
+Runoff real simulado: 0-48
+Factor de cola sintético 35->48: 1.00524958
+Pasivo no pagado estimado total: 112,843,441,819.28
 Semilla: 20260714
-Nota: 60/24 es una configuración didáctica defendible, no un mínimo universal.
+Advertencia: el residual pagado no identifica IBNR puro, RBNS ni IBNER por separado.

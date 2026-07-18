@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import sys
 from pathlib import Path
 from typing import Any
@@ -22,12 +23,15 @@ if str(SRC) not in sys.path:
 from health_reserving import (  # noqa: E402
     PRIOR_MODE_LABELS,
     SELECTION_LABELS,
+    BenktanderConfig,
     BornhuetterFergusonConfig,
     ChainLadderConfig,
+    assess_triangle_input,
     build_chain_ladder_zip,
     build_classical_methods_zip,
     compare_factor_methods,
     excel_sheet_names,
+    fit_benktander,
     fit_bornhuetter_ferguson,
     fit_chain_ladder,
     load_demo5_triangle_package,
@@ -50,7 +54,8 @@ SAMPLE = ROOT / "data" / "demo_triangulos_mensuales" / "triangulo_pagado_mensual
 SAMPLE_PRIOR = (
     ROOT / "data" / "demo_triangulos_mensuales" / "prior_bornhuetter_ferguson_mensual.csv"
 )
-VISUAL_BUILD = "Sprint 2 · comparación visual 0.2.2"
+VISUAL_BUILD = "v0.6.0 Sprint 2 r2 · alcance actuarial explícito"
+SAMPLE_TAIL_FACTOR = 1.0052495821422405
 
 
 def run_signature(
@@ -76,6 +81,17 @@ def bf_run_signature(
 
     digest = hashlib.sha256(chain_ladder_signature.encode("utf-8"))
     digest.update(prior.to_csv(index=True, lineterminator="\n").encode("utf-8"))
+    digest.update(json.dumps(config.to_dict(), sort_keys=True).encode("utf-8"))
+    return digest.hexdigest()
+
+
+def benktander_run_signature(
+    bornhuetter_ferguson_signature: str,
+    config: BenktanderConfig,
+) -> str:
+    """Return a deterministic signature for BF inputs and Benktander assumptions."""
+
+    digest = hashlib.sha256(bornhuetter_ferguson_signature.encode("utf-8"))
     digest.update(json.dumps(config.to_dict(), sort_keys=True).encode("utf-8"))
     return digest.hexdigest()
 
@@ -148,7 +164,7 @@ def method_comparison_charts(
             x=alt.X("periodo_origen:O", sort=origin_order, axis=axis),
             y=alt.Y(
                 "ibnr:Q",
-                title=f"IBNR ({currency})",
+                title=f"Pasivo no pagado estimado ({currency})",
                 scale=alt.Scale(zero=True),
                 axis=alt.Axis(format="~s"),
             ),
@@ -167,7 +183,7 @@ def method_comparison_charts(
             tooltip=[
                 alt.Tooltip("periodo_origen:N", title="Periodo de origen"),
                 alt.Tooltip("metodo:N", title="Método"),
-                alt.Tooltip("ibnr:Q", title=f"IBNR ({currency})", format=",.0f"),
+                alt.Tooltip("ibnr:Q", title=f"Pasivo no pagado ({currency})", format=",.0f"),
             ],
         )
         .properties(height=320)
@@ -204,7 +220,7 @@ def method_comparison_charts(
                 ),
                 alt.Tooltip(
                     "diferencia_relativa_vs_cl:Q",
-                    title="BF − CL / IBNR CL",
+                    title="BF − CL / pasivo CL",
                     format="+.2%",
                 ),
             ],
@@ -217,6 +233,114 @@ def method_comparison_charts(
     )
     difference = (bars + zero_line).properties(height=220)
     return trajectory, difference
+
+
+def benktander_comparison_charts(
+    comparison: pd.DataFrame,
+    currency: str,
+) -> tuple[alt.Chart, alt.LayerChart]:
+    """Build a common-scale CL/BF/Benktander trajectory and signed BK−CL chart."""
+
+    plot_frame = comparison.reset_index()
+    origin_column = str(plot_frame.columns[0])
+    plot_frame = plot_frame.rename(columns={origin_column: "periodo_origen"})
+    plot_frame["periodo_origen"] = plot_frame["periodo_origen"].astype(str)
+    origin_order = plot_frame["periodo_origen"].tolist()
+    method_columns = {
+        "ibnr_chain_ladder": "Chain Ladder",
+        "ibnr_bf": "Bornhuetter-Ferguson",
+        "ibnr_benktander": "Benktander",
+    }
+    series = plot_frame.melt(
+        id_vars="periodo_origen",
+        value_vars=list(method_columns),
+        var_name="metodo",
+        value_name="ibnr",
+    )
+    series["metodo"] = series["metodo"].map(method_columns)
+    method_domain = list(method_columns.values())
+    axis = alt.Axis(labelAngle=-45, labelOverlap="greedy", title="Periodo de origen")
+    trajectory = (
+        alt.Chart(series)
+        .mark_line(point=alt.OverlayMarkDef(filled=True, size=24), strokeWidth=2.2)
+        .encode(
+            x=alt.X("periodo_origen:O", sort=origin_order, axis=axis),
+            y=alt.Y(
+                "ibnr:Q",
+                title=f"Pasivo no pagado estimado ({currency})",
+                scale=alt.Scale(zero=True),
+                axis=alt.Axis(format="~s"),
+            ),
+            color=alt.Color(
+                "metodo:N",
+                title="Método",
+                sort=method_domain,
+                scale=alt.Scale(
+                    domain=method_domain,
+                    range=["#260080", "#526cfe", "#00a6a6"],
+                ),
+            ),
+            strokeDash=alt.StrokeDash(
+                "metodo:N",
+                sort=method_domain,
+                scale=alt.Scale(
+                    domain=method_domain,
+                    range=[[1, 0], [6, 3], [2, 2]],
+                ),
+                legend=None,
+            ),
+            tooltip=[
+                alt.Tooltip("periodo_origen:N", title="Periodo de origen"),
+                alt.Tooltip("metodo:N", title="Método"),
+                alt.Tooltip("ibnr:Q", title=f"Pasivo no pagado ({currency})", format=",.0f"),
+            ],
+        )
+        .properties(height=340)
+    )
+
+    difference_frame = plot_frame[
+        ["periodo_origen", "ibnr_chain_ladder", "diferencia_ibnr_bk_vs_cl"]
+    ].copy()
+    difference_frame["diferencia_relativa_vs_cl"] = difference_frame[
+        "diferencia_ibnr_bk_vs_cl"
+    ].div(difference_frame["ibnr_chain_ladder"].where(difference_frame["ibnr_chain_ladder"].ne(0)))
+    bars = (
+        alt.Chart(difference_frame)
+        .mark_bar()
+        .encode(
+            x=alt.X("periodo_origen:O", sort=origin_order, axis=axis),
+            y=alt.Y(
+                "diferencia_ibnr_bk_vs_cl:Q",
+                title=f"Diferencia Benktander − CL ({currency})",
+                scale=alt.Scale(zero=True),
+                axis=alt.Axis(format="~s"),
+            ),
+            color=alt.condition(
+                alt.datum.diferencia_ibnr_bk_vs_cl >= 0,
+                alt.value("#00a6a6"),
+                alt.value("#9b90b4"),
+            ),
+            tooltip=[
+                alt.Tooltip("periodo_origen:N", title="Periodo de origen"),
+                alt.Tooltip(
+                    "diferencia_ibnr_bk_vs_cl:Q",
+                    title=f"Benktander − CL ({currency})",
+                    format="+,.0f",
+                ),
+                alt.Tooltip(
+                    "diferencia_relativa_vs_cl:Q",
+                    title="Benktander − CL / pasivo CL",
+                    format="+.2%",
+                ),
+            ],
+        )
+    )
+    zero_line = (
+        alt.Chart(pd.DataFrame({"cero": [0.0]}))
+        .mark_rule(color="#1f2430", strokeWidth=1)
+        .encode(y="cero:Q")
+    )
+    return trajectory, (bars + zero_line).properties(height=220)
 
 
 def select_prior_column(
@@ -339,6 +463,35 @@ def display_diagnostics(result) -> None:
         st.dataframe(result.diagnostics, width="stretch", hide_index=True)
 
 
+def render_input_scope(assessment, *, uploaded: bool) -> None:
+    """State what arrived, what is missing and what the demo can support."""
+
+    st.subheader("1.1 Alcance de la información recibida")
+    if uploaded:
+        st.success(
+            "El archivo fue leído y validado estructuralmente. A continuación se distingue lo "
+            "recibido de la información adicional necesaria para una estimación más realista."
+        )
+    else:
+        st.info(
+            "La muestra es sintética: se conoce su runoff completo y se usa una cola didáctica "
+            "35→48. Esa ventaja no existe automáticamente en un archivo real."
+        )
+    received_tab, missing_tab, scope_tab = st.tabs(
+        ["Qué se recibió", "Qué falta o sería deseable", "Qué puede calcularse"]
+    )
+    with received_tab:
+        st.dataframe(assessment.received, width="stretch", hide_index=True)
+    with missing_tab:
+        st.dataframe(assessment.missing_desirable, width="stretch", hide_index=True)
+    with scope_tab:
+        st.dataframe(assessment.calculation_scope, width="stretch", hide_index=True)
+    st.warning(
+        "Un triángulo agregado exclusivamente pagado permite estimar un pasivo no pagado total, "
+        "pero no identifica por separado IBNR puro, RBNS ni IBNER."
+    )
+
+
 def display_result(
     result,
     sensitivity: pd.DataFrame,
@@ -377,25 +530,53 @@ def display_result(
         st.dataframe(result.individual_factors.round(6), width="stretch")
 
     st.subheader("Sensibilidad por método automático")
-    sensitivity_view = sensitivity.copy()
-    sensitivity_view["ultimate_total"] = sensitivity_view["ultimate_total"].round(2)
-    sensitivity_view["ibnr_total"] = sensitivity_view["ibnr_total"].round(2)
-    sensitivity_view["diferencia_ibnr_vs_ponderado"] = sensitivity_view[
-        "diferencia_ibnr_vs_ponderado"
-    ].round(2)
-    st.dataframe(sensitivity_view, width="stretch", hide_index=True)
+    sensitivity_view = sensitivity[
+        [
+            "metodo",
+            "seleccion",
+            "costo_proyectado_horizonte_seleccionado_total",
+            "pasivo_no_pagado_estimado_total",
+            "diferencia_pasivo_no_pagado_vs_ponderado",
+        ]
+    ].copy()
+    amount_columns = [
+        "costo_proyectado_horizonte_seleccionado_total",
+        "pasivo_no_pagado_estimado_total",
+        "diferencia_pasivo_no_pagado_vs_ponderado",
+    ]
+    sensitivity_view[amount_columns] = sensitivity_view[amount_columns].round(2)
+    st.dataframe(
+        sensitivity_view,
+        width="stretch",
+        hide_index=True,
+    )
 
-    st.header("4. Interpreta ultimate e IBNR")
+    st.header("4. Interpreta costo proyectado y pasivo no pagado")
+    final_cost_label = (
+        "Costo final técnico estimado"
+        if not math.isclose(config.tail_factor, 1.0)
+        else "Acumulado proyectado a edad terminal"
+    )
     render_kpi_grid(
         (
             ("Acumulado observado", money(observed, currency)),
-            ("Ultimate estimado", money(ultimate, currency)),
-            ("IBNR estimado", money(ibnr, currency)),
-            ("IBNR / ultimate", f"{ratio:.1%}".replace(".", ",")),
+            (final_cost_label, money(ultimate, currency)),
+            ("Pasivo no pagado estimado", money(ibnr, currency)),
+            ("Pasivo / costo proyectado", f"{ratio:.1%}".replace(".", ",")),
         )
     )
 
-    summary_view = result.origin_summary.reset_index()
+    summary_view = result.origin_summary.reset_index()[
+        [
+            "periodo_origen",
+            "ultima_edad_observada",
+            "acumulado_observado",
+            "madurez",
+            "costo_proyectado_horizonte_seleccionado",
+            "pasivo_no_pagado_estimado",
+            "participacion_pasivo_no_pagado",
+        ]
+    ]
     st.dataframe(summary_view, width="stretch", hide_index=True)
     origin_order = summary_view["periodo_origen"].astype(str).tolist()
     chain_ladder_chart = (
@@ -409,14 +590,18 @@ def display_result(
                 axis=alt.Axis(labelAngle=-45, labelOverlap="greedy"),
             ),
             y=alt.Y(
-                "ibnr:Q",
-                title=f"IBNR ({currency})",
+                "pasivo_no_pagado_estimado:Q",
+                title=f"Pasivo no pagado estimado ({currency})",
                 scale=alt.Scale(zero=True),
                 axis=alt.Axis(format="~s"),
             ),
             tooltip=[
                 alt.Tooltip("periodo_origen:N", title="Periodo de origen"),
-                alt.Tooltip("ibnr:Q", title=f"IBNR ({currency})", format=",.0f"),
+                alt.Tooltip(
+                    "pasivo_no_pagado_estimado:Q",
+                    title=f"Pasivo no pagado ({currency})",
+                    format=",.0f",
+                ),
             ],
         )
         .properties(height=280)
@@ -447,7 +632,7 @@ def display_result(
     )
     st.info(
         "El resultado es determinístico. No incluye error de predicción de Mack, bootstrap ni "
-        "intervalos de confianza."
+        "intervalos de confianza. El residual pagado es pasivo no pagado total, no IBNR puro."
     )
 
 
@@ -470,11 +655,16 @@ def display_bf_result(
     ratio_cl = ibnr_cl / ultimate_cl if ultimate_cl else 0.0
     ratio_bf = ibnr_bf / ultimate_bf if ultimate_bf else 0.0
     relative_difference = difference / ibnr_cl if ibnr_cl else 0.0
+    cost_label = (
+        "Costo final técnico estimado"
+        if not math.isclose(chain_ladder_config.tail_factor, 1.0)
+        else "Acumulado proyectado a edad terminal"
+    )
 
     st.header("6. Compara Chain Ladder y Bornhuetter-Ferguson")
     st.caption(
         "El acumulado observado es la misma base para ambos métodos. Las tarjetas conservan "
-        "idéntica jerarquía para que ultimate e IBNR puedan compararse sin sugerir aditividad."
+        "idéntica jerarquía para comparar costo proyectado y pasivo no pagado sin sugerir aditividad."
     )
     render_method_comparison(
         ("Base común · Acumulado observado", money(observed, currency)),
@@ -482,24 +672,24 @@ def display_bf_result(
             (
                 "Chain Ladder",
                 (
-                    ("Ultimate", money(ultimate_cl, currency)),
-                    ("IBNR", money(ibnr_cl, currency)),
-                    ("IBNR / ultimate", f"{ratio_cl:.2%}".replace(".", ",")),
+                    (cost_label, money(ultimate_cl, currency)),
+                    ("Pasivo no pagado", money(ibnr_cl, currency)),
+                    ("Pasivo / costo", f"{ratio_cl:.2%}".replace(".", ",")),
                 ),
             ),
             (
                 "Bornhuetter-Ferguson",
                 (
-                    ("Ultimate", money(ultimate_bf, currency)),
-                    ("IBNR", money(ibnr_bf, currency)),
-                    ("IBNR / ultimate", f"{ratio_bf:.2%}".replace(".", ",")),
+                    (cost_label, money(ultimate_bf, currency)),
+                    ("Pasivo no pagado", money(ibnr_bf, currency)),
+                    ("Pasivo / costo", f"{ratio_bf:.2%}".replace(".", ",")),
                 ),
             ),
         ),
         (
-            "Diferencia de IBNR · BF − CL",
+            "Diferencia de pasivo no pagado · BF − CL",
             signed_money(difference, currency),
-            f"{signed_percentage(relative_difference)} respecto al IBNR Chain Ladder",
+            f"{signed_percentage(relative_difference)} respecto al pasivo Chain Ladder",
         ),
     )
 
@@ -513,7 +703,7 @@ def display_bf_result(
         ]
     ]
     trajectory_chart, difference_chart = method_comparison_charts(comparison, currency)
-    st.subheader("IBNR por periodo de origen")
+    st.subheader("Pasivo no pagado estimado por periodo de origen")
     st.caption(
         "Las líneas son estimaciones alternativas de la misma magnitud y utilizan una escala "
         "común desde cero; no deben sumarse ni apilarse."
@@ -522,14 +712,26 @@ def display_bf_result(
 
     st.subheader("Diferencia por periodo de origen")
     st.caption(
-        "Cada barra representa BF − CL con una línea cero. Valores positivos indican mayor IBNR "
-        "BF y valores negativos, menor IBNR BF. Como el observado es común, la diferencia de "
-        "ultimate es exactamente igual a la diferencia de IBNR."
+        "Cada barra representa BF − CL con una línea cero. Valores positivos indican mayor pasivo "
+        "BF y valores negativos, menor pasivo BF. Como el observado es común, la diferencia de "
+        "costo proyectado coincide con la diferencia de pasivo no pagado."
     )
     st.altair_chart(difference_chart, width="stretch")
 
     with st.expander("Ver comparación numérica por periodo", expanded=False):
-        st.dataframe(comparison.reset_index(), width="stretch", hide_index=True)
+        st.dataframe(
+            comparison.reset_index().rename(
+                columns={
+                    "ultimate_chain_ladder": "costo_proyectado_horizonte_seleccionado_chain_ladder",
+                    "ultimate_bf": "costo_proyectado_horizonte_seleccionado_bf",
+                    "ibnr_chain_ladder": "pasivo_no_pagado_chain_ladder",
+                    "ibnr_bf": "pasivo_no_pagado_bf",
+                    "diferencia_ibnr_bf_vs_cl": "diferencia_pasivo_bf_vs_cl",
+                }
+            ),
+            width="stretch",
+            hide_index=True,
+        )
 
     st.subheader("Sensibilidad a la expectativa previa")
     sensitivity = result.sensitivity.copy()
@@ -541,10 +743,22 @@ def display_bf_result(
         "diferencia_ultimate_vs_base",
     ]
     sensitivity[amount_columns] = sensitivity[amount_columns].round(2)
-    st.dataframe(sensitivity, width="stretch", hide_index=True)
+    st.dataframe(
+        sensitivity.rename(
+            columns={
+                "ultimate_esperado_prior_total": "costo_final_esperado_prior_total",
+                "ultimate_bf_total": "costo_proyectado_horizonte_seleccionado_bf_total",
+                "ibnr_bf_total": "pasivo_no_pagado_bf_total",
+                "diferencia_ibnr_vs_base": "diferencia_pasivo_vs_base",
+                "diferencia_ultimate_vs_base": "diferencia_costo_proyectado_vs_base",
+            }
+        ),
+        width="stretch",
+        hide_index=True,
+    )
     st.line_chart(
         sensitivity.set_index("escenario")[["ibnr_bf_total"]],
-        y_label=f"IBNR BF ({currency})",
+        y_label=f"Pasivo no pagado BF ({currency})",
         x_label="Escenario del prior",
     )
 
@@ -571,6 +785,230 @@ def display_bf_result(
         "BF estabiliza los periodos inmaduros mediante una expectativa previa, pero no vuelve "
         "objetivo ni preciso un prior débil. La fuente y los ajustes deben documentarse."
     )
+
+
+def display_benktander_result(
+    result,
+    chain_ladder_result,
+    chain_ladder_config: ChainLadderConfig,
+    bf_result,
+    source_metadata: dict[str, Any],
+    prior_metadata: dict[str, Any],
+) -> None:
+    """Render the three-method comparison and a joint auditable export."""
+
+    currency = chain_ladder_config.currency
+    observed = metric_value(result, "acumulado_observado_total")
+    ultimate_cl = metric_value(result, "ultimate_chain_ladder_total")
+    ultimate_bf = metric_value(result, "ultimate_bf_total")
+    ultimate_bk = metric_value(result, "ultimate_benktander_total")
+    ibnr_cl = metric_value(result, "ibnr_chain_ladder_total")
+    ibnr_bf = metric_value(result, "ibnr_bf_total")
+    ibnr_bk = metric_value(result, "ibnr_benktander_total")
+    difference_cl = metric_value(result, "diferencia_ibnr_bk_vs_cl_total")
+    difference_bf = metric_value(result, "diferencia_ibnr_bk_vs_bf_total")
+    relative_difference = difference_cl / ibnr_cl if ibnr_cl else 0.0
+    cost_label = (
+        "Costo final técnico estimado"
+        if not math.isclose(chain_ladder_config.tail_factor, 1.0)
+        else "Acumulado proyectado a edad terminal"
+    )
+
+    st.header("8. Compara Chain Ladder, BF y Benktander")
+    st.caption(
+        f"Benktander se calculó con {result.config.iterations} iteraciones. Todos los métodos "
+        "parten del mismo acumulado observado; sus pasivos estimados son alternativas y no deben sumarse."
+    )
+    render_method_comparison(
+        ("Base común · Acumulado observado", money(observed, currency)),
+        (
+            (
+                "Chain Ladder",
+                (
+                    (cost_label, money(ultimate_cl, currency)),
+                    ("Pasivo no pagado", money(ibnr_cl, currency)),
+                ),
+            ),
+            (
+                "Bornhuetter-Ferguson",
+                (
+                    (cost_label, money(ultimate_bf, currency)),
+                    ("Pasivo no pagado", money(ibnr_bf, currency)),
+                ),
+            ),
+            (
+                "Benktander",
+                (
+                    (cost_label, money(ultimate_bk, currency)),
+                    ("Pasivo no pagado", money(ibnr_bk, currency)),
+                ),
+            ),
+        ),
+        (
+            "Diferencia de pasivo no pagado · Benktander − CL",
+            signed_money(difference_cl, currency),
+            f"{signed_percentage(relative_difference)} respecto al pasivo Chain Ladder",
+        ),
+    )
+
+    comparison = result.origin_summary[
+        [
+            "ultimate_chain_ladder",
+            "ultimate_bf",
+            "ultimate_benktander",
+            "ibnr_chain_ladder",
+            "ibnr_bf",
+            "ibnr_benktander",
+            "diferencia_ibnr_bk_vs_cl",
+            "diferencia_ibnr_bk_vs_bf",
+            "peso_chain_ladder",
+            "peso_prior_inicial",
+        ]
+    ]
+    trajectory_chart, difference_chart = benktander_comparison_charts(comparison, currency)
+    st.subheader("Trayectoria del pasivo no pagado por periodo de origen")
+    st.caption(
+        "Las tres líneas utilizan la misma escala desde cero. Benktander converge hacia Chain "
+        "Ladder a medida que aumenta el número de iteraciones cuando los pesos son convexos."
+    )
+    st.altair_chart(trajectory_chart, width="stretch")
+    st.subheader("Diferencia Benktander frente a Chain Ladder")
+    st.altair_chart(difference_chart, width="stretch")
+
+    with st.expander("Ver comparación numérica y pesos por periodo", expanded=False):
+        st.dataframe(
+            comparison.reset_index().rename(
+                columns={
+                    "ultimate_chain_ladder": "costo_proyectado_horizonte_seleccionado_chain_ladder",
+                    "ultimate_bf": "costo_proyectado_horizonte_seleccionado_bf",
+                    "ultimate_benktander": "costo_proyectado_horizonte_seleccionado_benktander",
+                    "ibnr_chain_ladder": "pasivo_no_pagado_chain_ladder",
+                    "ibnr_bf": "pasivo_no_pagado_bf",
+                    "ibnr_benktander": "pasivo_no_pagado_benktander",
+                    "diferencia_ibnr_bk_vs_cl": "diferencia_pasivo_bk_vs_cl",
+                    "diferencia_ibnr_bk_vs_bf": "diferencia_pasivo_bk_vs_bf",
+                }
+            ),
+            width="stretch",
+            hide_index=True,
+        )
+
+    st.subheader("Sensibilidad al número de iteraciones")
+    st.caption(
+        "La iteración 0 representa el prior inicial; la iteración 1 reproduce exactamente "
+        "Bornhuetter-Ferguson. Las siguientes iteraciones muestran la transición a Chain Ladder."
+    )
+    sensitivity = result.sensitivity.copy()
+    st.dataframe(
+        sensitivity.rename(
+            columns={
+                "ultimate_total": "costo_proyectado_horizonte_seleccionado_total",
+                "ibnr_total": "pasivo_no_pagado_estimado_total",
+            }
+        ),
+        width="stretch",
+        hide_index=True,
+    )
+    st.line_chart(
+        sensitivity.set_index("iteraciones")[["ibnr_total"]],
+        y_label=f"Pasivo no pagado ({currency})",
+        x_label="Iteraciones Benktander",
+    )
+
+    st.subheader("Diagnósticos Benktander")
+    display_diagnostics(result)
+    st.caption(
+        f"Diferencia total Benktander − BF: {signed_money(difference_bf, currency)}. "
+        "La equivalencia entre la forma iterativa y la forma cerrada se valida en el motor."
+    )
+
+    package = build_classical_methods_zip(
+        chain_ladder_result,
+        chain_ladder_config,
+        bf_result,
+        benktander=result,
+        source_metadata=source_metadata,
+        prior_metadata=prior_metadata,
+    )
+    st.download_button(
+        "Descargar comparación CL + BF + Benktander",
+        data=package,
+        file_name="demo6_resultados_cl_bf_benktander.zip",
+        mime="application/zip",
+        type="primary",
+    )
+    st.info(
+        "El número de iteraciones es una hipótesis actuarial: debe seleccionarse por estabilidad, "
+        "madurez, backtesting y gobierno, no para obtener un resultado objetivo predeterminado."
+    )
+
+
+def render_benktander_workflow(
+    chain_ladder_result,
+    chain_ladder_config: ChainLadderConfig,
+    bf_result,
+    bf_signature: str,
+    source_metadata: dict[str, Any],
+    prior_metadata: dict[str, Any],
+) -> None:
+    """Render the Benktander stage after reconciled CL and BF runs."""
+
+    st.header("7. Itera con Benktander")
+    st.caption(
+        "Cada iteración sustituye el prior anterior por su nuevo costo final estimado. "
+        "Una iteración equivale a BF; iteraciones adicionales reducen gradualmente el peso inicial."
+    )
+    iterations = int(
+        st.number_input(
+            "Número de iteraciones Benktander",
+            min_value=1,
+            max_value=20,
+            value=2,
+            step=1,
+            help="El demo presenta 2 como punto educativo, no como recomendación universal.",
+            key="benktander_iterations",
+        )
+    )
+    try:
+        config = BenktanderConfig(
+            iterations=iterations,
+            sensitivity_iterations=(0, 1, 2, 3),
+            currency=chain_ladder_config.currency,
+            measure=chain_ladder_config.measure,
+        )
+    except ValueError as exc:
+        st.error(str(exc))
+        return
+
+    confirmed = st.checkbox(
+        "Confirmo que documenté la selección del número de iteraciones",
+        key="benktander_iterations_confirmed",
+    )
+    current_signature = benktander_run_signature(bf_signature, config)
+    if st.button("Calcular Benktander", type="primary"):
+        if not confirmed:
+            st.error("Confirma la trazabilidad del número de iteraciones antes de calcular.")
+        else:
+            try:
+                result = fit_benktander(chain_ladder_result, bf_result, config)
+                st.session_state["demo6_benktander_result"] = result
+                st.session_state["demo6_benktander_signature"] = current_signature
+            except Exception as exc:
+                st.error(f"El cálculo Benktander se detuvo de forma segura: {exc}")
+
+    if st.session_state.get("demo6_benktander_signature") == current_signature:
+        stored_result = st.session_state.get("demo6_benktander_result")
+        if stored_result is not None:
+            display_benktander_result(
+                stored_result,
+                chain_ladder_result,
+                chain_ladder_config,
+                bf_result,
+                source_metadata,
+                prior_metadata,
+            )
+    elif st.session_state.get("demo6_benktander_signature"):
+        st.warning("El resultado BF o el número de iteraciones cambió. Calcula nuevamente.")
 
 
 def render_bf_workflow(
@@ -629,7 +1067,7 @@ def render_bf_workflow(
     expected_rate_column = "tasa_esperada"
     if prior_mode == "expected_ultimate":
         expected_ultimate_column = select_prior_column(
-            "Ultimate esperado",
+            "Costo final esperado",
             columns,
             ("ultimate_esperado", "expected_ultimate", "perdida_esperada"),
             key="bf_expected_ultimate_column",
@@ -709,6 +1147,11 @@ def render_bf_workflow(
                 st.session_state["demo6_bf_result"] = bf_result
                 st.session_state["demo6_bf_signature"] = current_signature
                 st.session_state["demo6_bf_prior_metadata"] = prior_metadata
+                for state_key in (
+                    "demo6_benktander_result",
+                    "demo6_benktander_signature",
+                ):
+                    st.session_state.pop(state_key, None)
             except Exception as exc:
                 st.error(f"La comparación BF se detuvo de forma segura: {exc}")
 
@@ -723,20 +1166,28 @@ def render_bf_workflow(
                 source_metadata,
                 stored_prior_metadata,
             )
+            render_benktander_workflow(
+                chain_ladder_result,
+                chain_ladder_config,
+                stored_result,
+                current_signature,
+                source_metadata,
+                stored_prior_metadata,
+            )
     elif st.session_state.get("demo6_bf_signature"):
         st.warning("El prior, su mapeo o los shocks cambiaron. Ejecuta nuevamente BF.")
 
 
-configure_page("Demo 6 · Chain Ladder y BF")
+configure_page("Demo 6 · Chain Ladder, BF y Benktander")
 inject_corporate_theme()
 render_brand_hero(
     "Demo 6",
-    "Del triángulo a ultimate e IBNR",
+    "Del triángulo al costo proyectado y pasivo no pagado",
     (
         "Asistente educativo local para estimar factores edad-a-edad, completar el triángulo "
-        "acumulado y comparar Chain Ladder con Bornhuetter-Ferguson."
+        "acumulado y comparar Chain Ladder, Bornhuetter-Ferguson y Benktander con alcance explícito."
     ),
-    tags=("Chain Ladder", "Bornhuetter-Ferguson", "Prior trazable"),
+    tags=("Chain Ladder", "Bornhuetter-Ferguson", "Benktander", "Prior trazable"),
 )
 st.info(
     "Privacidad: Demo 6 trabaja con triángulos agregados y priors por periodo de origen. Los "
@@ -754,10 +1205,12 @@ with st.sidebar:
         - Selección automática o manual
         - Factor de cola explícito
         - Prior directo o exposición × tasa
-        - Comparación Chain Ladder vs. BF
-        - Sensibilidad y exportación conjunta
+        - Comparación Chain Ladder, BF y Benktander
+        - Sensibilidad a prior e iteraciones
+        - Exportación conjunta y reconciliada
 
-        **No cuantifica todavía incertidumbre estocástica.**
+        **El triángulo pagado no identifica por separado IBNR puro, RBNS e IBNER y no cuantifica
+        todavía la incertidumbre estocástica.**
         """
     )
     if st.button("Borrar resultados de Demo 6"):
@@ -770,6 +1223,8 @@ with st.sidebar:
             "demo6_bf_result",
             "demo6_bf_signature",
             "demo6_bf_prior_metadata",
+            "demo6_benktander_result",
+            "demo6_benktander_signature",
         ):
             st.session_state.pop(state_key, None)
         st.success("Resultados eliminados de la memoria de la sesión.")
@@ -787,9 +1242,25 @@ if source_mode == "Aprender con el ejemplo mensual":
     source_metadata: dict[str, Any] = {
         "tipo": "ejemplo_sintetico",
         "ruta": str(SAMPLE.relative_to(ROOT)),
+        "base_estimacion": "72x36",
+        "vista_tradicional": "36x36",
+        "runoff_simulado": "0-48",
+        "factor_cola_sintetico_35_48": SAMPLE_TAIL_FACTOR,
+        "limitacion": "No identifica IBNR puro, RBNS ni IBNER por separado",
     }
+    scope_config: dict[str, Any] = {
+        "measure": "PAGADO_ACUMULADO",
+        "currency": "COP",
+        "valuation_month": "2025-12",
+        "segment": "salud_sintetico",
+    }
+    scope_manifest: dict[str, Any] = {"reconciliado": True, "tipo": "sintetico"}
     default_currency = "COP"
-    st.caption(f"Ejemplo sintético: `{SAMPLE.relative_to(ROOT)}`")
+    default_tail_factor = SAMPLE_TAIL_FACTOR
+    st.caption(
+        f"Ejemplo sintético: `{SAMPLE.relative_to(ROOT)}` · base 72×36 · vista 36×36 · "
+        "runoff conocido hasta 48 meses."
+    )
 else:
     uploaded = st.file_uploader(
         "Selecciona el paquete ZIP descargado desde Demo 5",
@@ -809,14 +1280,29 @@ else:
         "tipo": "paquete_demo5_verificado",
         "hash_datos_agregados_sha256": triangle_package.manifest.get("hash_datos_agregados_sha256"),
         "version_motor_demo5": triangle_package.manifest.get("version_motor"),
+        "limitacion": "No identifica IBNR puro, RBNS ni IBNER por separado sin datos adicionales",
     }
+    scope_config = triangle_package.triangle_config
+    scope_manifest = triangle_package.manifest
     default_currency = str(triangle_package.triangle_config.get("currency", "COP"))
+    default_tail_factor = 1.0
     st.success("Paquete de Demo 5 verificado: manifiesto, hash y reconciliación correctos.")
 
 col1, col2, col3 = st.columns(3)
 col1.metric("Periodos de origen", len(cumulative))
 col2.metric("Edades de desarrollo", len(cumulative.columns))
 col3.metric("Celdas observadas", int(mask.sum().sum()))
+input_scope = assess_triangle_input(
+    cumulative,
+    mask,
+    triangle_config=scope_config,
+    manifest=scope_manifest,
+    source_type=("muestra_sintetica_r2" if source_mode == "Aprender con el ejemplo mensual" else "paquete_usuario_demo5"),
+)
+render_input_scope(
+    input_scope,
+    uploaded=source_mode == "Usar un paquete ZIP de Demo 5",
+)
 st.dataframe(cumulative, width="stretch")
 
 st.header("2. Selecciona los factores")
@@ -828,10 +1314,14 @@ with middle:
     tail_factor = st.number_input(
         "Factor de cola",
         min_value=0.000001,
-        value=1.0,
+        value=float(default_tail_factor),
         step=0.001,
         format="%.6f",
-        help="Se aplica después de la última edad visible. Uno significa sin cola adicional.",
+        help=(
+            "Se aplica después de la última edad visible. En la muestra r2 se conoce por el runoff "
+            "sintético 35→48. En datos propios, 1.0 significa que no se agregó una cola; no prueba "
+            "que la última edad sea el costo final."
+        ),
     )
 with right:
     minimum_observations = st.number_input(
@@ -885,10 +1375,10 @@ except ValueError as exc:
     st.stop()
 
 review_confirmed = st.checkbox(
-    "Confirmo que revisé la representatividad histórica, los factores seleccionados y la cola"
+    "Confirmo que revisé representatividad, factores, cola y limitaciones de los datos recibidos"
 )
 current_signature = run_signature(cumulative, mask, config)
-if st.button("Estimar ultimate e IBNR", type="primary"):
+if st.button("Proyectar costo y pasivo no pagado", type="primary"):
     if not review_confirmed:
         st.error("Confirma la revisión actuarial de factores y cola antes de estimar.")
     else:
@@ -909,6 +1399,8 @@ if st.button("Estimar ultimate e IBNR", type="primary"):
                 "demo6_bf_result",
                 "demo6_bf_signature",
                 "demo6_bf_prior_metadata",
+                "demo6_benktander_result",
+                "demo6_benktander_signature",
             ):
                 st.session_state.pop(state_key, None)
         except Exception as exc:
@@ -932,6 +1424,7 @@ elif st.session_state.get("demo6_signature"):
     st.warning("Los factores o datos cambiaron. Ejecuta nuevamente la estimación.")
 
 render_corporate_footer(
-    "Uso educativo. Chain Ladder y BF requieren validación de datos, prior, factores, cola, "
-    "reconciliación y gobierno antes de cualquier uso profesional."
+    "Uso educativo. Chain Ladder, BF y Benktander requieren validación de datos, prior, "
+    "factores, cola, iteraciones, reconciliación y gobierno antes de cualquier uso profesional. "
+    "El pasivo no pagado estimado con datos pagados no equivale a IBNR puro."
 )

@@ -5,8 +5,8 @@ chapter: "project-handoff"
 part: "repository"
 language: "es"
 status: "active"
-version: "0.5.0"
-last_updated: "2026-07-17"
+version: "0.6.0-r2"
+last_updated: "2026-07-18"
 ---
 
 # Health Insurance Reserving Handbook — Estado y continuidad
@@ -18,8 +18,8 @@ Este documento permite continuar el proyecto sin depender de inventarios o decis
 - Repositorio: <https://github.com/jaforero/health-insurance-reserving-handbook>
 - Sitio: <https://actuaria.javierforero.co/>
 - Rama principal: `main`
-- Última versión pública: `v0.5.0`
-- Estado del release: Demo 5 y Demo 6 con Chain Ladder y Bornhuetter-Ferguson publicados
+- Última versión pública: `v0.5.0`; `v0.6.0` se encuentra en desarrollo
+- Estado del sprint: Demo 6 con Chain Ladder, Bornhuetter-Ferguson y Benktander; revisión actuarial r2 aplicada
 - Idioma principal: español
 - Demos: español e inglés
 
@@ -47,7 +47,8 @@ python scripts/generate_demo_triangles.py
 python scripts/generate_demo_triangle_visuals.py
 ```
 
-Genera datos largos, triángulos incremental y acumulado, factores, ultimate, IBNR y visualizaciones.
+Genera datos largos, triángulos incremental y acumulado, factores, costo final simulado, pasivo no
+pagado estimado y visualizaciones.
 
 ### Demo 2 · Pagado vs. incurrido
 
@@ -63,7 +64,10 @@ Genera bases pagada e incurrida, reserva caso, factores, comparación Chain Ladd
 python scripts/generate_demo_monthly_triangles.py
 ```
 
-Genera 60 meses de origen, desarrollo mensual 0–24, factores, ultimate, IBNR, controles de suficiencia y tres visualizaciones por idioma.
+Genera una base mensual de **72 periodos de origen por 36 edades observables** (0–35), una vista
+tradicional cuadrada 36×36 con los 36 orígenes más recientes y un runoff sintético hasta la edad
+48 para sustentar una cola didáctica 35→48. Las salidas distinguen acumulado proyectado, costo
+final estimado con cola y pasivo no pagado estimado.
 
 ### Demo 4 · Preparación de datos
 
@@ -83,7 +87,7 @@ construir triángulos y exportar resultados.
 Los datos incluidos en el repositorio son sintéticos. El Demo 5 también puede procesar archivos
 locales del usuario, que no deben incorporarse al control de versiones.
 
-### Demo 6 · Chain Ladder y Bornhuetter-Ferguson
+### Demo 6 · Chain Ladder, Bornhuetter-Ferguson y Benktander
 
 ```bash
 conda activate reserving-handbook
@@ -91,9 +95,17 @@ python scripts/iniciar_chain_ladder.py
 ```
 
 Consume el ZIP agregado de Demo 5 o el ejemplo mensual, compara factores, permite selección
-manual y cola explícita, y estima ultimate e IBNR. También admite un prior directo o exposición
+manual y cola explícita, y proyecta costo y pasivo no pagado. También admite un prior directo o exposición
 por tasa, comparación Bornhuetter-Ferguson, sensibilidad y exportación conjunta sin persistir los
-archivos fuente del usuario.
+archivos fuente del usuario. Cuando se carga un archivo, presenta tres inventarios: información
+recibida, información faltante o deseable y cálculos que los datos efectivamente soportan. El
+Sprint 2 añade Benktander con iteraciones configurables, formas
+iterativa y cerrada reconciliadas, sensibilidad, diagnósticos y exportación conjunta.
+
+Un triángulo pagado agregado no identifica por separado IBNR puro, RBNS o IBNER. En ese contexto,
+el residual se denomina **pasivo no pagado estimado basado en datos pagados**. Un costo final
+técnico requiere además una cola explícita y sustentada; con cola 1,00 solo se proyecta hasta la
+edad terminal observada.
 
 ## 4. Validación obligatoria
 
@@ -135,7 +147,7 @@ El objetivo recomendado es `v0.6.0`, con este orden:
 
 1. ejecutar pruebas de aceptación de Demo 5 con datos anonimizados;
 2. ampliar los diagnósticos y el backtesting de Demo 6;
-3. incorporar Benktander y Cape Cod;
+3. incorporar Cape Cod; Benktander quedó completado en Sprint 2;
 4. comparar métodos clásicos con reconciliación y sensibilidad por periodo de origen;
 5. ampliar la documentación y las salidas bilingües;
 6. actualizar changelog, citación, tag y release notes de `v0.6.0`.
@@ -145,9 +157,15 @@ El objetivo recomendado es `v0.6.0`, con este orden:
 ### 7.1 Base documental preparada para v0.6.0
 
 Sprint 1 profundiza los capítulos 07 y 11–14 y actualiza Demo 6. Chain Ladder y
-Bornhuetter-Ferguson continúan como componentes implementados. Benktander, Cape Cod, backtesting
-ampliado y la comparación reconciliada de cuatro métodos permanecen pendientes de código y
-pruebas. Las fórmulas y contratos documentales son el criterio de referencia para ese desarrollo.
+Bornhuetter-Ferguson continúan como componentes implementados.
+
+<!-- demo6-benktander-v0.6.0-sprint2 -->
+### 7.2 Benktander implementado en Sprint 2
+
+Benktander ya cuenta con motor, interfaz, sensibilidad, diagnósticos, exportación y pruebas. La
+iteración 1 se reconcilia con BF y todas las iteraciones validan la equivalencia entre recurrencia
+y forma cerrada. Permanecen pendientes Cape Cod, backtesting ampliado y la comparación final de
+cuatro métodos.
 
 ## 8. Criterio de continuidad
 

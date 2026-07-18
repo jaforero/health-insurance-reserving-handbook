@@ -50,6 +50,14 @@ class ChainLadderTest(unittest.TestCase):
         self.assertAlmostEqual(result.origin_summary.loc["2024", "ultimate"], 130 * factor_0 * 1.2)
         self.assertAlmostEqual(result.origin_summary.loc["2023", "ibnr"], 168 * 0.2)
         self.assertAlmostEqual(
+            result.origin_summary.loc["2023", "pasivo_no_pagado_estimado"],
+            result.origin_summary.loc["2023", "ibnr"],
+        )
+        self.assertAlmostEqual(
+            result.origin_summary.loc["2023", "costo_proyectado_horizonte_seleccionado"],
+            result.origin_summary.loc["2023", "ultimate"],
+        )
+        self.assertAlmostEqual(
             result.projected_cumulative.loc["2024", "dev_2"], 130 * factor_0 * 1.2
         )
         self.assertAlmostEqual(
@@ -160,6 +168,15 @@ class ChainLadderTest(unittest.TestCase):
             names = set(archive.namelist())
         self.assertIn("03_factores_individuales.csv", names)
         self.assertIn("08_resultados_por_origen.csv", names)
+        self.assertIn("13_informacion_recibida.csv", names)
+        self.assertIn("14_informacion_faltante_deseable.csv", names)
+        self.assertIn("15_alcance_calculable.csv", names)
+        with zipfile.ZipFile(io.BytesIO(package)) as archive:
+            results_header = archive.read("08_resultados_por_origen.csv").decode("utf-8").splitlines()[0]
+            self.assertIn("pasivo_no_pagado_estimado", results_header)
+            self.assertIn("costo_proyectado_horizonte_seleccionado", results_header)
+            self.assertNotIn("costo_final_estimado", results_header)
+            self.assertNotIn(",ibnr,", f",{results_header},")
         self.assertIn("12_manifiesto.json", names)
         self.assertNotIn("datos_canonicos_detalle.csv", names)
 
@@ -168,9 +185,13 @@ class ChainLadderTest(unittest.TestCase):
         cumulative = pd.read_csv(data_dir / "triangulo_pagado_mensual_acumulado.csv", index_col=0)
         published_factors = pd.read_csv(data_dir / "factores_mensuales_edad_a_edad.csv")
         published_results = pd.read_csv(
-            data_dir / "resultados_chain_ladder_mensual.csv", index_col=0
+            data_dir / "resultados_proyeccion_pasivo_no_pagado.csv", index_col=0
         )
-        result = fit_chain_ladder(cumulative, cumulative.notna())
+        result = fit_chain_ladder(
+            cumulative,
+            cumulative.notna(),
+            ChainLadderConfig(tail_factor=1.0052495821422405),
+        )
 
         np.testing.assert_allclose(
             result.selected_factors.to_numpy(),
@@ -180,14 +201,14 @@ class ChainLadderTest(unittest.TestCase):
         )
         np.testing.assert_allclose(
             result.origin_summary["ultimate"].to_numpy(),
-            published_results["ultimate_estimado"].to_numpy(),
-            rtol=1e-12,
+            published_results["costo_final_estimado_con_cola"].to_numpy(),
+            rtol=1e-8,
             atol=0.02,
         )
         np.testing.assert_allclose(
             result.origin_summary["ibnr"].to_numpy(),
-            published_results["ibnr_estimado"].to_numpy(),
-            rtol=1e-12,
+            published_results["pasivo_no_pagado_estimado"].to_numpy(),
+            rtol=1e-8,
             atol=0.02,
         )
 

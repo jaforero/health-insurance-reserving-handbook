@@ -1,10 +1,12 @@
-=== Monthly simulated health paid-triangle demo ===
+=== Monthly paid-triangle demo r2 ===
 Valuation month: 2025-12
-Origin months: 60
-Development months: 0-24
-Observed cells: 1200
-Complete origins: 36
-Minimum observations per factor: 36
-Total Chain Ladder IBNR: 77,957,625,915.76
+Estimation basis: 72 x 36 (origins x ages 0-35)
+Traditional actuarial view: 36 x 36
+Observed cells: 1962
+Complete origins at age 35: 37
+Minimum observations per factor: 37
+Simulated true runoff: 0-48
+Synthetic tail factor 35->48: 1.00524958
+Total estimated unpaid claim liability: 112,843,441,819.28
 Seed: 20260714
-Note: 60/24 is a defensible teaching design, not a universal minimum.
+Warning: the paid residual does not identify pure IBNR, RBNS or IBNER separately.

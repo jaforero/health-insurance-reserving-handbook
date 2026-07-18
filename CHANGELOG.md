@@ -1,8 +1,45 @@
 # Changelog
 
+## v0.6.0 Sprint 2 r2.1.2 — 2026-07-18
+
+- Evita nombres duplicados en la tabla de sensibilidad Chain Ladder de Streamlit.
+- Usa directamente las columnas actuariales precisas generadas por el motor.
+- Retira la línea en blanco adicional al final del informe de investigación de ChatGPT.
+
+## v0.6.0 Sprint 2 r2.1.1 — 2026-07-18
+
+- Reemplaza íntegramente `bibliography/chatgpt-deep-research-report.md` con la nueva investigación.
+- Normaliza espacios finales del Markdown sin alterar su contenido sustantivo.
+- Alinea la advertencia visible del Demo 6 con la prueba de alcance actuarial.
+
 Todos los cambios relevantes de este proyecto se documentan en este archivo. El formato se inspira en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y utiliza versionado semántico.
 
 ## [Unreleased]
+
+<!-- bibliography-refresh-2026-07-18 -->
+### Bibliografía
+
+- Actualización del informe de investigación de ChatGPT e incorporación del informe de Claude
+  como fuentes de descubrimiento, explícitamente subordinadas a la verificación de fuentes
+  primarias.
+- Registro verificable del estudio PROESA (2021) sobre planes voluntarios de salud, con alcance,
+  limitaciones, páginas y SHA-256.
+- Exclusión deliberada del PDF de Facecolda/PROESA del repositorio distribuible por su restricción
+  expresa de reproducción; se conserva una ficha bibliográfica auditable.
+
+<!-- demo6-actuarial-scope-v0.6.0-sprint2-r2 -->
+### Corregido en r2
+
+- Demo mensual ampliado a una base 72×36, con vista actuarial tradicional 36×36 y runoff
+  sintético separado hasta la edad 48 para sustentar una cola didáctica 35→48.
+- Sustitución de rótulos que prometían “IBNR” o “ultimate” por `pasivo no pagado estimado`,
+  `acumulado proyectado a edad terminal` y `costo final estimado con cola`, según corresponda.
+- Eliminación del piso artificial en cero del residual pagado; los resultados negativos permanecen
+  visibles como diagnóstico y requieren investigación.
+- Panel posterior a cada carga con inventario de información recibida, información faltante o
+  deseable y alcance de cálculo soportado por los datos.
+- Exportaciones con nombres precisos y manifest que aclara que un triángulo pagado agregado no
+  identifica por separado IBNR puro, RBNS ni IBNER.
 
 <!-- part-02-classical-methods-v0.6.0-sprint1 -->
 ### Documentación
@@ -14,6 +51,24 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo. El 
 - Marco común para comparar métodos clásicos por periodo de origen y total sin confundir la
   documentación objetivo con funcionalidad ya implementada.
 - Actualización de Demo 6 y del plan v0.6.0 para separar componentes disponibles y pendientes.
+
+<!-- demo6-benktander-v0.6.0-sprint2 -->
+### Agregado
+
+- Motor Benktander modular con recurrencia y forma cerrada reconciliadas por periodo de origen.
+- Iteraciones configurables, sensibilidad desde el prior inicial y pesos explícitos de prior y
+  Chain Ladder.
+- Comparación visual no apilada de Chain Ladder, Bornhuetter-Ferguson y Benktander.
+- Diagnósticos de reconciliación, CDF, pesos, IBNR negativo y convergencia.
+- Exportación conjunta con resultados, totales, sensibilidad, diagnósticos y configuración
+  Benktander, sin archivos fuente originales.
+- Pruebas de equivalencia con BF en una iteración, formas iterativa y cerrada, entradas inválidas,
+  inmutabilidad y recorrido completo en Streamlit.
+
+### Cambiado
+
+- Demo 6 y el capítulo Benktander reflejan funcionalidad efectivamente implementada; Cape Cod y
+  el backtesting común continúan como alcance pendiente de v0.6.0.
 
 ## [0.5.0] - 2026-07-17
 

@@ -5,8 +5,8 @@ chapter: "roadmap"
 part: "repository"
 language: "es"
 status: "draft"
-version: "0.5.0"
-last_updated: "2026-07-17"
+version: "0.6.0-r2"
+last_updated: "2026-07-18"
 ---
 
 # Roadmap del Health Insurance Reserving Handbook
@@ -67,7 +67,7 @@ Bornhuetter-Ferguson en Demo 6.
 - diccionario canónico con nombres principales en español;
 - Demo 4 de preparación y evaluación de datasets.
 - Demo 5 local para construir triángulos con datos propios mediante Streamlit;
-- Demo 6 local para seleccionar factores, proyectar el triángulo y estimar ultimate e IBNR;
+- Demo 6 local para seleccionar factores, proyectar el triángulo y estimar costo final y pasivo no pagado;
 - prior directo o exposición por tasa esperada para Bornhuetter-Ferguson;
 - comparación Chain Ladder vs. Bornhuetter-Ferguson por periodo de origen y total;
 - sensibilidad, diagnósticos y exportación conjunta auditable de ambos métodos;
@@ -92,7 +92,7 @@ fuentes de información explícitos.
 
 **Entregables**
 
-- ultimate e IBNR por periodo de origen;
+- costo final y pasivo no pagado por periodo de origen;
 - sensibilidad a la expectativa previa y a los patrones de desarrollo;
 - comparación directa con Chain Ladder.
 
@@ -126,7 +126,7 @@ mantener referencias cruzadas con los capítulos 6 y 11–14.
 
 - resultados conciliados y reproducibles;
 - priors y exposición trazables;
-- comparación visual y tabular de ultimate e IBNR;
+- comparación visual y tabular de costo final y pasivo no pagado;
 - salidas y documentación en español, con expansión bilingüe planificada.
 
 ### 4.5 Cierre de v0.5.0
@@ -152,13 +152,27 @@ Este paquete deja preparada la especificación para:
 - exposición ajustada y estimación de tasa Cape Cod;
 - comparación reconciliada de los cuatro métodos por origen y total.
 
-El cierre documental no equivale al cierre funcional. Benktander, Cape Cod, backtesting ampliado
-y el comparador de cuatro métodos deben implementarse, probarse y conciliarse antes de declarar
-completa la versión v0.6.0.
+El cierre documental no equivale al cierre funcional. El Sprint 2 completa Benktander; Cape Cod,
+backtesting ampliado y el comparador de cuatro métodos deben implementarse, probarse y conciliarse
+antes de declarar completa la versión v0.6.0.
+
+<!-- demo6-benktander-v0.6.0-sprint2 -->
+### Sprint 2 · Benktander funcional
+
+- motor independiente con recurrencia y forma cerrada reconciliadas;
+- selección explícita y trazable del número de iteraciones;
+- equivalencia verificada entre una iteración y Bornhuetter-Ferguson;
+- sensibilidad desde el prior inicial hasta las iteraciones configuradas;
+- comparación visual no apilada de Chain Ladder, BF y Benktander;
+- resultados por origen, totales, diagnósticos y configuración en el ZIP conjunto;
+- pruebas numéricas, de entradas inválidas, privacidad y recorrido Streamlit.
+
+El Sprint 3 incorporará Cape Cod sin modificar los resultados ya reconciliados. El backtesting
+común y el comparador final de cuatro métodos se mantienen como incrementos posteriores.
 
 El foco propuesto es completar la comparación clásica y reforzar la validación:
 
-- iteraciones Benktander configurables;
+- iteraciones Benktander configurables — completado en Sprint 2;
 - estimación Cape Cod con exposición;
 - diagnósticos y backtesting ampliados para Demo 6;
 - comparación reconciliada de métodos clásicos;
@@ -213,7 +227,7 @@ La existencia de un archivo o su inclusión en la navegación solo indica dispon
 1. publicación y verificación de `v0.5.0`;
 2. prueba de aceptación de Demo 5 con datos anonimizados;
 3. ampliación de diagnósticos y backtesting de Demo 6;
-4. incorporación de Benktander y Cape Cod;
+4. incorporación de Cape Cod, con Benktander ya completado;
 5. comparación reproducible de métodos clásicos;
 6. cierre y publicación de `v0.6.0`;
 7. Demo 7 de incertidumbre para `v0.7.0`.

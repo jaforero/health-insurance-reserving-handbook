@@ -20,17 +20,27 @@ class ChainLadderAppTest(unittest.TestCase):
         markdown = "\n".join(element.value for element in app.markdown)
         self.assertIn("IgraSans", markdown)
         self.assertIn("jf-hero", markdown)
-        self.assertIn("Del triángulo a ultimate e IBNR", markdown)
+        self.assertIn("Del triángulo al costo proyectado y pasivo no pagado", markdown)
         self.assertIn(
-            "Sprint 2 · comparación visual 0.2.2", [caption.value for caption in app.caption]
+            "Qué se recibió",
+            [tab.label for tab in app.tabs],
+        )
+        self.assertIn(
+            "Qué falta o sería deseable",
+            [tab.label for tab in app.tabs],
+        )
+        self.assertIn("no identifica por separado IBNR puro", markdown)
+        self.assertIn(
+            "v0.6.0 Sprint 2 r2 · alcance actuarial explícito",
+            [caption.value for caption in app.caption],
         )
         self.assertNotIn("st.bar_chart", APP.read_text(encoding="utf-8"))
 
         for checkbox in app.checkbox:
-            if checkbox.label.startswith("Confirmo que revisé la representatividad"):
+            if checkbox.label.startswith("Confirmo que revisé representatividad"):
                 checkbox.set_value(True)
         for button in app.button:
-            if button.label == "Estimar ultimate e IBNR":
+            if button.label == "Proyectar costo y pasivo no pagado":
                 button.click()
                 break
         app.run()
@@ -42,8 +52,8 @@ class ChainLadderAppTest(unittest.TestCase):
         )
         rendered = "\n".join(element.value for element in app.markdown)
         self.assertIn("jf-kpi-grid", rendered)
-        self.assertIn("Ultimate estimado", rendered)
-        self.assertIn("IBNR estimado", rendered)
+        self.assertIn("Costo final técnico estimado", rendered)
+        self.assertIn("Pasivo no pagado estimado", rendered)
         self.assertNotIn("...", rendered)
 
         for checkbox in app.checkbox:
@@ -62,7 +72,7 @@ class ChainLadderAppTest(unittest.TestCase):
         self.assertIn("jf-method-comparison", rendered)
         self.assertIn("Chain Ladder", rendered)
         self.assertIn("Bornhuetter-Ferguson", rendered)
-        self.assertIn("Diferencia de IBNR · BF − CL", rendered)
+        self.assertIn("Diferencia de pasivo no pagado · BF − CL", rendered)
 
         chart_specs = [json.loads(element.proto.spec) for element in app.get("vega_lite_chart")]
         trajectory = next(
@@ -82,6 +92,44 @@ class ChainLadderAppTest(unittest.TestCase):
         self.assertEqual(difference["layer"][0]["mark"]["type"], "bar")
         self.assertTrue(difference["layer"][0]["encoding"]["y"]["scale"]["zero"])
         self.assertEqual(difference["layer"][1]["mark"]["type"], "rule")
+
+        for checkbox in app.checkbox:
+            if checkbox.label.startswith(
+                "Confirmo que documenté la selección del número de iteraciones"
+            ):
+                checkbox.set_value(True)
+        for button in app.button:
+            if button.label == "Calcular Benktander":
+                button.click()
+                break
+        app.run()
+
+        self.assertEqual(len(app.exception), 0)
+        download_labels = [button.label for button in app.get("download_button")]
+        self.assertIn("Descargar comparación CL + BF + Benktander", download_labels)
+        rendered = "\n".join(element.value for element in app.markdown)
+        self.assertIn("Benktander", rendered)
+        self.assertIn("Diferencia de pasivo no pagado · Benktander − CL", rendered)
+
+        chart_specs = [json.loads(element.proto.spec) for element in app.get("vega_lite_chart")]
+        three_method_trajectory = next(
+            spec
+            for spec in chart_specs
+            if spec.get("encoding", {}).get("color", {}).get("scale", {}).get("domain")
+            == ["Chain Ladder", "Bornhuetter-Ferguson", "Benktander"]
+        )
+        self.assertEqual(three_method_trajectory["mark"]["type"], "line")
+        self.assertNotIn("stack", three_method_trajectory["encoding"]["y"])
+
+        benktander_difference = next(
+            spec
+            for spec in chart_specs
+            if spec.get("layer", [{}])[0].get("encoding", {}).get("y", {}).get("field")
+            == "diferencia_ibnr_bk_vs_cl"
+        )
+        self.assertEqual(benktander_difference["layer"][0]["mark"]["type"], "bar")
+        self.assertTrue(benktander_difference["layer"][0]["encoding"]["y"]["scale"]["zero"])
+        self.assertEqual(benktander_difference["layer"][1]["mark"]["type"], "rule")
 
 
 if __name__ == "__main__":

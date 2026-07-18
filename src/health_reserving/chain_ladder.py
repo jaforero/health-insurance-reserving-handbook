@@ -305,6 +305,11 @@ def _origin_summary(
     summary["participacion_ibnr"] = (
         summary["ibnr"] / total_ibnr if not math.isclose(total_ibnr, 0.0) else 0.0
     )
+    # Public, semantically precise aliases.  The legacy column names remain so
+    # existing notebooks keep working, but new UI and exports use these names.
+    summary["costo_proyectado_horizonte_seleccionado"] = summary["ultimate"]
+    summary["pasivo_no_pagado_estimado"] = summary["ibnr"]
+    summary["participacion_pasivo_no_pagado"] = summary["participacion_ibnr"]
     return summary
 
 
@@ -316,6 +321,13 @@ def _totals(summary: pd.DataFrame, config: ChainLadderConfig) -> pd.DataFrame:
         [
             {"indicador": "periodos_origen", "valor": len(summary)},
             {"indicador": "acumulado_observado_total", "valor": observed},
+            {"indicador": "costo_proyectado_horizonte_seleccionado_total", "valor": ultimate},
+            {"indicador": "pasivo_no_pagado_estimado_total", "valor": ibnr},
+            {
+                "indicador": "pasivo_no_pagado_sobre_costo_final",
+                "valor": ibnr / ultimate if not math.isclose(ultimate, 0.0) else np.nan,
+            },
+            # Aliases retained for compatibility with releases before r2.
             {"indicador": "ultimate_total", "valor": ultimate},
             {"indicador": "ibnr_total", "valor": ibnr},
             {
@@ -375,7 +387,10 @@ def _diagnostics(
             "codigo": "CL05_CONCENTRACION_RECIENTE",
             "nivel": "INFO",
             "valor": concentration,
-            "mensaje": f"Proporción del IBNR en los últimos {recent_count} periodos de origen.",
+            "mensaje": (
+                "Proporción del pasivo no pagado estimado en los últimos "
+                f"{recent_count} periodos de origen. No representa IBNR puro."
+            ),
         },
         {
             "codigo": "CL06_FACTOR_COLA",
@@ -450,6 +465,8 @@ def compare_factor_methods(
                 "seleccion": SELECTION_LABELS[method],
                 "ultimate_total": float(summary["ultimate"].sum()),
                 "ibnr_total": float(summary["ibnr"].sum()),
+                "costo_proyectado_horizonte_seleccionado_total": float(summary["ultimate"].sum()),
+                "pasivo_no_pagado_estimado_total": float(summary["ibnr"].sum()),
             }
         )
     sensitivity = pd.DataFrame(rows)
@@ -457,6 +474,9 @@ def compare_factor_methods(
         sensitivity.loc[sensitivity["metodo"].eq("volume_weighted"), "ibnr_total"].iloc[0]
     )
     sensitivity["diferencia_ibnr_vs_ponderado"] = sensitivity["ibnr_total"] - baseline
+    sensitivity["diferencia_pasivo_no_pagado_vs_ponderado"] = sensitivity[
+        "diferencia_ibnr_vs_ponderado"
+    ]
     return sensitivity
 
 

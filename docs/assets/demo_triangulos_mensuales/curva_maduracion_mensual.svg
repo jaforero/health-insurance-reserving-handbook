@@ -1,14 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 500" role="img">
 <rect width="920" height="500" fill="#ffffff"/>
-<style>
-text { font-family: Inter, Arial, sans-serif; fill: #1f2937; }
-.title { font-size: 24px; font-weight: 700; }
-.subtitle { font-size: 13px; fill: #52606d; }
-.label { font-size: 10px; }
-.value { font-size: 8px; font-family: Menlo, Consolas, monospace; }
-</style>
-<text x="28" y="38" class="title">Curva de maduración mensual pagada</text>
-<text x="28" y="62" class="subtitle">Promedio empírico de 36 meses completos · porcentaje acumulado del ultimate a 24 meses</text>
+<style>text { font-family: Inter, Arial, sans-serif; fill:#1f2937; } .title { font-size:24px;font-weight:700; } .subtitle { font-size:13px;fill:#52606d; } .label { font-size:9px; } .value { font-size:7px;font-family:Menlo,monospace; }</style>
+<text x="28" y="38" class="title">Maduración pagada y cola sintética</text>
+<text x="28" y="62" class="subtitle">Participación del costo final simulado · edad 35=99.47% · runoff final=48</text>
 <line x1="85" y1="364.0" x2="885" y2="364.0" stroke="#e5e7eb"/>
 <text x="73" y="368.0" class="label" text-anchor="end">20%</text>
 <line x1="85" y1="298.0" x2="885" y2="298.0" stroke="#e5e7eb"/>
@@ -19,29 +13,21 @@ text { font-family: Inter, Arial, sans-serif; fill: #1f2937; }
 <text x="73" y="170.0" class="label" text-anchor="end">80%</text>
 <line x1="85" y1="100.0" x2="885" y2="100.0" stroke="#e5e7eb"/>
 <text x="73" y="104.0" class="label" text-anchor="end">100%</text>
-<line x1="85" y1="100" x2="85" y2="430" stroke="#374151"/>
-<line x1="85" y1="430" x2="885" y2="430" stroke="#374151"/>
-<text x="85.0" y="455" class="label" text-anchor="middle">0</text>
-<text x="185.0" y="455" class="label" text-anchor="middle">3</text>
-<text x="285.0" y="455" class="label" text-anchor="middle">6</text>
-<text x="385.0" y="455" class="label" text-anchor="middle">9</text>
-<text x="485.0" y="455" class="label" text-anchor="middle">12</text>
-<text x="585.0" y="455" class="label" text-anchor="middle">15</text>
-<text x="685.0" y="455" class="label" text-anchor="middle">18</text>
-<text x="785.0" y="455" class="label" text-anchor="middle">21</text>
-<text x="885.0" y="455" class="label" text-anchor="middle">24</text>
-<polyline points="85.0,338.8 118.3,280.7 151.7,237.9 185.0,204.9 218.3,178.0 251.7,157.3 285.0,141.3 318.3,129.2 351.7,120.5 385.0,113.9 418.3,109.2 451.7,106.1 485.0,104.0 518.3,102.6 551.7,101.6 585.0,101.1 618.3,100.7 651.7,100.4 685.0,100.2 718.3,100.2 751.7,100.1 785.0,100.1 818.3,100.0 851.7,100.0 885.0,100.0" fill="none" stroke="#3659a7" stroke-width="3"/>
-<circle cx="85.0" cy="338.75433516383134" r="4" fill="#ffffff" stroke="#3659a7" stroke-width="2"/>
-<text x="85.0" y="328.75433516383134" class="label" text-anchor="middle">27.7%</text>
-<circle cx="185.0" cy="204.89657388405215" r="4" fill="#ffffff" stroke="#3659a7" stroke-width="2"/>
-<text x="185.0" y="194.89657388405215" class="label" text-anchor="middle">68.2%</text>
-<circle cx="285.0" cy="141.30873154664457" r="4" fill="#ffffff" stroke="#3659a7" stroke-width="2"/>
-<text x="285.0" y="131.30873154664457" class="label" text-anchor="middle">87.5%</text>
-<circle cx="485.0" cy="103.9770934100223" r="4" fill="#ffffff" stroke="#3659a7" stroke-width="2"/>
-<text x="485.0" y="93.9770934100223" class="label" text-anchor="middle">98.8%</text>
-<circle cx="685.0" cy="100.24718084466612" r="4" fill="#ffffff" stroke="#3659a7" stroke-width="2"/>
-<text x="685.0" y="90.24718084466612" class="label" text-anchor="middle">99.9%</text>
-<circle cx="885.0" cy="100.0" r="4" fill="#ffffff" stroke="#3659a7" stroke-width="2"/>
-<text x="885.0" y="90.0" class="label" text-anchor="middle">100.0%</text>
-<text x="485.0" y="482" class="subtitle" text-anchor="middle">Mes de desarrollo</text>
+<polyline points="85.0,340.1 107.9,278.2 130.7,234.9 153.6,204.0 176.4,181.7 199.3,165.4 222.1,153.4 245.0,144.3 267.9,137.3 290.7,131.8 313.6,127.4 336.4,123.9 359.3,120.9 382.1,118.4 405.0,116.3 427.9,114.5 450.7,112.9 473.6,111.6 496.4,110.4 519.3,109.4 542.1,108.4 565.0,107.6 587.9,106.8 610.7,106.2 633.6,105.6 656.4,105.1 679.3,104.6 702.1,104.1 725.0,103.7 747.9,103.4 770.7,103.0 793.6,102.7 816.4,102.4 839.3,102.2 862.1,101.9 885.0,101.7" fill="none" stroke="#3659a7" stroke-width="3"/>
+<circle cx="85.0" cy="340.1411759068111" r="4" fill="#fff" stroke="#3659a7" stroke-width="2"/>
+<text x="85.0" y="330.1411759068111" class="label" text-anchor="middle">27.2%</text>
+<circle cx="153.57142857142856" cy="203.97612678573452" r="4" fill="#fff" stroke="#3659a7" stroke-width="2"/>
+<text x="153.57142857142856" y="193.97612678573452" class="label" text-anchor="middle">68.5%</text>
+<circle cx="222.14285714285714" cy="153.39597068118513" r="4" fill="#fff" stroke="#3659a7" stroke-width="2"/>
+<text x="222.14285714285714" y="143.39597068118513" class="label" text-anchor="middle">83.8%</text>
+<circle cx="359.2857142857143" cy="120.90592963766102" r="4" fill="#fff" stroke="#3659a7" stroke-width="2"/>
+<text x="359.2857142857143" y="110.90592963766102" class="label" text-anchor="middle">93.7%</text>
+<circle cx="496.4285714285714" cy="110.41750144924487" r="4" fill="#fff" stroke="#3659a7" stroke-width="2"/>
+<text x="496.4285714285714" y="100.41750144924487" class="label" text-anchor="middle">96.8%</text>
+<circle cx="633.5714285714286" cy="105.6005074480472" r="4" fill="#fff" stroke="#3659a7" stroke-width="2"/>
+<text x="633.5714285714286" y="95.6005074480472" class="label" text-anchor="middle">98.3%</text>
+<circle cx="770.7142857142857" cy="103.02563890263528" r="4" fill="#fff" stroke="#3659a7" stroke-width="2"/>
+<text x="770.7142857142857" y="93.02563890263528" class="label" text-anchor="middle">99.1%</text>
+<circle cx="885.0" cy="101.73558266920585" r="4" fill="#fff" stroke="#3659a7" stroke-width="2"/>
+<text x="885.0" y="91.73558266920585" class="label" text-anchor="middle">99.5%</text>
 </svg>
