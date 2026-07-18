@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "product": "Pregúntale al Handbook — MVP",
   "language": "es",
   "last_updated": "2026-07-18",
@@ -128,7 +128,24 @@
       ],
       "language": "es",
       "version": "1.0.0",
-      "last_reviewed": "2026-07-18"
+      "last_reviewed": "2026-07-18",
+      "contexts": {
+        "paths": [
+          "/examples/04-demo-preparacion-datos/"
+        ],
+        "anchors": [
+          "deduplicacion"
+        ],
+        "parts": [
+          "examples"
+        ],
+        "tags": [
+          "deduplicacion",
+          "calidad-de-datos",
+          "llave-economica"
+        ],
+        "priority": 1.0
+      }
     },
     {
       "id": "data-duplicate-identification",
@@ -168,7 +185,25 @@
       ],
       "language": "es",
       "version": "1.0.0",
-      "last_reviewed": "2026-07-18"
+      "last_reviewed": "2026-07-18",
+      "contexts": {
+        "paths": [
+          "/examples/04-demo-preparacion-datos/"
+        ],
+        "anchors": [
+          "escenario",
+          "deduplicacion"
+        ],
+        "parts": [
+          "examples"
+        ],
+        "tags": [
+          "duplicados-tecnicos",
+          "calidad-de-datos",
+          "movimiento-economico"
+        ],
+        "priority": 0.96
+      }
     },
     {
       "id": "data-source-key",
@@ -207,7 +242,25 @@
       ],
       "language": "es",
       "version": "1.0.0",
-      "last_reviewed": "2026-07-18"
+      "last_reviewed": "2026-07-18",
+      "contexts": {
+        "paths": [
+          "/examples/04-demo-preparacion-datos/"
+        ],
+        "anchors": [
+          "normalizacion-y-construccion-de-identificadores",
+          "deduplicacion"
+        ],
+        "parts": [
+          "examples"
+        ],
+        "tags": [
+          "llave-economica",
+          "archivo-fuente",
+          "trazabilidad"
+        ],
+        "priority": 0.94
+      }
     },
     {
       "id": "data-negative-lag",
@@ -241,7 +294,24 @@
       ],
       "language": "es",
       "version": "1.0.0",
-      "last_reviewed": "2026-07-18"
+      "last_reviewed": "2026-07-18",
+      "contexts": {
+        "paths": [
+          "/examples/04-demo-preparacion-datos/"
+        ],
+        "anchors": [
+          "validaciones-iniciales"
+        ],
+        "parts": [
+          "examples"
+        ],
+        "tags": [
+          "lag-negativo",
+          "fechas",
+          "calidad-de-datos"
+        ],
+        "priority": 0.78
+      }
     },
     {
       "id": "data-negative-amount",
@@ -281,7 +351,27 @@
       ],
       "language": "es",
       "version": "1.0.0",
-      "last_reviewed": "2026-07-18"
+      "last_reviewed": "2026-07-18",
+      "contexts": {
+        "paths": [
+          "/examples/04-demo-preparacion-datos/",
+          "/part-01-foundations/04-incremental-vs-cumulative-triangles/"
+        ],
+        "anchors": [
+          "validaciones-iniciales",
+          "pagos-negativos-y-reversos"
+        ],
+        "parts": [
+          "examples",
+          "part-01-foundations"
+        ],
+        "tags": [
+          "pagos-negativos",
+          "reversos",
+          "recuperaciones"
+        ],
+        "priority": 0.84
+      }
     },
     {
       "id": "triangle-incremental-cumulative",
@@ -320,7 +410,28 @@
       ],
       "language": "es",
       "version": "1.0.0",
-      "last_reviewed": "2026-07-18"
+      "last_reviewed": "2026-07-18",
+      "contexts": {
+        "paths": [
+          "/part-01-foundations/04-incremental-vs-cumulative-triangles/",
+          "/part-02-classical-reserving/06-chain-ladder-method/"
+        ],
+        "anchors": [
+          "cuando-usar-acumulados",
+          "cuando-usar-incrementales"
+        ],
+        "parts": [
+          "part-01-foundations",
+          "part-02-classical-reserving"
+        ],
+        "tags": [
+          "incremental-acumulado",
+          "triangulos",
+          "incremental",
+          "acumulado"
+        ],
+        "priority": 0.98
+      }
     },
     {
       "id": "triangle-origin-immaturity",
@@ -359,7 +470,29 @@
       ],
       "language": "es",
       "version": "1.0.0",
-      "last_reviewed": "2026-07-18"
+      "last_reviewed": "2026-07-18",
+      "contexts": {
+        "paths": [
+          "/part-01-foundations/04-incremental-vs-cumulative-triangles/",
+          "/part-01-foundations/05-age-to-age-development-factors/",
+          "/examples/03-demo-triangulos-mensuales-salud/"
+        ],
+        "anchors": [
+          "valores-faltantes-y-ceros",
+          "factor-acumulado-hacia-ultimate",
+          "suficiencia-por-factor"
+        ],
+        "parts": [
+          "part-01-foundations",
+          "examples"
+        ],
+        "tags": [
+          "madurez",
+          "desarrollo-pendiente",
+          "cdf"
+        ],
+        "priority": 0.9
+      }
     },
     {
       "id": "triangle-descriptive-not-eligible",
@@ -399,7 +532,28 @@
       ],
       "language": "es",
       "version": "1.0.0",
-      "last_reviewed": "2026-07-18"
+      "last_reviewed": "2026-07-18",
+      "contexts": {
+        "paths": [
+          "/examples/04-demo-preparacion-datos/",
+          "/part-02-classical-reserving/06-chain-ladder-method/"
+        ],
+        "anchors": [
+          "construccion-del-triangulo-descriptivo",
+          "datos-requeridos",
+          "supuestos-implicitos"
+        ],
+        "parts": [
+          "examples",
+          "part-02-classical-reserving"
+        ],
+        "tags": [
+          "elegibilidad",
+          "chain-ladder",
+          "diagnostico"
+        ],
+        "priority": 0.93
+      }
     },
     {
       "id": "triangle-duplicates-factors",
@@ -439,7 +593,28 @@
       ],
       "language": "es",
       "version": "1.0.0",
-      "last_reviewed": "2026-07-18"
+      "last_reviewed": "2026-07-18",
+      "contexts": {
+        "paths": [
+          "/examples/04-demo-preparacion-datos/",
+          "/part-01-foundations/05-age-to-age-development-factors/"
+        ],
+        "anchors": [
+          "deduplicacion",
+          "diagnostico-de-factores"
+        ],
+        "parts": [
+          "examples",
+          "part-01-foundations"
+        ],
+        "tags": [
+          "factores-sesgados",
+          "duplicados",
+          "factores-edad-a-edad",
+          "sesgo"
+        ],
+        "priority": 0.88
+      }
     },
     {
       "id": "triangle-monthly-history",
@@ -479,7 +654,28 @@
       ],
       "language": "es",
       "version": "1.0.0",
-      "last_reviewed": "2026-07-18"
+      "last_reviewed": "2026-07-18",
+      "contexts": {
+        "paths": [
+          "/examples/03-demo-triangulos-mensuales-salud/",
+          "/part-01-foundations/05-age-to-age-development-factors/"
+        ],
+        "anchors": [
+          "por-que-la-base-es-7236-y-la-vista-3636",
+          "suficiencia-por-factor",
+          "diagnostico-de-factores"
+        ],
+        "parts": [
+          "examples",
+          "part-01-foundations"
+        ],
+        "tags": [
+          "historia-mensual",
+          "suficiencia",
+          "observaciones-por-factor"
+        ],
+        "priority": 0.95
+      }
     },
     {
       "id": "method-chain-ladder-unreliable",
@@ -520,7 +716,29 @@
       ],
       "language": "es",
       "version": "1.0.0",
-      "last_reviewed": "2026-07-18"
+      "last_reviewed": "2026-07-18",
+      "contexts": {
+        "paths": [
+          "/part-02-classical-reserving/06-chain-ladder-method/",
+          "/part-01-foundations/05-age-to-age-development-factors/"
+        ],
+        "anchors": [
+          "supuestos-implicitos",
+          "riesgos-comunes",
+          "relacion-con-chain-ladder"
+        ],
+        "parts": [
+          "part-02-classical-reserving",
+          "part-01-foundations"
+        ],
+        "tags": [
+          "chain-ladder-supuestos",
+          "chain-ladder",
+          "supuestos",
+          "inestabilidad"
+        ],
+        "priority": 1.0
+      }
     },
     {
       "id": "method-bf-prior-independence",
@@ -561,7 +779,27 @@
       ],
       "language": "es",
       "version": "1.0.0",
-      "last_reviewed": "2026-07-18"
+      "last_reviewed": "2026-07-18",
+      "contexts": {
+        "paths": [
+          "/part-02-classical-reserving/11-bornhuetter-ferguson/"
+        ],
+        "anchors": [
+          "construccion-del-prior",
+          "exposicion-por-tasa",
+          "ajustes-de-comparabilidad"
+        ],
+        "parts": [
+          "part-02-classical-reserving"
+        ],
+        "tags": [
+          "prior-independiente",
+          "bornhuetter-ferguson",
+          "prior",
+          "independencia"
+        ],
+        "priority": 1.0
+      }
     },
     {
       "id": "method-cl-vs-bf",
@@ -602,7 +840,27 @@
       ],
       "language": "es",
       "version": "1.0.0",
-      "last_reviewed": "2026-07-18"
+      "last_reviewed": "2026-07-18",
+      "contexts": {
+        "paths": [
+          "/part-02-classical-reserving/11-bornhuetter-ferguson/",
+          "/part-02-classical-reserving/06-chain-ladder-method/"
+        ],
+        "anchors": [
+          "formulas",
+          "idea-central"
+        ],
+        "parts": [
+          "part-02-classical-reserving"
+        ],
+        "tags": [
+          "comparacion-cl-bf",
+          "chain-ladder",
+          "bornhuetter-ferguson",
+          "comparacion"
+        ],
+        "priority": 0.92
+      }
     },
     {
       "id": "method-benktander-value",
@@ -642,7 +900,26 @@
       ],
       "language": "es",
       "version": "1.0.0",
-      "last_reviewed": "2026-07-18"
+      "last_reviewed": "2026-07-18",
+      "contexts": {
+        "paths": [
+          "/part-02-classical-reserving/12-benktander-method/",
+          "/part-02-classical-reserving/11-bornhuetter-ferguson/"
+        ],
+        "anchors": [
+          "proposito",
+          "forma-cerrada"
+        ],
+        "parts": [
+          "part-02-classical-reserving"
+        ],
+        "tags": [
+          "benktander",
+          "iteraciones",
+          "credibilidad"
+        ],
+        "priority": 1.0
+      }
     },
     {
       "id": "governance-demo-not-regulatory",
@@ -682,7 +959,31 @@
       ],
       "language": "es",
       "version": "1.0.0",
-      "last_reviewed": "2026-07-18"
+      "last_reviewed": "2026-07-18",
+      "contexts": {
+        "paths": [
+          "/examples/03-demo-triangulos-mensuales-salud/",
+          "/examples/04-demo-preparacion-datos/",
+          "/part-06-health-specific/28-health-reserving-governance-controls-and-reporting/",
+          "/part-07-colombia/37-colombia-ibnr-technical-provisions-and-regulatory-reporting/"
+        ],
+        "anchors": [
+          "uso-profesional"
+        ],
+        "parts": [
+          "examples",
+          "part-06-health-specific",
+          "part-07-colombia"
+        ],
+        "tags": [
+          "alcance-profesional",
+          "gobierno",
+          "demo",
+          "regulacion"
+        ],
+        "priority": 0.82,
+        "general": true
+      }
     }
   ]
 }

@@ -55,3 +55,8 @@
     </div>
   </div>
 {% endblock %}
+
+{% block content %}
+  {{ super() }}
+  {% include "partials/handbook-qa-panel.html" %}
+{% endblock %}
