@@ -81,7 +81,7 @@ extra_css:
   - stylesheets/igrasans.css
   - stylesheets/corporate.css
 
-  - stylesheets/handbook-qa.css
+  - assets/stylesheets/handbook-qa.css
 extra_javascript:
   - https://unpkg.com/mermaid@10/dist/mermaid.min.js
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
