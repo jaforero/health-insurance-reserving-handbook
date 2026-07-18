@@ -54,6 +54,8 @@ class BornhuetterFergusonTest(unittest.TestCase):
         self.assertAlmostEqual(latest["ultimate_bf"], 190.0)
         self.assertAlmostEqual(latest["ultimate_chain_ladder"], 200.0)
         self.assertAlmostEqual(latest["diferencia_ultimate_bf_vs_cl"], -10.0)
+        self.assertAlmostEqual(latest["costo_proyectado_horizonte_seleccionado_bf"], 190.0)
+        self.assertAlmostEqual(latest["pasivo_no_pagado_estimado_bf"], 90.0)
 
     def test_exposure_times_rate_produces_same_expected_ultimate(self) -> None:
         prior = pd.DataFrame(
@@ -189,7 +191,7 @@ class BornhuetterFergusonTest(unittest.TestCase):
         )
         self.assertAlmostEqual(result.origin_summary.loc["2024", "ibnr_bf"], -40.0)
         self.assertEqual(diagnostics.loc["BF02_CDF_MENORES_1", "nivel"], "ADVERTENCIA")
-        self.assertEqual(diagnostics.loc["BF05_IBNR_NEGATIVO", "valor"], 1)
+        self.assertEqual(diagnostics.loc["BF05_PASIVO_NO_PAGADO_NEGATIVO", "valor"], 1)
 
     def test_inputs_are_not_mutated(self) -> None:
         chain_ladder = handbook_example()

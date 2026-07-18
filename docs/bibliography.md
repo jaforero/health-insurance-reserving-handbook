@@ -228,6 +228,7 @@ Las fuentes colombianas todavía requieren un registro primario detallado por no
 | `COL-CONTADURIA-*` | Contaduría General de la Nación | `P1` | criterios contables públicos cuando aplique | separar de regulación de aseguradoras privadas |
 | `COL-SFC-*` | Superintendencia Financiera de Colombia | `P1` | aseguradoras vigiladas por SFC, instrucciones contables o financieras aplicables | no extrapolar a EPS sin análisis institucional |
 | `COL-DIAN-*` | DIAN | `P1` | factura electrónica, documentos soporte y reglas tributarias relacionadas con datos | no tratar reglas tributarias como definición actuarial de incurred |
+| `COL-PROESA-FASECOLDA-PVS-2021` | PROESA, con participación técnica de Fasecolda y ACEMI | `P2` | contexto, utilización, costos y política pública del mercado de planes voluntarios de salud | fuente institucional aplicada, no norma; citar periodo, muestra y página; no extrapolar sus resultados a la situación actual |
 
 ### 7.1 Regla para afirmaciones sobre Colombia
 
@@ -244,14 +245,26 @@ Una afirmación colombiana debe clasificarse antes de escribirse:
 !!! warning "Separación jurisdiccional"
     ASOP 5, ASOP 23, ASOP 28 y ASOP 56 pueden orientar calidad profesional del trabajo, pero una obligación colombiana debe sostenerse en fuente colombiana. Si hay tensión entre marco profesional extranjero y norma local, el capítulo debe explicarla y escalarla a revisión experta.
 
+### 7.2 Fuente institucional sobre planes voluntarios de salud
+
+El archivo recibido como `SistemaSalud_Facecolda.pdf` corresponde a PROESA (2021),
+*Análisis estratégico, rol en el sistema de salud y lineamientos de política pública para el
+mercado de planes voluntarios de salud (PVS) en Colombia*. La ficha
+`bibliography/COL-PROESA-FASECOLDA-PVS-2021.md` registra alcance, limitaciones y SHA-256.
+
+El PDF no se redistribuye porque incluye una restricción expresa de reproducción. Su contenido
+puede sustentar contexto sectorial cuando se cite página, periodo y población; no debe presentarse
+como norma vigente, estándar actuarial ni descripción automática del mercado actual.
+
 ## 8. Informes de investigación adjuntos
 
-Los dos informes adjuntos se registran como insumos de descubrimiento, no como autoridad final.
+Los tres informes adjuntos se registran como insumos de descubrimiento, no como autoridad final.
 
 | Clave | Archivo | Estado | Uso permitido | Restricción |
 |---|---|---|---|---|
-| `DISC-GEMINI-2026` | `project_sources/11-gemini-deep-research-report.md` | `D` | inventario de temas, pistas de fuentes, mapa inicial de preguntas, identificación de posibles normas y datasets | cada cita mencionada debe verificarse contra su fuente original antes de entrar a un capítulo |
-| `DISC-CHATGPT-2026` | `project_sources/12-chatgpt-deep-research-report.md` | `D` | hipótesis editoriales, estructura conceptual y comparación de enfoques | no contiene registro bibliográfico suficientemente formal para sostener afirmaciones |
+| `DISC-GEMINI-2026` | `bibliography/gemini-deep-research-report.md` | `D` | inventario de temas, pistas de fuentes, mapa inicial de preguntas, identificación de posibles normas y datasets | cada cita mencionada debe verificarse contra su fuente original antes de entrar a un capítulo |
+| `DISC-CHATGPT-2026` | `bibliography/chatgpt-deep-research-report.md` | `D` | estructura conceptual, comparación internacional, hipótesis y preguntas editoriales | versión actualizada el 2026-07-18; sus referencias y cifras requieren verificación primaria |
+| `DISC-CLAUDE-2026` | `bibliography/claude-deep-research-report.md` | `D` | mapa del estado del arte, brechas del SGSSS y fuentes candidatas | no usar sus conclusiones, cifras ni clasificación de evidencia como autoridad sin leer la fuente original |
 
 ### 8.1 Cómo convertir una fuente de descubrimiento en fuente admitida
 
@@ -479,4 +492,9 @@ Puede pasar a `Validated` cuando:
 ### 17.3 Insumos de descubrimiento
 
 - `DISC-GEMINI-2026`: *Deep research report* adjunto al proyecto. Uso permitido: descubrimiento de temas y fuentes candidatas.
-- `DISC-CHATGPT-2026`: *Deep research report* adjunto al proyecto. Uso permitido: estructura conceptual, hipótesis y preguntas editoriales.
+- `DISC-CHATGPT-2026`: *Modernizing Health Actuarial Practices: Global Lessons for Colombia*. Informe de investigación actualizado el 2026-07-18. Uso permitido: estructura conceptual, hipótesis y preguntas editoriales.
+- `DISC-CLAUDE-2026`: *Actuaría aplicada al sector salud: estado del arte mundial y hoja de ruta para el fortalecimiento actuarial del SGSSS de Colombia*. Informe de investigación de julio de 2026. Uso permitido: descubrimiento y priorización de fuentes originales.
+
+### 17.4 Fuente institucional colombiana
+
+- `COL-PROESA-FASECOLDA-PVS-2021`: PROESA. (2021). *Análisis estratégico, rol en el sistema de salud y lineamientos de política pública para el mercado de planes voluntarios de salud (PVS) en Colombia: informe final de consultoría*. Participación técnica de Fasecolda y ACEMI. Uso admitido: contexto sectorial e investigación aplicada, con cita de página, periodo y muestra.

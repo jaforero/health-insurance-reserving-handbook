@@ -1,5 +1,7 @@
 indicador,valor,lectura
-meses_origen,60,Cinco años; permite observar estacionalidad anual repetida.
-horizonte_desarrollo,24,Punto de partida para reclamaciones de salud de maduración rápida o media.
-origenes_completos,36,Meses con observación completa hasta el desarrollo 24.
-min_observaciones_factor,36,Supera el umbral didáctico de 24; no es un mínimo actuarial universal.
+meses_origen,72,Seis años para estimar patrones y revisar estacionalidad.
+columnas_desarrollo,36,Edades 0–35: 36 columnas.
+vista_tradicional,36x36,"Últimos 36 orígenes; presentación, no base completa de estimación."
+origenes_completos,37,Orígenes observados hasta edad 35.
+min_observaciones_factor,37,El enlace 34→35 conserva 37 observaciones.
+edad_runoff_simulado,48,Permite validar una cola sintética 35→48.

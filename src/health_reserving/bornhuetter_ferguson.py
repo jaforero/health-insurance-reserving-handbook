@@ -15,7 +15,7 @@ from .chain_ladder import ChainLadderResult
 PriorMode = Literal["expected_ultimate", "exposure_rate"]
 
 PRIOR_MODE_LABELS: dict[PriorMode, str] = {
-    "expected_ultimate": "Ultimate esperado directo",
+    "expected_ultimate": "Costo final esperado directo",
     "exposure_rate": "Exposición por tasa esperada",
 }
 
@@ -138,14 +138,14 @@ def _validated_chain_ladder_summary(result: ChainLadderResult) -> pd.DataFrame:
         rtol=1e-10,
         atol=1e-8,
     ):
-        raise ValueError("Ultimate, observado e IBNR no se reconcilian en Chain Ladder")
+        raise ValueError("Costo proyectado, observado y pasivo no pagado no se reconcilian en Chain Ladder")
     if not np.allclose(
         summary["ultimate"],
         summary["acumulado_observado"] * summary["cdf_a_ultimate"],
         rtol=1e-10,
         atol=1e-8,
     ):
-        raise ValueError("Ultimate y CDF no se reconcilian en Chain Ladder")
+        raise ValueError("Costo proyectado y CDF no se reconcilian en Chain Ladder")
     return summary
 
 
@@ -198,7 +198,7 @@ def _prepare_prior(
         expected = _numeric_column(
             frame,
             config.expected_ultimate_column,
-            label="el ultimate esperado",
+            label="el costo final esperado",
         )
     else:
         exposure = _numeric_column(frame, config.exposure_column, label="la exposición")
@@ -217,9 +217,9 @@ def _prepare_prior(
             expected = exposure * expected_rate
 
     if not np.isfinite(expected.to_numpy(dtype=float)).all():
-        raise ValueError("El cálculo del ultimate esperado produjo valores no finitos")
+        raise ValueError("El cálculo del costo final esperado produjo valores no finitos")
     if bool(expected.lt(0).any()):
-        raise ValueError("El ultimate esperado no puede contener valores negativos")
+        raise ValueError("El costo final esperado no puede contener valores negativos")
     prepared["ultimate_esperado_prior"] = expected
     return prepared
 
@@ -265,6 +265,13 @@ def _origin_results(
     summary["participacion_ibnr_bf"] = (
         summary["ibnr_bf"] / total_ibnr if not math.isclose(total_ibnr, 0.0) else 0.0
     )
+    summary["costo_final_esperado_prior"] = summary["ultimate_esperado_prior"]
+    summary["costo_proyectado_horizonte_seleccionado_bf"] = summary["ultimate_bf"]
+    summary["pasivo_no_pagado_estimado_bf"] = summary["ibnr_bf"]
+    summary["costo_proyectado_horizonte_seleccionado_chain_ladder"] = summary[
+        "ultimate_chain_ladder"
+    ]
+    summary["pasivo_no_pagado_estimado_chain_ladder"] = summary["ibnr_chain_ladder"]
     return summary
 
 
@@ -284,6 +291,14 @@ def _totals(summary: pd.DataFrame) -> pd.DataFrame:
         [
             {"indicador": "periodos_origen", "valor": len(summary)},
             {"indicador": "acumulado_observado_total", "valor": observed},
+            {"indicador": "costo_final_esperado_prior_total", "valor": expected},
+            {"indicador": "costo_proyectado_horizonte_seleccionado_bf_total", "valor": ultimate_bf},
+            {"indicador": "pasivo_no_pagado_estimado_bf_total", "valor": ibnr_bf},
+            {
+                "indicador": "costo_proyectado_horizonte_seleccionado_chain_ladder_total",
+                "valor": ultimate_cl,
+            },
+            {"indicador": "pasivo_no_pagado_estimado_chain_ladder_total", "valor": ibnr_cl},
             {"indicador": "ultimate_esperado_prior_total", "valor": expected},
             {"indicador": "ultimate_bf_total", "valor": ultimate_bf},
             {"indicador": "ibnr_bf_total", "valor": ibnr_bf},
@@ -372,7 +387,7 @@ def _diagnostics(
                 "codigo": "BF03_PRIOR_MENOR_OBSERVADO",
                 "nivel": "ADVERTENCIA" if prior_below_observed else "INFO",
                 "valor": prior_below_observed,
-                "mensaje": "Periodos cuyo ultimate esperado a priori es menor que lo observado.",
+                "mensaje": "Periodos cuyo costo final esperado a priori es menor que lo observado.",
             },
             {
                 "codigo": "BF04_PRIOR_CERO",
@@ -381,22 +396,22 @@ def _diagnostics(
                 "mensaje": "Periodos con expectativa previa igual a cero.",
             },
             {
-                "codigo": "BF05_IBNR_NEGATIVO",
+                "codigo": "BF05_PASIVO_NO_PAGADO_NEGATIVO",
                 "nivel": "ADVERTENCIA" if negative_ibnr else "INFO",
                 "valor": negative_ibnr,
-                "mensaje": "Periodos con IBNR BF negativo; revisar CDF, recuperaciones y ajustes.",
+                "mensaje": "Periodos con pasivo no pagado BF negativo; revisar CDF, recuperaciones y ajustes.",
             },
             {
                 "codigo": "BF06_CONCENTRACION_RECIENTE",
                 "nivel": "INFO",
                 "valor": concentration,
-                "mensaje": f"Proporción del IBNR BF en los últimos {recent_count} periodos.",
+                "mensaje": f"Proporción del pasivo no pagado BF en los últimos {recent_count} periodos.",
             },
             {
                 "codigo": "BF07_RANGO_SENSIBILIDAD_PRIOR",
                 "nivel": "INFO",
                 "valor": sensitivity_range,
-                "mensaje": "Rango del IBNR total entre los shocks configurados del prior.",
+                "mensaje": "Rango del pasivo no pagado total entre los shocks configurados del prior.",
             },
         ]
     )
@@ -407,7 +422,7 @@ def fit_bornhuetter_ferguson(
     prior: pd.DataFrame,
     config: BornhuetterFergusonConfig | None = None,
 ) -> BornhuetterFergusonResult:
-    """Estimate BF ultimate and IBNR from Chain Ladder maturity and an explicit prior.
+    """Estimate BF final cost and unpaid liability from maturity and an explicit prior.
 
     The prior must contain exactly one row per Chain Ladder origin. It can provide either a
     direct expected ultimate or exposure multiplied by an expected rate, according to ``config``.

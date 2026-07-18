@@ -289,7 +289,7 @@ a:hover {{
 
 .jf-method-grid {{
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
   gap: 0.8rem;
   margin: 0.8rem 0;
 }}
@@ -674,7 +674,7 @@ def method_comparison_html(
     methods: Iterable[tuple[str, Iterable[tuple[str, str]]]],
     difference: tuple[str, str, str],
 ) -> str:
-    """Build a balanced, escaped side-by-side comparison of two methods."""
+    """Build a balanced, escaped comparison of actuarial methods."""
 
     method_cards = []
     for position, (method_name, metrics) in enumerate(methods, start=1):
@@ -718,7 +718,7 @@ def render_method_comparison(
     methods: Iterable[tuple[str, Iterable[tuple[str, str]]]],
     difference: tuple[str, str, str],
 ) -> None:
-    """Render a balanced corporate comparison for two actuarial methods."""
+    """Render a balanced corporate comparison for actuarial methods."""
 
     st.markdown(
         method_comparison_html(baseline, methods, difference),

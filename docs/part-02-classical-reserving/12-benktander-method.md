@@ -5,8 +5,8 @@ chapter: "12"
 part: "02-classical-reserving"
 language: "es"
 status: "review"
-version: "0.6.0"
-last_updated: "2026-07-17"
+version: "0.6.0-r2"
+last_updated: "2026-07-18"
 tags:
   - benktander
   - bornhuetter-ferguson
@@ -18,7 +18,7 @@ tags:
 
 ## 1. Propósito
 
-Benktander actualiza iterativamente la expectativa previa de Bornhuetter-Ferguson. Cada iteración usa como nuevo prior el ultimate estimado en la iteración anterior. El resultado se desplaza de forma controlada desde el prior inicial hacia Chain Ladder.
+Benktander actualiza iterativamente la expectativa previa de Bornhuetter-Ferguson. Cada iteración usa como nuevo prior el costo final estimado en la iteración anterior. El resultado se desplaza de forma controlada desde el prior inicial hacia Chain Ladder.
 
 El método es útil para estudiar cuánto depende la reserva de una expectativa externa y cuánto de la experiencia emergente. El número de iteraciones es un supuesto visible; no debe elegirse para alcanzar una cifra predeterminada.
 
@@ -30,8 +30,8 @@ Para un periodo de origen $i$:
 - $p_i$: proporción desarrollada;
 - $q_i = 1-p_i$: proporción no desarrollada;
 - $U_i^{(0)}$: prior inicial;
-- $U_i^{(n)}$: ultimate después de $n$ iteraciones;
-- $U_i^{CL} = C_i/p_i$: ultimate Chain Ladder.
+- $U_i^{(n)}$: costo final estimado después de $n$ iteraciones;
+- $U_i^{CL} = C_i/p_i$: costo final estimado mediante Chain Ladder.
 
 Se requiere $p_i > 0$. Cuando $p_i = 1$, el periodo está completamente desarrollado y todos los métodos producen $U_i = C_i$.
 
@@ -49,7 +49,7 @@ $$
 U_i^{(n)} = C_i + q_i U_i^{(n-1)}
 $$
 
-La reserva en cada iteración es:
+El pasivo no pagado estimado en cada iteración es:
 
 $$
 R_i^{(n)} = U_i^{(n)} - C_i
@@ -83,7 +83,7 @@ Use el mismo caso del capítulo BF:
 - $U_i^{(0)} = 100$;
 - $U_i^{CL} = 90$.
 
-| Iteración | Cálculo | Ultimate | IBNR |
+| Iteración | Cálculo | Costo final estimado | Pasivo no pagado estimado |
 |---:|---|---:|---:|
 | 0 | prior inicial | 100.00 | 28.00 |
 | 1 | $72 + 0.20(100)$ | 92.00 | 20.00 |
@@ -134,19 +134,34 @@ Antes de aplicar Benktander se requiere:
 
 Una prueba de implementación esencial es que ambas fórmulas produzcan el mismo resultado dentro de la tolerancia numérica definida.
 
-## 9. Contrato de implementación para v0.6.0
+## 9. Implementación en Demo 6
 
-El incremento propuesto para Demo 6 debe:
+<!-- v0.6.0-sprint2-benktander-r2 -->
+El Sprint 2 r2 de v0.6.0 implementa este contrato en `src/health_reserving/benktander.py` y lo
+integra en `apps/chain_ladder_workshop.py`. El motor:
 
 - reutilizar sin modificar el resultado Chain Ladder y el prior BF ya conciliado;
-- aceptar un entero no negativo de iteraciones;
+- acepta entre 1 y 50 iteraciones en el núcleo y entre 1 y 20 en la interfaz;
 - calcular resultado iterativo y forma cerrada;
 - mostrar pesos de Chain Ladder y del prior;
-- producir ultimate e IBNR por origen y total;
+- producir costo final proyectado y pasivo no pagado estimado por origen y total;
 - exportar configuración, resultados, sensibilidad y diagnósticos;
-- probar casos maduros, inmaduros, múltiples iteraciones y entradas inválidas.
+- prueba casos maduros, inmaduros, múltiples iteraciones y entradas inválidas.
 
-Hasta que ese código y sus pruebas se integren, este capítulo funciona como especificación técnica y no como afirmación de funcionalidad disponible.
+La sensibilidad sí admite la iteración 0 para representar el prior inicial. La iteración 1 se
+reconcilia con BF y las formas iterativa y cerrada deben coincidir dentro de la tolerancia
+numérica. `tests/test_benktander.py` cubre estas identidades, la inmutabilidad de las entradas,
+los diagnósticos y la privacidad del paquete exportado.
+
+La disponibilidad técnica no reemplaza la selección actuarial del número de iteraciones ni la
+validación del prior y del patrón de desarrollo.
+
+!!! warning "Alcance de un triángulo exclusivamente pagado"
+    En Demo 6, la diferencia entre el costo final proyectado y el pagado acumulado se denomina
+    **pasivo no pagado estimado basado en datos pagados**. Un triángulo pagado agregado no permite
+    identificar por separado IBNR puro, RBNS o IBNER. Además, la expresión **costo final técnico
+    estimado** solo se usa cuando existe un factor de cola explícito y sustentado; con cola 1,00 el
+    resultado es un acumulado proyectado a la edad terminal seleccionada.
 
 ## 10. Limitaciones
 

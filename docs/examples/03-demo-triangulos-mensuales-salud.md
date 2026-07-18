@@ -1,146 +1,116 @@
 ---
 title: "Demo 3 · Triángulos mensuales de reclamaciones pagadas de salud"
-description: "Demo reproducible con 60 meses de origen, desarrollo mensual 0–24, Chain Ladder, controles de suficiencia y visualizaciones actuariales."
+description: "Demo r2 con base 72×36, vista tradicional 36×36, runoff simulado, cola explícita y terminología actuarial precisa."
 chapter: "demo-03"
 part: "examples"
 language: "es"
-status: "draft"
-version: "0.2.1"
-last_updated: "2026-07-14"
+status: "review"
+version: "0.6.0-r2"
+last_updated: "2026-07-18"
 ---
 
 # Demo 3 · Triángulos mensuales de reclamaciones pagadas de salud
 
-Este demo lleva la estructura tradicional del triángulo actuarial a una periodicidad mensual. Genera datos sintéticos de reclamaciones pagadas, construye triángulos incrementales y acumulados, selecciona factores edad-a-edad mensuales y estima ultimate e IBNR mediante Chain Ladder.
+Este demo genera datos sintéticos pagados, estima factores mensuales y completa el triángulo con Chain Ladder. La revisión r2 separa tres conceptos que no deben confundirse:
 
-!!! info "Configuración base"
-    El ejemplo utiliza **60 meses de origen** —cinco años— y edades de desarrollo **0–24 meses**. Así, el enlace más largo, 23→24, conserva 36 observaciones completas.
+- **base de estimación:** 72 meses de origen × 36 edades de desarrollo (`dev_0` a `dev_35`);
+- **vista tradicional:** últimos 36 meses de origen × las mismas 36 edades;
+- **runoff simulado:** pagos completos hasta `dev_48`, usados para sustentar y validar una cola sintética 35→48.
 
-## 1. Por qué 60 meses de origen y 24 de desarrollo
+!!! warning "Nombre correcto del resultado"
+    Con un triángulo agregado exclusivamente pagado, la diferencia entre el costo estimado y el pagado observado se denomina en este demo **pasivo no pagado estimado**. No puede identificarse por separado el IBNR puro, la reserva de siniestros reportados pendientes (RBNS) ni el IBNER sin información adicional.
 
-No existe un número universal de meses que garantice la adecuación de Chain Ladder. Los estándares actuariales exigen que los datos, el periodo de experiencia, el runout, el método y sus supuestos sean apropiados para el propósito y las características de desarrollo; no prescriben una combinación fija como 60/24.
+## 1. Por qué la base es 72×36 y la vista 36×36
 
-Para este demo, 60/24 es un punto de partida práctico porque:
+Una matriz 36×36 es una presentación mensual tradicional: 36 periodos de origen y 36 edades. Sin embargo, al corte de valuación solo una fila aporta el enlace más tardío 34→35. Esto es insuficiente como argumento para seleccionar un factor estable.
 
-- cinco años permiten observar varias repeticiones de la estacionalidad anual;
-- 24 meses capturan una cola razonable para reclamaciones de salud de maduración rápida o media;
-- 36 meses de origen quedan completamente desarrollados;
-- cada factor mensual tiene al menos 36 observaciones en la configuración predeterminada;
-- el volumen visual sigue siendo manejable y permite auditar la diagonal observada.
+Por eso r2 utiliza seis años de orígenes para estimar:
 
-La elección real debe hacerse por segmento. Reclamaciones de alto costo, litigiosas, con glosas prolongadas, cobros tardíos o procesos operativos inestables pueden requerir **36 meses o más**, un factor de cola o una metodología complementaria.
+| Elemento | Dimensión | Uso |
+|---|---:|---|
+| Base completa | 72×36 | estimación de factores y diagnósticos |
+| Vista tradicional | 36×36 | lectura y comunicación del triángulo |
+| Runoff sintético | 72×49 | verdad conocida del generador, no entrada observable |
 
-## 2. Estructura del triángulo tradicional
+En la base 72×36, el enlace 34→35 conserva 37 observaciones. Esto mejora el ejercicio, pero no constituye un mínimo actuarial universal: todavía deben revisarse homogeneidad, cambios operativos, volumen, dispersión, estacionalidad y estabilidad temporal.
 
-Las filas son meses de ocurrencia y las columnas son meses de desarrollo. La diagonal amarilla contiene la última observación disponible de cada mes de origen; las celdas vacías son pagos futuros por estimar.
+![Vista actuarial tradicional 36×36](../assets/demo_triangulos_mensuales/triangulo_pagado_mensual_acumulado.svg)
 
-![Triángulo mensual pagado acumulado](../assets/demo_triangulos_mensuales/triangulo_pagado_mensual_acumulado.svg)
+## 2. Edad terminal y cola
 
-La edad de desarrollo se calcula como la diferencia de meses calendario entre el mes de pago y el mes de origen:
+La proyección observada termina en edad 35. El generador, por ser sintético, conoce pagos hasta edad 48. Su factor de cola es:
 
-```text
-mes_desarrollo = 12 × (año_pago − año_origen) + mes_pago − mes_origen
-```
+$$
+f_{35\rightarrow48}^{cola}=\frac{C_{48}^{simulado}}{C_{35}^{simulado}}
+$$
 
-## 3. Curva de maduración
+Con la parametrización predeterminada es aproximadamente `1.00524958`. El resultado anterior a la cola se llama **acumulado proyectado a edad 35**. Solo después de aplicar la cola explícita se presenta como **costo final técnico estimado**.
 
-El generador conoce el ultimate sintético y puede medir cuánto se ha pagado acumuladamente en cada edad. La curva permite verificar si 24 meses es un horizonte razonablemente maduro para el patrón simulado.
+![Maduración pagada y cola](../assets/demo_triangulos_mensuales/curva_maduracion_mensual.svg)
 
-![Curva de maduración mensual](../assets/demo_triangulos_mensuales/curva_maduracion_mensual.svg)
+En datos reales, una cola no se obtiene por declarar que la última edad es suficiente. Debe sustentarse con runoff posterior, segmentos comparables, estudios externos pertinentes o una metodología documentada.
 
-En producción, esta revisión debe realizarse por población, cobertura, prestador, modelo de pago y tipo de reclamación. Una curva total puede ocultar colas materiales en segmentos pequeños.
+## 3. Qué se puede estimar
 
-## 4. Suficiencia por factor
+Para cada origen $i$, con último acumulado observado $P_{i,k}$:
 
-La información disponible disminuye a medida que aumenta la edad de desarrollo. Por eso no basta con contar 60 filas: debe revisarse cuántas observaciones soportan cada factor.
+$$
+\widehat{C}_{i,35}=P_{i,k}\times CDF_{k\rightarrow35}
+$$
+
+$$
+\widehat{C}_{i,final}=\widehat{C}_{i,35}\times f_{35\rightarrow48}^{cola}
+$$
+
+$$
+\widehat{L}_{i,no\ pagado}=\widehat{C}_{i,final}-P_{i,k}
+$$
+
+El código **no aplica un piso de cero** al residual. Un valor negativo permanece visible y requiere investigar recuperaciones, ajustes, cambios de definición o factores menores que uno.
+
+## 4. Qué falta para una estimación más realista
+
+Un archivo real debería incorporar o reconciliar, cuando corresponda:
+
+- fecha de ocurrencia, fecha de reporte/aviso y fecha de pago;
+- reserva caso o incurrido reportado;
+- estado, cierre y reapertura de la reclamación;
+- exposición y costo esperado independiente para BF/Benktander;
+- cobertura, prestador, contrato, región y población homogénea;
+- bruto/neto, recuperaciones y marcas de reclamaciones grandes;
+- runoff posterior para la cola;
+- cambios de tarifas, beneficios, adjudicación y procesos operativos.
+
+Sin fecha de reporte y reserva caso no se separan IBNR puro, RBNS e IBNER. Sin cola sustentada, no corresponde denominar costo final al acumulado de edad 35.
+
+## 5. Suficiencia por factor
 
 ![Observaciones por factor](../assets/demo_triangulos_mensuales/observaciones_por_factor.svg)
 
-La línea de 24 observaciones es una **heurística didáctica del demo**, no un estándar actuarial. El archivo `diagnostico_suficiencia.csv` hace explícita esta distinción.
+La línea de 24 observaciones es una heurística didáctica, no un estándar profesional. El conteo es solo una señal: la calidad y representatividad de esas observaciones importan tanto como su cantidad.
 
-## 5. Archivos generados
+## 6. Archivos r2
 
-La salida en español se encuentra en `data/demo_triangulos_mensuales/`:
-
-| Archivo | Contenido |
+| Archivo | Interpretación |
 |---|---|
-| `reclamaciones_pagadas_mensuales_largo.csv` | Celdas observadas en formato largo |
-| `triangulo_pagado_mensual_incremental.csv` | Pagos del mes por origen y desarrollo |
-| `triangulo_pagado_mensual_acumulado.csv` | Pagos acumulados en formato actuarial |
-| `factores_mensuales_edad_a_edad.csv` | Factores, CDF, dispersión y conteos |
-| `resultados_chain_ladder_mensual.csv` | Ultimate, IBNR y error contra la verdad simulada |
-| `diagnostico_suficiencia.csv` | Controles de historia, horizonte y observaciones |
-| `resumen_ejecucion.txt` | Resumen de parámetros y resultados |
+| `triangulo_pagado_mensual_acumulado.csv` | base completa 72×36 |
+| `vista_tradicional_36x36.csv` | últimos 36 orígenes para presentación |
+| `triangulo_pagado_mensual_incremental.csv` | pagos incrementales observados |
+| `factores_mensuales_edad_a_edad.csv` | factores a edad 35 y conteos |
+| `resultados_proyeccion_pasivo_no_pagado.csv` | costo a edad 35, cola, costo final y pasivo no pagado |
+| `prior_bornhuetter_ferguson_mensual.csv` | prior sintético compatible con Demo 6 |
+| `diagnostico_suficiencia.csv` | dimensiones y evidencia por enlace |
 
-Los archivos equivalentes en inglés se generan en `data/demo_monthly_triangles/`.
+Los nombres antiguos `ibnr_estimado` y `ultimate_estimado` se retiraron de estas salidas para evitar expectativas que los datos no soportan.
 
-## 6. Ejecución
-
-Desde la raíz del repositorio:
-
-```bash
-python scripts/generate_demo_monthly_triangles.py
-```
-
-Solo español:
+## 7. Reproducción
 
 ```bash
 python scripts/generate_demo_monthly_triangles.py --language es
 ```
 
-La valuación y la semilla son configurables:
+El diseño documentado fija edades 0–35 y runoff 0–48. Cambiarlos exige revisar patrón, cola, pruebas y documentación.
 
-```bash
-python scripts/generate_demo_monthly_triangles.py \
-  --valuation-month 2025-12 \
-  --origin-months 60 \
-  --development-months 24 \
-  --seed 20260714
-```
+## 8. Uso profesional
 
-El horizonte distinto de 24 meses se rechaza deliberadamente: antes de cambiarlo deben ajustarse el patrón de maduración, los controles y la documentación. Esto evita presentar una extensión mecánica como si estuviera validada.
-
-## 7. Controles reproducibles
-
-El generador detiene la ejecución si no se cumplen las siguientes reconciliaciones:
-
-- 60 meses de origen en la configuración predeterminada;
-- 1.200 celdas observadas;
-- suma de incrementales igual al acumulado en cada celda;
-- suma de incrementales completos igual al ultimate simulado;
-- conteo del factor más largo igual al número de orígenes completos;
-- salidas determinísticas para la misma semilla.
-
-Para validar todo el repositorio:
-
-```bash
-python tests/test_demo_monthly_triangles.py
-rm -rf site
-python scripts/audit_docs.py
-python scripts/preflight_release.py
-python -m mkdocs build --strict
-```
-
-## 8. Antes de utilizar la técnica con datos reales
-
-1. Definir con precisión la fecha de ocurrencia y la fecha de pago.
-2. Separar cambios de cobertura, población, red, tarifas y operación.
-3. Evaluar estacionalidad y tendencia médica en el eje calendario.
-4. Revisar cada ratio individual, no solo el promedio ponderado.
-5. Excluir o segmentar meses atípicos con justificación documentada.
-6. Comprobar estabilidad con ventanas móviles y backtesting.
-7. Estimar una cola cuando 24 meses no sea suficientemente maduro.
-8. Conciliar el resultado con contabilidad, exposición y sistemas de reclamaciones.
-
-!!! warning "Uso profesional"
-    Los datos son completamente sintéticos. La configuración 60/24, el umbral de 24 observaciones y los resultados del demo son educativos; no constituyen una metodología prescrita ni reemplazan el juicio actuarial documentado.
-
-## 9. Referencias relacionadas
-
-- [Construcción de triángulos](../part-01-foundations/02-triangle-construction.md)
-- [Factores edad-a-edad](../part-01-foundations/05-age-to-age-development-factors.md)
-- [Método Chain Ladder](../part-02-classical-reserving/06-chain-ladder-method.md)
-- [Diagnósticos de Chain Ladder](../part-02-classical-reserving/07-chain-ladder-diagnostics.md)
-- [Ciclo de vida y rezagos operativos](../part-06-health-specific/22-health-claim-lifecycle-and-operational-lags.md)
-- [Tendencia médica, estacionalidad y choques](../part-06-health-specific/24-health-medical-trend-seasonality-and-shocks.md)
-- [Bibliografía y evidencia](../bibliography.md)
+El demo es educativo y sintético. No constituye una reserva contable, una opinión actuarial ni una recomendación universal de 72×36. Antes de usar datos propios se requiere reconciliación, selección de segmentos, justificación de factores y cola, backtesting, sensibilidad y revisión independiente.

@@ -1,20 +1,11 @@
-# Monthly triangle demo data
+# Monthly demo data r2
 
-Entirely synthetic data for 60 origin months and development ages 0–24.
+Synthetic data with a **72 x 36** estimation basis and a traditional **36 x 36** view. Full runoff is simulated through age 48; the 35->48 tail is a known generator assumption.
 
-## Reproduction
+- `monthly_paid_cumulative_triangle.csv`: full estimation basis.
+- `traditional_36x36_view.csv`: latest 36 origins, traditional 36 x 36 presentation.
+- `monthly_age_to_age_factors.csv`: factors and observations per link.
+- `unpaid_claim_liability_projection_results.csv`: projected cost, tail and estimated unpaid claim liability.
+- `monthly_bornhuetter_ferguson_prior.csv`: synthetic BF/Benktander prior.
 
-```bash
-python scripts/generate_demo_monthly_triangles.py --language en
-```
-
-## Files
-
-- `monthly_paid_claims_long.csv`: observed long-format data.
-- `monthly_paid_incremental_triangle.csv` and `monthly_paid_cumulative_triangle.csv`: traditional triangles.
-- `monthly_age_to_age_factors.csv`: monthly factors and observation counts.
-- `monthly_chain_ladder_results.csv`: ultimate, IBNR and comparison with simulated truth.
-- `monthly_bornhuetter_ferguson_prior.csv`: synthetic exposure and expected cost for Bornhuetter-Ferguson.
-- `data_sufficiency_diagnostics.csv`: design-sufficiency controls.
-
-The data do not represent any entity's experience or a prescribed method.
+**Scope:** an aggregate paid-only triangle cannot split pure IBNR, RBNS and IBNER. This is an educational result, not a booked reserve.

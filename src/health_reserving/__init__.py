@@ -1,5 +1,6 @@
 """Reusable educational tools for health-insurance reserving."""
 
+from .benktander import BenktanderConfig, BenktanderResult, fit_benktander
 from .bornhuetter_ferguson import (
     PRIOR_MODE_LABELS,
     BornhuetterFergusonConfig,
@@ -17,6 +18,7 @@ from .chain_ladder import (
     load_demo5_triangle_package,
 )
 from .config import TriangleConfig
+from .data_scope import InputScopeAssessment, assess_triangle_input
 from .export import build_chain_ladder_zip, build_classical_methods_zip, build_results_zip
 from .ingestion import excel_sheet_names, read_tabular_file
 from .triangles import TriangleResult, build_triangles, evaluate_readiness_gates
@@ -30,10 +32,13 @@ from .validation import (
 __all__ = [
     "PRIOR_MODE_LABELS",
     "SELECTION_LABELS",
+    "BenktanderConfig",
+    "BenktanderResult",
     "BornhuetterFergusonConfig",
     "BornhuetterFergusonResult",
     "ChainLadderConfig",
     "ChainLadderResult",
+    "InputScopeAssessment",
     "PreparedClaims",
     "PriorMode",
     "TriangleConfig",
@@ -44,10 +49,12 @@ __all__ = [
     "build_chain_ladder_zip",
     "build_classical_methods_zip",
     "build_triangles",
+    "assess_triangle_input",
     "compare_factor_methods",
     "evaluate_readiness_gates",
     "excel_sheet_names",
     "fit_chain_ladder",
+    "fit_benktander",
     "fit_bornhuetter_ferguson",
     "load_demo5_triangle_package",
     "parse_date_series",
@@ -55,4 +62,4 @@ __all__ = [
     "read_tabular_file",
 ]
 
-__version__ = "0.5.0"
+__version__ = "0.6.0-r2"

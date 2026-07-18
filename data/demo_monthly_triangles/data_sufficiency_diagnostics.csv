@@ -1,5 +1,7 @@
 metric,value,interpretation
-origin_months,60,Five years; supports repeated annual-seasonality review.
-development_horizon,24,Starting point for fast- or medium-maturing health claims.
-complete_origins,36,Origin months fully observed through development 24.
-minimum_factor_observations,36,Above the 24-observation teaching threshold; not a universal actuarial minimum.
+origin_months,72,Six years for pattern estimation and seasonality review.
+development_columns,36,Ages 0–35: 36 columns.
+traditional_view,36x36,"Latest 36 origins; a display, not the full estimation basis."
+complete_origins,37,Origins observed through age 35.
+minimum_factor_observations,37,Link 34→35 retains 37 observations.
+simulated_runoff_age,48,Supports validation of a synthetic 35→48 tail.
