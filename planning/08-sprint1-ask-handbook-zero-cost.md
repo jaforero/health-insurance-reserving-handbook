@@ -1,175 +1,148 @@
-# Ask the Handbook · Sprint 1 — Prototipo funcional sin costo
+# Ask the Handbook · Sprint 1 — Prototipo local sin costo
 
 ## 1. Objetivo
 
-Implementar una prueba pública y aislada de **Pregúntale al Handbook** sobre MkDocs y GitHub Pages, manteniendo las restricciones aprobadas en Sprint 0:
+Implementar una página aislada y funcional para **Pregúntale al Handbook** usando únicamente
+archivos estáticos servidos por MkDocs y GitHub Pages.
 
-- costo operativo incremental esperado de USD 0;
-- cero consumo de tokens;
-- cero APIs de IA;
-- cero backend;
-- procesamiento local en el navegador;
-- respuestas editoriales y fuentes verificables;
-- abstención explícita fuera del alcance.
+La implementación conserva las restricciones del Sprint 0:
 
-## 2. Alcance entregado
+- sin modelos generativos;
+- sin consumo de tokens;
+- sin APIs externas;
+- sin backend;
+- sin embeddings ni base vectorial;
+- sin almacenamiento de preguntas;
+- sin carga de archivos del usuario.
 
-El Sprint 1 incorpora:
-
-1. una página demostrativa navegable;
-2. un catálogo editorial con 15 preguntas;
-3. un índice estático de 15 secciones;
-4. normalización local de consultas;
-5. coincidencia exacta, por variantes y con error ortográfico leve;
-6. puntuación por términos, conceptos, pregunta y contexto;
-7. tres estados cualitativos de cobertura;
-8. respuestas con explicación, ejemplo, advertencia y fuentes;
-9. consultas relacionadas;
-10. abstención ante cálculos, regulación específica y prompt injection;
-11. estilos responsivos para modos claro y oscuro;
-12. pruebas automáticas del contrato estático.
-
-## 3. Archivos
+## 2. Entregables
 
 ```text
-docs/
-├── ask-the-handbook.md
-├── assets/data/
-│   ├── handbook-qa-catalog.json
-│   └── handbook-section-index.json
-├── javascripts/
-│   └── handbook-qa.js
-└── stylesheets/
-    └── handbook-qa.css
-
-tests/
-└── test_ask_handbook_static.py
+docs/ask-the-handbook.md
+docs/assets/data/handbook-qa-catalog.json
+docs/assets/data/handbook-section-index.json
+docs/assets/javascripts/handbook-qa.js
+docs/assets/stylesheets/handbook-qa.css
+tests/test_handbook_qa.py
+tests/js/test_handbook_qa_engine.js
 ```
 
-Además, `mkdocs.yml` registra la página, JavaScript y CSS.
+`mkdocs.yml` registra la página, la hoja de estilo y el motor JavaScript.
 
-## 4. Recorrido de usuario
+## 3. Cobertura editorial
 
-1. abrir `Pregúntale al Handbook — MVP`;
-2. escribir una pregunta o seleccionar un ejemplo;
-3. procesar la consulta localmente;
-4. recibir:
-   - respuesta verificada;
-   - coincidencia probable; o
-   - cobertura insuficiente;
-5. navegar a las fuentes;
-6. explorar preguntas relacionadas;
-7. limpiar la consulta.
+El catálogo inicial contiene 15 respuestas sobre:
 
-## 5. Motor de recuperación
+1. deduplicación;
+2. identificación de duplicados técnicos;
+3. llave económica y archivo fuente;
+4. rezagos negativos;
+5. importes negativos;
+6. incrementales y acumulados;
+7. madurez;
+8. elegibilidad de Chain Ladder;
+9. efecto de duplicados en factores;
+10. historia mensual;
+11. riesgos de Chain Ladder;
+12. independencia del prior BF;
+13. diferencia entre CL y BF;
+14. aporte de Benktander;
+15. alcance profesional de los demos.
 
-La versión inicial utiliza:
+Cada respuesta contiene explicación directa, relevancia actuarial, ejemplo, advertencia, fuentes y
+preguntas relacionadas.
 
-- normalización de mayúsculas, tildes, signos y espacios;
-- eliminación limitada de palabras funcionales;
-- conservación de términos actuariales;
-- coincidencia difusa para errores leves;
-- comparación contra pregunta canónica, variantes y conceptos;
-- contexto opcional de ruta y etiquetas.
+## 4. Motor de recuperación
 
-La puntuación conserva la especificación del Sprint 0:
+El motor normaliza tildes y signos, elimina palabras funcionales, tolera un error ortográfico leve,
+expande grupos editoriales de sinónimos y combina cuatro componentes:
 
 \[
-S(q,d)=0.35S_{términos}+0.25S_{sinónimos}+0.15S_{contexto}+0.25S_{pregunta}.
+S(q,d)
+=
+0.35S_{terminos}
++
+0.25S_{sinonimos}
++
+0.15S_{contexto}
++
+0.25S_{pregunta}.
 \]
 
-Las coincidencias exactas con una pregunta canónica o variante reciben puntuación 1.
+Los estados implementados son:
 
-## 6. Umbrales
+| Estado | Regla inicial | Comportamiento |
+|---|---:|---|
+| Respuesta verificada | coincidencia exacta o \(S\geq0.78\) | respuesta completa |
+| Coincidencia probable | \(0.52\leq S<0.78\) | respuesta con advertencia |
+| Cobertura insuficiente | \(S<0.52\) | solo secciones relacionadas |
+| Fuera de alcance | patrón bloqueado | abstención explícita |
 
-| Puntaje | Resultado |
-|---:|---|
-| `S ≥ 0.80` | Respuesta verificada |
-| `0.55 ≤ S < 0.80` | Coincidencia probable |
-| `S < 0.55` | Cobertura insuficiente y secciones relacionadas |
+Los umbrales siguen siendo parámetros experimentales y deben revisarse con preguntas reales.
 
-Los umbrales siguen siendo hipótesis del MVP y deberán calibrarse con consultas reales.
+## 5. Seguridad y privacidad
 
-## 7. Abstención
+La pregunta permanece en el navegador. El motor solo realiza `fetch` de dos archivos JSON del
+mismo sitio. No existe endpoint público, clave API, cookie propia, persistencia ni telemetría de
+contenido.
 
-El motor bloquea respuestas aparentes para consultas como:
+Las solicitudes de cálculo particular, interpretación regulatoria específica, omisión de fuentes o
+búsqueda externa activan una respuesta de abstención.
 
-- reserva exacta de una entidad;
-- cálculo de IBNR sin datos;
-- metodología exigida por regulación específica;
-- método universalmente superior;
-- instrucciones para ignorar fuentes;
-- solicitud de búsqueda abierta en Internet.
+## 6. Accesibilidad
 
-La respuesta informa que se requieren propósito, datos, obligaciones, contratos, regulación aplicable y fecha de valoración.
+La página incluye:
 
-## 8. Pruebas
+- formulario operable por teclado;
+- etiqueta vinculada al campo;
+- foco visible;
+- región de resultados con `aria-live`;
+- estados expresados mediante texto y no solo color;
+- diseño adaptable a móvil;
+- respeto por `prefers-reduced-motion`;
+- alternativa `noscript`.
 
-`tests/test_ask_handbook_static.py` valida:
+## 7. Pruebas
 
-- 15 respuestas editoriales;
-- identificadores únicos;
-- campos obligatorios;
-- fechas y versiones;
-- relaciones válidas;
-- existencia de documentos y anchors;
-- resolución de preguntas de referencia;
-- tolerancia a un error ortográfico leve;
-- límites de tamaño;
-- ausencia de endpoints de IA o secretos;
-- declaración de procesamiento local en la página.
+`tests/test_handbook_qa.py` valida:
 
-## 9. Criterios de aceptación
+- estructura y unicidad del catálogo;
+- campos editoriales obligatorios;
+- relaciones internas;
+- existencia de rutas y anchors;
+- ausencia de endpoints de IA;
+- presupuestos de tamaño;
+- contrato de la página;
+- registro en MkDocs;
+- ejecución de la regresión JavaScript mediante Node.js.
 
-- [ ] el build estricto de MkDocs finaliza correctamente;
-- [ ] todos los tests terminan correctamente;
-- [ ] las cinco preguntas de demostración recuperan la respuesta esperada;
-- [ ] la consulta fuera de alcance produce abstención;
-- [ ] todas las fuentes navegan al anchor correcto;
-- [ ] no existen solicitudes de red fuera de los dos archivos JSON estáticos;
-- [ ] la interfaz funciona con teclado y en viewport móvil;
-- [ ] el JavaScript permanece por debajo de 100 KB;
-- [ ] cada índice permanece por debajo de 500 KB.
+`tests/js/test_handbook_qa_engine.js` valida las 15 preguntas canónicas, todas sus variantes,
+errores ortográficos leves, consultas fuera de alcance, abstención y construcción de enlaces.
 
-## 10. Fuera de alcance
+## 8. Criterios de salida
 
-- botón flotante global;
-- detección automática del encabezado visible;
-- historial conversacional;
-- persistencia de feedback;
-- analítica del texto de preguntas;
-- embeddings locales;
-- modelos generativos;
-- documentos cargados por usuarios;
-- soporte bilingüe;
-- cobertura completa de los 40 capítulos.
+El Sprint 1 puede cerrarse cuando terminen correctamente:
 
-## 11. Riesgos observables
+```bash
+python -m unittest discover -s tests -p "test_*.py"
+python scripts/audit_docs.py
+python scripts/preflight_release.py
+python -m mkdocs build --strict
+git diff --check
+```
 
-### Falso positivo léxico
+Además, la página debe probarse manualmente en vista de escritorio, móvil y modos claro y oscuro.
 
-Una pregunta ambigua puede coincidir con una respuesta cercana pero incorrecta.
+## 9. Riesgos pendientes
 
-**Control:** umbral probable, advertencia visible y fuentes obligatorias.
+- El catálogo todavía tiene cobertura limitada.
+- La similitud léxica no comprende razonamiento nuevo.
+- Los umbrales pueden producir falsos positivos o abstenciones excesivas.
+- Los anchors deben permanecer sincronizados con los capítulos.
+- La incorporación futura de analítica de preguntas requerirá una decisión explícita de privacidad.
 
-### Falsa percepción de inteligencia generativa
+## 10. Decisión para Sprint 2
 
-El usuario puede asumir que el sistema crea respuestas dinámicas.
-
-**Control:** aviso explícito de respuestas editoriales y procesamiento local.
-
-### Cobertura inicial limitada
-
-Quince preguntas no cubren todo el handbook.
-
-**Control:** abstención y secciones relacionadas; expansión basada en evidencia de uso.
-
-### Deriva editorial
-
-Un capítulo puede cambiar sin actualizar el catálogo.
-
-**Control:** pruebas automáticas de rutas y anchors; revisión de versión y fecha.
-
-## 12. Decisión para el siguiente sprint
-
-Sprint 2 solo debe comenzar después de validar el prototipo. Su foco recomendado sería integrar acceso contextual desde capítulos seleccionados, no ampliar aún a IA generativa.
+Sprint 2 debería integrar un botón contextual únicamente después de revisar la precisión de la página
+aislada. La integración global no debe preceder a la calibración del motor ni a la prueba de
+accesibilidad.
