@@ -1,0 +1,233 @@
+{
+  "schema_version": "1.0.0",
+  "language": "es",
+  "last_updated": "2026-07-18",
+  "sections": [
+    {
+      "id": "sec-demo4-scenario",
+      "title": "Demo 4 · Escenario y riesgos de datos",
+      "path": "examples/04-demo-preparacion-datos.md",
+      "anchor": "escenario",
+      "terms": [
+        "duplicados",
+        "fecha de pago",
+        "fecha de servicio",
+        "movimientos",
+        "archivos"
+      ],
+      "summary": "Riesgos semánticos, duplicación entre fuentes e historia insuficiente."
+    },
+    {
+      "id": "sec-demo4-identifiers",
+      "title": "Demo 4 · Identificadores económicos",
+      "path": "examples/04-demo-preparacion-datos.md",
+      "anchor": "normalizacion-y-construccion-de-identificadores",
+      "terms": [
+        "llave económica",
+        "identificador",
+        "factura",
+        "folio",
+        "archivo fuente"
+      ],
+      "summary": "Construcción de identificadores y separación entre evento económico y contenedor técnico."
+    },
+    {
+      "id": "sec-demo4-validation",
+      "title": "Demo 4 · Validaciones iniciales",
+      "path": "examples/04-demo-preparacion-datos.md",
+      "anchor": "validaciones-iniciales",
+      "terms": [
+        "fechas",
+        "rezago negativo",
+        "importe negativo",
+        "duplicados"
+      ],
+      "summary": "Controles de fechas, importes y duplicados antes de construir triángulos."
+    },
+    {
+      "id": "sec-demo4-dedup",
+      "title": "Demo 4 · Deduplicación",
+      "path": "examples/04-demo-preparacion-datos.md",
+      "anchor": "deduplicacion",
+      "terms": [
+        "deduplicación",
+        "duplicados",
+        "prioridad de fuente",
+        "movimiento económico"
+      ],
+      "summary": "Regla demostrativa y advertencia sobre pagos parciales, ajustes y reversos."
+    },
+    {
+      "id": "sec-demo4-triangle",
+      "title": "Demo 4 · Triángulo descriptivo",
+      "path": "examples/04-demo-preparacion-datos.md",
+      "anchor": "construccion-del-triangulo-descriptivo",
+      "terms": [
+        "triángulo descriptivo",
+        "elegibilidad",
+        "chain ladder",
+        "gates"
+      ],
+      "summary": "La construcción del triángulo no implica elegibilidad metodológica."
+    },
+    {
+      "id": "sec-inc-cum-use",
+      "title": "Incrementales vs. acumulados · Usos",
+      "path": "part-01-foundations/04-incremental-vs-cumulative-triangles.md",
+      "anchor": "cuando-usar-acumulados",
+      "terms": [
+        "incremental",
+        "acumulado",
+        "chain ladder",
+        "diagnóstico"
+      ],
+      "summary": "Diferencias de uso entre acumulados e incrementales."
+    },
+    {
+      "id": "sec-negative-payments",
+      "title": "Incrementales vs. acumulados · Pagos negativos",
+      "path": "part-01-foundations/04-incremental-vs-cumulative-triangles.md",
+      "anchor": "pagos-negativos-y-reversos",
+      "terms": [
+        "negativos",
+        "reversos",
+        "recuperaciones",
+        "glosas"
+      ],
+      "summary": "Causas y lectura de pagos negativos y factores menores que uno."
+    },
+    {
+      "id": "sec-factors-diagnostics",
+      "title": "Factores edad-a-edad · Diagnóstico",
+      "path": "part-01-foundations/05-age-to-age-development-factors.md",
+      "anchor": "diagnostico-de-factores",
+      "terms": [
+        "factores",
+        "cdf",
+        "volatilidad",
+        "atípicos",
+        "madurez"
+      ],
+      "summary": "Señales que deben revisarse antes de seleccionar factores."
+    },
+    {
+      "id": "sec-cl-data",
+      "title": "Chain Ladder · Datos requeridos",
+      "path": "part-02-classical-reserving/06-chain-ladder-method.md",
+      "anchor": "datos-requeridos",
+      "terms": [
+        "chain ladder",
+        "historia",
+        "triángulo acumulado",
+        "comparabilidad"
+      ],
+      "summary": "Datos y definiciones mínimas para aplicar Chain Ladder."
+    },
+    {
+      "id": "sec-cl-assumptions",
+      "title": "Chain Ladder · Supuestos implícitos",
+      "path": "part-02-classical-reserving/06-chain-ladder-method.md",
+      "anchor": "supuestos-implicitos",
+      "terms": [
+        "estabilidad",
+        "mezcla",
+        "operación",
+        "efecto calendario"
+      ],
+      "summary": "Supuestos de representatividad y estabilidad del patrón."
+    },
+    {
+      "id": "sec-cl-risks",
+      "title": "Chain Ladder · Riesgos comunes",
+      "path": "part-02-classical-reserving/06-chain-ladder-method.md",
+      "anchor": "riesgos-comunes",
+      "terms": [
+        "errores",
+        "celdas no observadas",
+        "pagado",
+        "incurrido",
+        "reversos"
+      ],
+      "summary": "Errores frecuentes y riesgos de interpretación."
+    },
+    {
+      "id": "sec-bf-prior",
+      "title": "Bornhuetter-Ferguson · Construcción del prior",
+      "path": "part-02-classical-reserving/11-bornhuetter-ferguson.md",
+      "anchor": "construccion-del-prior",
+      "terms": [
+        "bornhuetter ferguson",
+        "prior",
+        "exposición",
+        "tasa esperada",
+        "independencia"
+      ],
+      "summary": "Fuentes del prior, comparabilidad y riesgo de circularidad."
+    },
+    {
+      "id": "sec-bf-formulas",
+      "title": "Bornhuetter-Ferguson · Fórmulas",
+      "path": "part-02-classical-reserving/11-bornhuetter-ferguson.md",
+      "anchor": "formulas",
+      "terms": [
+        "bf",
+        "chain ladder",
+        "madurez",
+        "proporción pendiente"
+      ],
+      "summary": "Diferencia matemática y conceptual entre CL y BF."
+    },
+    {
+      "id": "sec-benktander-purpose",
+      "title": "Benktander · Propósito",
+      "path": "part-02-classical-reserving/12-benktander-method.md",
+      "anchor": "proposito",
+      "terms": [
+        "benktander",
+        "iteraciones",
+        "prior",
+        "chain ladder"
+      ],
+      "summary": "Actualización iterativa del prior y desplazamiento hacia Chain Ladder."
+    },
+    {
+      "id": "sec-benktander-closed",
+      "title": "Benktander · Forma cerrada",
+      "path": "part-02-classical-reserving/12-benktander-method.md",
+      "anchor": "forma-cerrada",
+      "terms": [
+        "pesos",
+        "convergencia",
+        "forma cerrada",
+        "iteración"
+      ],
+      "summary": "Pesos del prior y Chain Ladder después de n iteraciones."
+    },
+    {
+      "id": "sec-monthly-sufficiency",
+      "title": "Demo 3 · Suficiencia por factor",
+      "path": "examples/03-demo-triangulos-mensuales-salud.md",
+      "anchor": "suficiencia-por-factor",
+      "terms": [
+        "36x36",
+        "72x36",
+        "historia mensual",
+        "observaciones por factor"
+      ],
+      "summary": "La dimensión visual no garantiza evidencia suficiente en enlaces tardíos."
+    },
+    {
+      "id": "sec-monthly-professional",
+      "title": "Demo 3 · Uso profesional",
+      "path": "examples/03-demo-triangulos-mensuales-salud.md",
+      "anchor": "uso-profesional",
+      "terms": [
+        "demo",
+        "reserva regulatoria",
+        "uso profesional",
+        "validación"
+      ],
+      "summary": "Alcance educativo y requisitos antes de usar datos reales."
+    }
+  ]
+}

@@ -1,0 +1,688 @@
+{
+  "schema_version": "1.0.0",
+  "product": "Pregúntale al Handbook — MVP",
+  "language": "es",
+  "last_updated": "2026-07-18",
+  "disclaimer": "Las respuestas son editoriales y se recuperan localmente. Esta versión no utiliza IA generativa ni sustituye el juicio actuarial, la regulación aplicable o una validación profesional.",
+  "out_of_scope_response": "El handbook no contiene información suficiente para responder esta pregunta de forma defendible. La selección o el cálculo requiere conocer el propósito, los datos, las obligaciones, los contratos, la regulación aplicable y la fecha de valoración.",
+  "out_of_scope_patterns": [
+    "reserva exacta",
+    "mi eps",
+    "regulacion actual",
+    "regulación actual",
+    "que exige la regulacion",
+    "qué exige la regulación",
+    "ignora las fuentes",
+    "sin conocer mis datos",
+    "calcula mi ibnr",
+    "mejor metodo para todos",
+    "mejor método para todos",
+    "usa informacion de internet",
+    "usa información de internet"
+  ],
+  "synonym_groups": [
+    [
+      "deduplicacion",
+      "deduplicar",
+      "duplicado",
+      "duplicados",
+      "repetido",
+      "repetidos",
+      "doble conteo"
+    ],
+    [
+      "llave economica",
+      "clave economica",
+      "identificador economico",
+      "id movimiento"
+    ],
+    [
+      "pago negativo",
+      "importe negativo",
+      "reverso",
+      "recuperacion",
+      "glosa",
+      "anulacion"
+    ],
+    [
+      "triangulo acumulado",
+      "acumulados",
+      "cumulative"
+    ],
+    [
+      "triangulo incremental",
+      "incrementales",
+      "incremental"
+    ],
+    [
+      "madurez",
+      "inmaduro",
+      "inmadura",
+      "desarrollo pendiente"
+    ],
+    [
+      "historia",
+      "longitud historica",
+      "observaciones",
+      "periodos de origen"
+    ],
+    [
+      "chain ladder",
+      "cl",
+      "cadena de desarrollo"
+    ],
+    [
+      "bornhuetter ferguson",
+      "bf",
+      "prior"
+    ],
+    [
+      "benktander",
+      "iteracion",
+      "iteraciones"
+    ],
+    [
+      "reserva regulatoria",
+      "reserva definitiva",
+      "opinion actuarial",
+      "uso profesional"
+    ]
+  ],
+  "items": [
+    {
+      "id": "data-deduplication-why",
+      "question": "¿Por qué es necesario deduplicar los movimientos?",
+      "variants": [
+        "¿Por qué debo eliminar duplicados?",
+        "¿Qué pasa si tengo registros repetidos?",
+        "¿Cómo afectan los duplicados al IBNR?",
+        "¿Por qué debo deduplicar registros?"
+      ],
+      "concepts": [
+        "deduplicacion",
+        "duplicados",
+        "doble conteo",
+        "movimiento economico",
+        "triangulos"
+      ],
+      "summary": "La deduplicación evita que un mismo movimiento económico sea contabilizado más de una vez en pagos, frecuencias y triángulos.",
+      "why_it_matters": "Un duplicado técnico puede inflar el acumulado observado, alterar factores de desarrollo y sesgar el costo proyectado o el pasivo no pagado.",
+      "example": "Si el extracto operativo y una copia actuarial contienen la misma línea de factura por 120.000, sumar ambos archivos registra 240.000 aunque solo exista un movimiento económico.",
+      "caution": "No toda repetición es un duplicado. Pagos parciales, reversos, glosas, recuperaciones y ajustes pueden ser movimientos legítimos y deben clasificarse antes de eliminar filas.",
+      "sources": [
+        {
+          "path": "examples/04-demo-preparacion-datos.md",
+          "anchor": "deduplicacion",
+          "label": "Demo 4 · Deduplicación"
+        },
+        {
+          "path": "examples/04-demo-preparacion-datos.md",
+          "anchor": "escenario",
+          "label": "Demo 4 · Escenario"
+        }
+      ],
+      "related_questions": [
+        "data-duplicate-identification",
+        "data-source-key",
+        "triangle-duplicates-factors"
+      ],
+      "language": "es",
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-18"
+    },
+    {
+      "id": "data-duplicate-identification",
+      "question": "¿Cómo sé si dos filas repetidas son realmente duplicados?",
+      "variants": [
+        "¿Cómo identifico un duplicado técnico?",
+        "¿Dos filas iguales siempre se eliminan?",
+        "¿Qué campos definen un movimiento único?"
+      ],
+      "concepts": [
+        "duplicado tecnico",
+        "movimiento economico",
+        "llave economica",
+        "version",
+        "pago parcial",
+        "reverso"
+      ],
+      "summary": "Dos filas son duplicados solo cuando representan el mismo evento económico bajo una llave de negocio y no movimientos distintos del ciclo de la reclamación.",
+      "why_it_matters": "La comparación debe preservar la semántica del evento: factura, folio, fechas, importe y tipo de movimiento pueden ser relevantes, pero la llave depende del proceso real.",
+      "example": "Dos filas con la misma factura y distinto folio pueden ser pagos parciales legítimos; dos copias con la misma factura, folio, fechas, importe y tipo de movimiento pueden ser un duplicado técnico.",
+      "caution": "Una llave demasiado corta elimina movimientos legítimos. Una llave demasiado larga, por ejemplo incluyendo el archivo contenedor, puede ocultar copias económicas.",
+      "sources": [
+        {
+          "path": "examples/04-demo-preparacion-datos.md",
+          "anchor": "normalizacion-y-construccion-de-identificadores",
+          "label": "Demo 4 · Identificadores"
+        },
+        {
+          "path": "examples/04-demo-preparacion-datos.md",
+          "anchor": "deduplicacion",
+          "label": "Demo 4 · Regla de deduplicación"
+        }
+      ],
+      "related_questions": [
+        "data-deduplication-why",
+        "data-source-key"
+      ],
+      "language": "es",
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-18"
+    },
+    {
+      "id": "data-source-key",
+      "question": "¿Por qué archivo_fuente no debe formar parte de la llave económica?",
+      "variants": [
+        "¿Por qué no uso el nombre del archivo para deduplicar?",
+        "¿El archivo de origen identifica el movimiento?",
+        "¿Qué problema genera incluir archivo_fuente en la clave?"
+      ],
+      "concepts": [
+        "archivo fuente",
+        "contenedor tecnico",
+        "llave economica",
+        "duplicado",
+        "trazabilidad"
+      ],
+      "summary": "El archivo fuente identifica el contenedor técnico, no necesariamente el evento económico. Dos archivos distintos pueden contener la misma transacción.",
+      "why_it_matters": "Si el nombre del archivo entra en la llave, una copia del mismo movimiento en dos extractos se considera falsamente como dos eventos diferentes.",
+      "example": "Una factura idéntica aparece en extracto_operativo.csv y copia_actuarial.csv. La fuente cambia, pero la obligación y el movimiento económico no.",
+      "caution": "El archivo fuente sí debe conservarse para trazabilidad y reglas de prioridad. Excluirlo de la llave no significa perder su procedencia.",
+      "sources": [
+        {
+          "path": "examples/04-demo-preparacion-datos.md",
+          "anchor": "normalizacion-y-construccion-de-identificadores",
+          "label": "Demo 4 · Llave económica"
+        },
+        {
+          "path": "examples/04-demo-preparacion-datos.md",
+          "anchor": "deduplicacion",
+          "label": "Demo 4 · Prioridad de fuentes"
+        }
+      ],
+      "related_questions": [
+        "data-deduplication-why",
+        "data-duplicate-identification"
+      ],
+      "language": "es",
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-18"
+    },
+    {
+      "id": "data-negative-lag",
+      "question": "¿Qué ocurre si la fecha de pago es anterior a la fecha de servicio?",
+      "variants": [
+        "¿Puede existir un rezago negativo?",
+        "¿Qué significa pago antes del servicio?",
+        "¿Debo excluir fechas invertidas?"
+      ],
+      "concepts": [
+        "fecha pago",
+        "fecha servicio",
+        "rezago negativo",
+        "semantica temporal",
+        "calidad de datos"
+      ],
+      "summary": "Un pago anterior al servicio produce una edad de desarrollo negativa y normalmente indica un problema de semántica, mapeo, formato o calidad de datos.",
+      "why_it_matters": "Las edades negativas rompen la interpretación origen–desarrollo y pueden ubicar importes en celdas imposibles del triángulo.",
+      "example": "Si Periodo fue mapeado como fecha de pago pero en realidad era fecha contable, puede aparecer antes de la prestación y crear un rezago negativo artificial.",
+      "caution": "No debe corregirse desplazando fechas de forma automática. Primero se debe confirmar qué representa cada campo y si existe una excepción operativa documentada.",
+      "sources": [
+        {
+          "path": "examples/04-demo-preparacion-datos.md",
+          "anchor": "validaciones-iniciales",
+          "label": "Demo 4 · Validaciones de fechas"
+        }
+      ],
+      "related_questions": [
+        "data-negative-amount",
+        "triangle-descriptive-not-eligible"
+      ],
+      "language": "es",
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-18"
+    },
+    {
+      "id": "data-negative-amount",
+      "question": "¿Por qué un importe negativo no debe eliminarse automáticamente?",
+      "variants": [
+        "¿Los pagos negativos son errores?",
+        "¿Qué hago con reversos y recuperaciones?",
+        "¿Por qué conservar glosas negativas?"
+      ],
+      "concepts": [
+        "importe negativo",
+        "reverso",
+        "recuperacion",
+        "glosa",
+        "anulacion",
+        "reclasificacion"
+      ],
+      "summary": "Un importe negativo puede representar un reverso, recuperación, glosa aceptada, anulación o reclasificación legítima.",
+      "why_it_matters": "Eliminarlo sin clasificación sobrestima pagos netos y puede ocultar cambios operativos importantes.",
+      "example": "Un pago de 100 seguido por un reverso de -20 deja un neto de 80. Eliminar el negativo reportaría 100.",
+      "caution": "También puede ser un error de signo o una mezcla de bases brutas y netas. Debe clasificarse y reconciliarse, no aceptarse de manera automática.",
+      "sources": [
+        {
+          "path": "part-01-foundations/04-incremental-vs-cumulative-triangles.md",
+          "anchor": "pagos-negativos-y-reversos",
+          "label": "Pagos negativos y reversos"
+        },
+        {
+          "path": "examples/04-demo-preparacion-datos.md",
+          "anchor": "validaciones-iniciales",
+          "label": "Demo 4 · Validaciones de importes"
+        }
+      ],
+      "related_questions": [
+        "data-negative-lag",
+        "triangle-incremental-cumulative"
+      ],
+      "language": "es",
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-18"
+    },
+    {
+      "id": "triangle-incremental-cumulative",
+      "question": "¿Por qué se construyen triángulos acumulados además de incrementales?",
+      "variants": [
+        "¿Para qué sirven los acumulados?",
+        "¿Por qué mantener ambas vistas?",
+        "¿Incremental o acumulado para Chain Ladder?"
+      ],
+      "concepts": [
+        "triangulo incremental",
+        "triangulo acumulado",
+        "diagnostico",
+        "chain ladder",
+        "reconciliacion"
+      ],
+      "summary": "Los incrementales muestran lo ocurrido en cada edad; los acumulados muestran lo observado hasta esa edad. Ambos describen la misma experiencia, pero responden preguntas distintas.",
+      "why_it_matters": "Los acumulados suelen ser la base de Chain Ladder y de factores edad-a-edad; los incrementales permiten detectar estacionalidad, efectos calendario, reversos y celdas atípicas.",
+      "example": "Pagos incrementales 100, 50 y 20 se transforman en acumulados 100, 150 y 170.",
+      "caution": "Un acumulado puede ocultar un reverso o un efecto calendario, mientras un incremental puede ser demasiado volátil para proyectar directamente. Deben reconciliarse.",
+      "sources": [
+        {
+          "path": "part-01-foundations/04-incremental-vs-cumulative-triangles.md",
+          "anchor": "cuando-usar-acumulados",
+          "label": "Cuándo usar acumulados"
+        },
+        {
+          "path": "part-01-foundations/04-incremental-vs-cumulative-triangles.md",
+          "anchor": "cuando-usar-incrementales",
+          "label": "Cuándo usar incrementales"
+        }
+      ],
+      "related_questions": [
+        "triangle-origin-immaturity",
+        "triangle-descriptive-not-eligible"
+      ],
+      "language": "es",
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-18"
+    },
+    {
+      "id": "triangle-origin-immaturity",
+      "question": "¿Qué significa que un periodo de origen esté inmaduro?",
+      "variants": [
+        "¿Qué es un origen reciente?",
+        "¿Cómo se interpreta la madurez?",
+        "¿Por qué falta desarrollo en los últimos periodos?"
+      ],
+      "concepts": [
+        "madurez",
+        "periodo de origen",
+        "cdf",
+        "proporcion desarrollada",
+        "desarrollo pendiente"
+      ],
+      "summary": "Un periodo de origen está inmaduro cuando, a la fecha de valoración, solo se ha observado una parte de su desarrollo esperado.",
+      "why_it_matters": "La mayor proporción pendiente incrementa la dependencia de factores, cola y supuestos externos; por eso los orígenes recientes suelen concentrar más incertidumbre.",
+      "example": "Con un CDF de 1,25, la proporción desarrollada es 1/1,25 = 0,80 y queda 20% pendiente según el patrón seleccionado.",
+      "caution": "La madurez es una propiedad del patrón y la fecha de corte, no una garantía de calidad. Un CDF inestable produce una medida de madurez débil.",
+      "sources": [
+        {
+          "path": "part-02-classical-reserving/11-bornhuetter-ferguson.md",
+          "anchor": "notacion",
+          "label": "BF · Madurez y proporción pendiente"
+        },
+        {
+          "path": "part-01-foundations/05-age-to-age-development-factors.md",
+          "anchor": "factor-acumulado-hacia-ultimate",
+          "label": "CDF hacia ultimate"
+        }
+      ],
+      "related_questions": [
+        "triangle-monthly-history",
+        "method-bf-prior-independence"
+      ],
+      "language": "es",
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-18"
+    },
+    {
+      "id": "triangle-descriptive-not-eligible",
+      "question": "¿Por qué un triángulo descriptivo no implica que Chain Ladder sea elegible?",
+      "variants": [
+        "¿Construir un triángulo basta para usar Chain Ladder?",
+        "¿Por qué el demo puede formar el triángulo pero bloquear el método?",
+        "¿Ejecutable significa elegible?"
+      ],
+      "concepts": [
+        "triangulo descriptivo",
+        "elegibilidad",
+        "chain ladder",
+        "historia",
+        "estabilidad",
+        "gates"
+      ],
+      "summary": "Construir una tabla origen–desarrollo demuestra que los datos pueden agregarse, no que el patrón histórico sea estable, representativo o suficiente para proyectar.",
+      "why_it_matters": "Chain Ladder requiere historia, comparabilidad, definición consistente, revisión de cambios operativos y factores defendibles.",
+      "example": "Un dataset con tres meses puede producir un triángulo, pero quizá solo tenga una observación para el enlace tardío y no soporte una selección estable.",
+      "caution": "La capacidad técnica de ejecutar código no reemplaza los gates de propósito, semántica, calidad, suficiencia y validación.",
+      "sources": [
+        {
+          "path": "examples/04-demo-preparacion-datos.md",
+          "anchor": "construccion-del-triangulo-descriptivo",
+          "label": "Demo 4 · Triángulo descriptivo"
+        },
+        {
+          "path": "part-02-classical-reserving/06-chain-ladder-method.md",
+          "anchor": "datos-requeridos",
+          "label": "Chain Ladder · Datos requeridos"
+        }
+      ],
+      "related_questions": [
+        "triangle-monthly-history",
+        "method-chain-ladder-unreliable"
+      ],
+      "language": "es",
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-18"
+    },
+    {
+      "id": "triangle-duplicates-factors",
+      "question": "¿Qué efecto tienen los duplicados sobre los factores edad-a-edad?",
+      "variants": [
+        "¿Cómo sesga un duplicado los factores de desarrollo?",
+        "¿Los duplicados pueden cambiar el CDF?",
+        "¿Qué pasa si duplico una celda del triángulo?"
+      ],
+      "concepts": [
+        "duplicados",
+        "factores edad a edad",
+        "cdf",
+        "numerador",
+        "denominador",
+        "sesgo"
+      ],
+      "summary": "Los duplicados cambian los acumulados usados en numeradores y denominadores y pueden alterar los factores edad-a-edad y el CDF.",
+      "why_it_matters": "El sesgo no siempre es proporcional: depende de la edad, el periodo de origen y de si la duplicación afecta una o varias celdas.",
+      "example": "Duplicar un pago únicamente en dev_1 aumenta el acumulado de esa edad y puede elevar el factor 0→1, pero también modificar el factor 1→2 en sentido contrario.",
+      "caution": "Eliminar duplicados después de construir el triángulo dificulta rastrear el efecto. La integridad debe resolverse en el detalle antes de agregar.",
+      "sources": [
+        {
+          "path": "part-01-foundations/05-age-to-age-development-factors.md",
+          "anchor": "diagnostico-de-factores",
+          "label": "Diagnóstico de factores"
+        },
+        {
+          "path": "examples/04-demo-preparacion-datos.md",
+          "anchor": "deduplicacion",
+          "label": "Demo 4 · Deduplicación"
+        }
+      ],
+      "related_questions": [
+        "data-deduplication-why",
+        "method-chain-ladder-unreliable"
+      ],
+      "language": "es",
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-18"
+    },
+    {
+      "id": "triangle-monthly-history",
+      "question": "¿Por qué las matrices mensuales suelen requerir una historia suficientemente larga?",
+      "variants": [
+        "¿Por qué 36x36 puede ser insuficiente?",
+        "¿Cuántos meses necesito para factores mensuales?",
+        "¿Por qué usar más orígenes que edades?"
+      ],
+      "concepts": [
+        "triangulo mensual",
+        "historia",
+        "observaciones por factor",
+        "enlaces tardios",
+        "36x36",
+        "72x36"
+      ],
+      "summary": "Una vista mensual puede tener muchas celdas, pero los enlaces tardíos reciben observaciones de pocos periodos de origen. La historia adicional aumenta la evidencia disponible para estimar y diagnosticar factores.",
+      "why_it_matters": "En una matriz 36×36 al corte, el enlace 34→35 puede depender de una sola fila; esto no demuestra estabilidad.",
+      "example": "Una base 72×36 conserva más orígenes para cada enlace y permite separar una vista tradicional 36×36 de la base usada para estimar.",
+      "caution": "No existe un mínimo universal. Más observaciones no compensan falta de homogeneidad, cambios operativos, bajo volumen o mala calidad.",
+      "sources": [
+        {
+          "path": "examples/03-demo-triangulos-mensuales-salud.md",
+          "anchor": "suficiencia-por-factor",
+          "label": "Demo 3 · Suficiencia por factor"
+        },
+        {
+          "path": "examples/03-demo-triangulos-mensuales-salud.md",
+          "anchor": "uso-profesional",
+          "label": "Demo 3 · Uso profesional"
+        }
+      ],
+      "related_questions": [
+        "triangle-origin-immaturity",
+        "triangle-descriptive-not-eligible"
+      ],
+      "language": "es",
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-18"
+    },
+    {
+      "id": "method-chain-ladder-unreliable",
+      "question": "¿Cuándo Chain Ladder puede ser poco confiable?",
+      "variants": [
+        "¿Cuándo no debo usar Chain Ladder?",
+        "¿Qué rompe el patrón histórico?",
+        "¿Cuáles son los principales riesgos de CL?"
+      ],
+      "concepts": [
+        "chain ladder",
+        "estabilidad",
+        "mezcla de riesgo",
+        "efecto calendario",
+        "cambios operativos",
+        "datos comparables"
+      ],
+      "summary": "Chain Ladder puede ser poco confiable cuando el patrón histórico no representa los orígenes inmaduros.",
+      "why_it_matters": "Los cambios de mezcla, beneficios, red, auditoría, pago, segmentación, inflación o eventos calendario pueden contaminar factores y proyecciones.",
+      "example": "Si una nueva política reduce el tiempo de pago, los factores recientes pueden parecer menores aunque el costo final no haya disminuido.",
+      "caution": "El método no debe descartarse solo por imperfecciones, pero requiere diagnóstico, sensibilidad, segmentación o métodos alternativos cuando los supuestos dejan de ser razonables.",
+      "sources": [
+        {
+          "path": "part-02-classical-reserving/06-chain-ladder-method.md",
+          "anchor": "supuestos-implicitos",
+          "label": "Chain Ladder · Supuestos"
+        },
+        {
+          "path": "part-02-classical-reserving/06-chain-ladder-method.md",
+          "anchor": "riesgos-comunes",
+          "label": "Chain Ladder · Riesgos"
+        }
+      ],
+      "related_questions": [
+        "method-bf-prior-independence",
+        "method-cl-vs-bf",
+        "triangle-descriptive-not-eligible"
+      ],
+      "language": "es",
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-18"
+    },
+    {
+      "id": "method-bf-prior-independence",
+      "question": "¿Por qué Bornhuetter-Ferguson necesita un prior independiente?",
+      "variants": [
+        "¿Por qué el prior BF no debe salir del mismo triángulo?",
+        "¿Qué significa independencia del prior?",
+        "¿Puedo calibrar BF con el observado?"
+      ],
+      "concepts": [
+        "bornhuetter ferguson",
+        "prior independiente",
+        "ultimate esperado",
+        "exposicion",
+        "tasa esperada",
+        "leakage"
+      ],
+      "summary": "BF usa una expectativa previa para la porción todavía no desarrollada. Esa expectativa debe aportar información distinta de la experiencia que se está evaluando.",
+      "why_it_matters": "Si el prior se deriva retrospectivamente del mismo observado, la comparación puede volverse circular y aparentar más evidencia de la que existe.",
+      "example": "Un prior basado en miembros-mes y una tasa presupuestada antes del corte es conceptualmente distinto de ajustar la tasa hasta que reproduzca el ultimate de Chain Ladder.",
+      "caution": "Independencia no significa ausencia de juicio ni total desconexión. El prior debe ser comparable, trazable, fechado y ajustado a la misma población, cobertura y unidad.",
+      "sources": [
+        {
+          "path": "part-02-classical-reserving/11-bornhuetter-ferguson.md",
+          "anchor": "construccion-del-prior",
+          "label": "BF · Construcción del prior"
+        },
+        {
+          "path": "part-02-classical-reserving/11-bornhuetter-ferguson.md",
+          "anchor": "diagnosticos",
+          "label": "BF · Diagnósticos"
+        }
+      ],
+      "related_questions": [
+        "method-cl-vs-bf",
+        "method-benktander-value",
+        "triangle-origin-immaturity"
+      ],
+      "language": "es",
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-18"
+    },
+    {
+      "id": "method-cl-vs-bf",
+      "question": "¿Qué diferencia conceptual existe entre Chain Ladder y Bornhuetter-Ferguson?",
+      "variants": [
+        "¿Cómo se diferencian CL y BF?",
+        "¿Qué usa la experiencia y qué usa el prior?",
+        "¿Por qué BF es más estable en periodos recientes?"
+      ],
+      "concepts": [
+        "chain ladder",
+        "bornhuetter ferguson",
+        "observado",
+        "prior",
+        "madurez",
+        "ultimate"
+      ],
+      "summary": "Chain Ladder proyecta el observado usando el patrón completo; BF conserva el observado y aplica el prior únicamente a la proporción pendiente.",
+      "why_it_matters": "En orígenes inmaduros, Chain Ladder puede reaccionar fuertemente a un acumulado pequeño, mientras BF limita esa reacción mediante una expectativa externa.",
+      "example": "Con observado 72 y madurez 80%, CL estima 90. Si el prior es 100, BF estima 72 + 20%×100 = 92.",
+      "caution": "BF no es automáticamente superior. Un prior débil o un patrón inestable puede producir una estimación poco confiable.",
+      "sources": [
+        {
+          "path": "part-02-classical-reserving/11-bornhuetter-ferguson.md",
+          "anchor": "formulas",
+          "label": "BF · Fórmulas"
+        },
+        {
+          "path": "part-02-classical-reserving/06-chain-ladder-method.md",
+          "anchor": "idea-central",
+          "label": "Chain Ladder · Idea central"
+        }
+      ],
+      "related_questions": [
+        "method-chain-ladder-unreliable",
+        "method-bf-prior-independence",
+        "method-benktander-value"
+      ],
+      "language": "es",
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-18"
+    },
+    {
+      "id": "method-benktander-value",
+      "question": "¿Qué aporta Benktander frente a Bornhuetter-Ferguson?",
+      "variants": [
+        "¿Para qué sirve Benktander?",
+        "¿Cómo actualiza Benktander el prior?",
+        "¿Por qué Benktander converge a Chain Ladder?"
+      ],
+      "concepts": [
+        "benktander",
+        "bornhuetter ferguson",
+        "iteraciones",
+        "prior",
+        "chain ladder",
+        "credibilidad emergente"
+      ],
+      "summary": "Benktander actualiza iterativamente el prior de BF con el resultado de la iteración anterior y desplaza gradualmente el peso hacia Chain Ladder.",
+      "why_it_matters": "Permite estudiar de forma explícita cuánto depende la estimación del prior y cuánto de la experiencia emergente.",
+      "example": "Con madurez 80%, prior 100 y CL 90, BF produce 92; una segunda iteración Benktander produce 90,40 y se acerca a 90.",
+      "caution": "La iteración no crea información nueva. Converger a Chain Ladder no demuestra que Chain Ladder sea correcto y el número de iteraciones debe definirse antes, no para alcanzar una cifra.",
+      "sources": [
+        {
+          "path": "part-02-classical-reserving/12-benktander-method.md",
+          "anchor": "proposito",
+          "label": "Benktander · Propósito"
+        },
+        {
+          "path": "part-02-classical-reserving/12-benktander-method.md",
+          "anchor": "forma-cerrada",
+          "label": "Benktander · Forma cerrada"
+        }
+      ],
+      "related_questions": [
+        "method-bf-prior-independence",
+        "method-cl-vs-bf"
+      ],
+      "language": "es",
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-18"
+    },
+    {
+      "id": "governance-demo-not-regulatory",
+      "question": "¿Por qué el demo no debe interpretarse como una reserva regulatoria definitiva?",
+      "variants": [
+        "¿El resultado del demo sirve para reportar una reserva?",
+        "¿Es una opinión actuarial?",
+        "¿Puedo usar el cálculo directamente en estados financieros?"
+      ],
+      "concepts": [
+        "demo educativo",
+        "reserva regulatoria",
+        "uso profesional",
+        "datos sinteticos",
+        "validacion independiente",
+        "alcance"
+      ],
+      "summary": "El demo ilustra mecánica, datos y controles, pero no incorpora por sí solo todas las obligaciones, bases, contratos, regulación, cola, incertidumbre y validaciones de una estimación profesional.",
+      "why_it_matters": "Presentarlo como cifra definitiva puede crear una falsa precisión y omitir componentes que los datos agregados no identifican.",
+      "example": "Un triángulo pagado puede estimar un pasivo no pagado, pero sin fecha de reporte y reserva caso no separa IBNR puro, RBNS e IBNER.",
+      "caution": "Una aplicación real requiere reconciliación, segmentación, supuestos documentados, regulación vigente, revisión independiente y gobierno del modelo.",
+      "sources": [
+        {
+          "path": "examples/03-demo-triangulos-mensuales-salud.md",
+          "anchor": "uso-profesional",
+          "label": "Demo 3 · Uso profesional"
+        },
+        {
+          "path": "index.md",
+          "anchor": "estado-del-handbook",
+          "label": "Estado del handbook"
+        }
+      ],
+      "related_questions": [
+        "triangle-descriptive-not-eligible",
+        "method-chain-ladder-unreliable"
+      ],
+      "language": "es",
+      "version": "1.0.0",
+      "last_reviewed": "2026-07-18"
+    }
+  ]
+}
