@@ -575,10 +575,25 @@
     output.focus({ preventScroll: true });
   }
 
+  const JSON_CACHE = new Map();
+
   async function loadJson(url) {
-    const response = await fetch(url, { credentials: "same-origin" });
-    if (!response.ok) throw new Error(`No se pudo cargar ${url}: ${response.status}`);
-    return response.json();
+    const key = String(url);
+    if (!JSON_CACHE.has(key)) {
+      const pending = fetch(url, { credentials: "same-origin" })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`No se pudo cargar ${url}: ${response.status}`);
+          }
+          return response.json();
+        })
+        .catch((error) => {
+          JSON_CACHE.delete(key);
+          throw error;
+        });
+      JSON_CACHE.set(key, pending);
+    }
+    return JSON_CACHE.get(key);
   }
 
   function resolveContext(container) {
@@ -660,6 +675,199 @@
     }
   }
 
+
+  function shouldShowGlobalPanel(path) {
+    return normalizePath(path || "/") !== "/ask-the-handbook/";
+  }
+
+  function focusableElements(container) {
+    if (!container || typeof container.querySelectorAll !== "function") return [];
+    const selector = [
+      "a[href]",
+      "button:not([disabled])",
+      "input:not([disabled])",
+      "select:not([disabled])",
+      "textarea:not([disabled])",
+      "[tabindex]:not([tabindex='-1'])"
+    ].join(",");
+    return Array.from(container.querySelectorAll(selector)).filter((element) => {
+      if (element.hidden) return false;
+      if (element.getAttribute && element.getAttribute("aria-hidden") === "true") return false;
+      return true;
+    });
+  }
+
+  function nextFocusIndex(currentIndex, total, shiftKey) {
+    if (!Number.isInteger(total) || total <= 0) return -1;
+    if (shiftKey && currentIndex <= 0) return total - 1;
+    if (!shiftKey && currentIndex >= total - 1) return 0;
+    return shiftKey ? currentIndex - 1 : currentIndex + 1;
+  }
+
+  function setBackgroundScrollLocked(locked) {
+    if (!document || !document.body) return;
+    document.body.classList.toggle("handbook-qa-panel-open", Boolean(locked));
+  }
+
+  function pageHeading() {
+    const heading = document.querySelector(".md-content h1");
+    return heading ? String(heading.textContent || "").trim() : document.title;
+  }
+
+  function updateGlobalContext(container, context) {
+    const pageTarget = container.querySelector("[data-handbook-qa-context-page]");
+    const sectionTarget = container.querySelector("[data-handbook-qa-context-section]");
+    if (pageTarget) pageTarget.textContent = pageHeading() || "Página actual";
+    if (sectionTarget) {
+      const section = String(context.heading || "").trim();
+      sectionTarget.textContent = section || "Contexto general de la página";
+      sectionTarget.closest("[data-handbook-qa-context-section-row]")?.toggleAttribute(
+        "data-context-general",
+        !section
+      );
+    }
+  }
+
+  function renderGlobalSuggestions(target, catalog, context, onSelect) {
+    if (!target) return [];
+    target.replaceChildren();
+    const suggestions = suggestQuestions(catalog, context, 5);
+    suggestions.forEach((entry) => {
+      const button = createElement("button", "handbook-qa__question-chip", entry.item.question);
+      button.type = "button";
+      button.dataset.questionId = entry.item.id;
+      button.addEventListener("click", () => onSelect(entry.item.id));
+      target.appendChild(button);
+    });
+    return suggestions;
+  }
+
+  async function initializeGlobalPanel(container) {
+    const trigger = container.querySelector("[data-handbook-qa-global-trigger]");
+    const overlay = container.querySelector("[data-handbook-qa-global-overlay]");
+    const dialog = container.querySelector("[data-handbook-qa-global-dialog]");
+    const form = container.querySelector("[data-handbook-qa-form]");
+    const input = container.querySelector("[data-handbook-qa-input]");
+    const output = container.querySelector("[data-handbook-qa-output]");
+    const loading = container.querySelector("[data-handbook-qa-loading]");
+    const suggestionsTarget = container.querySelector("[data-handbook-qa-suggestions]");
+    const siteRoot = container.dataset.siteRoot || "./";
+
+    if (!trigger || !overlay || !dialog || !form || !input || !output) return;
+
+    trigger.hidden = true;
+    overlay.hidden = true;
+    let previouslyFocused = null;
+    let catalog = null;
+    let sectionIndex = null;
+
+    const closePanel = () => {
+      if (overlay.hidden) return;
+      overlay.hidden = true;
+      trigger.setAttribute("aria-expanded", "false");
+      setBackgroundScrollLocked(false);
+      if (previouslyFocused && typeof previouslyFocused.focus === "function") {
+        previouslyFocused.focus({ preventScroll: true });
+      } else {
+        trigger.focus({ preventScroll: true });
+      }
+    };
+
+    const askQuestion = (question) => {
+      input.value = String(question || "");
+      const result = search(input.value, catalog, sectionIndex, resolveContext(container));
+      renderResult(result, output, catalog, siteRoot, askQuestion);
+    };
+
+    const answerSuggestion = (id) => {
+      const result = answerById(catalog, id);
+      if (result.item) input.value = result.item.question;
+      renderResult(result, output, catalog, siteRoot, askQuestion);
+    };
+
+    const refreshContext = () => {
+      const context = resolveContext(container);
+      updateGlobalContext(container, context);
+      renderGlobalSuggestions(
+        suggestionsTarget,
+        catalog,
+        context,
+        answerSuggestion
+      );
+      return context;
+    };
+
+    const openPanel = () => {
+      previouslyFocused = document.activeElement;
+      refreshContext();
+      overlay.hidden = false;
+      trigger.setAttribute("aria-expanded", "true");
+      setBackgroundScrollLocked(true);
+      const focusInput = () => input.focus({ preventScroll: true });
+      if (typeof requestAnimationFrame === "function") requestAnimationFrame(focusInput);
+      else focusInput();
+    };
+
+    trigger.addEventListener("click", openPanel);
+    container.querySelectorAll("[data-handbook-qa-close]").forEach((control) => {
+      control.addEventListener("click", closePanel);
+    });
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      askQuestion(input.value);
+    });
+    output.addEventListener("click", (event) => {
+      const link = event.target && event.target.closest
+        ? event.target.closest("a[href]")
+        : null;
+      if (link) closePanel();
+    });
+    dialog.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closePanel();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusables = focusableElements(dialog);
+      if (!focusables.length) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+      const currentIndex = focusables.indexOf(document.activeElement);
+      const atBoundary = (
+        (event.shiftKey && currentIndex <= 0)
+        || (!event.shiftKey && currentIndex >= focusables.length - 1)
+        || currentIndex === -1
+      );
+      if (!atBoundary) return;
+      event.preventDefault();
+      const targetIndex = nextFocusIndex(currentIndex, focusables.length, event.shiftKey);
+      focusables[targetIndex].focus();
+    });
+
+    try {
+      if (loading) loading.hidden = false;
+      const catalogUrl = new URL(container.dataset.catalogUrl, document.baseURI);
+      const sectionsUrl = new URL(container.dataset.sectionsUrl, document.baseURI);
+      [catalog, sectionIndex] = await Promise.all([
+        loadJson(catalogUrl),
+        loadJson(sectionsUrl)
+      ]);
+      if (loading) loading.hidden = true;
+      if (shouldShowGlobalPanel(window.location.pathname)) {
+        trigger.hidden = false;
+      }
+    } catch (error) {
+      if (loading) loading.hidden = true;
+      trigger.hidden = true;
+      overlay.hidden = true;
+      setBackgroundScrollLocked(false);
+      console.warn("Ask the Handbook no pudo inicializar el panel global.", error);
+    }
+  }
+
   const api = {
     normalizeText,
     normalizeAnchor,
@@ -682,7 +890,9 @@
     suggestQuestions,
     search,
     sourceHref,
-    detectActiveHeading
+    detectActiveHeading,
+    shouldShowGlobalPanel,
+    nextFocusIndex
   };
 
   global.HandbookQAEngine = api;
@@ -694,6 +904,11 @@
         if (container.dataset.initialized === "true") return;
         container.dataset.initialized = "true";
         initialize(container);
+      });
+      document.querySelectorAll("[data-handbook-qa-global]").forEach((container) => {
+        if (container.dataset.globalInitialized === "true") return;
+        container.dataset.globalInitialized = "true";
+        initializeGlobalPanel(container);
       });
     };
     if (document.readyState === "loading") {

@@ -250,3 +250,244 @@
     transition: none !important;
   }
 }
+
+/* Ask the Handbook · Sprint 2.2 global contextual panel */
+.handbook-qa-global {
+  --handbook-qa-panel-width: min(34rem, calc(100vw - 2rem));
+  --handbook-qa-panel-shadow: 0 1.4rem 4rem rgba(19, 12, 39, 0.28);
+  position: relative;
+  z-index: 210;
+}
+
+.handbook-qa-global [hidden] {
+  display: none !important;
+}
+
+.handbook-qa-global__trigger {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 210;
+  display: inline-flex;
+  gap: 0.55rem;
+  align-items: center;
+  min-height: 3rem;
+  padding: 0.65rem 0.9rem;
+  color: #fff;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  background: #4e00ff;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  box-shadow: 0 0.75rem 2rem rgba(78, 0, 255, 0.3);
+}
+
+.handbook-qa-global__trigger > span[aria-hidden="true"] {
+  display: grid;
+  width: 1.55rem;
+  height: 1.55rem;
+  place-items: center;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+}
+
+.handbook-qa-global__trigger:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.handbook-qa-global__trigger:focus-visible,
+.handbook-qa-global__close:focus-visible {
+  outline: 3px solid rgba(124, 77, 255, 0.45);
+  outline-offset: 3px;
+}
+
+.handbook-qa-global__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+}
+
+.handbook-qa-global__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 10, 28, 0.56);
+  backdrop-filter: blur(2px);
+}
+
+.handbook-qa-global__dialog {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  width: var(--handbook-qa-panel-width);
+  max-width: 100%;
+  height: 100%;
+  max-height: 100dvh;
+  margin: 0;
+  overflow: hidden;
+  color: var(--md-default-fg-color);
+  background: var(--md-default-bg-color);
+  border-left: 1px solid var(--handbook-qa-border);
+  border-radius: 0;
+  box-shadow: var(--handbook-qa-panel-shadow);
+}
+
+.handbook-qa-global__header {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1rem 1rem 0.9rem;
+  background: var(--handbook-qa-accent-soft);
+  border-bottom: 1px solid var(--handbook-qa-border);
+}
+
+.handbook-qa-global__header h2 {
+  margin: 0 !important;
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+
+.handbook-qa-global__eyebrow {
+  margin: 0 0 0.25rem;
+  color: var(--handbook-qa-accent);
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+}
+
+.handbook-qa-global__close {
+  display: grid;
+  flex: 0 0 auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  color: var(--md-default-fg-color);
+  font: inherit;
+  font-size: 1.7rem;
+  line-height: 1;
+  cursor: pointer;
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--handbook-qa-border);
+  border-radius: 50%;
+}
+
+.handbook-qa-global__body {
+  flex: 1 1 auto;
+  padding: 1rem;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.handbook-qa-global__description {
+  margin-top: 0;
+  color: var(--handbook-qa-muted);
+  font-size: 0.82rem;
+}
+
+.handbook-qa-global__context {
+  padding: 0.7rem 0.8rem;
+  margin: 0.8rem 0 1rem;
+  background: var(--handbook-qa-accent-soft);
+  border: 1px solid rgba(78, 0, 255, 0.18);
+  border-radius: 0.65rem;
+}
+
+.handbook-qa-global__context p {
+  margin: 0.2rem 0;
+  font-size: 0.8rem;
+}
+
+.handbook-qa-global__section-title {
+  margin: 0 0 0.55rem !important;
+  font-size: 0.88rem;
+}
+
+.handbook-qa-global__suggestions {
+  margin-top: 0;
+}
+
+.handbook-qa-global__form {
+  margin-top: 1rem;
+}
+
+.handbook-qa-global__output {
+  padding: 0.9rem;
+  margin-top: 1rem;
+  box-shadow: none;
+}
+
+.handbook-qa-global__output .handbook-qa__answer-title {
+  font-size: 1.05rem;
+}
+
+.handbook-qa-global__full-page-link {
+  margin: 1rem 0 0;
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+body.handbook-qa-panel-open {
+  overflow: hidden;
+}
+
+[data-md-color-scheme="slate"] .handbook-qa-global__trigger {
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.45);
+}
+
+@media screen and (max-width: 640px) {
+  .handbook-qa-global {
+    --handbook-qa-panel-width: 100%;
+  }
+
+  .handbook-qa-global__trigger {
+    right: max(0.75rem, env(safe-area-inset-right));
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+    max-width: calc(100vw - 1.5rem);
+  }
+
+  .handbook-qa-global__dialog {
+    top: auto;
+    bottom: 0;
+    width: 100%;
+    height: min(92dvh, 52rem);
+    border-top: 1px solid var(--handbook-qa-border);
+    border-left: 0;
+    border-radius: 1rem 1rem 0 0;
+  }
+
+  .handbook-qa-global__body {
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .handbook-qa-global__trigger > span:last-child {
+    max-width: 12rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .handbook-qa-global *,
+  .handbook-qa-global *::before,
+  .handbook-qa-global *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .handbook-qa-global__trigger:hover {
+    transform: none;
+  }
+}
+

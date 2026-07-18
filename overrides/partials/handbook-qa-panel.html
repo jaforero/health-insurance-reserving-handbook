@@ -1,0 +1,119 @@
+{# Ask the Handbook · Sprint 2.2 global contextual panel #}
+<div
+  class="handbook-qa-global"
+  data-handbook-qa-global
+  data-catalog-url="{{ base_url }}/assets/data/handbook-qa-catalog.json"
+  data-sections-url="{{ base_url }}/assets/data/handbook-section-index.json"
+  data-site-root="{{ base_url }}/"
+>
+  <button
+    id="handbook-qa-global-trigger"
+    class="handbook-qa-global__trigger"
+    type="button"
+    aria-haspopup="dialog"
+    aria-controls="handbook-qa-global-dialog"
+    aria-expanded="false"
+    data-handbook-qa-global-trigger
+    hidden
+  >
+    <span aria-hidden="true">?</span>
+    <span>Pregúntale al Handbook</span>
+  </button>
+
+  <div
+    class="handbook-qa-global__overlay"
+    data-handbook-qa-global-overlay
+    hidden
+  >
+    <div
+      class="handbook-qa-global__backdrop"
+      data-handbook-qa-close
+      aria-hidden="true"
+    ></div>
+
+    <section
+      id="handbook-qa-global-dialog"
+      class="handbook-qa handbook-qa-global__dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="handbook-qa-global-title"
+      aria-describedby="handbook-qa-global-description"
+      data-handbook-qa-global-dialog
+      tabindex="-1"
+    >
+      <header class="handbook-qa-global__header">
+        <div>
+          <p class="handbook-qa-global__eyebrow">ASISTENTE EDITORIAL LOCAL</p>
+          <h2 id="handbook-qa-global-title">Pregúntale al Handbook</h2>
+        </div>
+        <button
+          class="handbook-qa-global__close"
+          type="button"
+          aria-label="Cerrar Pregúntale al Handbook"
+          data-handbook-qa-close
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </header>
+
+      <div class="handbook-qa-global__body">
+        <p id="handbook-qa-global-description" class="handbook-qa-global__description">
+          Recupera respuestas editoriales verificadas dentro de este sitio. No utiliza IA generativa ni envía tu pregunta a un servidor.
+        </p>
+
+        <section class="handbook-qa-global__context" aria-label="Contexto de lectura">
+          <p>
+            <strong>Página:</strong>
+            <span data-handbook-qa-context-page>Página actual</span>
+          </p>
+          <p data-handbook-qa-context-section-row>
+            <strong>Sección:</strong>
+            <span data-handbook-qa-context-section>Contexto general de la página</span>
+          </p>
+        </section>
+
+        <section aria-labelledby="handbook-qa-global-suggestions-title">
+          <h3 id="handbook-qa-global-suggestions-title" class="handbook-qa-global__section-title">
+            Preguntas sugeridas
+          </h3>
+          <div
+            class="handbook-qa__suggestions handbook-qa-global__suggestions"
+            data-handbook-qa-suggestions
+          ></div>
+        </section>
+
+        <form class="handbook-qa__form handbook-qa-global__form" data-handbook-qa-form>
+          <div class="handbook-qa__field">
+            <label for="handbook-qa-global-query">Escribe una pregunta</label>
+            <input
+              id="handbook-qa-global-query"
+              class="handbook-qa__input"
+              type="search"
+              autocomplete="off"
+              spellcheck="true"
+              data-handbook-qa-input
+            >
+          </div>
+          <button class="handbook-qa__submit" type="submit">Consultar</button>
+        </form>
+
+        <p class="handbook-qa__loading" data-handbook-qa-loading hidden>
+          Cargando catálogo editorial local…
+        </p>
+
+        <div
+          class="handbook-qa__output handbook-qa-global__output"
+          data-handbook-qa-output
+          aria-live="polite"
+          aria-atomic="false"
+          tabindex="-1"
+          hidden
+        ></div>
+
+        <p class="handbook-qa-global__full-page-link">
+          <a href="{{ base_url }}/ask-the-handbook/">Abrir la experiencia completa</a>
+        </p>
+      </div>
+    </section>
+  </div>
+</div>
