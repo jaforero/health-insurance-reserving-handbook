@@ -6,7 +6,7 @@ version: 1.0
 chapter: Bibliography
 part: Repository Governance
 status: Draft
-last_updated: 2026-07-14
+last_updated: 2026-10-24
 language: es
 jurisdiction: General con aplicaciones a Colombia
 tags:
@@ -498,3 +498,20 @@ Puede pasar a `Validated` cuando:
 ### 17.4 Fuente institucional colombiana
 
 - `COL-PROESA-FASECOLDA-PVS-2021`: PROESA. (2021). *Análisis estratégico, rol en el sistema de salud y lineamientos de política pública para el mercado de planes voluntarios de salud (PVS) en Colombia: informe final de consultoría*. Participación técnica de Fasecolda y ACEMI. Uso admitido: contexto sectorial e investigación aplicada, con cita de página, periodo y muestra.
+
+### 17.5 Desarrollo actuarial asistido por IA
+
+- **Clave:** `NZATI-SCHRAUB-2026-CLAUDE-CODE`.
+- **Referencia:** Nzati, Ethel Cédric, y David Schraub. (2026). *Claude Code for Actuaries — The Complete Guide (North American Edition).* Necflow AI & David Schraub Actuarial Consultancy. 62 páginas.
+- **Acceso:** [conversión Markdown de la fuente en el repositorio](https://github.com/jaforero/health-insurance-reserving-handbook/blob/main/bibliography/claude-code-for-actuaries-complete-guide.md).
+- **Clasificación:** `P4`, guía práctica independiente de uso de herramientas; no es documentación oficial de Anthropic, estándar profesional ni publicación metodológica revisada por pares acreditada.
+- **Estado:** `V-L` para identificación y contenido del PDF aportado, revisado el 2026-10-24. No implica validación de las implementaciones, vigencia regulatoria o comportamiento actual del software.
+- **Trazabilidad:** edición norteamericana identificada en metadatos; año 2026 indicado en la obra; fecha de creación del PDF 2026-10-20, sin asumir que sea su fecha de publicación. SHA-256: `f85745b52da7b06d49dcc9a05073eee904436ea34f953b3b1427b9cd2e8d49d6`. URL editorial canónica no confirmada.
+- **Derechos:** © 2026 Necflow AI & David Schraub Actuarial Consultancy. All rights reserved. La licencia MIT del handbook no se extiende a esta obra de terceros; no se ha verificado una licencia abierta.
+- **Conversión:** conserva el texto extraíble, prompts, enlaces, marcadores de página y cuatro fórmulas transcritas a LaTeX. Omite imágenes y capturas de interfaz, señaladas en el Markdown. Las notas editoriales se distinguen del contenido original.
+
+**Uso prioritario en el handbook:** especificación de tareas asistidas por IA, contexto de proyecto, pruebas, conciliación entre lenguajes y documentación reproducible. Las secciones relevantes son §1.2 (pp. 5–6), §5.9 (pp. 41–44), §6.2/caso 26 (p. 47), capítulo 10 (pp. 56–57), capítulo 11 (pp. 58–60) y capítulo 12 (p. 61).
+
+El caso 26 puede orientar la especificación de una herramienta que implemente Chain Ladder, Bornhuetter–Ferguson y Mack. Para fundamentos matemáticos y supuestos se mantienen las fuentes metodológicas de los capítulos [06](part-02-classical-reserving/06-chain-ladder-method.md), [11](part-02-classical-reserving/11-bornhuetter-ferguson.md) y [08](part-03-stochastic-reserving/08-mack-chain-ladder.md). El caso pertenece a P&C: su traslado a salud exige definir la base de los triángulos, alcance de la reserva, granularidad y rezagos. La estimación del error de predicción de Mack no determina por sí sola un intervalo probabilístico sin supuestos adicionales.
+
+Ejemplo de citación localizada: `NZATI-SCHRAUB-2026-CLAUDE-CODE`, §6.2, caso 26, p. 47. Esta guía no sustituye ASOP, regulación colombiana ni validación independiente de código y resultados.
