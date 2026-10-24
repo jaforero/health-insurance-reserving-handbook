@@ -13,7 +13,6 @@ autoridad técnica: la admisión, jerarquía y uso permitido se documentan en
 | `chatgpt-deep-research-report.md` | descubrimiento (`D`) | estructura conceptual, preguntas e hipótesis editoriales |
 | `claude-deep-research-report.md` | descubrimiento (`D`) | mapa internacional, brechas y referencias candidatas |
 | `COL-PROESA-FASECOLDA-PVS-2021.md` | registro de fuente institucional colombiana (`P2`) | contexto del mercado de planes voluntarios de salud |
-
 | [claude-code-for-actuaries-complete-guide.md](claude-code-for-actuaries-complete-guide.md) | guía práctica independiente de herramientas (`P4`), identificación documental `V-L` | apoyo para desarrollo asistido por IA; no sustituye teoría actuarial, estándares ni validación |
 
 ## Claude Code for Actuaries
