@@ -10,7 +10,7 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // ======================= i18n (interface only; note content is never machine-translated) =======================
 const T = {
   es: {
-    appName: 'Bóveda', searchLabel: 'Buscar', searchPh: 'Buscar en títulos y texto', openFolder: 'Abrir tu carpeta',
+    appName: 'Explorador de conocimiento', searchLabel: 'Buscar', searchPh: 'Buscar en títulos y texto', openFolder: 'Abrir tu carpeta',
     tabNotes: 'Notas', tabNote: 'Nota', tabGraph: 'Grafo', notesHead: 'Notas', back: 'Atrás', fwd: 'Adelante',
     graphHead: 'Grafo', global: 'Global', local: 'Local · 2 saltos', expand: 'Ampliar grafo', shrink: 'Volver a tres paneles', fit: 'Encuadrar',
     filters: 'Filtros', fLinks: 'Enlaces', fStatus: 'Estado', fTag: 'Etiqueta', fLang: 'Idioma', allTags: 'Todas las etiquetas',
@@ -18,7 +18,7 @@ const T = {
     sheetTitle: 'Explora tu propia carpeta', sheetLead: 'Elige una carpeta con tus artículos o notas en Markdown. El explorador la lee, encuentra los enlaces entre documentos y arma el grafo con las mismas reglas que usa para el Handbook.',
     dropHere: 'Arrastra una carpeta aquí, o', pickFolder: 'Elegir carpeta', pickFiles: 'Elegir archivos .md',
     privacy: 'Tus archivos se leen dentro de este navegador. No se suben a ningún servidor y desaparecen al cerrar la página.',
-    backSample: 'Volver al Handbook de ejemplo', close: 'Cerrar', dropFull: 'Suelta la carpeta para explorarla',
+    backSample: 'Volver al Handbook', close: 'Cerrar', dropFull: 'Suelta la carpeta para explorarla',
     rules: [
       'Notas: cada archivo <code>.md</code>; título, parte, estado, etiquetas e idioma salen del frontmatter.',
       'Enlaces: Markdown <code>[texto](ruta.md)</code>, wikilinks <code>[[nota]]</code>, <code>[[nota|alias]]</code>, <code>[[nota#sección]]</code> y los campos <code>prerequisites</code> y <code>related_chapters</code>.',
@@ -39,7 +39,7 @@ const T = {
     noMd: 'No encontré archivos .md en esa selección. Elige la carpeta que contiene tus notas.',
     filesMode: 'Abriste archivos sueltos: se pierde la estructura de carpetas, así que los enlaces entre subcarpetas pueden aparecer rotos. Para un resultado completo, elige la carpeta.',
     noDir: 'Este navegador no permite elegir carpetas. Usa «Elegir archivos .md» o arrastra la carpeta.',
-    sample: 'Ejemplo', yours: 'Tu carpeta', mathFail: 'No se pudo cargar el motor de fórmulas; se muestran en LaTeX.',
+    sample: 'Handbook', yours: 'Tu carpeta', mathFail: 'No se pudo cargar el motor de fórmulas; se muestran en LaTeX.',
     mermaidFail: 'No se pudo dibujar este diagrama; se muestra su código.', embedded: 'Nota incrustada',
     brokenTitle: r => `Enlace roto: ${r}`, missingImg: r => `Imagen no encontrada: ${r}`, empty: 'Sin coincidencias.',
     root: '(raíz)', noteMissing: 'Esta nota está oculta por el filtro de idioma.',
@@ -53,7 +53,7 @@ const T = {
     onSite: 'Ver en el manual', toSite: 'Ir al manual'
   },
   en: {
-    appName: 'Vault', searchLabel: 'Search', searchPh: 'Search titles and text', openFolder: 'Open your folder',
+    appName: 'Knowledge explorer', searchLabel: 'Search', searchPh: 'Search titles and text', openFolder: 'Open your folder',
     tabNotes: 'Notes', tabNote: 'Note', tabGraph: 'Graph', notesHead: 'Notes', back: 'Back', fwd: 'Forward',
     graphHead: 'Graph', global: 'Global', local: 'Local · 2 hops', expand: 'Expand graph', shrink: 'Back to three panes', fit: 'Fit to view',
     filters: 'Filters', fLinks: 'Links', fStatus: 'Status', fTag: 'Tag', fLang: 'Language', allTags: 'All tags',
@@ -61,7 +61,7 @@ const T = {
     sheetTitle: 'Explore your own folder', sheetLead: 'Pick a folder with your Markdown articles or notes. The explorer reads it, finds the links between documents and builds the graph with the same rules it uses for the Handbook.',
     dropHere: 'Drag a folder here, or', pickFolder: 'Choose folder', pickFiles: 'Choose .md files',
     privacy: 'Your files are read inside this browser. Nothing is uploaded to any server, and it is gone when you close the page.',
-    backSample: 'Back to the sample Handbook', close: 'Close', dropFull: 'Drop the folder to explore it',
+    backSample: 'Back to the Handbook', close: 'Close', dropFull: 'Drop the folder to explore it',
     rules: [
       'Notes: every <code>.md</code> file; title, part, status, tags and language come from the frontmatter.',
       'Links: Markdown <code>[text](path.md)</code>, wikilinks <code>[[note]]</code>, <code>[[note|alias]]</code>, <code>[[note#section]]</code>, and the <code>prerequisites</code> and <code>related_chapters</code> fields.',
@@ -96,6 +96,8 @@ const T = {
     onSite: 'View in the handbook', toSite: 'Go to the handbook'
   }
 };
+Object.assign(T.es, { viewGraph:'Grafo', viewSplit:'Grafo + lectura', viewRead:'Lectura', index:'Índice', qualityShort:'Calidad', copyLink:'Copiar enlace', copied:'Enlace copiado', copyFail:'No se pudo copiar. Copia la dirección del navegador.', localOnly:'Esta carpeta solo está disponible en tu navegador.', read:'Leer', connections:'Conexiones', neighbours:'Ver vecinos', reset:'Restablecer', zoomIn:'Acercar', zoomOut:'Alejar', missingLink:'La nota del enlace ya no está disponible.', viewHint:'G: grafo · D: vista dividida · L: lectura' });
+Object.assign(T.en, { viewGraph:'Graph', viewSplit:'Graph + reading', viewRead:'Reading', index:'Index', qualityShort:'Quality', copyLink:'Copy link', copied:'Link copied', copyFail:'Could not copy. Copy the browser address.', localOnly:'This folder is only available in your browser.', read:'Read', connections:'Connections', neighbours:'Show neighbours', reset:'Reset', zoomIn:'Zoom in', zoomOut:'Zoom out', missingLink:'The linked note is no longer available.', viewHint:'G: graph · D: split view · L: reading' });
 let UI = store.get('kb-ui') === 'en' ? 'en' : 'es';
 const t = (k, ...a) => { const v = T[UI][k]; return typeof v === 'function' ? v(...a) : v; };
 
@@ -106,7 +108,7 @@ const S = {
   groups: [], groupIdx: new Map(), hubs: new Set(), search: new Map(),
   cur: null, hist: [], hpos: -1,
   f: { types: new Set(['markdown', 'wikilink', 'prerequisite', 'related']), hubEdges: true, statuses: null, tag: '', lang: 'es' },
-  q: '', matches: null, mode: 'global', wide: false, linkTab: 'in', filesMode: false
+  view: 'graph', q: '', matches: null, mode: 'global', wide: false, linkTab: 'in', filesMode: false
 };
 
 // ======================= vault loading =======================
@@ -133,10 +135,12 @@ function loadVault(files, assets, meta) {
   S.hist = []; S.hpos = -1; S.q = ''; $('#q').value = ''; S.matches = null;
   posCache.clear();
   buildFilters(); renderList(); renderQuality(); renderMeta();
-  const start = (meta.start && S.notes.has(meta.start)) ? meta.start
+  const requested = S.source === 'sample' ? new URL(location.href).searchParams.get('note') : null;
+  const start = requested && S.notes.has(requested) ? requested : (meta.start && S.notes.has(meta.start)) ? meta.start
     : [...v.notes].filter(visibleNote).sort((a, b) => b.backlinkNotes - a.backlinkNotes)[0]?.id || v.notes[0]?.id;
   rebuildGraph();
   if (start) openNote(start, { push: true, noScroll: true });
+  if (requested && !S.notes.has(requested)) toast(t('missingLink'));
 }
 
 function groupColor(g) { const i = S.groupIdx.get(g); return `var(--g${i == null ? 8 : (i < 10 ? i : 8)})`; }
@@ -293,7 +297,7 @@ function rebuildGraph() {
   sim = d3.forceSimulation(nodes)
     .force('link', d3.forceLink(simEdges).distance(e => local ? 70 : (e.fm ? 62 : 48)).strength(local ? 0.15 : 0.25))
     .force('charge', d3.forceManyBody().strength(local ? -220 : -190).distanceMax(local ? 600 : 520))
-    .force('collide', d3.forceCollide(d => d.r + (local ? 14 : 4)))
+    .force('collide', d3.forceCollide(d => d.r + (local ? 18 : 10)))
     .stop();
   if (local) sim.force('radial', d3.forceRadial(d => d.depth * 110, 0, 0).strength(0.9));
   else sim.force('x', d3.forceX(0).strength(0.05)).force('y', d3.forceY(0).strength(0.06));
@@ -305,10 +309,11 @@ function rebuildGraph() {
     .attr('class', e => 'g-link' + (!e.types.has('markdown') && !e.types.has('wikilink') ? (e.types.has('translation') && e.types.size === 1 ? ' tr' : ' fm') : '') + (e.hubl && !local ? ' hubl' : ''));
   const ns = gNodes.selectAll('g.g-node').data(nodes, d => d.id);
   ns.exit().remove();
-  const nEnter = ns.enter().append('g').attr('class', 'g-node').attr('tabindex', -1);
+  const nEnter = ns.enter().append('g').attr('class', 'g-node').attr('tabindex', 0).attr('role', 'button');
   nEnter.append('circle').attr('class', 'ring');
   nEnter.append('path').attr('class', 'body');
   const nAll = nEnter.merge(ns);
+  nAll.attr('aria-label', d => d.note.title).on('keydown', (e, d) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openNote(d.id, {push:true, fromGraph:true}); } });
   nAll.classed('hub', d => d.hub).classed('far', d => local && d.depth === 2);
   nAll.select('.ring').attr('r', d => d.r + 4);
   nAll.select('.body').attr('d', d => d.hub ? diamond(d.r + 1.5) : circle(d.r)).style('fill', d => groupColor(d.note.part));
@@ -516,13 +521,16 @@ function openNote(id, o = {}) {
   if (o.push !== false && S.hist[S.hpos] !== id) { S.hist = S.hist.slice(0, S.hpos + 1); S.hist.push(id); S.hpos = S.hist.length - 1; }
   const changed = S.cur !== id; S.cur = id;
   renderNote(n, o.anchor);
+  renderPreview();
+  syncUrl();
+  if (o.fromList || o.anchor) { setView(matchMedia('(max-width: 900px)').matches ? 'read' : 'split'); toggleIndex(false); }
   renderLinks();
   renderList();
   const li = document.querySelector(`#list .item[data-note="${CSS.escape(id)}"]`); if (li && !o.fromList) li.scrollIntoView({ block: 'nearest' });
   if (S.mode === 'local' && changed) rebuildGraph(); else styleGraph();
   if (S.mode === 'local') $('#g-hint').textContent = t('hintLocal', short(n.title, 40));
   $('#nav-back').disabled = S.hpos <= 0; $('#nav-fwd').disabled = S.hpos >= S.hist.length - 1;
-  if ((o.fromList || o.fromGraph) && matchMedia('(max-width: 900px)').matches && !o.stay) setPane('center');
+
 }
 
 function renderNote(n, anchor) {
@@ -662,6 +670,7 @@ function runSearch() {
     $('#q-count').textContent = t('matches', S.matches.size);
   }
   renderList(); styleGraph();
+  if (S.q) toggleIndex(true);
 }
 
 // ======================= interactions =======================
@@ -715,12 +724,7 @@ $('#tab-local').addEventListener('click', () => setMode('local'));
 $('#tab-in').addEventListener('click', () => { S.linkTab = 'in'; renderLinks(); });
 $('#tab-out').addEventListener('click', () => { S.linkTab = 'out'; renderLinks(); });
 $('#g-fit').addEventListener('click', () => fit(true));
-$('#g-wide').addEventListener('click', () => {
-  S.wide = !S.wide; $('#app').classList.toggle('wide', S.wide);
-  $('#g-wide').title = t(S.wide ? 'shrink' : 'expand');
-  if (matchMedia('(max-width: 900px)').matches) setPane('right');
-  requestAnimationFrame(() => fit(true));
-});
+$('#g-wide').addEventListener('click', () => setView(S.view === 'graph' ? 'split' : 'graph'));
 svg.on('click', () => { if (pinnedGroup) { pinnedGroup = null; focusGroup = null; renderLegend(G.m); styleGraph(); } });
 
 // ======================= interface language =======================
@@ -737,6 +741,7 @@ $('#theme-toggle').addEventListener('click', () => {
 function applyUI() {
   updateThemeLabel();
   document.documentElement.lang = UI;
+  if (S.cur) renderPreview();
   document.querySelectorAll('[data-i18n]').forEach(el => { const v = T[UI][el.dataset.i18n]; if (typeof v === 'string') el.textContent = v; });
   document.querySelectorAll('[data-i18n-ph]').forEach(el => el.placeholder = T[UI][el.dataset.i18nPh]);
   document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = T[UI][el.dataset.i18nTitle]; el.setAttribute('aria-label', el.title); });
@@ -810,6 +815,69 @@ window.addEventListener('drop', async e => {
   ingest(out, items.length === 1 && items[0].isDirectory);
 });
 
+// ======================= focused research workspace =======================
+function setView(view) {
+  if (!['graph','split','read'].includes(view)) view = 'graph';
+  if (view === 'split' && matchMedia('(max-width: 900px)').matches) view = 'read';
+  S.view = view; $('#app').dataset.view = view; $('#app').classList.remove('wide');
+  document.querySelectorAll('.view-switch button').forEach(b => b.setAttribute('aria-pressed', b.dataset.view === view));
+  syncUrl(); requestAnimationFrame(() => fit(false));
+}
+function syncUrl() {
+  if (!S.vault) return;
+  const url = new URL(location.href);
+  if (S.source === 'sample' && S.cur) url.searchParams.set('note', S.cur); else url.searchParams.delete('note');
+  url.searchParams.set('view', S.view);
+  history.replaceState(null, '', url);
+}
+function toggleIndex(open) {
+  $('#app').classList.toggle('index-open', open);
+  $('#index-toggle').setAttribute('aria-expanded', String(open));
+}
+function showPanel(id) {
+  const panel = $(id), open = !panel.classList.contains('panel-open');
+  document.querySelectorAll('.panel-open').forEach(p => p.classList.remove('panel-open'));
+  panel.classList.toggle('panel-open', open);
+  $('#quality-toggle').setAttribute('aria-expanded', String(id === '#quality-panel' && open));
+}
+function renderPreview() {
+  const n = S.notes.get(S.cur); if (!n) return;
+  const incoming = new Set(S.vault.links.filter(l => l.target === n.id && l.source !== n.id).map(l => l.source)).size;
+  const outgoing = new Set(S.vault.links.filter(l => l.source === n.id && l.target && l.target !== n.id).map(l => l.target)).size;
+  $('#preview').hidden = false;
+  $('#preview').innerHTML = `<button class="icon-btn preview-close" id="preview-close" aria-label="${esc(t('close'))}">×</button><div class="eyebrow">${esc(groupLabel(n.part))}</div><h2>${esc(n.title)}</h2><p>${esc(n.frontmatter.description || '')}</p><div class="stat">${incoming} ${esc(t('incoming'))} · ${outgoing} ${esc(t('outgoing'))}</div><div class="preview-actions"><button class="btn btn-primary" id="preview-read">${esc(t('read'))}</button><button class="btn" id="preview-links">${esc(t('connections'))}</button><button class="btn" id="preview-local">${esc(t('neighbours'))}</button></div>`;
+  $('#preview-close').onclick = () => { $('#preview').hidden = true; };
+  $('#preview-read').onclick = () => setView('split');
+  $('#preview-links').onclick = () => showPanel('#links-panel');
+  $('#preview-local').onclick = () => { setMode('local'); $('#preview').hidden = true; };
+}
+document.querySelectorAll('.view-switch button').forEach(b => b.onclick = () => setView(b.dataset.view));
+$('#note-index').onclick = () => toggleIndex(!$('#app').classList.contains('index-open'));
+$('#note-links').onclick = () => { setView('graph'); showPanel('#links-panel'); };
+$('#index-toggle').onclick = () => toggleIndex(!$('#app').classList.contains('index-open'));
+$('#index-close').onclick = () => { toggleIndex(false); $('#index-toggle').focus(); };
+$('#filters-toggle').onclick = () => { $('#filters').open = !$('#filters').open; };
+$('#filters').addEventListener('toggle', () => $('#filters-toggle').setAttribute('aria-expanded', String($('#filters').open)));
+$('#quality-toggle').onclick = () => showPanel('#quality-panel');
+document.querySelectorAll('[data-close-panel]').forEach(b => b.onclick = () => { b.closest('section').classList.remove('panel-open'); $('#quality-toggle').setAttribute('aria-expanded','false'); });
+$('#zoom-in').onclick = () => svg.call(zoom.scaleBy, 1.3);
+$('#zoom-out').onclick = () => svg.call(zoom.scaleBy, 1 / 1.3);
+$('#copy-link').onclick = async () => {
+  if (S.source !== 'sample') return toast(t('localOnly'));
+  try { await navigator.clipboard.writeText(location.href); toast(t('copied')); } catch (_) { toast(t('copyFail')); }
+};
+$('#reset-filters').onclick = () => {
+  S.f.types = new Set(TYPES); S.f.hubEdges = true; S.f.tag = ''; S.f.lang = 'all';
+  S.f.statuses = new Set(S.vault.notes.map(n => n.status)); S.q = ''; S.matches = null; $('#q').value = ''; $('#q-count').textContent = '';
+  pinnedGroup = null; focusGroup = null; buildFilters(); rebuildGraph(); renderList();
+};
+document.addEventListener('keydown', e => {
+  if (/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName) || document.activeElement.isContentEditable || e.ctrlKey || e.metaKey || e.altKey || !$('#sheet').hidden) return;
+  const view = {g:'graph',d:'split',l:'read'}[e.key.toLowerCase()];
+  if (view) { e.preventDefault(); setView(view); }
+  if (e.key === 'Escape') { toggleIndex(false); $('#filters').open = false; document.querySelectorAll('.panel-open').forEach(p => p.classList.remove('panel-open')); $('#quality-toggle').setAttribute('aria-expanded','false'); $('#preview').hidden = true; }
+});
+
 // ======================= boot =======================
 // The sample vault is either embedded in the page (artifact build) or published next to it as vault.json (site build)
 let sampleData = null;
@@ -828,5 +896,5 @@ async function loadSample() {
 }
 applyUI();
 loadSample();
-setPane('center');
+setView(new URL(location.href).searchParams.get('view') || 'graph');
 })();

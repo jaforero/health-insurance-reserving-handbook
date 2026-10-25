@@ -6,6 +6,18 @@ Se publica junto al sitio en **`https://actuaria.javierforero.co/explorador/`** 
 
 ---
 
+## Espacio de investigación
+
+El explorador abre con el grafo como vista principal. La cabecera mantiene la identidad del Handbook, IgraSans y el acceso al manual.
+
+- **Grafo / Grafo + lectura / Lectura:** vistas con atajos `G`, `D` y `L`. En móvil, la vista dividida abre la lectura a ancho completo.
+- **Ficha de nota:** seleccionar un nodo muestra título, descripción y número de notas entrantes/salientes; permite leer, consultar referencias o explorar sus vecinos.
+- **Índice, filtros y calidad bajo demanda:** dejan el espacio principal al grafo. `Escape` cierra los paneles; `/` busca. Restablecer muestra todos los idiomas y tipos de enlace.
+- **Enlace compartible:** `?note=ruta.md&view=graph` abre una nota publicada; «Copiar enlace» conserva la nota y la vista. Las carpetas locales no se comparten mediante URL.
+- **Accesibilidad:** nodos activables con Enter/Espacio, controles de zoom, movimiento reducido y temas ES/EN claro/oscuro.
+
+La ficha cuenta notas distintas en todo el corpus; el grafo aplica el filtro de idioma y tipos activos. Sus conexiones agrupan referencias entre pares de notas, por lo que no equivalen al total de referencias documentales.
+
 ## Qué hace
 
 **Para quien visita el sitio**
