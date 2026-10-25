@@ -293,6 +293,8 @@ article.kb-article { padding: 22px clamp(18px, 4vw, 48px) 64px; max-width: 74ch;
 .brand-footer a { color:var(--accent); }
 @media (pointer:coarse) { button, .btn, select { min-height:44px; } }
 
+.graph-status { position:absolute; inset:20% 12%; text-align:center; color:var(--muted); }
+.g-node.neighbour:not(.sel):not(.match) .ring { opacity:.45; stroke:var(--edge-strong); stroke-width:1.5; }
 /* Research workspace: graph first, progressive disclosure, shared Handbook identity. */
 :root { --r:18px; }
 #app { height:100dvh; padding:0 12px 12px; gap:10px; grid-template-columns:minmax(0,1fr); grid-template-rows:auto auto minmax(0,1fr); grid-template-areas:"mast" "top" "right"; position:relative; }
@@ -321,7 +323,7 @@ article.kb-article { padding: 22px clamp(18px, 4vw, 48px) 64px; max-width: 74ch;
 .graph-card > .pane-head > .eyebrow { margin-right:auto; }
 .graph-actions { display:flex; gap:4px; flex-wrap:wrap; }
 .legend { padding:4px 12px; gap:0 12px; max-height:94px; overflow:auto; }
-.legend button { font-size:10px; min-height:30px; }
+.legend button { font-size:11px; min-height:30px; }
 .g-hint { padding:4px 14px 10px; }
 #filters { display:none; position:absolute; z-index:6; top:68px; right:10px; width:min(350px,calc(100% - 48px)); max-height:65%; overflow:auto; background:var(--panel); border:1px solid var(--line); border-radius:18px; box-shadow:0 12px 32px #041c5920; }
 #filters[open] { display:block; }
@@ -441,6 +443,7 @@ article.kb-article { padding: 22px clamp(18px, 4vw, 48px) 64px; max-width: 74ch;
         </div>
       </div>
       <div class="graph-wrap" id="graph-wrap">
+        <div id="graph-status" class="graph-status" role="status" data-i18n="loadingVault">Cargando las notas del manual…</div>
         <svg id="graph" role="img" aria-label="Grafo de notas"></svg>
         <article id="preview" class="preview" hidden aria-live="polite"></article>
         <div class="tip" id="tip" hidden></div>

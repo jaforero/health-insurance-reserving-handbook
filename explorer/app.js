@@ -14,7 +14,7 @@ const T = {
     tabNotes: 'Notas', tabNote: 'Nota', tabGraph: 'Grafo', notesHead: 'Notas', back: 'Atrás', fwd: 'Adelante',
     graphHead: 'Grafo', global: 'Global', local: 'Local · 2 saltos', expand: 'Ampliar grafo', shrink: 'Volver a tres paneles', fit: 'Encuadrar',
     filters: 'Filtros', fLinks: 'Enlaces', fStatus: 'Estado', fTag: 'Etiqueta', fLang: 'Idioma', allTags: 'Todas las etiquetas',
-    allLangs: 'Todos los idiomas', linksHead: 'Enlaces de esta nota', incoming: 'Entrantes', outgoing: 'Salientes', qualityHead: 'Salud de la bóveda',
+    allLangs: 'Todos los idiomas', linksHead: 'Enlaces de esta nota', incoming: 'Entrantes', outgoing: 'Salientes', qualityHead: 'Integridad del grafo',
     sheetTitle: 'Explora tu propia carpeta', sheetLead: 'Elige una carpeta con tus artículos o notas en Markdown. El explorador la lee, encuentra los enlaces entre documentos y arma el grafo con las mismas reglas que usa para el Handbook.',
     dropHere: 'Arrastra una carpeta aquí, o', pickFolder: 'Elegir carpeta', pickFiles: 'Elegir archivos .md',
     privacy: 'Tus archivos se leen dentro de este navegador. No se suben a ningún servidor y desaparecen al cerrar la página.',
@@ -34,7 +34,7 @@ const T = {
     orphans: 'Huérfanas', brokenH: 'Enlaces rotos', noOrphans: 'Ninguna nota huérfana: todas tienen al menos un enlace.',
     noBroken: 'Ningún enlace roto.', orphanHint: 'Sin enlaces de entrada ni de salida.',
     props: 'Propiedades', readIn: 'Leer en', fmField: f => `frontmatter · ${f}`, inSection: s => `en § ${s}`,
-    hintGlobal: 'Arrastra para mover · rueda para acercar · clic abre la nota', hintLocal: n => `Vecinos de «${n}» hasta 2 saltos · las notas eje no se expanden`,
+    hintGlobal: 'Color: parte del manual · tamaño: notas que enlazan aquí · clic: ficha · arrastra o acerca para explorar', hintLocal: n => `Vecinos de «${n}» hasta 2 saltos · las notas eje no se expanden`,
     loaded: (n, l) => `Bóveda cargada: ${n} notas · ${l} enlaces`, reading: n => `Leyendo ${n} archivos…`,
     noMd: 'No encontré archivos .md en esa selección. Elige la carpeta que contiene tus notas.',
     filesMode: 'Abriste archivos sueltos: se pierde la estructura de carpetas, así que los enlaces entre subcarpetas pueden aparecer rotos. Para un resultado completo, elige la carpeta.',
@@ -57,7 +57,7 @@ const T = {
     tabNotes: 'Notes', tabNote: 'Note', tabGraph: 'Graph', notesHead: 'Notes', back: 'Back', fwd: 'Forward',
     graphHead: 'Graph', global: 'Global', local: 'Local · 2 hops', expand: 'Expand graph', shrink: 'Back to three panes', fit: 'Fit to view',
     filters: 'Filters', fLinks: 'Links', fStatus: 'Status', fTag: 'Tag', fLang: 'Language', allTags: 'All tags',
-    allLangs: 'All languages', linksHead: 'Links of this note', incoming: 'Incoming', outgoing: 'Outgoing', qualityHead: 'Vault health',
+    allLangs: 'All languages', linksHead: 'Links of this note', incoming: 'Incoming', outgoing: 'Outgoing', qualityHead: 'Graph integrity',
     sheetTitle: 'Explore your own folder', sheetLead: 'Pick a folder with your Markdown articles or notes. The explorer reads it, finds the links between documents and builds the graph with the same rules it uses for the Handbook.',
     dropHere: 'Drag a folder here, or', pickFolder: 'Choose folder', pickFiles: 'Choose .md files',
     privacy: 'Your files are read inside this browser. Nothing is uploaded to any server, and it is gone when you close the page.',
@@ -77,7 +77,7 @@ const T = {
     orphans: 'Orphans', brokenH: 'Broken links', noOrphans: 'No orphan notes: every note has at least one link.',
     noBroken: 'No broken links.', orphanHint: 'No incoming or outgoing links.',
     props: 'Properties', readIn: 'Read in', fmField: f => `frontmatter · ${f}`, inSection: s => `in § ${s}`,
-    hintGlobal: 'Drag to move · scroll to zoom · click opens the note', hintLocal: n => `Neighbours of “${n}” up to 2 hops · hub notes are not expanded`,
+    hintGlobal: 'Colour: handbook part · size: incoming notes · click: preview · drag or zoom to explore', hintLocal: n => `Neighbours of “${n}” up to 2 hops · hub notes are not expanded`,
     loaded: (n, l) => `Vault loaded: ${n} notes · ${l} links`, reading: n => `Reading ${n} files…`,
     noMd: 'No .md files found in that selection. Choose the folder that holds your notes.',
     filesMode: 'You opened loose files: the folder structure is lost, so links between subfolders may show as broken. For a complete result, choose the folder.',
@@ -116,6 +116,7 @@ function loadVault(files, assets, meta) {
   S.objectUrls.forEach(u => URL.revokeObjectURL(u)); S.objectUrls = meta.objectUrls || [];
   const all = files.concat([...assets.keys()].map(p => ({ path: p, text: '' })));
   const v = VaultParser.parseVault(all, s => jsyaml.load(s, { schema: jsyaml.JSON_SCHEMA }));
+  $('#graph-status').hidden = true;
   S.vault = v; S.meta = meta; S.assets = assets; S.source = meta.source;
   S.notes = new Map(v.notes.map(n => [n.id, n]));
   // groups (parts) in stable order; colour slot by order
@@ -383,6 +384,7 @@ function styleGraph() {
   const local = S.mode === 'local';
   G.sel.nodes
     .classed('sel', d => d.id === S.cur)
+    .classed('neighbour', d => d.id !== S.cur && (G.adj.get(S.cur) || new Set()).has(d.id))
     .classed('match', d => !!S.matches && S.matches.has(d.id))
     .classed('dim', d => !noteActive(d.note) || (S.matches && !S.matches.has(d.id)) || (focusGroup && d.note.part !== focusGroup) || (nb && d.id !== hoverId && !nb.has(d.id)));
   G.sel.links
@@ -555,7 +557,7 @@ function renderNote(n, anchor) {
   };
   if (keys.length || isHub) {
     const rows = keys.map(k => { const h = val(k, fm[k]); return `<dt>${esc(k)}</dt>` + (h != null ? `<dd>${h}</dd>` : `<dd class="text">${esc(fm[k])}</dd>`); }).join('');
-    head += `<details class="props"${matchMedia('(max-width: 900px)').matches ? '' : ' open'}><summary>${esc(t('props'))} <span class="stat">${keys.length}</span>${isHub ? ` <span class="pill hub">${esc(t('hub'))}</span>` : ''}</summary><dl>${rows}</dl></details>`;
+    head += `<details class="props"><summary>${esc(t('props'))} <span class="stat">${keys.length}</span>${isHub ? ` <span class="pill hub">${esc(t('hub'))}</span>` : ''}</summary><dl>${rows}</dl></details>`;
   }
   if (n.translations && n.translations.length) {
     head += `<div class="lang-switch">${esc(t('readIn'))} ${n.translations.map(tid => { const tn = S.notes.get(tid); return `<button type="button" class="chip" data-note="${esc(tid)}" data-lang-jump="${esc(tn.language)}">${esc(langLabel(tn.language || '?'))}</button>`; }).join(' ')}</div>`;
@@ -888,7 +890,7 @@ async function loadSample() {
     else {
       $('#note').innerHTML = `<p class="empty">${esc(t('loadingVault'))}</p>`;
       try { const r = await fetch('vault.json', { cache: 'no-cache' }); if (!r.ok) throw new Error(r.status); sampleData = await r.json(); }
-      catch (e) { $('#note').innerHTML = `<h1>${esc(t('appName'))}</h1><p>${esc(t('vaultFail'))}</p>`; return; }
+      catch (e) { $('#graph-status').hidden = false; $('#graph-status').textContent = t('vaultFail'); $('#note').innerHTML = `<h1>${esc(t('appName'))}</h1><p>${esc(t('vaultFail'))}</p>`; return; }
     }
   }
   S.filesMode = false;
