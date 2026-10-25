@@ -37,6 +37,12 @@ theme:
         icon: material/weather-sunny
         name: Cambiar a modo claro
 
+hooks:
+  - hooks/explorer.py
+
+watch:
+  - explorer
+
 plugins:
   - search:
       lang:
@@ -96,6 +102,7 @@ extra:
 nav:
   - Inicio: index.md
   - Pregúntale al Handbook: ask-the-handbook.md
+  - Explorador de conocimiento: explorador/index.html
   - Gobierno del repositorio:
       - Roadmap: roadmap.md
       - Guía de selección de metodologías: methodology-selection-guide.md

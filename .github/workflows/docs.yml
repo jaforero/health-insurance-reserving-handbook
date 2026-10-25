@@ -44,8 +44,24 @@ jobs:
           python scripts/audit_docs.py
           python scripts/preflight_release.py
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Check knowledge graph
+        run: |
+          npm install --no-save js-yaml@4.1.0 jsdom@30.1.3 marked@12.0.2 d3@7.9.0 dompurify@3.3.1
+          node explorer/check_vault.js docs
+
       - name: Build MkDocs site
         run: python -m mkdocs build --strict
+
+      - name: Check published knowledge graph
+        run: node explorer/check_vault.js site/explorador/vault.json
+
+      - name: Test explorer interactions
+        run: node tests/js/test_explorer_ui.js
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
