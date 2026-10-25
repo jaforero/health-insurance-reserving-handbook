@@ -6,11 +6,17 @@ part: "part-07-colombia"
 language: "es"
 status: "draft"
 version: "0.1.11"
-last_updated: "2026-07-14"
+last_updated: "2026-10-25"
 jurisdiction: "Colombia"
 ---
 
 # Solvencia, liquidez y pruebas de estrés en salud
+
+## Conexiones de lectura
+
+- [37 · IBNR, provisiones y reporte](37-colombia-ibnr-technical-provisions-and-regulatory-reporting.md): identificar la base de pasivos del análisis.
+- [34 · UPC, ajuste de riesgo y morbilidad](34-colombia-upc-risk-adjustment-and-morbidity.md): evaluar los supuestos de suficiencia poblacional.
+- [39 · Escenarios y hoja de ruta](39-colombia-scenario-planning-and-reform-roadmap.md): organizar escenarios y respuestas de gestión.
 
 Este capítulo desarrolla un marco actuarial para analizar solvencia, liquidez y escenarios de estrés en aseguramiento de salud en Colombia. Conecta la suficiencia de UPC, reservas IBNR, alto costo, glosas, cuentas por pagar, flujo de caja, patrimonio, riesgo de modelo y sostenibilidad financiera.
 

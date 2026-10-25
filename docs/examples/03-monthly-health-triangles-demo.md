@@ -6,10 +6,19 @@ part: "examples"
 language: "en"
 status: "review"
 version: "0.6.0-r2"
-last_updated: "2026-07-18"
+last_updated: "2026-10-25"
 ---
 
 # Demo 3 · Monthly health paid-claims triangles
+
+**Language:** English · [Español](03-demo-triangulos-mensuales-salud.md)
+
+## Reading connections
+
+- [03 · Development lags and transformations](../part-01-foundations/03-development-lags-and-triangle-transformations.md): theoretical background (Spanish).
+- [05 · Age-to-age factors](../part-01-foundations/05-age-to-age-development-factors.md): theoretical background (Spanish).
+- [07 · Chain Ladder diagnostics](../part-02-classical-reserving/07-chain-ladder-diagnostics.md): theoretical background (Spanish).
+- [Handbook home](../index.md): browse chapters and demos.
 
 r2 distinguishes the **72×36 estimation basis**, the **traditional 36×36 display**, and the synthetic full runoff through age 48. A 36×36 triangle is familiar, but at one valuation date it contributes only one observation to link 34→35. The 72-origin basis retains 37 observations for that link.
 

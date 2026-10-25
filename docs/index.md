@@ -6,7 +6,7 @@ part: "repository"
 language: "es"
 status: "draft"
 version: "0.5.0"
-last_updated: "2026-07-17"
+last_updated: "2026-10-25"
 ---
 
 <div class="home-hero" markdown>
@@ -17,6 +17,7 @@ Manual técnico y reproducible sobre IBNR, reservas actuariales y desarrollo de 
 
 [:material-book-open-page-variant: Comenzar por los fundamentos](part-01-foundations/01-ibnr-and-reserving.md){ .md-button .md-button--primary }
 [:material-chart-box: Explorar los demos](examples/01-demo-triangulos-simulados-salud.md){ .md-button }
+[Pregúntale al Handbook](ask-the-handbook.md){ .md-button }
 [:material-source-repository: Ver el repositorio](https://github.com/jaforero/health-insurance-reserving-handbook){ .md-button }
 
 <div class="home-stats">
@@ -57,6 +58,17 @@ para comparar ultimate e IBNR con Chain Ladder y Bornhuetter-Ferguson.
 | 5 | Machine Learning | 3 | Diseño, árboles, deep learning y gobierno |
 | 6 | Especificidades de salud | 8 | Exposición, tendencia, contratos, auditoría y gobierno |
 | 7 | Colombia | 12 | UPC, RIPS–FEV, glosas, alto costo, provisiones y solvencia |
+
+## Recorrido aplicado para Colombia
+
+- [29 · Metodologías de reservas](part-07-colombia/29-colombia-health-reserving-methodologies.md)
+- [33 · Capitación y pagos prospectivos](part-07-colombia/33-colombia-capitation-and-prospective-payments.md)
+- [34 · UPC, ajuste de riesgo y morbilidad](part-07-colombia/34-colombia-upc-risk-adjustment-and-morbidity.md)
+- [36 · Calidad y validación RIPS–FEV](part-07-colombia/36-colombia-rips-fev-data-quality-and-validation.md)
+- [37 · IBNR, provisiones y reporte](part-07-colombia/37-colombia-ibnr-technical-provisions-and-regulatory-reporting.md)
+- [38 · Solvencia, liquidez y estrés](part-07-colombia/38-colombia-solvency-liquidity-and-stress-testing.md)
+- [39 · Escenarios y hoja de ruta](part-07-colombia/39-colombia-scenario-planning-and-reform-roadmap.md)
+- [40 · Playbook y plantillas](part-07-colombia/40-colombia-implementation-playbook-and-templates.md)
 
 ## Demos prácticos
 

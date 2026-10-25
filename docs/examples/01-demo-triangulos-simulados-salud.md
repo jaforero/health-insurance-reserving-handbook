@@ -6,10 +6,20 @@ version: "0.1.3"
 chapter: "example-01-es"
 part: "examples"
 language: "es"
-last_updated: "2026-07-14"
+last_updated: "2026-10-25"
 ---
 
 # Demo práctico de triángulos simulados de reclamaciones de salud
+
+**Idioma:** Español · [English](01-simulated-health-triangles-demo.md)
+
+## Conexiones de lectura
+
+- [02 · Construcción de triángulos](../part-01-foundations/02-triangle-construction.md): fundamento técnico del ejercicio.
+- [04 · Triángulos incrementales y acumulados](../part-01-foundations/04-incremental-vs-cumulative-triangles.md): fundamento técnico del ejercicio.
+- [05 · Factores edad-a-edad](../part-01-foundations/05-age-to-age-development-factors.md): fundamento técnico del ejercicio.
+- [06 · Chain Ladder](../part-02-classical-reserving/06-chain-ladder-method.md): fundamento técnico del ejercicio.
+- [Inicio del handbook](../index.md): consultar capítulos y demos.
 
 Este demo convierte la teoría de triángulos de desarrollo en un ejercicio reproducible. El objetivo es que el repositorio no sea solo un handbook conceptual, sino también una base práctica para ejecutar modelos, validar supuestos y demostrar resultados.
 

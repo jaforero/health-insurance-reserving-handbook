@@ -6,11 +6,17 @@ part: "part-07-colombia"
 language: "es"
 status: "draft"
 version: "0.1.11"
-last_updated: "2026-07-14"
+last_updated: "2026-10-25"
 jurisdiction: "Colombia"
 ---
 
 # Reservas para capitación y modalidades de pago prospectivo en Colombia
+
+## Conexiones de lectura
+
+- [26 · Contratos y modelos de pago](../part-06-health-specific/26-health-provider-contracts-and-payment-models.md): comparar modalidades contractuales antes de definir la obligación.
+- [34 · UPC, ajuste de riesgo y morbilidad](34-colombia-upc-risk-adjustment-and-morbidity.md): conectar exposición y riesgo poblacional con la suficiencia del pago.
+- [36 · Calidad de datos RIPS–FEV](36-colombia-rips-fev-data-quality-and-validation.md): revisar la trazabilidad de prestaciones y liquidaciones.
 
 > En una modalidad prospectiva, el costo contractual puede devengarse antes de que se conozca el detalle completo de las prestaciones. Por tanto, reservar no consiste únicamente en proyectar facturas: exige separar el pasivo contractual, el riesgo médico retenido y los ajustes de liquidación.
 

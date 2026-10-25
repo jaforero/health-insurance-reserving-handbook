@@ -6,7 +6,7 @@ part: "repository"
 language: "es"
 status: "review"
 version: "0.1.0"
-last_updated: "2026-07-18"
+last_updated: "2026-10-25"
 tags:
   - q-and-a
   - knowledge-retrieval
@@ -16,6 +16,13 @@ tags:
 ---
 
 # Pregúntale al Handbook — MVP
+
+## Conexiones de lectura
+
+- [Inicio](index.md): explorar la estructura completa del manual.
+- [Glosario](glossary.md): precisar los términos de una consulta.
+- [Guía de selección](methodology-selection-guide.md): comparar requisitos y límites de los métodos.
+- [Demo 4 · Preparación de datos](examples/04-demo-preparacion-datos.md): llevar las explicaciones a un ejercicio reproducible.
 
 Esta demostración permite formular preguntas en lenguaje natural y recuperar explicaciones
 editoriales verificadas dentro del **Health Insurance Reserving Handbook**.

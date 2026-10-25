@@ -6,10 +6,16 @@ part: "repository-governance"
 language: "es"
 status: "proposal"
 version: "0.1.0"
-last_updated: "2026-07-15"
+last_updated: "2026-10-25"
 ---
 
 # Matriz de preparación de datos para comparar métodos de reserving
+
+## Conexiones de lectura
+
+- [Marco de preparación · Parte 1](marco-preparacion-datos-metodologias-parte-1.md): definir el alcance y la semántica de los datos.
+- [Marco de preparación · Parte 2](marco-preparacion-datos-metodologias-parte-2.md): aplicar gates y criterios de benchmark.
+- [Demo 4 · Preparación de datos](examples/04-demo-preparacion-datos.md): aplicar la matriz a un ejercicio reproducible.
 
 ## 1. Propósito
 

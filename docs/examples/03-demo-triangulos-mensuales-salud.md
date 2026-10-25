@@ -6,10 +6,19 @@ part: "examples"
 language: "es"
 status: "review"
 version: "0.6.0-r2"
-last_updated: "2026-07-18"
+last_updated: "2026-10-25"
 ---
 
 # Demo 3 · Triángulos mensuales de reclamaciones pagadas de salud
+
+**Idioma:** Español · [English](03-monthly-health-triangles-demo.md)
+
+## Conexiones de lectura
+
+- [03 · Lags y transformaciones](../part-01-foundations/03-development-lags-and-triangle-transformations.md): fundamento técnico del ejercicio.
+- [05 · Factores edad-a-edad](../part-01-foundations/05-age-to-age-development-factors.md): fundamento técnico del ejercicio.
+- [07 · Diagnósticos de Chain Ladder](../part-02-classical-reserving/07-chain-ladder-diagnostics.md): fundamento técnico del ejercicio.
+- [Inicio del handbook](../index.md): consultar capítulos y demos.
 
 Este demo genera datos sintéticos pagados, estima factores mensuales y completa el triángulo con Chain Ladder. La revisión r2 separa tres conceptos que no deben confundirse:
 

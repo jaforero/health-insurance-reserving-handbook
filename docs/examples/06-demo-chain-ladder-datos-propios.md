@@ -6,7 +6,7 @@ part: "examples"
 language: "es"
 status: "draft"
 version: "0.6.0-r2"
-last_updated: "2026-07-18"
+last_updated: "2026-10-25"
 tags:
   - demo
   - streamlit
@@ -31,6 +31,13 @@ related_chapters:
 ---
 
 # Demo 6 · Chain Ladder, Bornhuetter-Ferguson y Benktander
+
+## Conexiones de lectura
+
+- [Demo 5 · Datos propios](05-demo-datos-propios-triangulos-actuariales.md): preparar y reconciliar el triángulo de entrada.
+- [07 · Diagnósticos de Chain Ladder](../part-02-classical-reserving/07-chain-ladder-diagnostics.md): evaluar estabilidad y limitaciones.
+- [11 · Bornhuetter-Ferguson](../part-02-classical-reserving/11-bornhuetter-ferguson.md): sustentar la expectativa previa.
+- [12 · Benktander](../part-02-classical-reserving/12-benktander-method.md): interpretar las iteraciones y la credibilidad.
 
 ## Resumen
 

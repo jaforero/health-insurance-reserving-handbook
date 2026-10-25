@@ -6,10 +6,19 @@ version: "0.1.4"
 chapter: "example-02-es"
 part: "examples"
 language: "es"
-last_updated: "2026-07-14"
+last_updated: "2026-10-25"
 ---
 
 # Demo práctico de triángulos pagados vs. incurridos en salud
+
+**Idioma:** Español · [English](02-paid-vs-incurred-health-demo.md)
+
+## Conexiones de lectura
+
+- [01 · IBNR y reservas](../part-01-foundations/01-ibnr-and-reserving.md): fundamento técnico del ejercicio.
+- [06 · Chain Ladder](../part-02-classical-reserving/06-chain-ladder-method.md): fundamento técnico del ejercicio.
+- [30 · Triángulos pagados e incurridos en Colombia](../part-07-colombia/30-colombia-paid-vs-incurred-triangles.md): fundamento técnico del ejercicio.
+- [Inicio del handbook](../index.md): consultar capítulos y demos.
 
 Este demo extiende el primer ejercicio de triángulos pagados. El objetivo es mostrar una diferencia operativa central en reserving de salud: una base pagada suele emerger más lentamente, mientras que una base incurrida incorpora reserva caso a caso y puede dar una señal más temprana del costo último.
 
@@ -148,4 +157,3 @@ Este demo es deliberadamente simple:
 - no evalúa suficiencia contable o regulatoria.
 
 Estas extensiones pueden agregarse en demos posteriores.
-

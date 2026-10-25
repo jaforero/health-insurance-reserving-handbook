@@ -6,11 +6,17 @@ part: "part-07-colombia"
 language: "es"
 status: "draft"
 version: "0.1.11"
-last_updated: "2026-07-14"
+last_updated: "2026-10-25"
 jurisdiction: "Colombia"
 ---
 
 # Calidad y validación de datos RIPS–FEV en Colombia
+
+## Conexiones de lectura
+
+- [31 · Datos y modelos multiestado](31-colombia-data-and-multistate-models.md): conectar la validación con los estados del reclamo.
+- [37 · IBNR, provisiones y reporte](37-colombia-ibnr-technical-provisions-and-regulatory-reporting.md): seguir el uso de datos reconciliados en la estimación y el reporte.
+- [40 · Playbook de implementación](40-colombia-implementation-playbook-and-templates.md): asignar controles, responsables y evidencia.
 
 Este capítulo define un marco actuarial y operativo para validar datos de salud en Colombia cuando se usan para reserving, suficiencia UPC, ajuste de riesgo, alto costo, presupuestos prospectivos y monitoreo financiero. El énfasis está en RIPS, facturación electrónica de venta en salud, pagos, glosas, MIPRES, afiliación, prestadores y trazabilidad entre prestación, factura, reconocimiento y pago.
 

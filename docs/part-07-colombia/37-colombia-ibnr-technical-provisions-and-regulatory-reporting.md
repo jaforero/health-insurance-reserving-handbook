@@ -6,11 +6,17 @@ part: "part-07-colombia"
 language: "es"
 status: "draft"
 version: "0.1.11"
-last_updated: "2026-07-14"
+last_updated: "2026-10-25"
 jurisdiction: "Colombia"
 ---
 
 # IBNR, provisiones técnicas y reporte regulatorio en Colombia
+
+## Conexiones de lectura
+
+- [36 · Calidad de datos RIPS–FEV](36-colombia-rips-fev-data-quality-and-validation.md): revisar los insumos antes del cierre actuarial.
+- [28 · Gobierno, controles y reporte](../part-06-health-specific/28-health-reserving-governance-controls-and-reporting.md): consultar el marco general de documentación y revisión.
+- [38 · Solvencia, liquidez y estrés](38-colombia-solvency-liquidity-and-stress-testing.md): examinar el efecto de las provisiones sobre balance y caja.
 
 Este capítulo define un marco técnico para estimar, documentar, controlar y reportar provisiones de siniestros en salud en Colombia, con énfasis en IBNR, obligaciones conocidas, obligaciones no liquidadas, desarrollo de pagos, glosas, alto costo, suficiencia patrimonial y reporting regulatorio.
 

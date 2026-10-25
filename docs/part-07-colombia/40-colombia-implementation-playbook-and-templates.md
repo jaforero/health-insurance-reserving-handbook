@@ -6,11 +6,18 @@ part: "part-07-colombia"
 language: "es"
 status: "draft"
 version: "0.1.11"
-last_updated: "2026-07-14"
+last_updated: "2026-10-25"
 jurisdiction: "Colombia"
 ---
 
 # Playbook de implementación y plantillas
+
+## Conexiones de lectura
+
+- [36 · Calidad de datos RIPS–FEV](36-colombia-rips-fev-data-quality-and-validation.md): estructurar validaciones y reconciliaciones.
+- [37 · IBNR, provisiones y reporte](37-colombia-ibnr-technical-provisions-and-regulatory-reporting.md): preparar el cierre y su evidencia.
+- [38 · Solvencia, liquidez y estrés](38-colombia-solvency-liquidity-and-stress-testing.md): incorporar análisis financiero al seguimiento.
+- [39 · Escenarios y hoja de ruta](39-colombia-scenario-planning-and-reform-roadmap.md): vincular el plan operativo con los escenarios.
 
 Este capítulo convierte la hoja de ruta técnica de Colombia en un playbook operativo. Su objetivo es entregar plantillas, checklists y estructuras de trabajo que puedan usarse para implementar reserving, IBNR, calidad de datos, ajuste por morbilidad, alto costo, solvencia, liquidez y reporting en una EPS, asegurador, consultor, auditor o equipo regulatorio.
 

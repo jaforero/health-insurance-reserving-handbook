@@ -6,11 +6,17 @@ part: "part-07-colombia"
 language: "es"
 status: "draft"
 version: "0.1.11"
-last_updated: "2026-07-14"
+last_updated: "2026-10-25"
 jurisdiction: "Colombia"
 ---
 
 # UPC, ajuste de riesgo y morbilidad en Colombia
+
+## Conexiones de lectura
+
+- [25 · Ajuste de riesgo en salud](../part-06-health-specific/25-health-risk-adjustment-and-morbidity.md): consultar los fundamentos generales.
+- [33 · Capitación y pagos prospectivos](33-colombia-capitation-and-prospective-payments.md): distinguir financiación poblacional y obligaciones contractuales.
+- [35 · Alto costo y mutualización](35-colombia-high-cost-conditions-and-risk-pooling.md): examinar la concentración de riesgo.
 
 Este capítulo desarrolla una propuesta técnica para incorporar morbilidad en el análisis de suficiencia de la Unidad de Pago por Capitación (UPC) y en la gestión actuarial del riesgo en salud en Colombia. El objetivo no es sustituir el marco regulatorio vigente ni proponer una fórmula oficial, sino definir una arquitectura actuarial defendible para medir diferencias de riesgo clínico entre poblaciones, EPS, regiones, cohortes y periodos.
 

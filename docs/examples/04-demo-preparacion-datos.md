@@ -6,7 +6,7 @@ part: "examples"
 language: "es"
 status: "draft"
 version: "0.1.0"
-last_updated: "2026-07-15"
+last_updated: "2026-10-25"
 tags:
   - demo
   - data-readiness
@@ -16,8 +16,8 @@ tags:
   - health-insurance
   - data-quality
 prerequisites:
-  - ../repository-governance/marco-preparacion-datos-metodologias-parte-1.md
-  - ../repository-governance/marco-preparacion-datos-metodologias-parte-2.md
+  - ../marco-preparacion-datos-metodologias-parte-1.md
+  - ../marco-preparacion-datos-metodologias-parte-2.md
   - ../../config/diccionario_datos_canonico.yml
 related_chapters:
   - ../part-01-foundations/02-triangle-construction.md
@@ -31,6 +31,12 @@ related_chapters:
 ---
 
 # Demo de preparación de datos para metodologías de reserving
+
+## Conexiones de lectura
+
+- [Marco de preparación · Parte 1](../marco-preparacion-datos-metodologias-parte-1.md): definir alcance y semántica de los datos.
+- [Marco de preparación · Parte 2](../marco-preparacion-datos-metodologias-parte-2.md): aplicar gates de elegibilidad y criterios de validación.
+- [Demo 5 · Datos propios](05-demo-datos-propios-triangulos-actuariales.md): continuar con la construcción de triángulos.
 
 > **Archivo propuesto:** `docs/examples/04-demo-preparacion-datos.md`
 

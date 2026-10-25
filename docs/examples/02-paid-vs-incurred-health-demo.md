@@ -6,10 +6,19 @@ version: "0.1.4"
 chapter: "example-02-en"
 part: "examples"
 language: "en"
-last_updated: "2026-07-14"
+last_updated: "2026-10-25"
 ---
 
 # Practical demo of paid vs. incurred health triangles
+
+**Language:** English · [Español](02-demo-pagado-vs-incurrido-salud.md)
+
+## Reading connections
+
+- [01 · IBNR and reserving](../part-01-foundations/01-ibnr-and-reserving.md): theoretical background (Spanish).
+- [06 · Chain Ladder](../part-02-classical-reserving/06-chain-ladder-method.md): theoretical background (Spanish).
+- [30 · Paid and incurred triangles in Colombia](../part-07-colombia/30-colombia-paid-vs-incurred-triangles.md): theoretical background (Spanish).
+- [Handbook home](../index.md): browse chapters and demos.
 
 This demo extends the first paid triangle exercise. The goal is to show a central operational distinction in health reserving: paid data usually emerges more slowly, while incurred data includes case reserves and can provide an earlier signal of ultimate cost.
 
@@ -148,4 +157,3 @@ This demo is intentionally simple:
 - it does not evaluate accounting or regulatory sufficiency.
 
 These extensions can be added in later demos.
-

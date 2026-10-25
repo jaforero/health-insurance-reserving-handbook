@@ -6,7 +6,7 @@ part: "examples"
 language: "es"
 status: "draft"
 version: "0.1.1"
-last_updated: "2026-07-16"
+last_updated: "2026-10-25"
 tags:
   - demo
   - streamlit
@@ -26,6 +26,12 @@ related_chapters:
 ---
 
 # Demo 5 · De datos propios a triángulos actuariales
+
+## Conexiones de lectura
+
+- [Demo 4 · Preparación de datos](04-demo-preparacion-datos.md): revisar el mapeo y los controles previos.
+- [02 · Construcción de triángulos](../part-01-foundations/02-triangle-construction.md): verificar origen, desarrollo y agregación.
+- [Demo 6 · Proyección y comparación](06-demo-chain-ladder-datos-propios.md): continuar con los métodos de reserving.
 
 ## Resumen
 

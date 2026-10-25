@@ -6,11 +6,17 @@ part: "part-07-colombia"
 language: "es"
 status: "draft"
 version: "0.1.11"
-last_updated: "2026-07-14"
+last_updated: "2026-10-25"
 jurisdiction: "Colombia"
 ---
 
 # Planeación de escenarios y hoja de ruta de reforma
+
+## Conexiones de lectura
+
+- [38 · Solvencia, liquidez y estrés](38-colombia-solvency-liquidity-and-stress-testing.md): cuantificar las consecuencias financieras de los escenarios.
+- [36 · Calidad de datos RIPS–FEV](36-colombia-rips-fev-data-quality-and-validation.md): identificar dependencias de información.
+- [40 · Playbook de implementación](40-colombia-implementation-playbook-and-templates.md): convertir escenarios y prioridades en entregables y controles.
 
 Este capítulo cierra el bloque Colombia con una hoja de ruta técnica para planear escenarios, priorizar reformas actuariales y secuenciar capacidades de reserving, datos, ajuste de riesgo, alto costo, solvencia y reporting. No es una propuesta legal ni una predicción política. Es un marco de implementación para transformar un sistema de estimación reactivo en una arquitectura actuarial prospectiva, trazable y gobernable.
 

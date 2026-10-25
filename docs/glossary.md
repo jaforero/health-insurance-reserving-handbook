@@ -6,7 +6,7 @@ version: 1.0
 chapter: Glossary
 part: Repository Governance
 status: Draft
-last_updated: 2026-07-14
+last_updated: "2026-10-25"
 language: es
 jurisdiction: General con aplicaciones a Colombia
 tags:
@@ -22,13 +22,18 @@ related_chapters:
   - methodology-selection-guide.md
   - part-01-foundations/01-ibnr-and-reserving.md
   - part-01-foundations/02-triangle-construction.md
-  - part-01-foundations/03-development-factors.md
+  - part-01-foundations/05-age-to-age-development-factors.md
   - part-02-classical-reserving/14-classical-reserving-methods-comparison.md
   - part-07-colombia/29-colombia-health-reserving-methodologies.md
   - roadmap.md
 ---
 
 # Glosario actuarial y de reserving en salud
+
+## Conexiones de lectura
+
+- [05 · Factores edad-a-edad](part-01-foundations/05-age-to-age-development-factors.md): desarrollo de las definiciones de link ratio y CDF.
+- [Inicio](index.md): regresar al recorrido del handbook.
 
 > Este glosario es un vocabulario controlado. Su finalidad no es reunir todas las acepciones posibles, sino fijar el significado que debe tener cada término dentro del handbook.
 

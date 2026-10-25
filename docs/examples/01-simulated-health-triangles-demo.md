@@ -6,10 +6,20 @@ version: "0.1.3"
 chapter: "example-01-en"
 part: "examples"
 language: "en"
-last_updated: "2026-07-14"
+last_updated: "2026-10-25"
 ---
 
 # Practical demo of simulated health claims triangles
+
+**Language:** English · [Español](01-demo-triangulos-simulados-salud.md)
+
+## Reading connections
+
+- [02 · Triangle construction](../part-01-foundations/02-triangle-construction.md): theoretical background (Spanish).
+- [04 · Incremental and cumulative triangles](../part-01-foundations/04-incremental-vs-cumulative-triangles.md): theoretical background (Spanish).
+- [05 · Age-to-age factors](../part-01-foundations/05-age-to-age-development-factors.md): theoretical background (Spanish).
+- [06 · Chain Ladder](../part-02-classical-reserving/06-chain-ladder-method.md): theoretical background (Spanish).
+- [Handbook home](../index.md): browse chapters and demos.
 
 This demo turns development triangle theory into a reproducible exercise. The goal is for the repository to work not only as a conceptual handbook, but also as a practical base for running models, validating assumptions, and showing results.
 

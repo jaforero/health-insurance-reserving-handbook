@@ -6,7 +6,7 @@ part: "part-06-health-specific"
 language: "es"
 status: "draft"
 version: "0.1.12"
-last_updated: "2026-07-14"
+last_updated: "2026-10-25"
 subtitle: Marco técnico para obligaciones, datos, métodos y gobierno actuarial en salud
 author: Health Insurance Reserving Handbook
 jurisdiction: General con aplicaciones a Colombia
@@ -21,22 +21,22 @@ tags:
   - model-governance
   - colombia
 prerequisites:
-  - glossary.md
-  - bibliography.md
-  - methodology-selection-guide.md
-  - part-01-foundations/01-ibnr-and-reserving.md
-  - part-01-foundations/02-triangle-construction.md
-  - part-02-classical-reserving/06-chain-ladder-method.md
+  - ../glossary.md
+  - ../bibliography.md
+  - ../methodology-selection-guide.md
+  - ../part-01-foundations/01-ibnr-and-reserving.md
+  - ../part-01-foundations/02-triangle-construction.md
+  - ../part-02-classical-reserving/06-chain-ladder-method.md
 related_chapters:
-  - part-01-foundations/03-development-lags-and-triangle-transformations.md
-  - part-02-classical-reserving/11-bornhuetter-ferguson.md
-  - part-02-classical-reserving/14-classical-reserving-methods-comparison.md
-  - part-03-stochastic-reserving/08-mack-chain-ladder.md
-  - part-04-statistical-models/15-glm-for-loss-reserving.md
-  - part-05-machine-learning/18-machine-learning-for-loss-reserving.md
-  - part-07-colombia/29-colombia-health-reserving-methodologies.md
-  - part-07-colombia/30-colombia-paid-vs-incurred-triangles.md
-  - part-07-colombia/32-colombia-glosas-and-disputes.md
+  - ../part-01-foundations/03-development-lags-and-triangle-transformations.md
+  - ../part-02-classical-reserving/11-bornhuetter-ferguson.md
+  - ../part-02-classical-reserving/14-classical-reserving-methods-comparison.md
+  - ../part-03-stochastic-reserving/08-mack-chain-ladder.md
+  - ../part-04-statistical-models/15-glm-for-loss-reserving.md
+  - ../part-05-machine-learning/18-machine-learning-for-loss-reserving.md
+  - ../part-07-colombia/29-colombia-health-reserving-methodologies.md
+  - ../part-07-colombia/30-colombia-paid-vs-incurred-triangles.md
+  - ../part-07-colombia/32-colombia-glosas-and-disputes.md
 sources:
   - ASB-ASOP05-2017
   - ASB-ASOP23-2016

@@ -6,10 +6,16 @@ part: "repository"
 language: "es"
 status: "draft"
 version: "0.6.0-r2"
-last_updated: "2026-07-18"
+last_updated: "2026-10-25"
 ---
 
 # Roadmap del Health Insurance Reserving Handbook
+
+## Conexiones de lectura
+
+- [Inicio](index.md): consultar la estructura y los demos disponibles.
+- [Guía de selección de metodologías](methodology-selection-guide.md): revisar criterios técnicos para priorizar métodos.
+- [Playbook de implementación](part-07-colombia/40-colombia-implementation-playbook-and-templates.md): organizar entregables, controles y responsables.
 
 > El avance se gobierna mediante entregables verificables y criterios de salida, no únicamente por cantidad de archivos.
 
