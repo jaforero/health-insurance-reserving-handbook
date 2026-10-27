@@ -36,18 +36,26 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip install -e . -r requirements-app.txt
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Generate Ask the Handbook knowledge layer
+        run: python scripts/generate_handbook_qa_knowledge.py
+
       - name: Run automated tests
         run: python -m unittest discover -s tests -p "test_*.py"
+
+      - name: Run Ask the Handbook JavaScript regressions
+        run: |
+          node tests/js/test_handbook_qa_engine.js
+          node tests/js/test_handbook_qa_health_method_regression.js
 
       - name: Audit documentation
         run: |
           python scripts/audit_docs.py
           python scripts/preflight_release.py
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
 
       - name: Check knowledge graph
         run: |
