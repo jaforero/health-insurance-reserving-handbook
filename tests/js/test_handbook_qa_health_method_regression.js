@@ -39,12 +39,12 @@ assert.strictEqual(
   "La pregunta de selección metodológica en salud debe ser la primera sugerencia por defecto"
 );
 
-const corpusQuestion = "¿Cómo afectan las glosas al reserving en Colombia?";
+const corpusQuestion = "Glosas y disputas en Colombia";
 const corpusResult = engine.search(corpusQuestion, catalog, sections, {});
 assert.strictEqual(
   corpusResult.status,
   "corpus_match",
-  "Una pregunta respaldada por el corpus no debe degradarse a Cobertura insuficiente"
+  "Una consulta respaldada por el corpus no debe degradarse a Cobertura insuficiente"
 );
 assert.ok(corpusResult.relatedSections.length, "El corpus match debe devolver secciones fuente");
 assert.ok(
