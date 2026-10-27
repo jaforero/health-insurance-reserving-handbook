@@ -39,7 +39,7 @@ assert.strictEqual(
   "La pregunta de selección metodológica en salud debe ser la primera sugerencia por defecto"
 );
 
-const corpusQuestion = "Glosas y disputas en Colombia";
+const corpusQuestion = "Modelación actuarial de glosas, devoluciones y controversias en salud";
 const corpusResult = engine.search(corpusQuestion, catalog, sections, {});
 assert.strictEqual(
   corpusResult.status,
@@ -51,7 +51,7 @@ assert.ok(
   corpusResult.relatedSections.some(
     (entry) => entry.section.path === "part-07-colombia/32-colombia-glosas-and-disputes.md"
   ),
-  "La recuperación debe incluir el capítulo colombiano de glosas y disputas"
+  "La recuperación debe incluir el capítulo colombiano de glosas, devoluciones y controversias"
 );
 
 console.log("OK: selección metodológica en salud y fallback de corpus verificados.");
