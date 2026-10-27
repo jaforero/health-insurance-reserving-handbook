@@ -116,7 +116,9 @@ def clean_inline_markdown(value: str) -> str:
     # Keep underscores: MkDocs preserves them in heading anchors such as
     # `archivo_fuente`. Removing them here would create broken generated links.
     value = re.sub(r"[`*~]", "", value)
-    value = re.sub(r"\$+[^$]*\$+", " ", value)
+    # Keep the contents of inline math so a heading such as `$\widehat R$`
+    # produces the same semantic anchor (`widehat-r`) that MkDocs exposes.
+    value = re.sub(r"\$+([^$]*)\$+", r"\1", value)
     value = re.sub(r"^\s*(?:[-*+] |\d+[.)]\s+|!!!\s+\w+\s*)", "", value)
     return re.sub(r"\s+", " ", value).strip()
 
