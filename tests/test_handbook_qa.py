@@ -63,13 +63,18 @@ def slugify(value: str, *, remove_accents: bool) -> str:
 def markdown_anchors(path: Path) -> set[str]:
     text = path.read_text(encoding="utf-8")
     anchors: set[str] = set()
+    counts: dict[tuple[bool, str], int] = {}
     for line in text.splitlines():
         match = re.match(r"^#{1,6}\s+(.+?)\s*#*\s*$", line)
         if not match:
             continue
         heading = match.group(1)
-        anchors.add(slugify(heading, remove_accents=False))
-        anchors.add(slugify(heading, remove_accents=True))
+        for remove_accents in (False, True):
+            base = slugify(heading, remove_accents=remove_accents)
+            key = (remove_accents, base)
+            count = counts.get(key, 0)
+            counts[key] = count + 1
+            anchors.add(base if count == 0 else f"{base}_{count}")
     return anchors
 
 
