@@ -39,7 +39,7 @@ assert.strictEqual(
   "La pregunta de selección metodológica en salud debe ser la primera sugerencia por defecto"
 );
 
-const corpusQuestion = "¿Qué son las glosas en reservas de salud?";
+const corpusQuestion = "¿Cómo afectan las glosas al reserving en Colombia?";
 const corpusResult = engine.search(corpusQuestion, catalog, sections, {});
 assert.strictEqual(
   corpusResult.status,
