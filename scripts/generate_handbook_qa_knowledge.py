@@ -113,7 +113,9 @@ def clean_inline_markdown(value: str) -> str:
     value = re.sub(r"!\[([^\]]*)\]\([^)]*\)", r"\1", value)
     value = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", value)
     value = re.sub(r"<[^>]+>", " ", value)
-    value = re.sub(r"[`*_~]", "", value)
+    # Keep underscores: MkDocs preserves them in heading anchors such as
+    # `archivo_fuente`. Removing them here would create broken generated links.
+    value = re.sub(r"[`*~]", "", value)
     value = re.sub(r"\$+[^$]*\$+", " ", value)
     value = re.sub(r"^\s*(?:[-*+] |\d+[.)]\s+|!!!\s+\w+\s*)", "", value)
     return re.sub(r"\s+", " ", value).strip()
