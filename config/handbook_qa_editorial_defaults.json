@@ -84,7 +84,7 @@
           "bornhuetter-ferguson"
         ],
         "priority": 1.0,
-        "general": true,
+        "general": false,
         "default": true
       }
     }
