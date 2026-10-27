@@ -1,4 +1,4 @@
-.PHONY: install install-app install-dev app test audit build serve clean
+.PHONY: install install-app install-dev app qa-index test audit build serve clean
 
 PYTHON ?= python
 PIP ?= $(PYTHON) -m pip
@@ -15,16 +15,19 @@ install-dev:
 app:
 	$(PYTHON) scripts/iniciar_asistente_triangulos.py
 
-test:
+qa-index:
+	$(PYTHON) scripts/generate_handbook_qa_knowledge.py
+
+test: qa-index
 	$(PYTHON) -m unittest discover -s tests -p "test_*.py"
 
 audit:
 	$(PYTHON) scripts/audit_docs.py
 
-build:
+build: qa-index
 	$(PYTHON) -m mkdocs build --strict
 
-serve:
+serve: qa-index
 	$(PYTHON) -m mkdocs serve
 
 clean:
