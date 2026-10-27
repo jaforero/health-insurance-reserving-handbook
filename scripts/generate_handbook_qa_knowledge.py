@@ -66,7 +66,8 @@ def slugify(value: str) -> str:
     value = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", value)
     value = re.sub(r"`([^`]+)`", r"\1", value)
     value = re.sub(r"^\d+(?:\.\d+)*\s*", "", value.strip())
-    value = normalize_text(value)
+    value = strip_accents(value).lower()
+    value = re.sub(r"[^\w\s-]", "", value, flags=re.UNICODE)
     return re.sub(r"[-\s]+", "-", value).strip("-") or "section"
 
 
@@ -118,7 +119,7 @@ def clean_inline_markdown(value: str) -> str:
     return re.sub(r"\s+", " ", value).strip()
 
 
-def section_summary(lines: list[str], fallback: str, maximum: int = 220) -> str:
+def section_summary(lines: list[str], fallback: str, maximum: int = 160) -> str:
     collected: list[str] = []
     in_fence = False
     for raw in lines:
@@ -145,7 +146,7 @@ def section_summary(lines: list[str], fallback: str, maximum: int = 220) -> str:
     return result
 
 
-def extract_keywords(*values: str, limit: int = 14) -> list[str]:
+def extract_keywords(*values: str, limit: int = 10) -> list[str]:
     keywords: list[str] = []
     seen: set[str] = set()
     for value in values:
@@ -212,7 +213,7 @@ def build_section_index(docs_root: Path = DEFAULT_DOCS) -> dict[str, Any]:
                 "part": part,
                 "language": language,
                 "status": status,
-                "tags": tags,
+                "tags": tags[:8],
                 "rendered_path": rendered_path(relative),
             }
         )
@@ -230,7 +231,10 @@ def build_section_index(docs_root: Path = DEFAULT_DOCS) -> dict[str, Any]:
             content_lines = lines[line_index + 1 : next_index] if line_index >= 0 else lines[:20]
             summary = section_summary(content_lines, description)
             terms = extract_keywords(heading, title, " ".join(tags), summary)
+            if not terms:
+                terms = [base_anchor]
             identifier = hashlib.sha1(f"{relative}#{anchor}".encode("utf-8")).hexdigest()[:14]
+            section_tags = list(dict.fromkeys(tags[:6] + [part, language]))
             sections.append(
                 {
                     "id": f"sec-{identifier}",
@@ -241,9 +245,7 @@ def build_section_index(docs_root: Path = DEFAULT_DOCS) -> dict[str, Any]:
                     "summary": summary,
                     "part": part,
                     "rendered_path": rendered_path(relative),
-                    "tags": list(dict.fromkeys(tags + [part, language])),
-                    "document_title": title,
-                    "heading_level": level,
+                    "tags": section_tags,
                 }
             )
 
@@ -263,7 +265,6 @@ def sync_catalog(catalog: dict[str, Any], defaults: dict[str, Any]) -> dict[str,
     default_ids = {item["id"] for item in default_items}
     remaining = [item for item in catalog.get("items", []) if item.get("id") not in default_ids]
     result = dict(catalog)
-    result["schema_version"] = "1.2.0"
     reviewed = [str(item.get("last_reviewed", "")) for item in default_items]
     result["last_updated"] = max([str(catalog.get("last_updated", ""))] + reviewed)
     result["items"] = default_items + remaining
@@ -301,15 +302,26 @@ def patch_engine(engine_text: str) -> str:
       : "insufficient";
     let item = status === "insufficient" ? null : best.item;
 
+    const topCorpusSection = relatedSections.length ? relatedSections[0].section : null;
+    const corpusCoverage = topCorpusSection
+      ? fuzzyCoverage(
+          tokenize(trimmed),
+          tokenize(
+            `${topCorpusSection.title || ""} ${(topCorpusSection.terms || []).join(" ")} ${topCorpusSection.summary || ""}`
+          )
+        )
+      : 0;
+
     // The editorial catalog is the highest-confidence layer. When it does not
     // resolve the wording but the automatically generated corpus index contains
     // strong lexical evidence, expose that evidence instead of claiming that the
-    // handbook lacks coverage. No text is synthesized: the reader is sent to the
-    // exact source sections.
+    // handbook lacks coverage. A single generic token is not enough: corpus
+    // fallback requires both a section score and at least 50% query-token coverage.
     if (
       status === "insufficient"
       && relatedSections.length
       && relatedSections[0].score >= 0.30
+      && corpusCoverage >= 0.50
     ) {
       status = "corpus_match";
       item = null;
@@ -366,9 +378,13 @@ def patch_style(style_text: str) -> str:
     return style_text.replace(marker, addition, 1)
 
 
-def write_json(path: Path, payload: dict[str, Any]) -> None:
+def write_json(path: Path, payload: dict[str, Any], *, compact: bool = False) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    if compact:
+        serialized = json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + "\n"
+    else:
+        serialized = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
+    path.write_text(serialized, encoding="utf-8")
 
 
 def generate(
@@ -380,7 +396,7 @@ def generate(
     style_path: Path = DEFAULT_STYLE,
 ) -> dict[str, int]:
     section_index = build_section_index(docs_root)
-    write_json(section_index_path, section_index)
+    write_json(section_index_path, section_index, compact=True)
 
     catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
     defaults = json.loads(editorial_path.read_text(encoding="utf-8"))
