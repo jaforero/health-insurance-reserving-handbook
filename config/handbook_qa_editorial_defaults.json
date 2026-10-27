@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0.0",
+  "items": [
+    {
+      "id": "health-reserving-method-selection",
+      "question": "Para reservas en salud, ¿cuál de los métodos es más recomendado?",
+      "variants": [
+        "Para reservas en salud cuál de los métodos es más recomendado?",
+        "¿Cuál es el método más recomendado para reservas en salud?",
+        "¿Qué método debería usar para estimar reservas en salud?",
+        "¿Cuál es el mejor método de reserving en salud?",
+        "¿Chain Ladder o Bornhuetter-Ferguson para reservas en salud?",
+        "¿Cómo selecciono el método de reservas en salud?"
+      ],
+      "concepts": [
+        "reservas en salud",
+        "health reserving",
+        "selección metodológica",
+        "método recomendado",
+        "IBNR",
+        "Chain Ladder",
+        "Bornhuetter-Ferguson",
+        "Cape Cod",
+        "PMPM",
+        "Mack",
+        "Bootstrap",
+        "madurez",
+        "estabilidad",
+        "prior",
+        "exposición"
+      ],
+      "summary": "No existe un único método universalmente superior para reservas en salud. La selección depende de la obligación que se estima, la madurez de los claims, la estabilidad del patrón de desarrollo, la disponibilidad de exposición o de un prior defendible, la calidad de los datos y el propósito de la estimación. Con desarrollo triangular estable, Chain Ladder es un benchmark natural; para periodos inmaduros con un prior o exposición confiables, Bornhuetter-Ferguson, Cape Cod o enfoques PMPM suelen ser candidatos más robustos; cuando esas estructuras no representan bien el fenómeno, deben considerarse modelos granulares, GLM/GAM, supervivencia, escenarios u otros enfoques apropiados.",
+      "why_it_matters": "En salud, el patrón observado puede cambiar por morbilidad, mezcla poblacional, red, contratos, glosas, velocidad de adjudicación, inflación médica o shocks externos. Por eso la práctica defendible no consiste en declarar un ganador universal, sino en seleccionar un método central, contrastarlo con challengers y validar sus supuestos mediante diagnósticos, backtesting y sensibilidad.",
+      "example": "Si una cartera tiene varios años de triángulos mensuales comparables y factores estables, Chain Ladder puede ser un buen punto de partida. Si los meses recientes son muy inmaduros pero existe una expectativa PMPM o un prior independiente confiable, Bornhuetter-Ferguson puede reducir la dependencia de factores tempranos volátiles. Si además cambió la red o el proceso de pago, conviene segmentar, ajustar el modelo o usar escenarios antes de confiar en la historia agregada.",
+      "caution": "La recomendación cambia con el propósito y los datos. Mack y Bootstrap cuantifican incertidumbre alrededor de estructuras de desarrollo y no sustituyen automáticamente la elección del estimador central. Tampoco debe usarse una reserva contable como forecast futuro sin reconciliar exposición, tendencia, fecha de valoración, contratos y definición de la obligación.",
+      "sources": [
+        {
+          "path": "part-06-health-specific/21-health-insurance-reserving-specificities.md",
+          "anchor": "seleccion-metodologica",
+          "label": "Particularidades de reservas en salud · Selección metodológica"
+        },
+        {
+          "path": "part-06-health-specific/21-health-insurance-reserving-specificities.md",
+          "anchor": "arbol-de-decision-resumido",
+          "label": "Particularidades de reservas en salud · Árbol de decisión"
+        },
+        {
+          "path": "methodology-selection-guide.md",
+          "anchor": "principios-de-seleccion",
+          "label": "Guía de selección de metodologías · Principios"
+        },
+        {
+          "path": "methodology-selection-guide.md",
+          "anchor": "arboles-de-decision",
+          "label": "Guía de selección de metodologías · Árboles de decisión"
+        }
+      ],
+      "related_questions": [],
+      "language": "es",
+      "version": "1.0.0",
+      "last_reviewed": "2026-10-27",
+      "contexts": {
+        "paths": [
+          "/part-06-health-specific/21-health-insurance-reserving-specificities/",
+          "/methodology-selection-guide/",
+          "/part-02-classical-reserving/14-classical-reserving-methods-comparison/"
+        ],
+        "anchors": [
+          "seleccion-metodologica",
+          "arbol-de-decision-resumido",
+          "principios-de-seleccion",
+          "arboles-de-decision"
+        ],
+        "parts": [
+          "part-06-health-specific",
+          "part-02-classical-reserving",
+          "repository"
+        ],
+        "tags": [
+          "health-reserving",
+          "methodology-selection",
+          "ibnr",
+          "chain-ladder",
+          "bornhuetter-ferguson"
+        ],
+        "priority": 1.0,
+        "general": false,
+        "default": true
+      }
+    }
+  ]
+}

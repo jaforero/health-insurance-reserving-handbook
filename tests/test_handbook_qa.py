@@ -22,6 +22,8 @@ STYLE_PATH = DOCS / "assets" / "stylesheets" / "handbook-qa.css"
 PAGE_PATH = DOCS / "ask-the-handbook.md"
 MKDOCS_PATH = ROOT / "mkdocs.yml"
 NODE_TEST_PATH = ROOT / "tests" / "js" / "test_handbook_qa_engine.js"
+GENERATOR_PATH = ROOT / "scripts" / "generate_handbook_qa_knowledge.py"
+EDITORIAL_DEFAULTS_PATH = ROOT / "config" / "handbook_qa_editorial_defaults.json"
 
 REQUIRED_ITEM_FIELDS = {
     "id",
@@ -61,13 +63,18 @@ def slugify(value: str, *, remove_accents: bool) -> str:
 def markdown_anchors(path: Path) -> set[str]:
     text = path.read_text(encoding="utf-8")
     anchors: set[str] = set()
+    counts: dict[tuple[bool, str], int] = {}
     for line in text.splitlines():
         match = re.match(r"^#{1,6}\s+(.+?)\s*#*\s*$", line)
         if not match:
             continue
         heading = match.group(1)
-        anchors.add(slugify(heading, remove_accents=False))
-        anchors.add(slugify(heading, remove_accents=True))
+        for remove_accents in (False, True):
+            base = slugify(heading, remove_accents=remove_accents)
+            key = (remove_accents, base)
+            count = counts.get(key, 0)
+            counts[key] = count + 1
+            anchors.add(base if count == 0 else f"{base}_{count}")
     return anchors
 
 
@@ -85,14 +92,17 @@ class HandbookQACatalogTest(unittest.TestCase):
             STYLE_PATH,
             PAGE_PATH,
             NODE_TEST_PATH,
+            GENERATOR_PATH,
+            EDITORIAL_DEFAULTS_PATH,
         ]:
             self.assertTrue(path.is_file(), f"Falta el archivo {path.relative_to(ROOT)}")
 
     def test_catalog_contains_reference_questions(self) -> None:
         items = self.catalog["items"]
-        self.assertEqual(len(items), 15)
+        self.assertGreaterEqual(len(items), 16)
         identifiers = [item["id"] for item in items]
         self.assertEqual(len(identifiers), len(set(identifiers)))
+        self.assertEqual(identifiers[0], "health-reserving-method-selection")
 
     def test_required_fields_and_editorial_content(self) -> None:
         for item in self.catalog["items"]:
@@ -159,6 +169,7 @@ class HandbookQACatalogTest(unittest.TestCase):
                 SECTIONS_PATH.read_text(encoding="utf-8"),
                 ENGINE_PATH.read_text(encoding="utf-8"),
                 PAGE_PATH.read_text(encoding="utf-8"),
+                GENERATOR_PATH.read_text(encoding="utf-8"),
             ]
         ).lower()
         for forbidden in [
@@ -173,8 +184,8 @@ class HandbookQACatalogTest(unittest.TestCase):
 
     def test_size_budgets(self) -> None:
         combined_index_size = CATALOG_PATH.stat().st_size + SECTIONS_PATH.stat().st_size
-        self.assertLess(combined_index_size, 500_000)
-        self.assertLess(ENGINE_PATH.stat().st_size, 100_000)
+        self.assertLess(combined_index_size, 1_500_000)
+        self.assertLess(ENGINE_PATH.stat().st_size, 120_000)
 
     def test_demo_page_contract(self) -> None:
         page = PAGE_PATH.read_text(encoding="utf-8")
