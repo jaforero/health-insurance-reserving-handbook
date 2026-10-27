@@ -62,7 +62,7 @@ class HandbookQAContextTest(unittest.TestCase):
 
     def test_schema_versions_are_contextual(self) -> None:
         self.assertEqual(self.catalog["schema_version"], "1.1.0")
-        self.assertEqual(self.sections["schema_version"], "1.1.0")
+        self.assertEqual(self.sections["schema_version"], "2.0.0")
 
     def test_every_item_declares_context(self) -> None:
         for item in self.catalog["items"]:
@@ -104,7 +104,11 @@ class HandbookQAContextTest(unittest.TestCase):
             self.assertTrue(section.get("part"), f"{section['id']}: falta part")
             self.assertTrue(section.get("rendered_path"), f"{section['id']}: falta rendered_path")
             self.assertTrue(section.get("tags"), f"{section['id']}: falta tags")
-            expected = "/" + section["path"].removesuffix(".md").strip("/") + "/"
+            expected = (
+                "/"
+                if section["path"] == "index.md"
+                else "/" + section["path"].removesuffix(".md").strip("/") + "/"
+            )
             self.assertEqual(section["rendered_path"], expected)
 
     def test_engine_exports_context_contract(self) -> None:
@@ -124,6 +128,7 @@ class HandbookQAContextTest(unittest.TestCase):
         engine = ENGINE_PATH.read_text(encoding="utf-8")
         self.assertIn("hasLexicalEvidence", engine)
         self.assertIn("question >= 0.4", engine)
+        self.assertIn("corpusCoverage >= 0.50", engine)
 
     def test_node_context_regression_suite(self) -> None:
         node = shutil.which("node")
