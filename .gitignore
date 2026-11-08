@@ -53,3 +53,6 @@ node_modules/
 # Ask the Handbook: deterministic build artifacts, not source files
 /docs/assets/data/handbook-qa-catalog.json
 /docs/assets/data/handbook-section-index.json
+
+# Generated P1 diagnostic reports
+/artifacts/
