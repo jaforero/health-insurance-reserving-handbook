@@ -5,9 +5,10 @@ The generator is intentionally deterministic and local. It does not call an LLM,
 a vector database, or a remote service. It performs four jobs:
 
 1. index every publishable ``docs/**/*.md`` document and its H1-H3 sections;
-2. prepend curated editorial defaults to the existing Q&A catalog;
-3. upgrade the browser retrieval engine with a source-backed ``corpus_match`` fallback;
-4. add the corresponding visual status style.
+2. combine the immutable base Q&A catalog with reviewed editorial defaults;
+3. write or verify the two generated JSON assets used by the browser.
+
+JavaScript and CSS are versioned source files; this generator must never patch them.
 
 The generated section index is consumed by ``handbook-qa.js``. Editorial answers remain the
 highest-confidence layer; corpus matches only expose source-backed sections and never synthesize
@@ -30,8 +31,7 @@ DEFAULT_DOCS = ROOT / "docs"
 DEFAULT_CATALOG = DEFAULT_DOCS / "assets" / "data" / "handbook-qa-catalog.json"
 DEFAULT_SECTION_INDEX = DEFAULT_DOCS / "assets" / "data" / "handbook-section-index.json"
 DEFAULT_EDITORIAL = ROOT / "config" / "handbook_qa_editorial_defaults.json"
-DEFAULT_ENGINE = DEFAULT_DOCS / "assets" / "javascripts" / "handbook-qa.js"
-DEFAULT_STYLE = DEFAULT_DOCS / "assets" / "stylesheets" / "handbook-qa.css"
+DEFAULT_BASE_CATALOG = ROOT / "config" / "handbook_qa_base_catalog.json"
 
 STOP_WORDS = {
     "a", "al", "algo", "como", "con", "cual", "cuando", "de", "del", "desde",
@@ -275,119 +275,16 @@ def sync_catalog(catalog: dict[str, Any], defaults: dict[str, Any]) -> dict[str,
     return result
 
 
-def patch_engine(engine_text: str) -> str:
-    if 'return "Evidencia encontrada en el Handbook";' in engine_text:
-        return engine_text
-
-    old_coverage = '["verified", "probable", "insufficient", "out_of_scope"]'
-    new_coverage = '["verified", "probable", "corpus_match", "insufficient", "out_of_scope"]'
-    if old_coverage not in engine_text:
-        raise RuntimeError("No se encontró la lista de estados de cobertura esperada en handbook-qa.js")
-    engine_text = engine_text.replace(old_coverage, new_coverage, 1)
-
-    old_search = '''    const status = best.details.hasLexicalEvidence
-      ? classifyScore(best.score, best.exact)
-      : "insufficient";
-    return {
-      status,
-      item: status === "insufficient" ? null : best.item,
-      score: best.score,
-      scoreDetails: best.details,
-      alternatives: ranked.slice(1, 4),
-      relatedSections: findRelatedSections(trimmed, sectionIndex, 3, context),
-      message: status === "insufficient"
-        ? "No se encontró una respuesta editorial suficientemente precisa. Estas son las secciones más relacionadas dentro del handbook."
-        : null
-    };'''
-
-    new_search = '''    const relatedSections = findRelatedSections(trimmed, sectionIndex, 3, context);
-    let status = best.details.hasLexicalEvidence
-      ? classifyScore(best.score, best.exact)
-      : "insufficient";
-    let item = status === "insufficient" ? null : best.item;
-
-    const topCorpusSection = relatedSections.length ? relatedSections[0].section : null;
-    const corpusCoverage = topCorpusSection
-      ? fuzzyCoverage(
-          tokenize(trimmed),
-          tokenize(
-            `${topCorpusSection.title || ""} ${(topCorpusSection.terms || []).join(" ")} ${topCorpusSection.summary || ""}`
-          )
-        )
-      : 0;
-
-    // The editorial catalog is the highest-confidence layer. When it does not
-    // resolve the wording but the automatically generated corpus index contains
-    // strong lexical evidence, expose that evidence instead of claiming that the
-    // handbook lacks coverage. A single generic token is not enough: corpus
-    // fallback requires both a section score and at least 50% query-token coverage.
-    if (
-      status === "insufficient"
-      && relatedSections.length
-      && relatedSections[0].score >= 0.30
-      && corpusCoverage >= 0.50
-    ) {
-      status = "corpus_match";
-      item = null;
-    }
-
-    return {
-      status,
-      item,
-      score: best.score,
-      scoreDetails: best.details,
-      alternatives: ranked.slice(1, 4),
-      relatedSections,
-      message: status === "corpus_match"
-        ? "El Handbook contiene evidencia directamente relacionada con esta pregunta. Revise estas secciones fuente; esta recuperación no sintetiza ni completa información fuera del corpus."
-        : status === "insufficient"
-          ? "No se encontró evidencia documental suficientemente relacionada en el corpus publicado."
-          : null
-    };'''
-
-    if old_search not in engine_text:
-        raise RuntimeError("No se encontró el bloque de búsqueda esperado en handbook-qa.js")
-    engine_text = engine_text.replace(old_search, new_search, 1)
-
-    old_label = '''    if (status === "verified") return "Respuesta verificada";
-    if (status === "probable") return "Coincidencia probable";
-    if (status === "out_of_scope") return "Fuera de alcance";
-    return "Cobertura insuficiente";'''
-    new_label = '''    if (status === "verified") return "Respuesta verificada";
-    if (status === "probable") return "Coincidencia probable";
-    if (status === "corpus_match") return "Evidencia encontrada en el Handbook";
-    if (status === "out_of_scope") return "Fuera de alcance";
-    return "Cobertura insuficiente";'''
-    if old_label not in engine_text:
-        raise RuntimeError("No se encontró coverageLabel esperado en handbook-qa.js")
-    return engine_text.replace(old_label, new_label, 1)
-
-
-def patch_style(style_text: str) -> str:
-    if ".handbook-qa__status--corpus_match" in style_text:
-        return style_text
-    marker = '''.handbook-qa__status--probable {
-  color: #7a4b00;
-  background: rgba(214, 137, 16, 0.15);
-}
-'''
-    addition = marker + '''
-.handbook-qa__status--corpus_match {
-  color: #2446a8;
-  background: rgba(78, 0, 255, 0.10);
-}
-'''
-    if marker not in style_text:
-        raise RuntimeError("No se encontró el bloque probable esperado en handbook-qa.css")
-    return style_text.replace(marker, addition, 1)
-
-
-def write_json(path: Path, payload: dict[str, Any], *, compact: bool = False) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
+def write_json(path: Path, payload: dict[str, Any], *, compact: bool = False, check: bool = False) -> None:
     if compact:
         serialized = json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + "\n"
     else:
         serialized = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
+    if check:
+        if not path.is_file() or path.read_text(encoding="utf-8") != serialized:
+            raise RuntimeError(f"Artefacto generado obsoleto o ausente: {path}")
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(serialized, encoding="utf-8")
 
 
@@ -396,26 +293,17 @@ def generate(
     catalog_path: Path = DEFAULT_CATALOG,
     section_index_path: Path = DEFAULT_SECTION_INDEX,
     editorial_path: Path = DEFAULT_EDITORIAL,
-    engine_path: Path = DEFAULT_ENGINE,
-    style_path: Path = DEFAULT_STYLE,
+    base_catalog_path: Path = DEFAULT_BASE_CATALOG,
+    *,
+    check: bool = False,
 ) -> dict[str, int]:
     section_index = build_section_index(docs_root)
-    write_json(section_index_path, section_index, compact=True)
+    write_json(section_index_path, section_index, compact=True, check=check)
 
-    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+    base_catalog = json.loads(base_catalog_path.read_text(encoding="utf-8"))
     defaults = json.loads(editorial_path.read_text(encoding="utf-8"))
-    synced_catalog = sync_catalog(catalog, defaults)
-    write_json(catalog_path, synced_catalog)
-
-    engine_text = engine_path.read_text(encoding="utf-8")
-    patched_engine = patch_engine(engine_text)
-    if patched_engine != engine_text:
-        engine_path.write_text(patched_engine, encoding="utf-8")
-
-    style_text = style_path.read_text(encoding="utf-8")
-    patched_style = patch_style(style_text)
-    if patched_style != style_text:
-        style_path.write_text(patched_style, encoding="utf-8")
+    synced_catalog = sync_catalog(base_catalog, defaults)
+    write_json(catalog_path, synced_catalog, check=check)
 
     return {
         "documents": section_index["documents_indexed"],
@@ -430,8 +318,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--catalog", type=Path, default=DEFAULT_CATALOG)
     parser.add_argument("--section-index", type=Path, default=DEFAULT_SECTION_INDEX)
     parser.add_argument("--editorial", type=Path, default=DEFAULT_EDITORIAL)
-    parser.add_argument("--engine", type=Path, default=DEFAULT_ENGINE)
-    parser.add_argument("--style", type=Path, default=DEFAULT_STYLE)
+    parser.add_argument("--base-catalog", type=Path, default=DEFAULT_BASE_CATALOG)
+    parser.add_argument("--check", action="store_true", help="Verifica artefactos sin modificar archivos")
     return parser.parse_args()
 
 
@@ -442,13 +330,13 @@ def main() -> int:
         catalog_path=args.catalog,
         section_index_path=args.section_index,
         editorial_path=args.editorial,
-        engine_path=args.engine,
-        style_path=args.style,
+        base_catalog_path=args.base_catalog,
+        check=args.check,
     )
     print(
-        "Ask the Handbook actualizado: "
-        f"{counts['documents']} documentos, {counts['sections']} secciones, "
-        f"{counts['editorial_answers']} respuestas editoriales."
+        ("Verificación correcta: " if args.check else "Ask the Handbook actualizado: ")
+        + f"{counts['documents']} documentos, {counts['sections']} secciones, "
+        + f"{counts['editorial_answers']} respuestas editoriales."
     )
     return 0
 
