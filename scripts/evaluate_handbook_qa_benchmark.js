@@ -104,6 +104,7 @@ function evaluate(fixture,catalog,index,runtime=engine) {
         ? test.relevant_sections.map(sourceId):[],
       predicted_status:result.status,predicted_editorial_id:result.item?.id||null,
       expected_editorial_id:test.expected_editorial_id||null,
+      ranking_depth:test.review_status==="reviewed_source"?5:3,
       ranked_sources_at5,first_gold_rank_at5:goldRank,
       first_gold_document_rank_at5:documentRank,
       candidate_document_rank_at5:candidateRank||null,
@@ -187,7 +188,8 @@ function toMarkdown(report) {
       " | "+cell(q.errors.join(", ")||"—")+" |");
   }
   lines.push("","## Detalle completo","",
-    "El JSON adjunto documenta las 65 consultas, el top 5 de cada una,",
+    "El JSON adjunto documenta las 65 consultas: top 5 para las 12",
+    "fuentes revisadas y top 3 para las otras consultas,",
     "puntajes y referencias path#anchor, etiquetas y códigos de error.",
     "El documento candidato no se considera referencia validada.","");
   return lines.join("\n");
