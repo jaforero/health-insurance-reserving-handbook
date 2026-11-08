@@ -24,6 +24,8 @@ const entries=[
 ];
 assert.strictEqual(evaluator.firstRelevantRank(entries,[{path:"b.md",anchor:"b"}]),2);
 assert.strictEqual(evaluator.firstRelevantRank(entries,[{path:"z.md",anchor:"z"}]),null);
+assert.strictEqual(evaluator.firstDocumentRank(entries,[{path:"b.md",anchor:"different-anchor"}]),2);
+assert.strictEqual(evaluator.firstDocumentRank(entries,[{path:"z.md",anchor:"z"}]),null);
 assert.deepStrictEqual(evaluator.rate(1,2),{numerator:1,denominator:2,value:0.5});
 assert.deepStrictEqual(evaluator.rate(0,0),{numerator:0,denominator:0,value:null});
 
