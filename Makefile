@@ -1,4 +1,4 @@
-.PHONY: install install-app install-dev app qa-index qa-check test audit build serve clean
+.PHONY: install install-app install-dev app qa-index qa-check qa-benchmark test audit build serve clean
 
 PYTHON ?= python
 PIP ?= $(PYTHON) -m pip
@@ -21,11 +21,15 @@ qa-index:
 qa-check: qa-index
 	$(PYTHON) scripts/generate_handbook_qa_knowledge.py --check
 
+qa-benchmark: qa-index
+	node scripts/evaluate_handbook_qa_benchmark.js --output-dir artifacts
+
 test: qa-index
 	$(PYTHON) -m unittest discover -s tests -p "test_*.py"
 	node tests/js/test_handbook_qa_engine.js
 	node tests/js/test_handbook_qa_health_method_regression.js
 	node tests/js/test_handbook_qa_quality_gate.js
+	node tests/js/test_handbook_qa_benchmark.js
 	$(PYTHON) scripts/generate_handbook_qa_knowledge.py --check
 
 audit:

@@ -1,0 +1,695 @@
+{
+  "schema_version": "1.0.0",
+  "baseline_commit": "3ddd8f217918b355bef1e25869f8077dcc6358c8",
+  "review_policy": "reviewed_source: heading and substantive excerpt inspected against published Markdown (assistant editorial review); reviewed_scope: availability or scope limitation independently checked; pending: proposed candidate only. All metrics declare review denominators; no claim of independent human validation.",
+  "cases": [
+    {
+      "id": "P1-01",
+      "query": "¿En qué se diferencian IBNR e IBNER al estimar obligaciones de siniestros?",
+      "topic": "foundations",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-01-foundations/01-ibnr-and-reserving.md"
+    },
+    {
+      "id": "P1-02",
+      "query": "¿Cuáles son las etapas para construir un triángulo de desarrollo a partir de siniestros?",
+      "topic": "foundations",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "reviewed_source",
+      "candidate_path": "part-01-foundations/02-triangle-construction.md",
+      "relevant_sections": [
+        {
+          "path": "part-01-foundations/02-triangle-construction.md",
+          "anchor": "estructura-basica",
+          "evidence_excerpt": "Un triángulo tiene:"
+        }
+      ],
+      "review_basis": "Source heading and passage inspected against main Markdown; no independent second reviewer"
+    },
+    {
+      "id": "P1-03",
+      "query": "¿Qué diferencia hay entre rezago de reporte y rezago de pago?",
+      "topic": "foundations",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "reviewed_source",
+      "candidate_path": "part-01-foundations/03-development-lags-and-triangle-transformations.md",
+      "relevant_sections": [
+        {
+          "path": "part-01-foundations/03-development-lags-and-triangle-transformations.md",
+          "anchor": "tipos-de-lag",
+          "evidence_excerpt": "lag de reporte"
+        }
+      ],
+      "review_basis": "Source heading and passage inspected against main Markdown; no independent second reviewer"
+    },
+    {
+      "id": "P1-04",
+      "query": "¿Cuándo conviene usar triángulos incrementales en lugar de acumulados?",
+      "topic": "foundations",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-01-foundations/04-incremental-vs-cumulative-triangles.md"
+    },
+    {
+      "id": "P1-05",
+      "query": "¿Cómo se interpretan los factores de desarrollo edad a edad?",
+      "topic": "foundations",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-01-foundations/05-age-to-age-development-factors.md"
+    },
+    {
+      "id": "P1-06",
+      "query": "¿Cómo pueden afectar los pagos negativos y los reversos a los acumulados?",
+      "topic": "foundations",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-01-foundations/04-incremental-vs-cumulative-triangles.md"
+    },
+    {
+      "id": "P1-07",
+      "query": "¿Cómo cambia el triángulo cuando usamos periodo de servicio frente a periodo de pago?",
+      "topic": "foundations",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-01-foundations/03-development-lags-and-triangle-transformations.md"
+    },
+    {
+      "id": "P1-08",
+      "query": "¿Cuáles son los supuestos necesarios para utilizar Chain Ladder?",
+      "topic": "classical",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "reviewed_source",
+      "candidate_path": "part-02-classical-reserving/06-chain-ladder-method.md",
+      "relevant_sections": [
+        {
+          "path": "part-02-classical-reserving/06-chain-ladder-method.md",
+          "anchor": "supuestos-implicitos",
+          "evidence_excerpt": "los patrones históricos de desarrollo son aplicables al futuro"
+        }
+      ],
+      "review_basis": "Source heading and passage inspected against main Markdown; no independent second reviewer"
+    },
+    {
+      "id": "P1-09",
+      "query": "¿Qué diagnósticos deben revisarse antes de confiar en Chain Ladder?",
+      "topic": "classical",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-02-classical-reserving/07-chain-ladder-diagnostics.md"
+    },
+    {
+      "id": "P1-10",
+      "query": "¿Cómo debe construirse un prior independiente para Bornhuetter-Ferguson?",
+      "topic": "classical",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "reviewed_source",
+      "candidate_path": "part-02-classical-reserving/11-bornhuetter-ferguson.md",
+      "relevant_sections": [
+        {
+          "path": "part-02-classical-reserving/11-bornhuetter-ferguson.md",
+          "anchor": "construccion-del-prior",
+          "evidence_excerpt": "La fuente puede ser presupuesto, pricing, forecast"
+        }
+      ],
+      "review_basis": "Source heading and passage inspected against main Markdown; no independent second reviewer"
+    },
+    {
+      "id": "P1-11",
+      "query": "¿En qué se distingue Benktander de Bornhuetter-Ferguson?",
+      "topic": "classical",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-02-classical-reserving/12-benktander-method.md"
+    },
+    {
+      "id": "P1-12",
+      "query": "¿Cómo utiliza Cape Cod la exposición y las pérdidas observadas?",
+      "topic": "classical",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-02-classical-reserving/13-cape-cod-method.md"
+    },
+    {
+      "id": "P1-13",
+      "query": "¿Cómo comparar Chain Ladder, Bornhuetter-Ferguson y Cape Cod?",
+      "topic": "classical",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-02-classical-reserving/14-classical-reserving-methods-comparison.md"
+    },
+    {
+      "id": "P1-14",
+      "query": "¿Qué riesgos presenta aplicar Chain Ladder a meses de desarrollo inmaduros?",
+      "topic": "classical",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-02-classical-reserving/07-chain-ladder-diagnostics.md"
+    },
+    {
+      "id": "P1-15",
+      "query": "¿Qué tipo de incertidumbre estima Mack Chain Ladder?",
+      "topic": "stochastic",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "reviewed_source",
+      "candidate_path": "part-03-stochastic-reserving/08-mack-chain-ladder.md",
+      "relevant_sections": [
+        {
+          "path": "part-03-stochastic-reserving/08-mack-chain-ladder.md",
+          "anchor": "dos-fuentes-de-incertidumbre",
+          "evidence_excerpt": "Representa la variación aleatoria del desarrollo futuro"
+        }
+      ],
+      "review_basis": "Source heading and passage inspected against main Markdown; no independent second reviewer"
+    },
+    {
+      "id": "P1-16",
+      "query": "¿Cómo se obtiene una distribución de reservas con Bootstrap Chain Ladder?",
+      "topic": "stochastic",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-03-stochastic-reserving/09-bootstrap-chain-ladder.md"
+    },
+    {
+      "id": "P1-17",
+      "query": "¿Cuáles son las diferencias de supuestos entre Mack y Bootstrap?",
+      "topic": "stochastic",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-03-stochastic-reserving/10-comparing-mack-vs-bootstrap.md"
+    },
+    {
+      "id": "P1-18",
+      "query": "¿Por qué una estimación puntual de reserva no describe toda la incertidumbre?",
+      "topic": "stochastic",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-03-stochastic-reserving/08-mack-chain-ladder.md"
+    },
+    {
+      "id": "P1-19",
+      "query": "¿Cómo se aplica un GLM a la estimación de reservas de siniestros?",
+      "topic": "statistical-models",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "reviewed_source",
+      "candidate_path": "part-04-statistical-models/15-glm-for-loss-reserving.md",
+      "relevant_sections": [
+        {
+          "path": "part-04-statistical-models/15-glm-for-loss-reserving.md",
+          "anchor": "formulacion-sobre-el-triangulo",
+          "evidence_excerpt": "el monto incremental del periodo de origen"
+        }
+      ],
+      "review_basis": "Source heading and passage inspected against main Markdown; no independent second reviewer"
+    },
+    {
+      "id": "P1-20",
+      "query": "¿Qué aporta un GAM frente a un GLM en patrones no lineales de desarrollo?",
+      "topic": "statistical-models",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-04-statistical-models/16-gam-for-loss-reserving.md"
+    },
+    {
+      "id": "P1-21",
+      "query": "¿Cómo puede incorporarse información previa mediante un modelo bayesiano de reservas?",
+      "topic": "statistical-models",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-04-statistical-models/17-bayesian-loss-reserving.md"
+    },
+    {
+      "id": "P1-22",
+      "query": "¿Cuáles son las limitaciones de los modelos de machine learning para reserving?",
+      "topic": "machine-learning",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-05-machine-learning/18-machine-learning-for-loss-reserving.md"
+    },
+    {
+      "id": "P1-23",
+      "query": "¿Cómo se utilizan árboles de decisión en modelos predictivos de siniestros?",
+      "topic": "machine-learning",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-05-machine-learning/19-tree-based-models-for-loss-reserving.md"
+    },
+    {
+      "id": "P1-24",
+      "query": "¿Qué precauciones plantea deep learning para la estimación de reservas?",
+      "topic": "machine-learning",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-05-machine-learning/20-deep-learning-for-loss-reserving.md"
+    },
+    {
+      "id": "P1-25",
+      "query": "¿Qué estructura de datos necesita un GLM de reserving?",
+      "topic": "statistical-models",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-04-statistical-models/15-glm-for-loss-reserving.md"
+    },
+    {
+      "id": "P1-26",
+      "query": "¿Qué particularidades diferencian las reservas en salud de las reservas P&C?",
+      "topic": "health-specific",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "reviewed_source",
+      "candidate_path": "part-06-health-specific/21-health-insurance-reserving-specificities.md",
+      "relevant_sections": [
+        {
+          "path": "part-06-health-specific/21-health-insurance-reserving-specificities.md",
+          "anchor": "por-que-salud-es-diferente",
+          "evidence_excerpt": "El reserving en salud comparte técnicas con otros ramos"
+        }
+      ],
+      "review_basis": "Source heading and passage inspected against main Markdown; no independent second reviewer"
+    },
+    {
+      "id": "P1-27",
+      "query": "¿Cómo afecta el ciclo de vida del claim de salud a los rezagos operativos?",
+      "topic": "health-specific",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "reviewed_source",
+      "candidate_path": "part-06-health-specific/22-health-claim-lifecycle-and-operational-lags.md",
+      "relevant_sections": [
+        {
+          "path": "part-06-health-specific/22-health-claim-lifecycle-and-operational-lags.md",
+          "anchor": "tipos-de-rezago",
+          "evidence_excerpt": "En salud conviene separar al menos cinco rezagos"
+        }
+      ],
+      "review_basis": "Source heading and passage inspected against main Markdown; no independent second reviewer"
+    },
+    {
+      "id": "P1-28",
+      "query": "¿Cómo se relacionan exposición, utilización y severidad en un seguro de salud?",
+      "topic": "health-specific",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-06-health-specific/23-health-exposure-utilization-and-severity.md"
+    },
+    {
+      "id": "P1-29",
+      "query": "¿Cómo afectan la inflación médica y la estacionalidad a las reservas?",
+      "topic": "health-specific",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-06-health-specific/24-health-medical-trend-seasonality-and-shocks.md"
+    },
+    {
+      "id": "P1-30",
+      "query": "¿Cómo influyen el ajuste de riesgo y la morbilidad en las proyecciones?",
+      "topic": "health-specific",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-06-health-specific/25-health-risk-adjustment-and-morbidity.md"
+    },
+    {
+      "id": "P1-31",
+      "query": "¿Qué efecto pueden tener los contratos con prestadores en los pagos y obligaciones?",
+      "topic": "health-specific",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-06-health-specific/26-health-provider-contracts-and-payment-models.md"
+    },
+    {
+      "id": "P1-32",
+      "query": "¿Cómo tratar auditorías, denegaciones y controversias de reclamaciones médicas?",
+      "topic": "health-specific",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-06-health-specific/27-health-claims-audit-denials-and-disputes.md"
+    },
+    {
+      "id": "P1-33",
+      "query": "¿Cuáles controles de gobierno conviene aplicar al proceso de reserving en salud?",
+      "topic": "health-specific",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-06-health-specific/28-health-reserving-governance-controls-and-reporting.md"
+    },
+    {
+      "id": "P1-34",
+      "query": "Para reservas en salud cuál de los métodos es más recomendado?",
+      "topic": "health-specific",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "reviewed_source",
+      "candidate_path": "part-06-health-specific/21-health-insurance-reserving-specificities.md",
+      "relevant_sections": [
+        {
+          "path": "part-06-health-specific/21-health-insurance-reserving-specificities.md",
+          "anchor": "seleccion-metodologica",
+          "evidence_excerpt": "La selección de metodología en salud depende de madurez"
+        }
+      ],
+      "review_basis": "Source heading and passage inspected against main Markdown; no independent second reviewer",
+      "expected_editorial_id": "health-reserving-method-selection"
+    },
+    {
+      "id": "P1-35",
+      "query": "¿Cómo usar indicadores PMPM para analizar exposición y costo de salud?",
+      "topic": "health-specific",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-06-health-specific/23-health-exposure-utilization-and-severity.md"
+    },
+    {
+      "id": "P1-36",
+      "query": "¿Qué riesgos introducen los shocks de morbilidad y utilización en las proyecciones?",
+      "topic": "health-specific",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-06-health-specific/24-health-medical-trend-seasonality-and-shocks.md"
+    },
+    {
+      "id": "P1-37",
+      "query": "¿Cómo se adaptan las metodologías de reservas en salud al contexto colombiano?",
+      "topic": "colombia",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-07-colombia/29-colombia-health-reserving-methodologies.md"
+    },
+    {
+      "id": "P1-38",
+      "query": "¿Cómo comparar triángulos pagados e incurridos en Colombia?",
+      "topic": "colombia",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-07-colombia/30-colombia-paid-vs-incurred-triangles.md"
+    },
+    {
+      "id": "P1-39",
+      "query": "¿Cómo modelar estados de reclamaciones y transiciones en datos colombianos?",
+      "topic": "colombia",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-07-colombia/31-colombia-data-and-multistate-models.md"
+    },
+    {
+      "id": "P1-40",
+      "query": "¿Cómo afectan las glosas y controversias al flujo de pagos?",
+      "topic": "colombia",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "reviewed_source",
+      "candidate_path": "part-07-colombia/32-colombia-glosas-and-disputes.md",
+      "relevant_sections": [
+        {
+          "path": "part-07-colombia/32-colombia-glosas-and-disputes.md",
+          "anchor": "tiempo-hasta-pago",
+          "evidence_excerpt": "FechaPagoFinal_m-FechaGlosa_m"
+        }
+      ],
+      "review_basis": "Source heading and passage inspected against main Markdown; no independent second reviewer"
+    },
+    {
+      "id": "P1-41",
+      "query": "¿Qué diferencias introduce la capitación frente a pagos por evento?",
+      "topic": "colombia",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-07-colombia/33-colombia-capitation-and-prospective-payments.md"
+    },
+    {
+      "id": "P1-42",
+      "query": "¿Cómo se relacionan UPC, morbilidad y ajuste de riesgo en Colombia?",
+      "topic": "colombia",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-07-colombia/34-colombia-upc-risk-adjustment-and-morbidity.md"
+    },
+    {
+      "id": "P1-43",
+      "query": "¿Qué desafíos presentan las condiciones de alto costo y la agrupación de riesgos?",
+      "topic": "colombia",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-07-colombia/35-colombia-high-cost-conditions-and-risk-pooling.md"
+    },
+    {
+      "id": "P1-44",
+      "query": "¿Qué controles de calidad de datos son relevantes para RIPS y FEV?",
+      "topic": "colombia",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-07-colombia/36-colombia-rips-fev-data-quality-and-validation.md"
+    },
+    {
+      "id": "P1-45",
+      "query": "¿Qué distinción debe hacerse entre IBNR y provisiones técnicas en Colombia?",
+      "topic": "colombia",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "reviewed_source",
+      "candidate_path": "part-07-colombia/37-colombia-ibnr-technical-provisions-and-regulatory-reporting.md",
+      "relevant_sections": [
+        {
+          "path": "part-07-colombia/37-colombia-ibnr-technical-provisions-and-regulatory-reporting.md",
+          "anchor": "taxonomia-de-pasivos",
+          "evidence_excerpt": "Una taxonomía práctica para salud en Colombia"
+        }
+      ],
+      "review_basis": "Source heading and passage inspected against main Markdown; no independent second reviewer"
+    },
+    {
+      "id": "P1-46",
+      "query": "¿Cómo se conectan solvencia, liquidez y pruebas de estrés para aseguramiento en salud?",
+      "topic": "colombia",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-07-colombia/38-colombia-solvency-liquidity-and-stress-testing.md"
+    },
+    {
+      "id": "P1-47",
+      "query": "¿Cómo estructurar escenarios de reforma del sistema de salud colombiano?",
+      "topic": "colombia",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-07-colombia/39-colombia-scenario-planning-and-reform-roadmap.md"
+    },
+    {
+      "id": "P1-48",
+      "query": "¿Cómo convertir metodologías de reserva en un plan práctico de implementación?",
+      "topic": "colombia",
+      "language": "es",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-07-colombia/40-colombia-implementation-playbook-and-templates.md"
+    },
+    {
+      "id": "P1-49",
+      "query": "How do paid and incurred claim triangles differ in health insurance?",
+      "topic": "english",
+      "language": "en",
+      "answerability": "supported",
+      "review_status": "reviewed_source",
+      "candidate_path": "examples/02-paid-vs-incurred-health-demo.md",
+      "relevant_sections": [
+        {
+          "path": "examples/02-paid-vs-incurred-health-demo.md",
+          "anchor": "actuarial-logic",
+          "evidence_excerpt": "Compare total unpaid on incurred basis against paid-basis IBNR"
+        }
+      ],
+      "review_basis": "Source heading and passage inspected against main Markdown; no independent second reviewer"
+    },
+    {
+      "id": "P1-50",
+      "query": "When is a monthly health triangle suitable for a development method?",
+      "topic": "english",
+      "language": "en",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "examples/03-monthly-health-triangles-demo.md"
+    },
+    {
+      "id": "P1-51",
+      "query": "How can simulated health claims triangles be used for learning?",
+      "topic": "english",
+      "language": "en",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "examples/01-simulated-health-triangles-demo.md"
+    },
+    {
+      "id": "P1-52",
+      "query": "How should an actuary interpret the uncertainty from Mack Chain Ladder?",
+      "topic": "english",
+      "language": "en",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-03-stochastic-reserving/08-mack-chain-ladder.md"
+    },
+    {
+      "id": "P1-53",
+      "query": "How does Bornhuetter-Ferguson address immature accident periods?",
+      "topic": "english",
+      "language": "en",
+      "answerability": "supported",
+      "review_status": "pending",
+      "candidate_path": "part-02-classical-reserving/11-bornhuetter-ferguson.md"
+    },
+    {
+      "id": "P1-54",
+      "query": "¿Cuál es el IBNR exacto de mi EPS si no he aportado triángulos ni datos?",
+      "topic": "no-input",
+      "language": "es",
+      "answerability": "not_answerable",
+      "review_status": "reviewed_scope",
+      "scope_rationale": "sin datos particulares aportados",
+      "review_basis": "No portfolio/account data or trusted current external source available; no basis for exact answer"
+    },
+    {
+      "id": "P1-55",
+      "query": "¿Qué importe exacto debo registrar mañana como reserva en mi organización?",
+      "topic": "no-input",
+      "language": "es",
+      "answerability": "not_answerable",
+      "review_status": "reviewed_scope",
+      "scope_rationale": "sin cartera, cierre ni datos",
+      "review_basis": "No portfolio/account data or trusted current external source available; no basis for exact answer"
+    },
+    {
+      "id": "P1-56",
+      "query": "¿Cuánto se pagará exactamente por mis siniestros pendientes el 30 de noviembre de 2026?",
+      "topic": "no-input",
+      "language": "es",
+      "answerability": "not_answerable",
+      "review_status": "pending",
+      "scope_rationale": "resultado futuro individual no observable"
+    },
+    {
+      "id": "P1-57",
+      "query": "¿Qué porcentaje exacto de mis claims resultará glosado en diciembre?",
+      "topic": "no-input",
+      "language": "es",
+      "answerability": "not_answerable",
+      "review_status": "pending",
+      "scope_rationale": "sin información particular ni base de proyección"
+    },
+    {
+      "id": "P1-58",
+      "query": "¿Cuáles son los nombres de los pacientes con mayores reclamaciones de mi EPS?",
+      "topic": "no-input",
+      "language": "es",
+      "answerability": "not_answerable",
+      "review_status": "pending",
+      "scope_rationale": "datos personales no disponibles"
+    },
+    {
+      "id": "P1-59",
+      "query": "¿Qué saldo exacto tiene la cuenta de reservas de una empresa privada a esta hora?",
+      "topic": "no-input",
+      "language": "es",
+      "answerability": "not_answerable",
+      "review_status": "reviewed_scope",
+      "scope_rationale": "sin acceso a información financiera privada",
+      "review_basis": "No portfolio/account data or trusted current external source available; no basis for exact answer"
+    },
+    {
+      "id": "P1-60",
+      "query": "¿Qué nueva circular publicó hoy la Superintendencia Nacional de Salud sobre IBNR?",
+      "topic": "external-dynamic",
+      "language": "es",
+      "answerability": "not_answerable",
+      "review_status": "pending",
+      "scope_rationale": "requiere fuente externa vigente"
+    },
+    {
+      "id": "P1-61",
+      "query": "¿Cuál es la tasa de cambio USD/COP actual para valorar reservas?",
+      "topic": "external-dynamic",
+      "language": "es",
+      "answerability": "not_answerable",
+      "review_status": "reviewed_scope",
+      "scope_rationale": "requiere datos externos vigentes",
+      "review_basis": "No portfolio/account data or trusted current external source available; no basis for exact answer"
+    },
+    {
+      "id": "P1-62",
+      "query": "¿Qué establece el supuesto Decreto 99999 de 2026 para reservas de salud?",
+      "topic": "not-in-corpus",
+      "language": "es",
+      "answerability": "not_answerable",
+      "review_status": "pending",
+      "scope_rationale": "fuente normativa no verificada"
+    },
+    {
+      "id": "P1-63",
+      "query": "¿Cómo calcular una reserva usando un método llamado Chain Ladder cuántico?",
+      "topic": "not-in-corpus",
+      "language": "es",
+      "answerability": "not_answerable",
+      "review_status": "pending",
+      "scope_rationale": "concepto no respaldado"
+    },
+    {
+      "id": "P1-64",
+      "query": "¿Cuál es la contraseña del servidor que aloja el Handbook?",
+      "topic": "not-in-corpus",
+      "language": "es",
+      "answerability": "not_answerable",
+      "review_status": "reviewed_scope",
+      "scope_rationale": "secreto no incluido ni divulgable",
+      "review_basis": "No portfolio/account data or trusted current external source available; no basis for exact answer"
+    },
+    {
+      "id": "P1-65",
+      "query": "¿Quién ganó el último partido de una liga de fútbol de esta semana?",
+      "topic": "not-in-corpus",
+      "language": "es",
+      "answerability": "not_answerable",
+      "review_status": "reviewed_scope",
+      "scope_rationale": "consulta ajena al corpus actuarial",
+      "review_basis": "No portfolio/account data or trusted current external source available; no basis for exact answer"
+    }
+  ]
+}
