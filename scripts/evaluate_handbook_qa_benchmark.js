@@ -73,7 +73,12 @@ function evaluate(fixture,catalog,index,runtime=engine) {
   assertValidFixture(fixture,index);
   const per_question=fixture.cases.map(test=>{
     const result=runtime.search(test.query,catalog,index,{});
-    const topFive=runtime.findRelatedSections(test.query,index,5,{});
+    // The engine already returns top-3 sections with search(). Request top-5
+    // only for source-reviewed cases: avoid rescoring 2,352 sections twice for
+    // every pending/unanswerable query, without changing the production motor.
+    const topFive=test.review_status==="reviewed_source"
+      ? runtime.findRelatedSections(test.query,index,5,{})
+      : (result.relatedSections||[]);
     const ranked_sources_at5=topFive.map((x,i)=>({
       rank:i+1,path:x.section.path,anchor:x.section.anchor||"",
       title:x.section.title,score:Number(x.score.toFixed(6)),
