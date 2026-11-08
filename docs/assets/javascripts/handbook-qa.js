@@ -104,7 +104,7 @@
       }
       if (field === "coverage_class") {
         const coverage = sanitizeAnalyticsToken(source[field], 32);
-        if (["verified", "probable", "insufficient", "out_of_scope"].includes(coverage)) {
+        if (["verified", "probable", "corpus_match", "insufficient", "out_of_scope"].includes(coverage)) {
           safe[field] = coverage;
         }
         return;
@@ -540,19 +540,49 @@
       };
     }
 
-    const status = best.details.hasLexicalEvidence
+    const relatedSections = findRelatedSections(trimmed, sectionIndex, 3, context);
+    let status = best.details.hasLexicalEvidence
       ? classifyScore(best.score, best.exact)
       : "insufficient";
+    let item = status === "insufficient" ? null : best.item;
+
+    const topCorpusSection = relatedSections.length ? relatedSections[0].section : null;
+    const corpusCoverage = topCorpusSection
+      ? fuzzyCoverage(
+          tokenize(trimmed),
+          tokenize(
+            `${topCorpusSection.title || ""} ${(topCorpusSection.terms || []).join(" ")} ${topCorpusSection.summary || ""}`
+          )
+        )
+      : 0;
+
+    // The editorial catalog is the highest-confidence layer. When it does not
+    // resolve the wording but the automatically generated corpus index contains
+    // strong lexical evidence, expose that evidence instead of claiming that the
+    // handbook lacks coverage. A single generic token is not enough: corpus
+    // fallback requires both a section score and at least 50% query-token coverage.
+    if (
+      status === "insufficient"
+      && relatedSections.length
+      && relatedSections[0].score >= 0.30
+      && corpusCoverage >= 0.50
+    ) {
+      status = "corpus_match";
+      item = null;
+    }
+
     return {
       status,
-      item: status === "insufficient" ? null : best.item,
+      item,
       score: best.score,
       scoreDetails: best.details,
       alternatives: ranked.slice(1, 4),
-      relatedSections: findRelatedSections(trimmed, sectionIndex, 3, context),
-      message: status === "insufficient"
-        ? "No se encontró una respuesta editorial suficientemente precisa. Estas son las secciones más relacionadas dentro del handbook."
-        : null
+      relatedSections,
+      message: status === "corpus_match"
+        ? "El Handbook contiene evidencia directamente relacionada con esta pregunta. Revise estas secciones fuente; esta recuperación no sintetiza ni completa información fuera del corpus."
+        : status === "insufficient"
+          ? "No se encontró evidencia documental suficientemente relacionada en el corpus publicado."
+          : null
     };
   }
 
@@ -678,6 +708,7 @@
   function coverageLabel(status) {
     if (status === "verified") return "Respuesta verificada";
     if (status === "probable") return "Coincidencia probable";
+    if (status === "corpus_match") return "Evidencia encontrada en el Handbook";
     if (status === "out_of_scope") return "Fuera de alcance";
     return "Cobertura insuficiente";
   }

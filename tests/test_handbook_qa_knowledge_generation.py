@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -73,13 +74,39 @@ class HandbookQAKnowledgeGenerationTest(unittest.TestCase):
             question_texts,
         )
 
-    def test_engine_patch_adds_source_backed_corpus_match(self) -> None:
-        engine = (DOCS / "assets" / "javascripts" / "handbook-qa.js").read_text(encoding="utf-8")
-        patched = knowledge.patch_engine(engine)
-        self.assertIn('status = "corpus_match"', patched)
-        self.assertIn('return "Evidencia encontrada en el Handbook";', patched)
-        self.assertEqual(knowledge.patch_engine(patched), patched)
+    def test_runtime_source_contains_fallback_without_build_patches(self) -> None:
+        engine_path = DOCS / "assets" / "javascripts" / "handbook-qa.js"
+        style_path = DOCS / "assets" / "stylesheets" / "handbook-qa.css"
+        engine = engine_path.read_text(encoding="utf-8")
+        style = style_path.read_text(encoding="utf-8")
+        self.assertIn('status = "corpus_match"', engine)
+        self.assertIn('return "Evidencia encontrada en el Handbook";', engine)
+        self.assertIn(".handbook-qa__status--corpus_match", style)
+        self.assertFalse(hasattr(knowledge, "patch_engine"))
+        self.assertFalse(hasattr(knowledge, "patch_style"))
 
+    def test_generator_determinism_and_source_immutability(self) -> None:
+        engine_path = DOCS / "assets" / "javascripts" / "handbook-qa.js"
+        style_path = DOCS / "assets" / "stylesheets" / "handbook-qa.css"
+        before = (engine_path.read_bytes(), style_path.read_bytes())
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            options = {
+                "docs_root": DOCS,
+                "catalog_path": base / "handbook-qa-catalog.json",
+                "section_index_path": base / "handbook-section-index.json",
+                "base_catalog_path": ROOT / "config" / "handbook_qa_base_catalog.json",
+                "editorial_path": EDITORIAL_DEFAULTS_PATH,
+            }
+            first = knowledge.generate(**options)
+            self.assertGreater(first["documents"], 0)
+            self.assertGreater(first["sections"], first["documents"])
+            self.assertGreaterEqual(first["editorial_answers"], 16)
+            knowledge.generate(**options, check=True)
+            (base / "handbook-qa-catalog.json").write_text("{}", encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "obsoleto o ausente"):
+                knowledge.generate(**options, check=True)
+        self.assertEqual(before, (engine_path.read_bytes(), style_path.read_bytes()))
 
 if __name__ == "__main__":
     unittest.main()

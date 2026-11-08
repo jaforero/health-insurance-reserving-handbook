@@ -143,6 +143,11 @@
   background: rgba(214, 137, 16, 0.15);
 }
 
+.handbook-qa__status--corpus_match {
+  color: #2446a8;
+  background: rgba(78, 0, 255, 0.10);
+}
+
 .handbook-qa__status--insufficient,
 .handbook-qa__status--out_of_scope {
   color: #7a2530;
