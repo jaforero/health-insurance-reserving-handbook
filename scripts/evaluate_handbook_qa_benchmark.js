@@ -14,6 +14,11 @@ function firstRelevantRank(entries, gold) {
   const index=(entries||[]).findIndex(x=>set.has(sourceId(x.section||x)));
   return index>=0?index+1:null;
 }
+function firstDocumentRank(entries,gold) {
+  const paths=new Set((gold||[]).map(x=>x.path));
+  const idx=(entries||[]).findIndex(x=>paths.has((x.section||x).path));
+  return idx>=0?idx+1:null;
+}
 function assertValidFixture(fixture, index) {
   if (!fixture || fixture.schema_version!=="1.0.0" ||
       !Array.isArray(fixture.cases) || fixture.cases.length!==65)
@@ -54,11 +59,12 @@ function assertValidFixture(fixture, index) {
   }
   return true;
 }
-function errorCodes(test,result,rank) {
+function errorCodes(test,result,rank,documentRank) {
   if (test.review_status==="pending") return ["reference_pending_review"];
   const errors=[];
   if (test.review_status==="reviewed_source") {
     if (rank===null) errors.push("gold_evidence_missing_at5");
+    if (documentRank===null) errors.push("gold_document_missing_at5");
     if (result.status==="insufficient") errors.push("false_insufficient");
     if (result.status==="out_of_scope") errors.push("false_out_of_scope");
     if (test.expected_editorial_id && result.item?.id!==test.expected_editorial_id)
@@ -86,6 +92,8 @@ function evaluate(fixture,catalog,index,runtime=engine) {
     }));
     const goldRank=test.review_status==="reviewed_source"
       ? firstRelevantRank(topFive,test.relevant_sections):null;
+    const documentRank=test.review_status==="reviewed_source"
+      ? firstDocumentRank(topFive,test.relevant_sections):null;
     const candidateRank=test.candidate_path
       ? ranked_sources_at5.findIndex(x=>x.path===test.candidate_path)+1:0;
     return {
@@ -97,15 +105,18 @@ function evaluate(fixture,catalog,index,runtime=engine) {
       predicted_status:result.status,predicted_editorial_id:result.item?.id||null,
       expected_editorial_id:test.expected_editorial_id||null,
       ranked_sources_at5,first_gold_rank_at5:goldRank,
+      first_gold_document_rank_at5:documentRank,
       candidate_document_rank_at5:candidateRank||null,
-      errors:errorCodes(test,result,goldRank)
+      errors:errorCodes(test,result,goldRank,documentRank)
     };
   });
   const gold=per_question.filter(x=>x.review_status==="reviewed_source");
   const scope=per_question.filter(x=>x.review_status==="reviewed_scope");
   const pending=per_question.filter(x=>x.review_status==="pending");
   const hits=k=>gold.filter(x=>x.first_gold_rank_at5!==null&&x.first_gold_rank_at5<=k).length;
+  const docHits=k=>gold.filter(x=>x.first_gold_document_rank_at5!==null&&x.first_gold_document_rank_at5<=k).length;
   const rr=gold.reduce((n,x)=>n+(x.first_gold_rank_at5?1/x.first_gold_rank_at5:0),0);
+  const docRr=gold.reduce((n,x)=>n+(x.first_gold_document_rank_at5?1/x.first_gold_document_rank_at5:0),0);
   const eids=gold.filter(x=>x.expected_editorial_id!==null);
   return {
     schema_version:"1.0.0",
@@ -125,6 +136,11 @@ function evaluate(fixture,catalog,index,runtime=engine) {
       evidence_hit_at3:rate(hits(3),gold.length),
       evidence_hit_at5:rate(hits(5),gold.length),
       evidence_mrr_at5:rate(rr,gold.length),
+      document_hit_at1:rate(docHits(1),gold.length),
+      document_hit_at3:rate(docHits(3),gold.length),
+      document_hit_at5:rate(docHits(5),gold.length),
+      document_mrr_at5:rate(docRr,gold.length),
+      false_insufficient_on_reviewed_source:rate(gold.filter(x=>x.predicted_status==="insufficient").length,gold.length),
       no_editorial_answer_on_scope:rate(scope.filter(x=>!x.predicted_editorial_id).length,scope.length),
       corpus_match_on_unanswerable_scope:rate(scope.filter(x=>x.predicted_status==="corpus_match").length,scope.length),
       required_editorial_id_accuracy:rate(eids.filter(x=>x.predicted_editorial_id===x.expected_editorial_id).length,eids.length)
@@ -156,17 +172,18 @@ function toMarkdown(report) {
     "|---|---:|---:|"
   ];
   for(const [key,v] of Object.entries(report.metrics)){
-    lines.push("| "+key+" | "+(key==="evidence_mrr_at5"&&v.value!==null?v.value.toFixed(4):percent(v.value))+
+    lines.push("| "+key+" | "+((key==="evidence_mrr_at5"||key==="document_mrr_at5")&&v.value!==null?v.value.toFixed(4):percent(v.value))+
       " | "+Number(v.numerator.toFixed(4))+" / "+v.denominator+" |");
   }
   lines.push("","## Evaluación por pregunta","",
     "Los resultados pendientes se marcan reference_pending_review, no como errores del motor.","",
-    "| ID | Estado revisión | Estado respuesta | Rango evidencia gold | Fuente rango 1 | Error o límite |",
-    "|---|---|---|---:|---|---|");
+    "| ID | Estado revisión | Estado respuesta | Rango sección gold | Rango documento gold | Fuente rango 1 | Error o límite |",
+    "|---|---|---|---:|---:|---|---|");
   for(const q of report.per_question){
     const top=q.ranked_sources_at5[0];
     lines.push("| "+q.id+" | "+q.review_status+" | "+q.predicted_status+
-      " | "+(q.first_gold_rank_at5||"—")+" | "+cell(top?top.reference:"—")+
+      " | "+(q.first_gold_rank_at5||"—")+" | "+(q.first_gold_document_rank_at5||"—")+
+      " | "+cell(top?top.reference:"—")+
       " | "+cell(q.errors.join(", ")||"—")+" |");
   }
   lines.push("","## Detalle completo","",
@@ -193,4 +210,4 @@ function main(){
   console.log(JSON.stringify({counts:report.counts,metrics:report.metrics},null,2));
 }
 if(require.main===module)main();
-module.exports={sourceId,rate,firstRelevantRank,assertValidFixture,errorCodes,evaluate,toMarkdown};
+module.exports={sourceId,rate,firstRelevantRank,firstDocumentRank,assertValidFixture,errorCodes,evaluate,toMarkdown};
