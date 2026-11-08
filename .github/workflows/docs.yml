@@ -63,6 +63,19 @@ jobs:
           node tests/js/test_handbook_qa_engine.js
           node tests/js/test_handbook_qa_health_method_regression.js
           node tests/js/test_handbook_qa_quality_gate.js
+          node tests/js/test_handbook_qa_benchmark.js
+
+      - name: Generate P1 benchmark diagnostic
+        run: node scripts/evaluate_handbook_qa_benchmark.js --output-dir artifacts
+
+      - name: Upload P1 benchmark diagnostic
+        uses: actions/upload-artifact@v4
+        with:
+          name: ask-handbook-p1-benchmark
+          path: |
+            artifacts/handbook-qa-p1-report.json
+            artifacts/handbook-qa-p1-report.md
+          if-no-files-found: error
 
       - name: Audit documentation
         run: |
