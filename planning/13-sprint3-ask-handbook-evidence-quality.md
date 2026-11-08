@@ -83,3 +83,11 @@ Solo después de medir el baseline se decidirá si incorporar indexación por pa
 | Confundir recuperación con recomendación actuarial | Preservar estados, citas a fuentes y advertencia de alcance |
 
 **Decisión de cierre:** no fusionar el PR cuando alguna compuerta falle; no declarar alcanzadas las métricas de P1/P2 hasta medirlas.
+
+## 7. Protección de `main` — requisito de gobernanza pendiente
+
+**Estado verificado al preparar este PR:** GitHub reporta `main.protected = false`, la protección de checks aparece deshabilitada y no hay rulesets del repositorio. Por lo tanto, aunque el workflow falle correctamente ante una regresión, **todavía no se impide técnicamente que alguien fusione o envíe cambios sin pasar las pruebas**. La conexión GitHub disponible carece de permisos de administración para configurar la protección de ramas.
+
+**Acción manual obligatoria de un administrador:** en **Settings → Rules → Rulesets** (o **Settings → Branches**) configurar una regla para `main` que exija pull request y el status check **`Validate and build`** del workflow **`Build and deploy MkDocs site`**, evitando excepciones de bypass no justificadas. El workflow ejecuta la generación verificable, la matriz de calidad, las auditorías y `mkdocs build --strict` dentro de ese mismo job.
+
+**Comprobación de cierre:** verificar en GitHub que `main` esté protegida y que un PR con un fallo deliberado del test de calidad **no se pueda fusionar**. Restaurar el test antes de aprobar. Hasta superar esta verificación, el componente P0 está implementado y puede tener CI verde, pero **la obligatoriedad organizacional de las pruebas permanece pendiente**.
