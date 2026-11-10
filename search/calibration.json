@@ -1,0 +1,74 @@
+[
+  {
+    "id": "C-0",
+    "query": "¿Cómo se transforman importes incrementales en acumulados?",
+    "answerability": "supported",
+    "path": "part-01-foundations/04-incremental-vs-cumulative-triangles.md",
+    "evidence_substring": "acumulad"
+  },
+  {
+    "id": "C-1",
+    "query": "¿Cómo se calculan factores de desarrollo edad a edad?",
+    "answerability": "supported",
+    "path": "part-01-foundations/05-age-to-age-development-factors.md",
+    "evidence_substring": "factor"
+  },
+  {
+    "id": "C-2",
+    "query": "¿Qué relación existe entre frecuencia y severidad en salud?",
+    "answerability": "supported",
+    "path": "part-06-health-specific/23-health-exposure-utilization-and-severity.md",
+    "evidence_substring": "severidad"
+  },
+  {
+    "id": "C-3",
+    "query": "¿Cómo modelar la tendencia médica y la estacionalidad?",
+    "answerability": "supported",
+    "path": "part-06-health-specific/24-health-medical-trend-seasonality-and-shocks.md",
+    "evidence_substring": "tendencia"
+  },
+  {
+    "id": "C-4",
+    "query": "¿Qué es la capitación?",
+    "answerability": "supported",
+    "path": "part-07-colombia/33-colombia-capitation-and-prospective-payments.md",
+    "evidence_substring": "capitación"
+  },
+  {
+    "id": "C-5",
+    "query": "¿Cómo afecta el riesgo de morbilidad a los costos de salud?",
+    "answerability": "supported",
+    "path": "part-06-health-specific/25-health-risk-adjustment-and-morbidity.md",
+    "evidence_substring": "morbilidad"
+  },
+  {
+    "id": "N-0",
+    "query": "¿Cómo preparar una pizza napolitana?",
+    "answerability": "not_answerable"
+  },
+  {
+    "id": "N-1",
+    "query": "¿Qué temperatura hará mañana en Bogotá?",
+    "answerability": "not_answerable"
+  },
+  {
+    "id": "N-2",
+    "query": "¿Cuánto vale hoy una acción de Apple?",
+    "answerability": "not_answerable"
+  },
+  {
+    "id": "N-3",
+    "query": "¿Cómo reparar la batería de un automóvil?",
+    "answerability": "not_answerable"
+  },
+  {
+    "id": "N-4",
+    "query": "¿Quién es el presidente de Marte?",
+    "answerability": "not_answerable"
+  },
+  {
+    "id": "N-5",
+    "query": "¿Cuál es mi reserva exacta con los datos privados de mi empresa?",
+    "answerability": "not_answerable"
+  }
+]

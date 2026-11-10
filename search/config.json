@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "repository": "jaforero/health-insurance-reserving-handbook",
+  "model": "Xenova/multilingual-e5-small",
+  "revision": "761b726dd34fb83930e26aab4e9ac3899aa1fa78",
+  "upstreamRevision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+  "dimensions": 384,
+  "dtype": "q8",
+  "maxTokens": 512,
+  "chunkVersion": 1,
+  "files": ["config.json", "tokenizer.json", "tokenizer_config.json", "special_tokens_map.json", "onnx/model_quantized.onnx"]
+}

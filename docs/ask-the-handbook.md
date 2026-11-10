@@ -18,6 +18,12 @@ tags:
 
 # Pregúntale al Handbook — MVP
 
+!!! tip "Nueva búsqueda semántica local"
+    [Abrir buscador híbrido: significado + términos técnicos](pregunta/index.html).
+    Recupera fragmentos literales con líneas y commit verificables. El modelo se descarga
+    una vez y las consultas se procesan en tu navegador, sin APIs ni servicios de inferencia.
+    El asistente editorial de esta página permanece disponible debajo.
+
 ## Conexiones de lectura
 
 - [Inicio](index.md): explorar la estructura completa del manual.

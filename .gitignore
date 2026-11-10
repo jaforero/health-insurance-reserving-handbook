@@ -56,3 +56,7 @@ node_modules/
 
 # Generated P1 diagnostic reports
 /artifacts/
+
+# Static semantic search build products
+/docs/pregunta/
+/.cache/semantic/

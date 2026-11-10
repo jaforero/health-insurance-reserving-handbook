@@ -6,11 +6,14 @@ on:
       - main
   pull_request:
   workflow_dispatch:
+    inputs:
+      rebuild_search:
+        description: Rebuild all semantic embeddings (ignore incremental cache)
+        type: boolean
+        default: false
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages-${{ github.ref }}
@@ -40,6 +43,38 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+
+      - name: Install pinned local search dependencies
+        run: npm ci --prefix search
+
+      - name: Restore pinned model assets
+        uses: actions/cache@v4
+        with:
+          path: docs/pregunta/models
+          key: semantic-model-${{ hashFiles('search/config.json') }}
+
+      - name: Restore incremental embeddings
+        uses: actions/cache@v4
+        with:
+          path: .cache/semantic
+          key: semantic-v1-${{ hashFiles('search/**', '!search/node_modules/**', 'docs/**/*.md') }}
+          restore-keys: semantic-v1-
+
+      - name: Prepare self-hosted model and browser runtime
+        run: node search/prepare.mjs
+
+      - name: Build coherent hybrid index
+        env:
+          FULL: ${{ inputs.rebuild_search || false }}
+        run: |
+          if [ "$FULL" = "true" ]; then
+            node search/build.mjs --full
+          else
+            node search/build.mjs
+          fi
+          node search/evaluate.mjs
+          node --test search/test.mjs
+          node search/incremental-test.mjs
 
       - name: Generate Ask the Handbook knowledge layer
         run: python scripts/generate_handbook_qa_knowledge.py
@@ -96,6 +131,20 @@ jobs:
       - name: Test explorer interactions
         run: node tests/js/test_explorer_ui.js
 
+      - name: Verify local inference, citations and repository-prefix routing
+        run: |
+          cd search && npx playwright install --with-deps chromium && cd ..
+          SEARCH_SITE_ROOT=site node search/browser-test.mjs
+          node search/size-check.mjs
+
+      - name: Upload semantic quality and privacy evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: semantic-search-validation
+          path: artifacts/semantic-*
+          retention-days: 3
+          if-no-files-found: error
+
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -103,7 +152,10 @@ jobs:
 
   deploy:
     name: Deploy to GitHub Pages
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    permissions:
+      pages: write
+      id-token: write
     needs: build
     runs-on: ubuntu-latest
     environment:
