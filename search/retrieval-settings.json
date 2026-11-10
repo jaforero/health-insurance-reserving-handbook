@@ -1,0 +1,9 @@
+{
+  "calibrateFusion": true,
+  "rrfK": 60,
+  "candidates": 100,
+  "lexicalWeight": 1,
+  "semanticWeight": 1,
+  "k1": 1.2,
+  "b": 0.75
+}

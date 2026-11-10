@@ -1,0 +1,19 @@
+{
+  "name": "search",
+  "version": "1.0.0",
+  "description": "Static local semantic and lexical retrieval for the Health Insurance Reserving Handbook",
+  "scripts": {
+    "test": "cd .. && node --test search/test.mjs",
+    "build": "cd .. && node search/prepare.mjs && node search/build.mjs && node search/evaluate.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@huggingface/transformers": "3.8.1",
+    "esbuild": "0.25.12",
+    "playwright": "1.56.1"
+  },
+  "private": true
+}
