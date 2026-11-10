@@ -22,7 +22,7 @@ concurrency:
 jobs:
   build:
     name: Validate and build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -149,7 +149,7 @@ jobs:
 
       - name: Verify local inference, citations and repository-prefix routing
         run: |
-          cd search && npx playwright install --with-deps chromium && cd ..
+          node search/node_modules/playwright/cli.js install --with-deps chromium
           SEARCH_SITE_ROOT=site node search/browser-test.mjs
           node search/size-check.mjs
           node search/report.mjs
@@ -174,7 +174,7 @@ jobs:
       pages: write
       id-token: write
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

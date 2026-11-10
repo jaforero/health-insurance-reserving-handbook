@@ -16,12 +16,15 @@ try {
  const start=Date.now();
  const vectors=await page.evaluate(async probes=>{const w=new Worker('./worker.js',{type:'module'});const ask=(query,id)=>new Promise((resolve,reject)=>{w.onmessage=e=>{if(e.data.id!==id)return;if(e.data.type==='error')reject(Error(e.data.text));else if(e.data.type==='probe')resolve(e.data.vector);};w.postMessage({type:'probe',query,id});});const out=[];for(let i=0;i<probes.length;i++)out.push(await ask(probes[i].text,i));w.terminate();return out;},parity);
  const maxErrors=vectors.map((v,i)=>Math.max(...v.map((x,j)=>Math.abs(x-parity[i].vector[j]))));
- const cosines=vectors.map((v,i)=>v.reduce((s,x,j)=>s+x*parity[i].vector[j],0));
+ const cosines=vectors.map((v,i)=>v.reduce((s,x,j)=>s+x*parity[i].vector[j],0)/(Math.hypot(...v)*Math.hypot(...parity[i].vector)));
  // Same quantized weights, but native CPU and WASM kernels may round differently.
  console.log('Embedding parity', {cosines,maxErrors});
  assert.ok(cosines.every(x=>x>.999),'Node/browser embedding cosine must exceed .999');
  await page.locator('#question').fill('¿Cuáles son los supuestos necesarios para utilizar Chain Ladder?');await page.locator('button').click();await page.waitForFunction(()=>document.querySelectorAll('article').length>0,{},{timeout:180000});
  const first=await page.locator('article a').first().getAttribute('href');assert.match(first,/\/blob\/[a-f0-9]{40}\/docs\/.*#L\d+-L\d+$/);
+ await page.screenshot({path:'artifacts/semantic-desktop.png',fullPage:true});
+ await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+ await page.screenshot({path:'artifacts/semantic-mobile-results.png',fullPage:true});
  const before=requests.filter(x=>x.endsWith('.onnx')).length;
  await page.locator('#question').fill('¿Cuál es el IBNR exacto de mi EPS si no he aportado triángulos ni datos?');await page.locator('button').click();await page.getByText('No encontré información suficiente en los documentos para responder esta pregunta.',{exact:true}).waitFor();
  assert.equal(requests.filter(x=>x.endsWith('.onnx')).length,before,'Model must not download per query');
