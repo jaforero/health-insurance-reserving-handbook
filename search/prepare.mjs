@@ -24,7 +24,8 @@ await fs.writeFile(out+'/model-assets.json',JSON.stringify({revision:config.revi
 const readme=await fetch(`https://huggingface.co/intfloat/multilingual-e5-small/raw/${config.upstreamRevision}/README.md`);
 if(!readme.ok) throw Error('Cannot verify model license');
 const card=await readme.text(); if(!/^license: mit$/m.test(card)) throw Error('Model license changed');
-await fs.writeFile(out+'/models/MODEL_CARD.md',card);
+await fs.rm(out+'/models/MODEL_CARD.md',{force:true});
+await fs.writeFile(out+'/models/MODEL_CARD.txt',card);
 for(const name of await fs.readdir('search/node_modules/onnxruntime-web/dist'))
   if(/\.wasm$|^ort-wasm.*\.mjs$/.test(name)) await fs.copyFile('search/node_modules/onnxruntime-web/dist/'+name,out+'/runtime/'+name);
 await fs.copyFile('search/node_modules/@huggingface/transformers/LICENSE',out+'/runtime/TRANSFORMERS_LICENSE');

@@ -48,13 +48,15 @@ jobs:
         run: npm ci --prefix search
 
       - name: Restore pinned model assets
-        uses: actions/cache@v4
+        id: model-cache
+        uses: actions/cache/restore@v4
         with:
           path: docs/pregunta/models
           key: semantic-model-${{ hashFiles('search/config.json') }}
 
       - name: Restore incremental embeddings
-        uses: actions/cache@v4
+        id: index-cache
+        uses: actions/cache/restore@v4
         with:
           path: .cache/semantic
           key: semantic-v1-${{ hashFiles('search/**', '!search/node_modules/**', 'docs/**/*.md') }}
@@ -62,6 +64,13 @@ jobs:
 
       - name: Prepare self-hosted model and browser runtime
         run: node search/prepare.mjs
+
+      - name: Save verified model assets
+        if: steps.model-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: docs/pregunta/models
+          key: ${{ steps.model-cache.outputs.cache-primary-key }}
 
       - name: Build coherent hybrid index
         env:
@@ -75,6 +84,13 @@ jobs:
           node search/evaluate.mjs
           node --test search/test.mjs
           node search/incremental-test.mjs
+
+      - name: Save validated incremental embeddings
+        if: steps.index-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .cache/semantic
+          key: ${{ steps.index-cache.outputs.cache-primary-key }}
 
       - name: Generate Ask the Handbook knowledge layer
         run: python scripts/generate_handbook_qa_knowledge.py
@@ -136,6 +152,7 @@ jobs:
           cd search && npx playwright install --with-deps chromium && cd ..
           SEARCH_SITE_ROOT=site node search/browser-test.mjs
           node search/size-check.mjs
+          node search/report.mjs
 
       - name: Upload semantic quality and privacy evidence
         uses: actions/upload-artifact@v4
