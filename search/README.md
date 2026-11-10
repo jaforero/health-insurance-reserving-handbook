@@ -8,7 +8,7 @@ Este componente añade recuperación por significado a **Pregúntale al Handbook
 
 Se indexa el corpus publicado: 58 Markdown, 1.07 MB al inicio de esta implementación. Los archivos de planificación, código, PDF, bibliografía externa y los productos generados no son fuentes de respuestas. La selección se obtiene de `git ls-files`: detecta automáticamente adiciones, modificaciones y eliminaciones. Los documentos fuente no se reescriben. No se utiliza un LLM generativo.
 
-Los bloques H2 conservan sus H3–H6 para no perder contexto. Se respetan front matter, títulos Setext y fences; los encabezados dentro de código no crean secciones. La subdivisión utiliza el tokenizer real, con máximo 512 tokens incluyendo prefijo y contexto. Una línea individual excesivamente larga provoca un error visible en CI en lugar de truncamiento silencioso. Los fragmentos son intervalos contiguos exactos de la fuente; no se inventan extractos ni se renderiza HTML de los documentos.
+Los bloques H2 conservan sus H3–H6 para no perder contexto. Se respetan front matter, títulos Setext, fences y bloques matemáticos LaTeX; los encabezados dentro de código no crean secciones. La subdivisión utiliza el tokenizer real, con máximo 512 tokens incluyendo prefijo y contexto. Una línea individual excesivamente larga provoca un error visible en CI en lugar de truncamiento silencioso. Los fragmentos son intervalos contiguos exactos de la fuente; no se inventan extractos ni se renderiza HTML de los documentos.
 
 ## Modelo y distribución
 
@@ -69,7 +69,7 @@ La primera descarga es grande: aproximadamente 160 MB entre modelo, tokenizer y 
 
 GitHub documenta 100 GB/mes de transferencia flexible, timeout de despliegue de 10 minutos y restricciones de uso comercial/SaaS. El manual educativo no procesa transacciones. GitHub puede limitar tráfico. Los runners estándar de repositorios públicos son gratuitos; cachés y artefactos tienen límites propios. No aumentar el límite de caché por encima de los 10 GB gratuitos; mantener artefactos de diagnóstico con retención corta y revisar el consumo total de la cuenta. El componente no puede garantizar la factura de otros repositorios o servicios de la cuenta.
 
-Optimización adoptada: carga diferida, ONNX q8, caché, vectores binarios (~3.4 MB para 2,214 fragmentos) y ejecución incremental. No se eligió un modelo menor: el despliegue actual cabe en Pages y se verificó E5. Si la descarga o RAM móvil resulta inaceptable, comparar con el mismo benchmark una cuantización q4 y un modelo multilingüe menor **antes** de sustituir E5; no hay resultados medidos de esas alternativas en esta entrega. No se sustituye semántica por BM25 cuando falla el modelo: se muestra un error explícito.
+Optimización adoptada: carga diferida, ONNX q8, caché, vectores binarios (~3–4 MB con el corpus actual) y ejecución incremental. No se eligió un modelo menor: el despliegue actual cabe en Pages y se verificó E5. Si la descarga o RAM móvil resulta inaceptable, comparar con el mismo benchmark una cuantización q4 y un modelo multilingüe menor **antes** de sustituir E5; no hay resultados medidos de esas alternativas en esta entrega. No se sustituye semántica por BM25 cuando falla el modelo: se muestra un error explícito.
 
 ## Fuentes verificadas (2026-11-10)
 

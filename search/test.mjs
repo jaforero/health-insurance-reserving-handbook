@@ -9,6 +9,12 @@ test('Markdown metadata, fences, headings and exact lines',()=>{
  const out=sections(source,'docs/test.md');assert.equal(out.length,2);assert.equal(out[1].heading,'Child');assert.equal(out[1].start,7);assert.equal(out[1].end,11);for(const c of out)assert.equal(source.split('\n').slice(c.start-1,c.end).join('\n'),c.text);
  const setext=sections('Title\n=====\nbody\n\nChild\n-----\nmore','d.md');assert.equal(setext.length,2);assert.equal(setext[1].heading,'Child');
 });
+test('display math is opaque to Setext heading detection',()=>{
+ const source='# Actuarial title\n\n## Estimator\n\n\\[\n\\widehat{U}\n=\n5\n\\]\n\n$$\nx\n=\n3\n$$\n\n## Interpretation\nEvidence';
+ const out=sections(source,'docs/math.md');assert.equal(out.length,3);
+ assert.equal(out[2].title,'Actuarial title');assert.equal(out[1].heading,'Estimator');
+ assert.ok(out[1].text.includes('widehat'));
+});
 test('token-bounded chunks never truncate source silently',()=>{
  const tokenizer=s=>({input_ids:{size:s.length}}),s={text:'abc\ndef\nghi\njkl',heading:'h',title:'t',start:3,path:'d'};
  const out=splitSection(s,tokenizer,21);assert.ok(out.length>1);assert.equal(out.map(x=>x.text).join('\n'),s.text);assert.throws(()=>splitSection({...s,text:'x'.repeat(50)},tokenizer,21));

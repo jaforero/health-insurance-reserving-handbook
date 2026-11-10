@@ -1,6 +1,6 @@
 // Line-preserving Markdown section parser. Fences are opaque to heading detection.
 export function sections(source, path) {
-  const lines=source.split('\n'), out=[]; let start=0, heading=path, title=path, fence=null;
+  const lines=source.split('\n'), out=[]; let start=0, heading=path, title=path, fence=null, math=null;
   if(lines[0]?.trim()==='---') { const end=lines.findIndex((l,i)=>i>0&&l.trim()==='---'); if(end>=0) start=end+1; }
   let begin=start;
   function emit(end) {
@@ -13,6 +13,9 @@ export function sections(source, path) {
     const line=lines[i], f=line.match(/^\s{0,3}(`{3,}|~{3,})/);
     if(f) { if(!fence) fence=f[1]; else if(f[1][0]===fence[0]&&f[1].length>=fence.length) fence=null; continue; }
     if(fence) continue;
+    const trimmed=line.trim();
+    if(math) { if(trimmed===math) math=null; continue; }
+    if(trimmed==='$$'||trimmed==='\\[') {math=trimmed==='$$'?'$$':'\\]';continue;}
     const h=line.match(/^ {0,3}(#{1,6})\s+(.+?)(?:\s+#+)?\s*$/);
     const setext=i+1<lines.length && line.trim() && /^ {0,3}(=+|-+)\s*$/.test(lines[i+1]);
     // Keep H3-H6 subsections with their H2 parent so assumptions and definitions retain context.
