@@ -19,10 +19,11 @@ tags:
 # Pregúntale al Handbook — MVP
 
 !!! tip "Nueva búsqueda semántica local"
-    [Abrir buscador híbrido: significado + términos técnicos](pregunta/index.html).
-    Recupera fragmentos literales con líneas y commit verificables. El modelo se descarga
-    una vez y las consultas se procesan en tu navegador, sin APIs ni servicios de inferencia.
-    El asistente editorial de esta página permanece disponible debajo.
+    [Abrir Pregúntale al Handbook](pregunta/index.html).
+    Presenta respuestas directas, criterios y fuentes con líneas y commit verificables.
+    La exploración semántica adicional es opcional; las consultas se procesan en tu navegador.
+    Este acceso abre la misma experiencia de respuesta directa que el botón global.
+    El contenido histórico de esta página se conserva como referencia.
 
 ## Conexiones de lectura
 
@@ -55,6 +56,7 @@ Las respuestas editoriales tienen prioridad. Cuando una formulación no coincide
 <div
   class="handbook-qa"
   data-handbook-qa
+  data-unified-url="../pregunta/"
   data-catalog-url="../assets/data/handbook-qa-catalog.json"
   data-sections-url="../assets/data/handbook-section-index.json"
   data-site-root="../"

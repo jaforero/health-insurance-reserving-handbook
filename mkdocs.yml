@@ -102,7 +102,8 @@ extra:
 nav:
   - Inicio: index.md
   - Pregúntale al Handbook: pregunta/index.html
-  - Asistente editorial clásico: ask-the-handbook.md
+  - Respuestas fundamentales: handbook-answers.md
+  - Pregúntale · acceso anterior: ask-the-handbook.md
   - Explorador de conocimiento: explorador/index.html
   - Gobierno del repositorio:
       - Roadmap: roadmap.md

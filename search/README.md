@@ -1,10 +1,12 @@
 # Búsqueda híbrida estática del Handbook
 
-Este componente añade recuperación por significado a **Pregúntale al Handbook**, conservando el asistente editorial anterior. La interfaz aislada se publica en `pregunta/`; funciona también bajo `/health-insurance-reserving-handbook/pregunta/`. No hereda la analítica, MathJax ni Mermaid externos de la plantilla MkDocs existente.
+Este componente unifica **Pregúntale al Handbook**: respuestas editoriales concretas primero y recuperación por significado como exploración adicional. Conserva las preguntas editoriales anteriores dentro de la misma experiencia. La interfaz aislada se publica en `pregunta/`; funciona también bajo `/health-insurance-reserving-handbook/pregunta/`. No hereda la analítica, MathJax ni Mermaid externos de la plantilla MkDocs existente.
 
 ## Arquitectura y corpus
 
-`docs/**/*.md` versionados en Git → secciones Markdown y líneas originales → E5 ONNX cuantizado → vectores Float32 normalizados + postings BM25 → Web Worker local → coseno y RRF → cinco fragmentos literales con citas al SHA exacto.
+`docs/**/*.md` versionados en Git → secciones Markdown y líneas originales → E5 ONNX cuantizado → vectores Float32 normalizados + postings BM25 → Web Worker local → coseno y RRF → fragmentos literales con citas al SHA exacto, disponibles en la exploración adicional.
+
+La capa principal extrae respuestas y criterios de `docs/handbook-answers.md`, reconoce intenciones acotadas y muestra citas antes de ofrecer esa exploración.
 
 Se indexa el corpus publicado: 58 Markdown, 1.07 MB al inicio de esta implementación. Los archivos de planificación, código, PDF, bibliografía externa y los productos generados no son fuentes de respuestas. La selección se obtiene de `git ls-files`: detecta automáticamente adiciones, modificaciones y eliminaciones. Los documentos fuente no se reescriben. No se utiliza un LLM generativo.
 
@@ -18,7 +20,7 @@ Los bloques H2 conservan sus H3–H6 para no perder contexto. Se respetan front 
 - Preprocesamiento compartido: `passage: ` para documentos, `query: ` para preguntas; mean pooling y normalización L2. Node y navegador usan el mismo ONNX WASM de un hilo. `embedding-node.mjs` utiliza el hook de inyección de runtime presente en la versión fijada de Transformers.js. Se verifica equivalencia con dos probes bilingües y las 20 preguntas de evaluación (coseno > 0.999). El primer prototipo con CPU nativo mostró discrepancias y fue descartado.
 - `prepare.mjs` descarga **solo durante compilación** pesos/tokenizer de la revisión fija; valida SHA-256 contra `model-assets.lock.json`; copia JS, WASM, licencias y recursos a Pages. La ruta del modelo incluye la revisión para evitar reutilizar pesos antiguos en la caché del navegador.
 - No hay CDN, inferencia remota, clave, endpoint de consultas, fuente web ni analítica en esta interfaz. Su CSP restringe conexiones a su propio origen. Los enlaces a GitHub solo navegan al seleccionarlos.
-- El modelo se descarga al consultar por primera vez. El worker reutiliza la instancia y Transformers.js usa Cache Storage cuando está disponible. No hay promesa de persistencia si el navegador elimina su caché.
+- El modelo se descarga al abrir explícitamente la exploración semántica por primera vez. El worker reutiliza la instancia y Transformers.js usa Cache Storage cuando está disponible. No hay promesa de persistencia si el navegador elimina su caché.
 
 ## Construcción y mantenimiento
 
@@ -28,10 +30,12 @@ Desde la raíz del repositorio, con Node 22 y las dependencias Python habituales
 npm ci --prefix search
 node search/prepare.mjs
 node search/build.mjs
+node search/build-answers.mjs
 node search/evaluate.mjs
 node --test search/test.mjs
 node search/incremental-test.mjs
 python scripts/generate_handbook_qa_knowledge.py
+node search/answers-test.mjs
 python -m mkdocs build --strict
 cd search
 npx playwright install --with-deps chromium
@@ -79,3 +83,11 @@ Optimización adoptada: carga diferida, ONNX q8, caché, vectores binarios (~3�
 - [Conversión ONNX fijada](https://huggingface.co/Xenova/multilingual-e5-small/tree/761b726dd34fb83930e26aab4e9ac3899aa1fa78): archivos distribuidos.
 
 Los detalles por pregunta y navegador se publican como artefacto de Actions `semantic-search-validation`, junto con el diagnóstico P1 preexistente.
+
+## Experiencia unificada de respuesta directa
+
+El botón global y la ruta histórica `ask-the-handbook/` abren `pregunta/`. No se envía la pregunta en la URL. Las respuestas editoriales están en `docs/handbook-answers.md`; `build-answers.mjs` extrae texto literal, criterios y referencias con líneas y SHA. `answers.mjs` reconoce intenciones acotadas y variantes: no es un clasificador universal. Ante ambigüedad solicita precisión; ante una pregunta no cubierta ofrece exploración explícitamente separada de una respuesta. No utiliza un LLM ni carga E5 para una respuesta editorial.
+
+Después de `build.mjs` y de generar el catálogo histórico con `python scripts/generate_handbook_qa_knowledge.py`, ejecutar `node search/build-answers.mjs` y `node search/answers-test.mjs`. Las pruebas de aceptación no son una estimación de generalización: verifican respuestas concretas, casos negativos y trazabilidad. Para ampliar cobertura, editar el Markdown, revisar los capítulos fuente, añadir reglas acotadas y probar variantes no usadas como títulos o preguntas equivalentes. Mantener pruebas negativas para evitar responder una intención distinta.
+
+La primera ampliación cubre nueve temas fundamentales y conserva las 16 preguntas editoriales anteriores (24 respuestas en total; selección de métodos de salud comparte respuesta). El catálogo histórico sigue en el repositorio para regresiones; la experiencia unificada publica el texto desde Markdown. Los nuevos temas requieren revisión editorial, no se incorporan por coincidencias semánticas automáticamente.
