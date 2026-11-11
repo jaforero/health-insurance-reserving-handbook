@@ -81,6 +81,7 @@ jobs:
           else
             node search/build.mjs
           fi
+          node search/build-answers.mjs
           node search/evaluate.mjs
           node --test search/test.mjs
           node search/incremental-test.mjs
@@ -94,6 +95,9 @@ jobs:
 
       - name: Generate Ask the Handbook knowledge layer
         run: python scripts/generate_handbook_qa_knowledge.py
+
+      - name: Verify direct-answer acceptance and legacy coverage
+        run: node search/answers-test.mjs
 
       - name: Verify generated knowledge and immutable runtime sources
         run: |

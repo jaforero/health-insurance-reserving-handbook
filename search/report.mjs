@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 const r=JSON.parse(await fs.readFile('artifacts/semantic-report.json'));
 const b=JSON.parse(await fs.readFile('artifacts/semantic-browser.json'));
+const a=JSON.parse(await fs.readFile('artifacts/semantic-answers.json'));
 const m=JSON.parse(await fs.readFile('docs/pregunta/manifest.json'));
 const pct=x=>(100*x).toFixed(1)+' %';
 const times=r.results.map(x=>x.embeddingMs+x.hybridSearchMs).sort((a,b)=>a-b);
@@ -8,6 +9,8 @@ const lines=[
  '# Validación de búsqueda híbrida estática',
  '',`Commit documental: \`${r.commit}\`. Corpus: ${m.documents.length} documentos, ${m.chunks} fragmentos.`,
  '', 'Resultados reales de la ejecución registrada; evaluación exploratoria de regresión, sin revisión independiente ni etiquetas exhaustivas.',
+ '', `Respuesta directa editorial: ${a.answers} respuestas; ${a.affirmative} preguntas fundamentales, ${a.legacyQuestions} preguntas editoriales anteriores y ${a.negativeOrAmbiguous} casos negativos/ambiguos aprobados. Texto y criterios coinciden exactamente con sus líneas Markdown. Estas pruebas no miden generalización.`,
+ '', `Accesos unificados comprobados: ${b.entryChecks.join(', ')}. Descargas del modelo para la respuesta fundamental inicial: ${b.editorialModelRequests}. La exploración semántica conserva la respuesta.`,
  '', '| Métrica | BM25 | Híbrida |','|---|---:|---:|',
  `| Recall@5 del extracto de referencia (${r.supported} preguntas) | ${pct(r.bm25RecallAt5)} | ${pct(r.hybridRecallAt5)} |`,
  `| Recall@5 del documento de referencia | ${pct(r.bm25DocumentRecallAt5)} | ${pct(r.hybridDocumentRecallAt5)} |`,

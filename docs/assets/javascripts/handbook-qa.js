@@ -808,6 +808,10 @@
   }
 
   async function initialize(container) {
+    if (container.dataset.unifiedUrl) {
+      window.location.replace(new URL(container.dataset.unifiedUrl, window.location.href).href);
+      return;
+    }
     const form = container.querySelector("[data-handbook-qa-form]");
     const input = container.querySelector("[data-handbook-qa-input]");
     const output = container.querySelector("[data-handbook-qa-output]");
@@ -920,6 +924,17 @@
   }
 
   async function initializeGlobalPanel(container) {
+    if (container.dataset.unifiedUrl) {
+      const launch = container.querySelector("[data-handbook-qa-global-trigger]");
+      if (launch) {
+        launch.hidden = false;
+        launch.removeAttribute("aria-haspopup");
+        launch.removeAttribute("aria-controls");
+        launch.removeAttribute("aria-expanded");
+        launch.addEventListener("click", () => window.location.assign(new URL(container.dataset.unifiedUrl, window.location.href).href));
+      }
+      return;
+    }
     const trigger = container.querySelector("[data-handbook-qa-global-trigger]");
     const overlay = container.querySelector("[data-handbook-qa-global-overlay]");
     const dialog = container.querySelector("[data-handbook-qa-global-dialog]");
